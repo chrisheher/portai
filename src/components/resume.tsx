@@ -4,18 +4,10 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowDownToLine, Download, Eye, File, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
+import { resumeDetails } from '@/lib/config-loader';
 
 export function Resume() {
-  // Resume details
-  const resumeDetails = {
-    title: "Anuj's Resume",
-    description: 'Full Stack Python Developer • AI Engineer',
-    fileType: 'PDF',
-    lastUpdated: 'March 2025',
-    fileSize: '0.5 MB',
-    previewImageSrc: '/anuj_resume_preview.png', // You'll need to add this image
-    downloadUrl: 'https://anujjainbatu.github.io/anujjainbatu/Anuj_Jain_Resume.pdf',
-  };
+  // Resume details loaded from configuration
 
   const handleDownload = () => {
     // For external URLs, open in a new tab
