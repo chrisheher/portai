@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://portfolio.anujjainbatu.tech/sitemap.xml
+Sitemap: onlychr.is/sitemap.txt
 
 # Popular search engines
 User-agent: Googlebot

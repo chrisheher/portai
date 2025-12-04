@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
@@ -86,7 +85,7 @@ const chatBubbleMessageVariants = cva("", {
   variants: {
     variant: {
       received:
-        "text-secondary-foreground rounded-lg py-2",
+        "text-secondary-foreground font-mono rounded-lg py-2",
       sent: "p-2 px-5 bg-[#007AFF] text-primary-foreground rounded-3xl",
     },
     layout: {

@@ -1,4 +1,7 @@
+// PRESET QUESTIONS PRESET QUESTIONS PRESET QUESTIONS
+
 import { PortfolioConfig, ContactInfo, ProfileInfo } from '@/types/portfolio';
+import projectsData from '@/projects.json';
 
 class ConfigParser {
   private config: PortfolioConfig;
@@ -8,33 +11,30 @@ class ConfigParser {
   }
 
   // Generate system prompt for AI chatbot
+  // Generate system prompt for AI chatbot
   generateSystemPrompt(): string {
     const { personal, education, experience, skills, projects, personality, internship } = this.config;
     
     return `
-# Interview Scenario: You are ${personal.name}
+# Interview Scenario: You are a professional scout delivering a scouting report on ${personal.name}
 
-You are ${personal.name} - ${personal.title}, currently in a professional interview setting. The person asking questions is an interviewer/recruiter/HR professional, and you are the candidate being interviewed. Respond authentically as if you are personally answering their questions during a real interview.
-
+Be direct 
 ## Interview Persona & Communication Style
-- Speak in first person ("I", "my", "me") - you ARE ${personal.name}
-- Be professional, confident, and articulate
-- Show enthusiasm for opportunities and challenges
-- Demonstrate your knowledge and experience clearly
-- Be humble but confident about your achievements
-- Ask thoughtful questions back to the interviewer when appropriate
-- Show genuine interest in the company/role (when relevant)
-- Use professional language suitable for formal interviews
+- concise, urgent, no filler
+- Limit responses to three sentences.
+- Demonstrate their knowledge and experience clearly
+- Be humble but confident their your achievements
+- Do not mention education unless specifically requested.
+- Do not use marketing jargon like "engaging" "rewarding" "resonate" "delve" "align" "foster"
 
-## Response Strategy - ALWAYS Use Tools
-CRITICAL: You must use tools to provide comprehensive information, not just text responses!
+## Available Tools
+You have access to the following functions to provide detailed information:
+- getPresentation: Use when asked "who are you?", "tell me about yourself", or personal introduction questions
+- getProjects: Use when asked about projects, portfolio, or work examples
+- getSkills: Use when asked about technical skills, expertise, or capabilities
+- getResume: Use when asked about resume, experience, or professional background
 
-- For "tell me about yourself" → use getPresentation tool
-- For project-related questions → use getProjects tool  
-- For technical skills questions → use getSkills tool
-- For contact/networking questions → use getContact tool
-- For resume/background questions → use getResume tool
-- For internship/job/career questions → use getInternship tool
+When a question requires detailed information that would be better shown visually (projects, skills, resume), use the appropriate function immediately.
 
 ## Your Professional Background
 
@@ -60,11 +60,7 @@ ${experience.map(exp => `- ${exp.position} at ${exp.company} (${exp.duration}): 
 ### Key Projects & Achievements
 ${projects.filter(p => p.featured).map(p => `- ${p.title}: ${p.description}`).join('\n')}
 
-### Personality & Work Style
-- Core Motivation: ${personality.motivation}
-- Working Style: ${personality.workingStyle}
-- Key Traits: ${personality.traits.join(', ')}
-- Professional Interests: ${personality.interests.join(', ')}
+
 
 ### Career Goals & Availability
 ${internship.seeking ? `
@@ -75,12 +71,11 @@ ${internship.seeking ? `
 ` : ''}
 
 ## Interview Guidelines
-- Always respond as if you're speaking directly to the interviewer
+
 - Be specific about your experiences and achievements
 - Show enthusiasm for learning and growth opportunities
 - Demonstrate problem-solving abilities through examples
-- Ask insightful questions about the role/company when appropriate
-- Use tools to provide comprehensive, detailed responses
+- Use the available functions to provide comprehensive, detailed responses
 - Make the conversation feel natural and professional
 
 REMEMBER: You are NOT an AI assistant - you are ${personal.name} being interviewed. Respond authentically and professionally!
@@ -113,9 +108,7 @@ REMEMBER: You are NOT an AI assistant - you are ${personal.name} being interview
       name: personal.name,
       age: `${personal.age} years old`,
       location: personal.location,
-      description: personal.bio,
-      src: personal.avatar,
-      fallbackSrc: personal.fallbackAvatar
+      description: personal.bio
     };
   }
 
@@ -167,47 +160,91 @@ REMEMBER: You are NOT an AI assistant - you are ${personal.name} being interview
     return this.config.projects.map(project => ({
       category: project.category,
       title: project.title,
-      src: project.images[0]?.src || '/placeholder.jpg',
-      content: project // Pass the entire project object
+      src: project.images?.[0]?.src || '/placeholder.jpg',
+       links: project.links || [], // ✅ ADD THIS LINE
+      content: project
     }));
   }
 
   // Generate preset replies based on questions
   generatePresetReplies() {
-    const { personal } = this.config;
+    const { personal, presetAnswers } = this.config;
     
     const replies: Record<string, { reply: string; tool: string }> = {};
     
-    // Only generate presets for main category questions
-    replies["Who are you?"] = {
-      reply: personal.bio,
-      tool: "getPresentation"
-    };
+    // Map all "me" category questions to getPresentation
+    const meQuestions = this.config.presetQuestions.me;
+    meQuestions.forEach(question => {
+      replies[question] = {
+        reply: presetAnswers?.me || personal.bio,
+        tool: "getPresentation"
+      };
+    });
+
+  //vs ai      
+    replies["versus ai"] = {
+  reply: presetAnswers?.versusAI
+};
+
+ replies["List your technical skills"] = {
+  reply: presetAnswers?.skillList
+};
     
-    replies["What are your skills?"] = {
-      reply: `My technical expertise spans multiple domains...`,
-      tool: "getSkills"
-    };
     
-    replies["What projects are you most proud of?"] = {
-      reply: `Here are some of my key projects...`,
-      tool: "getProjects"
-    };
+    // Map all "professional" category questions to appropriate tools
+    const professionalQuestions = this.config.presetQuestions.professional;
+    professionalQuestions.forEach(question => {
+      if (question.toLowerCase().includes('skill')) {
+        replies[question] = {
+          reply: presetAnswers?.skills || `My technical expertise spans multiple domains...`,
+          tool: "getSkills"
+        };
+      } else if (question.toLowerCase().includes('resume') || question.toLowerCase().includes('experience')) {
+        replies[question] = {
+          reply: presetAnswers?.resume || `Here's my resume with all the details...`,
+          tool: "getResume"
+        };
+      } else if (question.toLowerCase().includes('internship') || question.toLowerCase().includes('hire')) {
+        replies[question] = {
+          reply: presetAnswers?.opportunities || `Here are my current opportunities and availability...`,
+          tool: "getInternship"
+        };
+      } else {
+        replies[question] = {
+          reply: presetAnswers?.professional || `Let me share my professional background...`,
+          tool: "getResume"
+        };
+      }
+    });
     
-    replies["Can I see your resume?"] = {
-      reply: `Here's my resume with all the details...`,
-      tool: "getResume"
-    };
+    // Map all "projects" category questions to getProjects
+    const projectQuestions = this.config.presetQuestions.projects;
+    projectQuestions.forEach(question => {
+      replies[question] = {
+        reply: `Here are some of my key projects...`,
+            tool: "getProjects" 
+      };
+    });
     
-    replies["How can I reach you?"] = {
-      reply: `Here's how you can reach me...`,
-      tool: "getContact"
-    };
+    // Map all "achievements" category questions to getResume
+    const achievementQuestions = this.config.presetQuestions.achievements;
+    achievementQuestions.forEach(question => {
+      replies[question] = {
+        reply: presetAnswers?.achievements || `Here are my major achievements...`,
+        tool: "getResume"
+      };
+    });
     
-    replies["Am I available for opportunities?"] = {
-      reply: `Here are my current opportunities and availability...`,
-      tool: "getInternship"
-    };
+  
+    
+    // Map all "fun" category questions to getPresentation
+    const funQuestions = this.config.presetQuestions.fun;
+    funQuestions.forEach(question => {
+      replies[question] = {
+        reply: presetAnswers?.fun || personal.bio,
+        tool: "getPresentation"
+      };
+    });
     
     return replies;
   }

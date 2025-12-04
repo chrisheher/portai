@@ -19,7 +19,7 @@ export const getPresentation = tool({
       traits: config.personality.traits,
       interests: config.personality.interests,
       motivation: config.personality.motivation,
-      professionalSummary: "Thank you for asking! I'm a dedicated software developer with a strong passion for technology and innovation. My journey in tech has been driven by curiosity and a desire to create solutions that make a real impact. Through my academic studies combined with practical experience via internships and freelance work, I've developed both a solid theoretical foundation and hands-on problem-solving skills. I'm particularly drawn to challenges that require creative thinking and technical excellence. I thrive in collaborative environments where I can contribute to innovative projects while continuously learning and growing. My ultimate goal is to work on meaningful projects that leverage cutting-edge technology to solve real-world problems. I'm excited about the possibility of bringing my skills and enthusiasm to your team."
+      professionalSummary: "I am what ai ain't."
     };
   },
 });

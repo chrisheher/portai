@@ -67,10 +67,7 @@ export interface Project {
 export interface Social {
   linkedin: string;
   github: string;
-  twitter: string;
-  kaggle: string;
-  leetcode: string;
-  fiverr: string;
+  
 }
 
 export interface Internship {
@@ -85,8 +82,8 @@ export interface Internship {
 }
 
 export interface Personality {
-  traits: string[];
-  interests: string[];
+  traits: string[reading];
+  interests: string[basketball];
   funFacts: string[];
   workingStyle: string;
   motivation: string;
@@ -99,6 +96,20 @@ export interface Resume {
   lastUpdated: string;
   fileSize: string;
   downloadUrl: string;
+}
+
+
+export interface PresetAnswers {
+  me: string;
+  skills: string;
+  projects: string;
+  resume: string;
+  achievements: string;
+  opportunities: string;
+  contact: string;
+  fun: string;
+  professional: string;
+  versusAI?: string; // ← Add this
 }
 
 export interface Chatbot {

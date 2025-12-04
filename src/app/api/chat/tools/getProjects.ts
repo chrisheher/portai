@@ -1,28 +1,132 @@
-
+// src/app/api/chat/tools/getProjects.ts
 import { tool } from "ai";
 import { z } from "zod";
-import { getConfig } from "@/lib/config-loader";
+import { projectData } from "@/lib/config-loader";
 
 export const getProjects = tool({
-  description:
-    "This tool showcases a comprehensive project portfolio, highlighting technical achievements and real-world impact.",
-  parameters: z.object({}),
-  execute: async () => {
-    const config = getConfig();
+  description: `CRITICAL: Always analyze the user's query for filtering keywords before calling this tool.
+
+This tool retrieves Chris Heher's portfolio projects. YOU MUST extract and pass filter parameters based on the user's question.
+
+FILTER DECISION RULES (FOLLOW THESE EXACTLY):
+1. Technology mentions → USE techStack parameter
+   - "React", "Python", "Ceros", "Gemini", "Next.js", etc.
+   - Example: "Show React projects" → {techStack: "React"}
+   
+2. Category/industry mentions → USE category parameter
+   - "SaaS", "DevOps", "Developer Relations", "GTM", "content strategy"
+   - Example: "SaaS projects" → {category: "SaaS"}
+   
+3. Quality indicators → USE featured parameter
+   - "best", "featured", "top", "favorite", "proud of"
+   - Example: "best projects" → {featured: true}
+   
+4. Specific keywords → USE keyword parameter
+   - Company names: "DroneDeploy", "Sentry", "Airbnb"
+   - Topics: "AI", "automation", "developer"
+   - Example: "Sentry projects" → {keyword: "Sentry"}
+
+5. Generic requests → NO parameters
+   - "What projects", "show all projects", "your work"
+   - Example: "What projects do you have?" → {} (no filters)
+
+IMPORTANT: Extract these from natural language. Don't require exact phrasing.`,
+  
+  parameters: z.object({
+    category: z.string().optional().describe("EXTRACT from queries mentioning: SaaS, DevOps, Developer Relations, GTM, content strategy, pharmaceuticals, etc."),
+    techStack: z.string().optional().describe("EXTRACT from queries mentioning: React, Python, Ceros, Gemini, Next.js, TypeScript, etc."),
+    featured: z.boolean().optional().describe("SET TO TRUE when user asks for: best, featured, top, favorite, proud projects"),
+    keyword: z.string().optional().describe("EXTRACT company names (DroneDeploy, Sentry, Airbnb) or topics (AI, automation) from the query"),
+  }),
+  
+  execute: async ({ 
+    category, 
+    techStack, 
+    featured, 
+    keyword 
+  } = {}) => {
+    console.log('🔧 getProjects called with params:', { category, techStack, featured, keyword });
     
-    return {
-      projects: config.projects.map(project => ({
+    let projects = projectData || [];
+    console.log('📊 Total projects before filtering:', projects.length);
+    
+    // ✅ LOG RAW PROJECT DATA TO SEE IF LINKS EXIST
+    if (projects.length > 0) {
+      console.log('🔍 Sample raw project data (first project):', JSON.stringify(projects[0], null, 2));
+    }
+    
+    if (category) {
+      console.log('🔍 Filtering by category:', category);
+      projects = projects.filter((p: any) => {
+        const projectCategory = Array.isArray(p.category) 
+          ? p.category.join(' ') 
+          : typeof p.category === 'string' 
+          ? p.category 
+          : String(p.category || '');
+        
+        const matches = projectCategory.toLowerCase().includes(category.toLowerCase());
+        if (matches) console.log('  ✅ Match:', p.title);
+        return matches;
+      });
+    }
+    
+    if (techStack) {
+      console.log('🔍 Filtering by techStack:', techStack);
+      projects = projects.filter((p: any) => {
+        const matches = p.techStack?.some((tech: string) =>
+          tech.toLowerCase().includes(techStack.toLowerCase())
+        );
+        if (matches) console.log('  ✅ Match:', p.title);
+        return matches;
+      });
+      console.log('📊 After techStack filter:', projects.length);
+    }
+    
+    if (featured !== undefined) {
+      console.log('🔍 Filtering by featured:', featured);
+      projects = projects.filter((p: any) => p.featured === featured);
+      console.log('📊 After featured filter:', projects.length);
+    }
+    
+    if (keyword) {
+      console.log('🔍 Filtering by keyword:', keyword);
+      const kw = keyword.toLowerCase();
+      projects = projects.filter((p: any) => {
+        const matches = p.title?.toLowerCase().includes(kw) ||
+                       p.description?.toLowerCase().includes(kw);
+        if (matches) console.log('  ✅ Match:', p.title);
+        return matches;
+      });
+      console.log('📊 After keyword filter:', projects.length);
+    }
+    
+    console.log('✅ Final filtered projects:', projects.length);
+    
+    // ✅ LOG WHAT WE'RE RETURNING
+    const result = projects.map((project: any) => {
+      console.log(`📦 Mapping project: ${project.title}`);
+      console.log(`   - Has links property: ${!!project.links}`);
+      console.log(`   - Links value:`, project.links);
+      
+      return {
         title: project.title,
-        type: project.category,
+        category: project.category,
         date: project.date,
         description: project.description,
-        techStack: project.techStack,
-        status: project.status,
-        featured: project.featured,
-        links: project.links,
-        highlights: project.achievements || project.metrics || []
-      })),
-      summary: "I'm excited to share my project portfolio with you. These projects represent my journey as a developer and demonstrate my ability to take ideas from conception to deployment. Each project has taught me something different - from technical implementation to project management and problem-solving. I've worked across various technology stacks and domains, which has given me a broad perspective on software development. What I'm most proud of is how these projects have allowed me to solve real-world problems while continuously learning and growing as a developer. I'd be happy to dive deeper into any specific project that interests you or discuss how the experience from these projects would apply to roles at your organization."
+        techStack: project.techStack || [],
+        featured: project.featured || false,
+        links: project.links || [],
+        highlights: project.metrics || [],
+      };
+    });
+    
+    console.log('🎯 Final result with links:', JSON.stringify(result, null, 2));
+    
+    return {
+      projects: result,
+      summary: projects.length 
+        ? `Found ${projects.length} project(s) matching your criteria.`
+        : "No projects found matching those filters.",
     };
   },
 });

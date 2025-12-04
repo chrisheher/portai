@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colbo Style Tumbling Shapes</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #d4c4b0;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        .info {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        .info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <p><strong>Colbo Style Effect</strong></p>
+        <p>Shapes gently tumble and float</p>
+        <p><strong>Click shapes</strong> to navigate</p>
+        <p>Hover for interactive effects</p>
+    </div>
+
+    <script>
+        const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Events } = Matter;
+
+        // Create engine
+        const engine = Engine.create();
+        const world = engine.world;
+
+        // Gentle gravity for floating effect
+        engine.world.gravity.y = 0.5;
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        // Create renderer
+        const render = Render.create({
+            element: document.body,
+            engine: engine,
+            options: {
+                width: width,
+                height: height,
+                wireframes: false,
+                background: '#d4c4b0'
+            }
+        });
+
+        // Categories and shapes data with URLs
+        const categories = [
+            { label: 'DRONEDEPLOY', type: 'circle', size: 210, x: width * 0.3, y: -100, url: '#clothes' },
+            { label: 'SENTRY', type: 'circle', size: 170, x: width * 0.15, y: -200, url: '#records' },
+                        { label: 'CEROS', type: 'circle', size: 180, x: width * 0.15, y: -200, url: '#records' },
+            { label: 'what is your value', type: 'rectangle', size: 200, x: width * 0.3, y: -300, url: '#shop' },
+            { label: 'tech stack', type: 'rectangle', size: 120, x: width * 0.5, y: -400, url: '#me' },
+            { label: 'portfolio', type: 'rectangle', size: 120, x: width * 0.1, y: -500, url: '#port' }
+        ];
+
+        const shapes = [];
+
+        // Create shapes
+        categories.forEach(cat => {
+            let body;
+            const options = {
+                restitution: 0.3,
+                friction: 0.5,
+                frictionAir: 0.02,
+                density: 0.001,
+                angle: (Math.random() - 0.5) * 0.3,
+                render: {
+                    fillStyle: '#7d8fa3',
+                    strokeStyle: 'transparent',
+                    lineWidth: 0
+                }
+            };
+
+            if (cat.type === 'circle') {
+                body = Bodies.circle(cat.x, cat.y, cat.size / 2, options);
+            } else if (cat.type === 'rectangle') {
+                body = Bodies.rectangle(cat.x, cat.y, cat.size, cat.size * 0.2, options);
+            } else if (cat.type === 'semicircle') {
+                // Create a semicircle using vertices
+                const vertices = [];
+                const radius = cat.size / 2;
+                for (let i = 0; i <= 180; i += 10) {
+                    const angle = (i * Math.PI) / 180;
+                    vertices.push({
+                        x: radius * Math.cos(angle),
+                        y: radius * Math.sin(angle)
+                    });
+                }
+                body = Bodies.fromVertices(cat.x, cat.y, vertices, options);
+            }
+
+            shapes.push({
+                body: body,
+                label: cat.label,
+                type: cat.type,
+                size: cat.size,
+                url: cat.url
+            });
+
+            Composite.add(world, body);
+        });
+
+        // Create walls
+        const wallThickness = 1;
+        const walls = [
+            Bodies.rectangle(width / 12, height - 10, width, wallThickness, { 
+                isStatic: true,
+                render: { visible: false }
+            }),
+            Bodies.rectangle(-25, height / 2, wallThickness, height * 2, { 
+                isStatic: true,
+                render: { visible: false }
+            }),
+            Bodies.rectangle(width + 25, height / 2, wallThickness, height * 2, { 
+                isStatic: true,
+                render: { visible: false }
+            })
+        ];
+        Composite.add(world, walls);
+
+        // Add mouse control
+        const mouse = Mouse.create(render.canvas);
+        const mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.2,
+                render: { visible: false }
+            }
+        });
+        Composite.add(world, mouseConstraint);
+
+        // Make shapes clickable links
+        let hoveredShape = null;
+
+        // Track mouse position for hover effects
+        render.canvas.addEventListener('mousemove', (event) => {
+            const mousePosition = mouse.position;
+            hoveredShape = null;
+
+            shapes.forEach(shape => {
+                const distance = Math.sqrt(
+                    Math.pow(mousePosition.x - shape.body.position.x, 2) +
+                    Math.pow(mousePosition.y - shape.body.position.y, 2)
+                );
+
+                if (distance < shape.size / 2) {
+                    hoveredShape = shape;
+                    render.canvas.style.cursor = 'pointer';
+                }
+            });
+
+            if (!hoveredShape) {
+                render.canvas.style.cursor = 'default';
+            }
+        });
+
+        // Handle clicks on shapes
+        render.canvas.addEventListener('click', (event) => {
+            const mousePosition = mouse.position;
+
+            shapes.forEach(shape => {
+                const distance = Math.sqrt(
+                    Math.pow(mousePosition.x - shape.body.position.x, 2) +
+                    Math.pow(mousePosition.y - shape.body.position.y, 2)
+                );
+
+                if (distance < shape.size / 2) {
+                    console.log('Navigating to:', shape.url);
+                    window.location.href = shape.url;
+                }
+            });
+        });
+
+        // Custom rendering for text labels
+        Events.on(render, 'afterRender', () => {
+            const context = render.context;
+            
+            shapes.forEach(shape => {
+                const pos = shape.body.position;
+                const angle = shape.body.angle;
+                
+                context.save();
+                context.translate(pos.x, pos.y);
+                context.rotate(angle);
+                
+                // Change color on hover
+                const isHovered = hoveredShape === shape;
+                context.fillStyle = isHovered ? '#d4c4b0' : '#7d8fa3';
+                context.strokeStyle = isHovered ? '#7d8fa3' : 'transparent';
+                context.lineWidth = isHovered ? 3 : 0;
+                
+                // Redraw shape with hover effect
+                if (shape.type === 'circle') {
+                    context.beginPath();
+                    context.arc(0, 0, shape.size / 2, 0, Math.PI * 2);
+                    context.fill();
+                    context.stroke();
+                } else if (shape.type === 'rectangle') {
+                    // Draw rectangle matching the physics body dimensions
+                    const rectWidth = shape.size;
+                    const rectHeight = shape.size * 0.1;
+                    context.fillRect(-rectWidth / 2, -rectHeight / 2, rectWidth, rectHeight);
+                    context.strokeRect(-rectWidth / 2, -rectHeight / 2, rectWidth, rectHeight);
+                }
+                
+                // Set text style (inverted color on hover)
+                context.fillStyle = isHovered ? '#7d8fa3' : '#d4c4b0';
+                context.textAlign = 'center';
+                context.textBaseline = 'middle';
+                
+                if (shape.type === 'circle') {
+                    context.font = shape.size > 250 ? '48px Arial' : '24px Arial';
+                    context.fillText(shape.label, 0, 0);
+                } else if (shape.type === 'rectangle') {
+                    // Horizontal text for rectangles with appropriate font size
+                    const fontSize = Math.min(16, shape.size * 0.12);
+                    context.font = `${fontSize}px Arial`;
+                    context.fillText(shape.label, 0, 0);
+                } else if (shape.type === 'semicircle') {
+                    // Curved text for semicircle
+                    context.font = '28px Arial';
+                    const letters = shape.label.split('');
+                    const radius = shape.size / 3;
+                    const angleStep = Math.PI / (letters.length + 1);
+                    
+                    letters.forEach((letter, i) => {
+                        const letterAngle = Math.PI - (i + 1) * angleStep;
+                        const x = radius * Math.cos(letterAngle);
+                        const y = radius * Math.sin(letterAngle);
+                        
+                        context.save();
+                        context.translate(x, y);
+                        context.rotate(letterAngle + Math.PI / 2);
+                        context.fillText(letter, 0, 0);
+                        context.restore();
+                    });
+                }
+                
+                context.restore();
+            });
+        });
+
+        // Run the engine
+        const runner = Runner.create();
+        Runner.run(runner, engine);
+        Render.run(render);
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            location.reload();
+        });
+    </script>
+</body>
+</html>

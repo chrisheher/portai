@@ -61,19 +61,13 @@ const AvailabilityCard = ({ data }: AvailabilityCardProps) => {
         <div className="flex items-center gap-4">
           {/* Avatar placeholder */}
           <div className="bg-muted h-16 w-16 overflow-hidden rounded-full shadow-md">
-            <img
-              src="/profile.jpeg"
-              alt="Anuj's avatar"
-              className="h-full w-full object-cover object-[center_top_-5%] scale-95"
-            />
+            
           </div>
           <div>
             <h2 className="text-foreground text-2xl font-semibold">
-              Anuj Jain
+              Christopher Heher
             </h2>
-            <p className="text-muted-foreground text-sm">
-              Available for Opportunities
-            </p>
+           
           </div>
         </div>
 
@@ -96,7 +90,6 @@ const AvailabilityCard = ({ data }: AvailabilityCardProps) => {
       <div className="mb-8 rounded-2xl bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 p-6 border border-green-200 dark:border-green-800">
         <div className="flex items-center gap-3 mb-4">
           <div className="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center">
-            <Briefcase className="h-4 w-4 text-white" />
           </div>
           <h3 className="text-lg font-semibold text-foreground">Current Availability Status</h3>
         </div>
@@ -132,7 +125,7 @@ const AvailabilityCard = ({ data }: AvailabilityCardProps) => {
           <div>
             <p className="text-foreground text-sm font-medium">Location</p>
             <p className="text-muted-foreground text-sm">
-              {data?.preferences.location || "Based in India, open to relocation for the right opportunity 🇮🇳"}
+              {data?.preferences.location || ""}
             </p>
           </div>
         </div>

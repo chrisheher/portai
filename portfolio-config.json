@@ -1,178 +1,210 @@
 {
   "personal": {
-    "name": "Anuj Jain",
-    "age": 22,
-    "location": "Vidisha, Madhya Pradesh, India",
-    "title": "Full-stack Python Developer & AI Engineer",
-    "email": "anujjainbatu@gmail.com",
-    "phone": "+91 8305117236",
-    "handle": "@anujjainbatu",
-    "bio": "Hey 👋\nI'm Anuj, a passionate Full-stack Python developer and AI engineer with experience across ML, Generative AI, and IoT. Amazon ML Summer School trainee, SIH 2025 finalist, and active freelancer with 25+ delivered automation projects. I love building end-to-end smart systems — from IoT devices to LLM-powered applications.",
-    "avatar": "/profile.jpeg",
-    "fallbackAvatar": "https://images.unsplash.com/photo-1610216705422-caa3fcb6d158?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3"
+    "name": "Christopher Heher",
+    "location": "Jersey City, NJ",
+    "title": "writer | marketer | conversational design",
+    "email": "chrisheher@gmail.com",
+    "phone": "5106714398",
+    "bio": "Content is context."
+    
   },
   "education": {
     "current": {
-      "degree": "B.Tech in Internet of Things",
-      "institution": "Samrat Ashok Technological Institute (SATI)",
-      "duration": "2022-2026",
-      "cgpa": "7.85/10.0",
-      "graduationDate": "June 2026"
+      "degree": "B.A. Creative writing",
+      "institution": "Loyola Marymount University"
     },
-    "previous": {
-      "degree": "Higher Secondary Certificate (Science Stream)",
-      "institution": "Board of Secondary Education, MP",
-      "duration": "2021",
-      "percentage": "96.4%",
-      "completionDate": "March 2021"
-    },
+
     "achievements": [
-      "Smart India Hackathon 2025 Finalist (2nd among 88,221 teams)",
-      "Amazon ML Summer School Trainee (Selected from 60,000+ applicants)",
-      "HDFC Badhte Kadam Scholarship recipient (2023 & 2024)",
-      "Satyarth Techfest 2023: 3rd position in Robo Race"
+      "",
+      "",
+      "",
+      ""
     ]
   },
   "experience": [
     {
-      "company": "Amazon ML Summer School",
-      "position": "Trainee",
-      "type": "Training Program",
-      "duration": "August 2025",
-      "description": "Selected from 60,000+ applicants for intensive machine learning program. Completed 8 modules covering Supervised/Unsupervised Learning, Deep Neural Networks, Sequential Models, Reinforcement Learning, Generative AI, and Causal Inference. Gained hands-on experience with Amazon-scale ML systems and recommendation engines.",
-      "technologies": ["Machine Learning", "Deep Neural Networks", "Reinforcement Learning", "Generative AI", "Sequential Models", "Causal Inference"]
+      "company": "DroneDeploy",
+      "position": "lead writer",
+      "industry": "SaaS (reality capture)",
+    "media": ["blog posts, white papers, web pages"],
+      "duration": "2024",
+      "description": "Collaborated with engineering and product teams to create a range of strategic content that helped drive a $10M+ sales pipeline. Wrote sales enablement content across DroneDeploy’s product suite: dock automation, ground  robotics, Data on Demand, and cybersecurity solutions. Developed “Your AI In the Sky” tagline for DroneDeploy’s Safety AI rollout. Wrote white papers on all aspects of reality capture – ground control points to underground utilities to facade inspections. ",
+    "impact": ["11% Deals influenced in pipeline", "Engagement rate to take meaningful action 1.7%", "Share of MRR --$2.5m for ground robotics"],
+    "topics": ["Machine Learning", "Photogrammerty", "Reinforcement Learning", "Generative AI"],
+    "technologies": ["Descript", "Gemini"]
     },
     {
-      "company": "MookMati",
-      "position": "Machine Learning Intern",
-      "type": "Internship",
-      "duration": "July 2024",
-      "description": "AI-Powered Book Startup - Developed ML model for book genre classification using TF-IDF and XGBoost, achieving 88% F1-score. Engineered FastAPI backend with REST endpoints for genre prediction and recommendations. Containerized and deployed service on AWS EC2 with monitoring and auto-restart capabilities.",
-      "technologies": ["Python", "Machine Learning", "TF-IDF", "XGBoost", "FastAPI", "AWS EC2", "Docker"]
+      "company": "Sentry",
+      "position": "Technical Content Strategist",
+      "type": "Full time",
+      "duration": "2020-2022",
+      "description": "Sentry is used by millions of developers to monitor their applications. There I wrote content and copy that defined the developer experience: blogs, video scripts, social, website, drip campaigns, and long-form. Product releases run the risk of getting bogged down in their own jargon. For Sentry’s Performance product release, this meant turning jargony benefits (such as improved Apdex scores and p95 response times) into a simple, differentiating insight.My tagline – See Slow Faster – articulated Sentry's competitive advantage, propelling the unicorn to 3x ARR and cement its status as a leader in application performance monitoring.",
+          "impact": ["11% Deals influenced in pipeline", "Engagement rate to take meaningful action 1.7%"],
+      "technologies": ["Python", "Javascript", "Jamstack", "Next.js"]
     },
-    {
-      "company": "Fiverr",
-      "position": "Freelance Python & AI Developer",
+      
+        {
+      "company": "Momentum Worldwide",
+      "position": "Copywriter",
       "type": "Freelance",
-      "duration": "August 2023 - Present",
-      "description": "Delivered 25+ Python automation solutions reducing manual work by 60% for global clients. Built GenAI-powered chatbots and autonomous agents using LangChain, LangGraph, OpenAI APIs. Developed LLM-backed APIs using FastAPI and Docker for conversational AI integration.",
-      "technologies": ["Python", "LangChain", "LangGraph", "OpenAI API", "FastAPI", "Docker", "Web Scraping", "Automation"]
+      "duration": "2017",
+      "description": "Momentum is an experiential advertising agency.  While there I wrote a pitch deck that won Facebook’s FBIQ account, led Espolon tequila's social media, shaped messaging for Verizon’s go90 streaming platform launch, and created on-premise product activations for Jameson and Glenfiddich",
+      "media": ["Live deliberately. Drink responsibly.", "Hack the moment"]
     }
+   
   ],
   "skills": {
     "programming": ["Python", "JavaScript", "SQL", "HTML/CSS", "TypeScript"],
-    "ml_ai": ["Scikit-learn", "XGBoost", "TensorFlow", "OpenCV", "Pandas", "NumPy", "LangChain", "LangGraph", "OpenAI API", "LLM Agents", "ChatGPT Integration", "Hugging Face"],
-    "web_development": ["React.js", "Next.js", "FastAPI", "Flask", "Django", "Firebase SDK", "REST APIs", "Tailwind CSS", "Node.js"],
-    "databases": ["PostgreSQL", "MongoDB", "Firebase", "MySQL"],
+    "ml_ai": ["OpenAI API", "LLM Agents", "ChatGPT Integration", "Hugging Face"],
+    "web_development": ["React.js", "Next.js", "FastAPI", "Tailwind CSS", "Node.js"],
+    "databases": ["PostgreSQL", "MySQL"],
     "devops_cloud": ["Docker", "Git", "GitHub Actions", "CI/CD", "AWS (EC2/S3)", "Firebase", "Heroku"],
-    "iot_hardware": ["ESP32", "Arduino", "PCB Design", "Hardware Development", "IoT Systems", "Raspberry Pi"],
+    "iot_hardware": ["Arduino",  "Hardware Development", "IoT Systems", "Raspberry Pi"],
     "soft_skills": ["Problem Solving", "Team Leadership", "Project Management", "Communication", "Learning Agility", "Innovation"]
   },
-  "certifications": [
-    {
-      "name": "Joy of Computing with Python",
-      "issuer": "IIT Madras (NPTEL)",
-      "grade": "Elite + Silver",
-      "year": "2024"
-    },
-    {
-      "name": "Machine Learning Specialization",
-      "issuer": "Stanford University (Coursera)",
-      "year": "2024"
-    },
-    {
-      "name": "Meta Front-End Developer Professional Certificate",
-      "issuer": "Meta (Coursera)",
-      "year": "2024"
-    },
-    {
-      "name": "Java Programming & Software Engineering",
-      "issuer": "Duke University (Coursera)",
-      "year": "2023"
-    }
-  ],
+ 
   "projects": [
-    {
-      "title": "AI-Powered Developer Portfolio",
-      "category": "AI/Web Development",
-      "description": "Built customizable portfolio platform using Next.js, TypeScript, and Google Gemini API. Implemented AI-driven content generation and resume parsing for automated portfolio creation. Features include dynamic chatbot, responsive design, and Vercel deployment.",
+       {
+      "company": "Ceros",
+      "position": "Content strategist",
+      "type": "Full-time",
+      "duration": "2017-2019",
+      "description": "Ceros is an experiential content creation platform; think photoshop for front-end code.  My role was to discover and execute use cases for customers in trial, write content from a mobile-first mindset, and lead the strategic briefing process. As content strategist, I was tasked to lead the creative conversation during a client’s trial period. I did this by relating to clients that static content written from a paper perspective – even if insightful and strategic– is viewed by their customers as merely lumps of words. From writing strategic briefs to filming webinars to pitching experiential activations, I was central to turning static .pdfs into interactive, mobile-friendly content that showcased Ceros's value to its clients"
+    },
+      
+      
+      {
+      "company": "Cincoro",
+            "category": "tequila",
+      "position": "Creative director",
+      "type": "Freelance",
+      "duration": "2022",
+      "description": "Tagline, brand manifesto, and social media rollout for a tequila owned by five NBA owners.Cutting through the clutter of celebrity tequila brands. George Clooney. The Rock. Kylie Jenner. Bryan Cranston. Celebrity tequila is a crowded space. So when Michael Jordan and four other NBA owners started their own tequila company, I was there to help them find a way to help their brand stand out among the stars. Cincoro translates to 'five rings'. And so the story of Cincoro Tequila is the passion and competitive spirit its five owners share as they each chase their next championship ring.",
+        "lines": ["All sunshine. No burn.", "Good times deserve great tequila.", "Some owners autograph their bottles. Ours create a signature taste."],
+      "media": ["facebook", "microsite", "pinterest", "email", "instagram"]
+    },
+      
+      {
+      "title": "DroneDeploy Safety AI launch",
+      "category": "enterprise SaaS reality capture",
+      "description": "As part of DroneDeploy's Safety AI gtm campaign, this article explores how AI is purpose-built to protect workers, fortify compliance, and support a culture of safety.",
       "techStack": ["Next.js", "TypeScript", "Google Gemini API", "React", "Tailwind CSS", "Vercel"],
       "date": "April 2025",
-      "status": "Completed",
-      "featured": true,
-      "links": [
-        {
-          "name": "Live Site",
-          "url": "https://portfolio.anujjainbatu.tech/"
-        },
-        {
-          "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/portfolio"
-        }
-      ],
-      "images": [
-        {
-          "src": "https://raw.githubusercontent.com/anujjainbatu/portfolio/main/assets/portfolio.png",
-          "alt": "Portfolio Homepage"
-        }
-      ]
-    },
-    {
-      "title": "Insurance Premium Prediction API",
-      "category": "Backend API/Machine Learning",
-      "description": "Built production-ready ML inference API with FastAPI and Pydantic validation. Dockerized application with comprehensive monitoring endpoints and Swagger documentation. Designed scalable architecture following industry best practices for input validation and error handling.",
-      "techStack": ["Python", "FastAPI", "Pydantic", "Docker", "Machine Learning", "Swagger", "Uvicorn"],
-      "date": "September 2025",
-      "status": "Completed",
-      "featured": true,
-      "links": [
-        {
-          "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/insurance-premium-prediction-fastapi"
-        },
-        {
-          "name": "Docker Hub",
-          "url": "https://hub.docker.com/r/anujjainbatu/insurance-premium-api"
-        },
-        {
-          "name": "Live API Docs",
-          "url": "http://51.20.55.205:8000/docs"
-        }
-      ],
-      "images": [
+   
+           "images": [
         {
           "src": "https://raw.githubusercontent.com/anujjainbatu/insurance-premium-prediction-fastapi/main/assets/demo.gif",
           "alt": "Insurance Premium Prediction API Demo"
+        }],
+      "links": [
+        {
+          "name": "blog post",
+          "url": "https://www.dronedeploy.com/blog/safety-smarter-artificial-intelligence-and-your-work-site"
+        },
+          {
+          "name": "demo video",
+          "url": "https://www.youtube.com/watch?v=yewTE_X6PLwonedeploy.com/product/safety-ai"
+        },
+        {
+          "name": "Product page",
+          "url": "https://www.dronedeploy.com/product/safety-ai"
         }
       ]
-    },
+    }, 
     {
-      "title": "LeetConnect",
-      "category": "Chrome Extension",
-      "description": "JavaScript-based Chrome Extension that connects you with friends and tracks LeetCode statistics in real-time. Stay motivated by seeing your friends' progress, get notified when they solve new problems, and manage your study group or team's coding journey together.",
-      "techStack": ["JavaScript", "Chrome Extension Manifest V3", "HTML", "CSS", "Chrome Storage API", "Chrome Notifications API", "LeetCode API"],
-      "date": "2024",
-      "status": "Ongoing",
+      "title": "Sentry Perfomance launch",
+      "category": "DevOps",
+      "description": "Product releases run the risk of getting bogged down in their own jargon. For Sentry’s Performance product release, this meant turning jargony benefits (such as improved Apdex scores and p95 response times) into a simple, differentiating insight. My tagline – See Slow Faster – articulated Sentry's competitive advantage, propelling the unicorn to 3x ARR and cement its status as a leader in application performance monitoring.",
+      "techStack": ["Python", "Machine Learning", "Swagger", "Uvicorn"],
+      "featured": true,
+      "links": [
+        {
+          "name": "Blog post",
+          "url": "https://blog.sentry.io/how-slow-is-slow/"
+        },
+        {
+          "name": "Product release",
+          "url": "https://blog.sentry.io/see-slow-faster-with-performance-monitoring/"
+        },
+        {
+          "name": "Product page",
+          "url": "https://sentry.io/solutions/application-performance-monitoring/"
+        }
+      ]
+    }, 
+       {
+      "title": "DroneDeploy AI content",
+      "category": "Automation",
+      "description": "Delivered 25+ Python automation projects for global clients, including web scraping, API bots, and data pipelines. Built GenAI-powered chatbots and autonomous agents using LangChain, LangGraph, and OpenAI APIs, reducing manual work by 60%.",
+      "techStack": ["Python", "LangChain", "LangGraph", "OpenAI API", "Web Scraping", "Automation", "FastAPI", "Docker"],
+      "featured": true,
+      "metrics": ["25+ Projects Delivered", "60% Manual Work Reduction"],
+      "links": [
+        {
+          "name": "Fiverr Profile",
+          "url": "https://www.fiverr.com"
+        },
+        {
+          "name": "GitHub",
+          "url": "https://github.com/anujjainbatu"
+        }
+      ]
+    },  
+    {
+      "title": "Sentry Dogfooding Chronicles",
+      "category": "Developer Relations",
+      "description": "Dogfooding is the process in which a company uses its own product as a quality control mechanism. Think: the hair club for men guy. With Dogfooding Chronicles, we could tell the stories of software engineers  used the platform to improve the platform, syndicating unique anecdotes of how dev teams approached the inevitable flaws in their work with honesty and humor. ",
+      "techStack": ["JavaScript", "Feature flags", "documentation"],
+      "featured": true,
+      "links": [
+         {
+          "name": "Using Sentry Performance to get Sentry Performant",
+          "url": "https://blog.sentry.io/go-getting-lazy-loading/"
+        },
+          {
+          "name": "Go-Getting Lazy loading",
+          "url": "https://blog.sentry.io/go-getting-lazy-loading/"
+        }
+      ]
+    },  
+
+        
+        {
+      "title": "FBIQ",
+      "category": "Machine Learning",
+      "description": "Winning the hearts, minds, and budgets of media strategists everywhereFacebook IQ was a tool that helped brands better target audiences through context-based programmatic ads. For example: if a facebook friend announced their engagement, FBIQ would shoehorn contextual ads in your feed -- things like bachelor party destinations and 20 percent off cummerbund rentals.To debut FBIQ, Facebook invited over two hundred media leaders to premiere events in New York, Chicago and Los Angeles. They tasked Momentum Worldwide with thinking through event activations that could tie Facebook's culture with the benefits the tool offered advertisers.As part of Momentum's pitch team, I helped think through creative opportunities for FBIQ's premiere event ranging from invites to booking talent, on-premise activations, and follow-up communications.",
+      "links": [
+        {
+          "name": "case study",
+          "url": "https://onlychris2.webflow.io/projects/facebook"
+        }
+      ]
+    },   
+        {
+      "title": "Espolon",
+      "category": "Machine Learning",
+      "description": "ML-powered laptop price prediction system built with Streamlit. Features clean interface, fast predictions, and easy deployment via Docker. Uses key attributes like brand, CPU, RAM, storage, GPU, and screen size for accurate real-time price estimates.",
+      "techStack": ["Python", "Streamlit", "scikit-learn", "Docker", "Pandas", "Machine Learning"],
+      "date": "2025",
+      "status": "Completed",
       "featured": true,
       "links": [
         {
           "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/leetconnect"
+          "url": "https://github.com/anujjainbatu/IntelliPrice"
         },
         {
           "name": "Demo GIF",
-          "url": "https://raw.githubusercontent.com/anujjainbatu/leetconnect/main/assets-landing/screenshots/demo-web.gif"
-        }
-      ],
-      "images": [
-        {
-          "src": "https://raw.githubusercontent.com/anujjainbatu/leetconnect/main/assets-landing/screenshots/demo-web.gif",
-          "alt": "LeetConnect Extension Demo"
+          "url": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif"
         }
       ]
-    },
-    {
-      "title": "IntelliPrice",
+    },  
+       
+    
+  
+     
+        {
+      "title": "Cybersecurity",
       "category": "Machine Learning",
       "description": "ML-powered laptop price prediction system built with Streamlit. Features clean interface, fast predictions, and easy deployment via Docker. Uses key attributes like brand, CPU, RAM, storage, GPU, and screen size for accurate real-time price estimates.",
       "techStack": ["Python", "Streamlit", "scikit-learn", "Docker", "Pandas", "Machine Learning"],
@@ -195,23 +227,169 @@
           "alt": "IntelliPrice App Demo"
         }
       ]
-    },
-    {
-      "title": "SpamSense",
-      "category": "NLP System",
-      "description": "NLP-based spam detection tool that predicts whether marketing emails will land in inbox or spam folder. Features Streamlit web interface and scikit-learn ML model trained on real spam datasets for agencies to optimize campaign deliverability.",
-      "techStack": ["Python", "Streamlit", "scikit-learn", "NLP", "Machine Learning", "Heroku"],
+    },  
+        {
+      "title": "Abbott Pharma",
+      "category": "pharmaceuticals",
+      "description": "ML-powered laptop price prediction system built with Streamlit. Features clean interface, fast predictions, and easy deployment via Docker. Uses key attributes like brand, CPU, RAM, storage, GPU, and screen size for accurate real-time price estimates.",
+      "techStack": ["Python", "Streamlit", "scikit-learn", "Docker", "Pandas", "Machine Learning"],
       "date": "2025",
       "status": "Completed",
       "featured": true,
       "links": [
         {
           "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/spamsense"
+          "url": "https://github.com/anujjainbatu/IntelliPrice"
         },
         {
           "name": "Demo GIF",
-          "url": "https://github.com/anujjainbatu/spamsense/blob/main/assets/demo.gif"
+          "url": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif?raw=true",
+          "alt": "IntelliPrice App Demo"
+        }
+      ]
+    },  
+        {
+      "title": "GE",
+      "category": "experiential content",
+      "description": "Designing technical content for GE's aviation division included layering benefits across hover states, data visualizations, and interactive quizzes.",
+      "techStack": "experiential content",
+      "status": "Completed",
+      "featured": true,
+      "links": [
+        {
+          "name": "Aviation turboprop",
+          "url": "ceros.com/inspire/project/ge-aviation-1/"
+        },
+        {
+          "name": "Digital transformation",
+          "url": "https://www.ceros.com/inspire/project/digital-transformation"
+        },
+           {
+          "name": "Unplanned downtime",
+          "url": "https://www.ceros.com/inspire/project/unplanned-downtime"
+        }
+      ]
+    },  
+        {
+      "title": "Ceros internal",
+      "category": "content strategy",
+      "description": "Ceros is a B2B content creation platform; think photoshop for front-end code. Many Ceros clients in trial were suffering from blank platform syndrome; that is, while they had an appreciation of the tool itself, they lacked  an understanding of its application to their broader content initiatives.<br/> As content strategist, I was tasked to lead the creative conversation during a client’s trial. I approached this by relating to clients that most digital content is still being written as if from a typewriter — despite being read on a screen. And that static content written from this paper perspective – even if well-written and strategic –  is viewed by their customers as merely lumps of words.<br/> From writing strategic briefs to pitching experiential activations and rewriting client inputs, I was central to turning  static .pdfs into interactive, mobile-friendly content in ways which showcased the Ceros platform.",
+      "techStack": ["Ceros"],
+
+      "featured": true,
+      "links": [
+        {
+          "name": "GitHub",
+          "url": "https://github.com/anujjainbatu/IntelliPrice"
+        },
+        {
+          "name": "Demo GIF",
+          "url": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif?raw=true",
+          "alt": "IntelliPrice App Demo"
+        }
+      ]
+    },  
+        {
+      "title": "gpay",
+      "category": "Developer Relations",
+      "description": "Content to get developers to check out a checkout API. Gpay is a one-touch checkout experience that works seamlessly between applications and e-commerce sites. <br/> Like all things Google, Gpay was designed to be efficient ( it’s instrumented with only a few lines of code). Which means video content for its I/O premiere needed to act likewise. <br/> So instead of a smug, stemwinding video that wastes a developer’s time with phony rapport, we got out of our own way and just told the simplest, most direct path to instrumentation. ",
+      "techStack": ["Python", "Streamlit", "scikit-learn", "Docker", "Pandas", "Machine Learning"],
+      "featured": true,
+      "links": [
+        {
+          "name": "GitHub",
+          "url": "https://github.com/anujjainbatu/IntelliPrice"
+        },
+        {
+          "name": "Demo GIF",
+          "url": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif?raw=true",
+          "alt": "IntelliPrice App Demo"
+        }
+      ]
+    },  
+        {
+      "title": "HP Presence launch",
+      "category": "GTM",
+      "description": "Making hybrid work, work for employees and employers.The context.The pandemic altered the fabric of society. Nowhere was this more evident than the corporate office. As a content strategist on Transmission's HP account, I helped  position their Presence videoconferencing product suite to be the connective tissue for distributed workforces. How businesses can build out their hybrid work infrastructure to seamlessly incorporate devices, solutions, and services across distributed teams.The world of work continues to evolve. And the tools employees use for that work need to evolve with it. And that starts with HP Presence building out intelligent meeting experiences that fully incorporate remote workers such that their points can be heard with the same volume and clarity as those physically in the room.How IT professionals can calibrate their offices to the new normal ",
+   
+      "featured": true,
+      "links": [
+        {
+          "name": "The new era of work",
+          "url": "https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf"
+        },
+          {
+          "name": "A New Blueprint for an Uncertain World.",
+          "url": "https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf"
+        },
+        {
+          "name": "The New Office For the Way People Want to Work",
+          "url": "https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf"
+        }
+      ]
+    },  
+        {
+      "title": "Airbnb",
+      "category": "Employer branding",
+      "description": "Coming out of the pandemic (and the subsequent great resignation), competition for talent has ratcheted up. To that end, companies are changing how they view career websites: from a mere job repository to a digital moment where they can define their culture to candidates.  While working at talent agency Symphony Studio, I was assigned to writing Airbnb’s career website. That first meant establishing their Employer Brand Proposition: that is, the values and benefits which differentiates Airbnb from not only their competitors, but the workforce at large. Working with Airbnb executives and HR stakeholders, we articulated AirBnb’s core values, their Live and Work Anywhere policy, and growth opportunities with responsive, mobile-friendly content that speaks simply, directly, and strategically to candidates.",
+      "techStack": ["figma", "contentful", "milanote"],
+      "featured": true,
+      "links": [
+        {
+          "name": "Home Page",
+          "url": "https://careers.airbnb.com/"
+        },
+           {
+          "name": "Apprenticeship Page",
+          "url": "https://careers.airbnb.com/connect-engineering-apprenticeship/"
+        },
+        {
+          "name": "Life at airbnb",
+          "url": "https://careers.airbnb.com/life-at-airbnb/"
+        }
+      ]
+    
+    },  
+       
+        {
+      "title": "Sentry Customer Stories",
+      "category": "Developer Relations",
+      "description": "The consequences of poor application performance are both real and terrifying: lost customers, lost trust from your team, and lost confidence in your abilities. It’s why every developer remembers those moments where their solution improves both process and performance -- and why Sentry celebrates their Great Moments in Application Monitoring:",
+      "techStack": ["Full stack integration"],
+
+      "status": "Completed",
+      "featured": true,
+      "links": [
+        {
+          "name": "Great Moments in Application monitoring",
+          "url": "https://blog.sentry.io/great-moments-in-application-monitoring/"
+        },
+           {
+          "name": "tackle.io",
+          "url": "https://sentry.io/customers/tackle/"
+        },
+           {
+          "name": "eventbrite",
+          "url": "https://sentry.io/customers/eventbrite/"
+        },
+        {
+          "name": "Riot Games",
+          "url": "https://sentry.io/customers/riot/"
         }
       ],
       "images": [
@@ -220,35 +398,49 @@
           "alt": "SpamSense Demo"
         }
       ]
-    },
+    },  
     {
-      "title": "PopcornPicks",
+      "title": "Sentry discover",
       "category": "Machine Learning",
-      "description": "Movie recommendation system built with Streamlit. Select a movie you like and get personalized recommendations with detailed information and posters. Uses machine learning to suggest similar movies based on selection using movie metadata and similarity matrix.",
-      "techStack": ["Python", "Streamlit", "Pickle", "scikit-learn", "pandas", "Heroku"],
-      "date": "2024",
-      "status": "Completed",
+      "description": "To get the right answer, you have to ask the right question. Enter Discover, Sentry’s new query builder. It helps you analyze raw event data across your application. For example, if you want to understand which parts of your code are responsible for triggering the most errors, use Discover to analyze everything from errors by release to slowest transactions by end user..",
+      "techStack": ["Django", "Python", "Webpack",  "BigQuery"],
       "featured": true,
       "links": [
         {
-          "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/popcornpicks"
+          "name": "Measuring success with sentry",
+          "url": "https://blog.sentry.io/measuring-success-with-sentry/"
+        },
+            {
+          "name": "Asking the right query with discover",
+          "url": "https://blog.sentry.io/asking-the-right-query-with-discover/"
+        },
+            {
+          "name": "Documentation",
+          "url": "https://docs.sentry.io/product/explore/discover-queries/"
         }
       ],
       "images": []
-    },
+    }, 
     {
-      "title": "Chess Trace",
-      "category": "IoT System",
-      "description": "Built an IoT-enabled chessboard using ESP32, multiplexers, and 64 reed switches with 98.2% move detection accuracy at 1/8th the commercial cost. Features real-time move logging to Firebase, a web dashboard for live analysis and replay, and Stockfish-powered engine integration. Led a 3-member team through hardware prototyping, firmware development, cloud setup, and user testing with 20+ players.",
-      "techStack": ["ESP32", "C++ (Arduino)", "HTML", "CSS", "JavaScript", "Firebase", "Stockfish.js", "PCB Design", "IoT", "Cloud Integration", "Hardware Development"],
+      "title": "Sentry instrumentation",
+      "category": ["developer relations"],
+      "description": "A dev tool is only as good as its ability to speak the language of its developers.",
+      "techStack": ["javascript", "python 3", "Web Vitals", "Jamstack", "Netlify", "Firebase",  "Cloud Integration"],
       "date": "2025",
       "status": "Completed",
       "featured": true,
       "links": [
         {
-          "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/chess-trace"
+          "name": "Why debugging Javascript sucks (and what you can do about it)",
+          "url": "https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/"
+        },
+          {
+          "name": "Python 3 compatibility",
+          "url": "https://blog.sentry.io/python-3-compatibility-what-to-know/"
+        },
+          {
+          "name": "Measuring UX with Web Vitals",
+          "url": "https://blog.sentry.io/measuring-user-experience-with-web-vitals/"
         }
       ],
       "images": [
@@ -261,11 +453,11 @@
           "alt": "Product"
         }
       ]
-    },
+    },  
     {
-      "title": "Pralay Mitra",
-      "category": "AI/Disaster Management",
-      "description": "AI-powered disaster management system to assist government officials during emergencies. Features interactive dashboard, real-time high-risk city alerts, AI chatbot (Gemini API) for response planning, and centralized resources for food, shelter, and medical aid.",
+      "title": "Sentry sell sheets",
+      "category": "DevOps",
+      "description": "Technical content to support sales teams as they advocate for the developer .",
       "techStack": ["Python", "Django", "JavaScript", "Bootstrap", "FontAwesome", "Gemini API"],
       "date": "2024",
       "status": "Completed",
@@ -277,57 +469,95 @@
         }
       ],
       "images": []
-    },
+    },  
     {
-      "title": "hideFlare: CDN Obfuscation Detection System",
+      "title": "DroneDeploy web pages",
       "category": "Cybersecurity Tool",
       "description": "Python tool to uncover real hosting details of websites protected by Cloudflare. Automates subdomain enumeration, SSL analysis, ASN/org/GeoIP lookups, historical IP resolution, and outputs results for security researchers. Used for SIH 2024 finalist project for MP Police.",
       "techStack": ["Python", "Subdomain Enumeration", "SSL Analysis", "SecurityTrails API"],
       "date": "2024",
       "status": "Completed",
       "featured": true,
-      "achievements": ["Smart India Hackathon 2024 Finalist"],
+      "metrics": ["Deals influenced in pipeline --> 8.5%"],
+      "links": [  {
+          "name": "Ground robotics",
+          "url": "https://www.dronedeploy.com/product/robotics"
+        },
+            {
+          "name": "Industrial inspection",
+          "url": "https://www.dronedeploy.com/product/robotic-industrial-inspection"
+        },
+            {
+          "name": "Dock automation",
+          "url": "https://www.dronedeploy.com/product/dock-automation"
+        }
+    
+      ],
+      "images": []
+    },  
+        {
+      "title": "DroneDeploy customer stories",
+      "category": "Machine Learning",
+      "description": "ML-powered laptop price prediction system built with Streamlit. Features clean interface, fast predictions, and easy deployment via Docker. Uses key attributes like brand, CPU, RAM, storage, GPU, and screen size for accurate real-time price estimates.",
+      "techStack": ["Python", "Streamlit", "scikit-learn", "Docker", "Pandas", "Machine Learning"],
+      "date": "2025",
+      "status": "Completed",
+      "featured": true,
       "links": [
         {
           "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/hideFlare"
-        }
-      ],
-      "images": []
-    },
-    {
-      "title": "Python Automation Suite",
-      "category": "Automation",
-      "description": "Delivered 25+ Python automation projects for global clients, including web scraping, API bots, and data pipelines. Built GenAI-powered chatbots and autonomous agents using LangChain, LangGraph, and OpenAI APIs, reducing manual work by 60%.",
-      "techStack": ["Python", "LangChain", "LangGraph", "OpenAI API", "Web Scraping", "Automation", "FastAPI", "Docker"],
-      "date": "2023-Present",
-      "status": "Ongoing",
-      "featured": true,
-      "metrics": ["25+ Projects Delivered", "60% Manual Work Reduction"],
-      "links": [
-        {
-          "name": "Fiverr Profile",
-          "url": "https://www.fiverr.com"
+          "url": "https://github.com/anujjainbatu/IntelliPrice"
         },
         {
-          "name": "GitHub",
-          "url": "https://github.com/anujjainbatu"
+          "name": "Demo GIF",
+          "url": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif"
         }
       ],
-      "images": []
-    }
-  ],
+      "images": [
+        {
+          "src": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif?raw=true",
+          "alt": "IntelliPrice App Demo"
+        }
+      ]
+    },  
+    
+        {
+      "title": "social media compilation",
+      "category": "Machine Learning",
+      "description": "ML-powered laptop price prediction system built with Streamlit. Features clean interface, fast predictions, and easy deployment via Docker. Uses key attributes like brand, CPU, RAM, storage, GPU, and screen size for accurate real-time price estimates.",
+      "techStack": ["Python", "Streamlit", "scikit-learn", "Docker", "Pandas", "Machine Learning"],
+      "date": "2025",
+      "status": "Completed",
+      "featured": true,
+      "links": [
+        {
+          "name": "GitHub",
+          "url": "https://github.com/anujjainbatu/IntelliPrice"
+        },
+        {
+          "name": "Demo GIF",
+          "url": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif"
+        }
+      ],
+      "images": [
+        {
+          "src": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif?raw=true",
+          "alt": "IntelliPrice App Demo"
+        }
+      ]
+    } 
+   
+        
+      
+   ],
   "social": {
-    "linkedin": "https://linkedin.com/in/anujjainbatu",
-    "github": "https://github.com/anujjainbatu",
-    "twitter": "https://x.com/anujainbatu",
-    "kaggle": "https://www.kaggle.com/anujjainbatu",
-    "leetcode": "https://leetcode.com/u/anujjainbatu/",
-    "fiverr": "https://www.fiverr.com",
-    "portfolio": "https://portfolio.anujjainbatu.tech/"
+    "linkedin": "https://linkedin.com/in/cheher",
+    "github": "https://github.com/chrisheher",
+    "spotify": "https://www.fiverr.com",
+    "portfolio": "https://onlychr.is"
   },
   "internship": {
-    "seeking": true,
+    "seeking": false,
     "duration": "6 months",
     "startDate": "February 2025",
     "preferredLocation": "Remote or On-site",
@@ -340,29 +570,27 @@
     "traits": ["passionate", "curious", "determined", "collaborative", "results-driven"],
     "interests": ["AI/ML", "Generative AI", "IoT", "Web Development", "Open Source", "Hackathons", "Automation"],
     "funFacts": [
-      "Smart India Hackathon 2025 finalist among 88,221 teams",
-      "Amazon ML Summer School trainee (top 5% selection rate)",
-      "Built 25+ automation projects reducing manual work by 60%",
-      "Achieved 88% F1-score in ML model for book genre classification"
+      "Captained Atlantic seaboard",
+      "Authored The Floating Studio"
     ],
-    "workingStyle": "I move fast, learn faster, and love tackling challenging problems with scalable solutions",
+    "workingStyle": "I am a dedicated timeboxer, having used the pomodoro technique since 2011",
     "motivation": "Building technology that makes a real impact on people's lives through AI and automation"
   },
   "resume": {
-    "title": "Anuj Jain - Resume",
-    "description": "Full-stack Python Developer & AI Engineer | Amazon ML Summer School Trainee | SIH 2025 Finalist",
+    "title": "Chris Heher Resume",
+    "description": "my resume",
     "fileType": "PDF",
     "lastUpdated": "September 2025",
     "fileSize": "2.1 MB",
-    "downloadUrl": "https://anujjainbatu.github.io/anujjainbatu/resume_show_16092025.pdf"
+    "downloadUrl": "https://assets.ctfassets.net/em6l9zw4tzag/7gHp5QpqTIFRuSuhg4R6WO/33731d473215fac85f35ec365c7f419d/sentry-ecosystem.pdf"
   },
   "chatbot": {
-    "name": "Anuj",
-    "personality": "casual, enthusiastic, tech-savvy",
-    "tone": "friendly and conversational",
+    "name": "Chris",
+    "personality": "casual, erudite",
+    "tone": "friendly",
     "language": "english",
     "responseStyle": "short and interactive",
-    "useEmojis": true,
+    "useEmojis": false,
     "topics": ["projects", "skills", "experience", "internship", "contact", "fun_facts", "certifications", "achievements"]
   },
   "presetQuestions": {
@@ -415,10 +643,18 @@
       "What's a fun fact about you?"
     ]
   },
+    
+  "presetAnswers": {
+    "me": "Your bio...",
+    "skills": "Your skills...",
+    "versusAI": "I am what ai ain’t.Your customers deserve better than to read robot. They want a human voice behind your brand — one which piques curiosity, not parrot information; one which intrigues, not inundates; and one that doesn’t regurgitate words already written, but reveals fresh insights unique to your brand.",
+      
+      "skillList": "python."
+  },
   "meta": {
     "configVersion": "2.0",
     "lastUpdated": "2025-09-15",
-    "generatedBy": "Anuj Jain",
-    "description": "Updated portfolio configuration with latest resume information including Amazon ML Summer School, updated projects, and enhanced certifications"
+    "generatedBy": "Chris Heher",
+    "description": "portfolio"
   }
 }

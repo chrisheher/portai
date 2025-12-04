@@ -54,7 +54,7 @@ export function SimplifiedChatView({
   const currentTool = toolInvocations.length > 0 ? [toolInvocations[0]] : [];
 
   // Check if we have meaningful text content (more than just confirmations)
-  const hasTextContent = message.content.trim().length > 0;
+const hasTextContent = String(message.content ?? '').trim().length > 0;
   const hasTools = currentTool.length > 0;
   
   // If we have tools, minimize text content to avoid redundancy
