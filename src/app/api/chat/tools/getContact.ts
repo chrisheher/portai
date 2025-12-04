@@ -1,16 +1,19 @@
-import { Tool } from 'ai'; // or whatever the SDK exports
+import { tool } from "ai";
+import { z } from "zod";
+import { getConfig } from "@/lib/config-loader";
 
-export const careerInfo: Tool = {
-  name: 'career-info',
-  description: 'Provides ...',
-  parameters: z.object({}),
-  async execute() {
+export const getContact = tool({
+  description: 'Provides contact information and career opportunities',
+  parameters: z.object({}), // ✅ Empty parameters - no input needed
+  execute: async () => {
     const config = getConfig();
     return {
-      availability: 'open',
-      preferences: { /* ... */ },
-      experience: { /* ... */ },
-      professionalMessage: 'Ready for new opportunities.',
+      email: config.personal?.email || '',
+      linkedin: config.social?.linkedin || '',
+      github: config.social?.github || '',
+      location: config.personal?.location || '',
+      availability: config.internship?.availability || '',
+      seekingOpportunities: config.internship?.seeking || false,
     };
   },
-};
+});
