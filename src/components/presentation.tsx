@@ -57,12 +57,12 @@ export function Presentation() {
             variants={textVariants}
           >
             <h1 className="from-foreground to-muted-foreground bg-gradient-to-r bg-clip-text text-xl font-semibold text-transparent md:text-3xl">
-              {profile.name}
+             
             </h1>
             <div className="mt-1 flex flex-col gap-1 md:flex-row md:items-center md:gap-4">
-              <p className="text-muted-foreground">{profile.age}</p>
+              <p className="text-muted-foreground"></p>
               <div className="bg-border hidden h-1.5 w-1.5 rounded-full md:block" />
-              <p className="text-muted-foreground">{profile.location}</p>
+              <p className="text-muted-foreground"></p>
             </div>
           </motion.div>
 
@@ -72,7 +72,7 @@ export function Presentation() {
             variants={paragraphAnimation}
             className="text-foreground mt-6 leading-relaxed whitespace-pre-line"
           >
-            {profile.description}
+          
           </motion.p>
 
           {/* Tags/Keywords */}
