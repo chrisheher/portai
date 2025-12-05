@@ -65,8 +65,7 @@ const Chat: React.FC = () => {
   const [showChatResponse, setShowChatResponse] = useState(false);
 
 const {
-  messages,
-  status,
+  messages, 
   stop,
   setMessages,
   addToolResult,
@@ -104,7 +103,7 @@ const {
 });
 
 
-const isLoading = status !== 'idle';
+const isLoading = loadingSubmit;
   const { currentAIMessage, latestUserMessage, hasActiveTool } = useMemo(() => {
     const latestAI = messages.findLastIndex((m) => m.role === 'assistant');
     const latestUser = messages.findLastIndex((m) => m.role === 'user');
@@ -191,7 +190,7 @@ const isLoading = status !== 'idle';
     })
       .then(async (res) => {
         if (!res.ok) {
-          throw new Error(`API error: ${res.status}`);
+          throw new Error(`API error:`);
         }
         const data = await res.json();
         return data;
