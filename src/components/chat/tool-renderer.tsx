@@ -27,7 +27,7 @@ export default function ToolRenderer({
          case 'analyzeJob':
   return (
     <div key={toolCallId} className="w-full overflow-hidden rounded-lg">
-      <JobAnalysisDisplay data={result} />
+      <JobAnalysisDisplay />
     </div>
   );
          
@@ -48,7 +48,7 @@ export default function ToolRenderer({
           case 'getResume':
             return (
               <div key={toolCallId} className="w-full rounded-lg">
-                <Resume data={result} />
+                <Resume />
               </div>
             );
 
