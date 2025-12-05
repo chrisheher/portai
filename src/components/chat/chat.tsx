@@ -197,7 +197,7 @@ const isToolInProgress = messages.some(
       .then((data) => {
         console.log('API data:', data);
 
-        let messagesToAdd = [];
+        let messagesToAdd: any[] = [];
         let isJobAnalysis = false;
         let isProjectSearch = false;
 
