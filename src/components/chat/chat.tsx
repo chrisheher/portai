@@ -408,7 +408,7 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!e
                     </motion.div>
                   ) : currentAIMessage ? (
                     <div className="w-full space-y-6">
-                      <SimplifiedChatView message={currentAIMessage} isLoading={isLoading} addToolResult={addToolResult} />
+                      <SimplifiedChatView message={currentAIMessage} isLoading={isLoading}  />
                       
                       {currentAIMessage.parts?.map((part: any, index: number) => {
                         if (part.type === 'tool-invocation') {
