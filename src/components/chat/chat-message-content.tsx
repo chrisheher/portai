@@ -15,7 +15,7 @@ export type ChatMessageContentProps = {
   message: UIMessage;
   isLast?: boolean;
   isLoading?: boolean;
-  reload?: () => Promise<string | null | undefined>;
+ 
   addToolResult?: (args: { toolCallId: string; result: string }) => void;
   skipToolRendering?: boolean;
 };

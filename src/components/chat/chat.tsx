@@ -69,7 +69,6 @@ const Chat: React.FC = () => {
     status,
     stop,
     setMessages,
-    reload,
     addToolResult,
     append,
   } = useChat({
@@ -370,7 +369,7 @@ const Chat: React.FC = () => {
                     <motion.div {...MOTION_CONFIG} className="mx-auto flex max-w-7xl px-4 mt-4">
                       <ChatBubble variant="sent">
                         <ChatBubbleMessage>
-                          <ChatMessageContent message={latestUserMessage} isLast={true} isLoading={false} reload={() => Promise.resolve(null)} />
+                          <ChatMessageContent message={latestUserMessage} isLast={true} isLoading={false} />
                         </ChatBubbleMessage>
                       </ChatBubble>
                     </motion.div>
@@ -405,7 +404,7 @@ const Chat: React.FC = () => {
                     </motion.div>
                   ) : currentAIMessage ? (
                     <div className="w-full space-y-6">
-                      <SimplifiedChatView message={currentAIMessage} isLoading={isLoading} reload={reload} addToolResult={addToolResult} />
+                      <SimplifiedChatView message={currentAIMessage} isLoading={isLoading} addToolResult={addToolResult} />
                       
                       {currentAIMessage.parts?.map((part: any, index: number) => {
                         if (part.type === 'tool-invocation') {
