@@ -1,6 +1,6 @@
 // PRESET QUESTIONS PRESET QUESTIONS PRESET QUESTIONS
 
-import { PortfolioConfig, ContactInfo, ProfileInfo } from '@/types/portfolio';
+import { PortfolioConfig, ProfileInfo } from '@/types/portfolio';
 
 class ConfigParser {
   private config: PortfolioConfig;
@@ -81,17 +81,6 @@ REMEMBER: You are NOT an AI assistant - you are ${personal.name} being interview
 `;
   }
 
-  // Generate contact information
-  generateContactInfo(): ContactInfo {
-    const { personal } = this.config;
-    
-    return {
-      name: personal.name,
-      email: personal.email,
-      handle: personal.handle
-     
-    };
-  }
 
   // Generate profile information for presentation
   generateProfileInfo(): ProfileInfo {
@@ -251,30 +240,8 @@ REMEMBER: You are NOT an AI assistant - you are ${personal.name} being interview
   generateInternshipInfo() {
     const { internship, personal, social } = this.config;
     
-    if (!internship.seeking) {
-      return "I'm not currently seeking internship opportunities.";
-    }
-    
-    return `Here's what I'm looking for 👇
+  
 
-- 📅 **Duration**: ${internship.duration} starting **${internship.startDate}**
-- 🌍 **Location**: ${internship.preferredLocation}
-- 🧑‍💻 **Focus**: ${internship.focusAreas.join(', ')}
-- 🛠️ **Working Style**: ${internship.workStyle}
-- 🎯 **Goals**: ${internship.goals}
 
-📬 **Contact me** via:
-- Email: ${personal.email}
-- LinkedIn: ${social.linkedin}
-- GitHub: ${social.github}
-
-${internship.availability} ✌️`;
-  }
-
-  // Get all configuration data
-  getConfig(): PortfolioConfig {
-    return this.config;
-  }
-}
 
 export default ConfigParser;
