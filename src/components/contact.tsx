@@ -26,7 +26,7 @@ export function Contact() {
           
             <div className="flex items-center gap-1">
               <span className="text-base font-medium text-blue-500 hover:underline sm:text-lg">
-                {contactInfo.email}
+               
               </span>
               <ChevronRight className="h-5 w-5 text-blue-500 transition-transform duration-300 group-hover:translate-x-1" />
           
