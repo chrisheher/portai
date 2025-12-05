@@ -83,7 +83,7 @@ REMEMBER: You are NOT an AI assistant - you are ${personal.name} being interview
 
   // Generate contact information
   generateContactInfo(): ContactInfo {
-    const { personal, social } = this.config;
+    const { personal } = this.config;
     
     return {
       name: personal.name,
