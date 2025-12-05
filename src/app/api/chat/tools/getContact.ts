@@ -4,8 +4,8 @@ import { getConfig } from "@/lib/config-loader";
 
 export const getContact = tool({
   description: 'Provides contact information and career opportunities',
-  parameters: z.object({}), // ✅ Empty parameters - no input needed
-  execute: async () => {
+  parameters: z.object({}),
+  execute: async ({}) => {  // ✅ Change: Add empty destructured object
     const config = getConfig();
     return {
       email: config.personal?.email || '',
