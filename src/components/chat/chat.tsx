@@ -98,9 +98,7 @@ const Chat: React.FC = () => {
   },
 });
 
-// Derive isLoading from status for backward compatibility
-const isLoading = status === 'in_progress';
-  // Derive isLoading from status for backward compatibility
+// Derive isLoading from status for backward  // Derive isLoading from status for backward compatibility
   const isLoading = status === 'in_progress';
 
   const { currentAIMessage, latestUserMessage, hasActiveTool } = useMemo(() => {
