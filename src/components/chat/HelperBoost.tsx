@@ -44,8 +44,16 @@ const questions = {
     'How can I reach you? What kind of project would make you say "yes" immediately?',
 };
 
-const questionConfig = [
- 
+interface QuestionConfig {
+  // Define your question config structure here
+  question?: string;
+key: string;        // Add this
+  color: string;      // Make sure this exists
+  icon: any; 
+}
+
+const questionConfig: QuestionConfig[] = [
+  
 ];
 
 const specialQuestions = [

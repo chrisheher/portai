@@ -5,8 +5,8 @@ import { getConfig } from '@/lib/config-loader';
 export const getResume = tool({
   description:
     'This tool provides comprehensive resume information including professional experience, education, and achievements.',
-  parameters: z.object({}),
-  execute: async ({}) => {
+  inputSchema: z.object({}),  // Changed from 'parameters' to 'inputSchema'
+  execute: async () => {  // Changed from '({})' to '()' since there are no parameters
     const config = getConfig();
     
     return {
@@ -16,11 +16,7 @@ export const getResume = tool({
         location: config.personal.location,
         title: config.personal.title,
         profiles: {
-          github: config.social.github,
-          linkedin: config.social.linkedin,
-          twitter: config.social.twitter,
-          kaggle: config.social.kaggle,
-          leetcode: config.social.leetcode
+       
         }
       },
       summary: config.personal.bio,
