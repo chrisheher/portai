@@ -3,7 +3,6 @@ import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { Button, ButtonProps } from "../button";
 import MessageLoading from "./message-loading";
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 
 // ChatBubble
@@ -70,16 +69,7 @@ const ChatBubbleAvatar: React.FC<ChatBubbleAvatarProps> = ({
   width,
   height,
 }) => (
-  <Avatar>
-    <AvatarImage
-      src={src}
-      alt="Avatar"
-      className={className}
-      width={width}
-      height={height}
-    />
-    <AvatarFallback>{fallback}</AvatarFallback>
-  </Avatar>
+ 
 );
 
 // ChatBubbleMessage
