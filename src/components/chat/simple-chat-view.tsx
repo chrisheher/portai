@@ -5,7 +5,7 @@ import {
   ChatBubbleMessage,
 } from '@/components/ui/chat/chat-bubble';
 import { ChatRequestOptions } from 'ai';
-import { Message } from 'ai/react';
+import { Message } from 'ai';
 import { motion } from 'framer-motion';
 import ChatMessageContent from './chat-message-content';
 import ToolRenderer from './tool-renderer';
