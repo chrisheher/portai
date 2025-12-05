@@ -89,7 +89,6 @@ try {
       professional: [],
       projects: [],
       achievements: [],
-      contact: [],
       fun: []
     },
     presetAnswers: {
@@ -99,7 +98,6 @@ try {
       resume: '',
       achievements: '',
       opportunities: '',
-      contact: '',
       fun: '',
       professional: ''
     },
@@ -136,14 +134,7 @@ export const systemPrompt = (() => {
   }
 })();
 
-export const contactInfo = (() => {
-  try {
-    return configParser.generateContactInfo();
-  } catch (error) {
-    console.error('❌ Error generating contact info:', error);
-    return {};
-  }
-})();
+
 
 export const profileInfo = (() => {
   try {
@@ -206,7 +197,6 @@ export const internshipInfo = (() => {
 // Log configuration status
 console.log('🔧 Config Loader Status:');
 console.log('  - System Prompt:', systemPrompt ? '✅ Loaded' : '❌ Missing');
-console.log('  - Contact Info:', Object.keys(contactInfo).length > 0 ? '✅ Loaded' : '❌ Missing');
 console.log('  - Profile Info:', Object.keys(profileInfo).length > 0 ? '✅ Loaded' : '❌ Missing');
 console.log('  - Skills Data:', skillsData.length > 0 ? `✅ ${skillsData.length} skills` : '❌ Missing');
 console.log('  - Project Data:', projectData.length > 0 ? `✅ ${projectData.length} projects` : '❌ Missing');
