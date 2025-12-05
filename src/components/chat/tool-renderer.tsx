@@ -34,7 +34,7 @@ export default function ToolRenderer({
          case 'getProjects':
             return (
               <div key={toolCallId} className="w-full overflow-hidden rounded-lg">
-                <AllProjects data={result} />
+                <AllProjects />
               </div>
             );
 
@@ -55,21 +55,21 @@ export default function ToolRenderer({
           case 'getContact':
             return (
               <div key={toolCallId} className="w-full rounded-lg">
-                <Contact data={result} />
+                <Contact />
               </div>
             );
 
           case 'getSkills':
             return (
               <div key={toolCallId} className="w-full rounded-lg">
-                <Skills data={result} />
+                <Skills />
               </div>
             );
 
           case 'getInternship':
             return (
               <div key={toolCallId} className="w-full rounded-lg">
-                <AvailabilityCard data={result} />
+                <AvailabilityCard />
               </div>
             );
 
