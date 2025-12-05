@@ -17,14 +17,14 @@ FILTER DECISION RULES (FOLLOW THESE EXACTLY):
 
 IMPORTANT: Extract these from natural language. Don't require exact phrasing.`,
   
-  parameters: z.object({
+  inputSchema: z.object({  // Changed from 'parameters' to 'inputSchema'
     category: z.string().optional().describe("EXTRACT from queries mentioning: SaaS, DevOps, Developer Relations, GTM, content strategy, pharmaceuticals, etc."),
     techStack: z.string().optional().describe("EXTRACT from queries mentioning: React, Python, Ceros, Gemini, Next.js, TypeScript, etc."),
     featured: z.boolean().optional().describe("SET TO TRUE when user asks for: best, featured, top, favorite, proud projects"),
     keyword: z.string().optional().describe("EXTRACT company names (DroneDeploy, Sentry, Airbnb) or topics (AI, automation) from the query"),
   }),
   
-  execute: async ({ category, techStack, featured, keyword }) => {
+  execute: async ({ category, techStack, featured, keyword }) => {  // No type annotation needed
     console.log('🔧 getProjects called with params:', { category, techStack, featured, keyword });
     
     let projects = projectData || [];
