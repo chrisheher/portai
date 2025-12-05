@@ -54,7 +54,6 @@ interface PresetReplyType {
 const Chat: React.FC = () => {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get('query');
-
   const [input, setInput] = useState('');
   const [autoSubmitted, setAutoSubmitted] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -67,8 +66,7 @@ const Chat: React.FC = () => {
 
 
   const {
-  messages,
-  submit,  // Changed from handleSubmit
+  messages,// Changed from handleSubmit
   isLoading,
   stop,
   setMessages,
