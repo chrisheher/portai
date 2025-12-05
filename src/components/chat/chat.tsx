@@ -104,7 +104,7 @@ const {
 });
 
 // Derive isLoading from status for backward compatibility
-const isLoading = status === 'in_progress';
+
 // Derive isLoading from status for backward  // Derive isLoading from status for backward compatibility
   const isLoading = status === 'in_progress';
 
