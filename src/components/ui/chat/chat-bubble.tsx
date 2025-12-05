@@ -53,14 +53,7 @@ const ChatBubble = React.forwardRef<HTMLDivElement, ChatBubbleProps>(
 );
 ChatBubble.displayName = "ChatBubble";
 
-// ChatBubbleAvatar
-interface ChatBubbleAvatarProps {
-  src?: string;
-  fallback?: string;
-  className?: string;
-  width?: number;
-  height?: number;
-}
+
 
 
 
@@ -185,7 +178,7 @@ ChatBubbleActionWrapper.displayName = "ChatBubbleActionWrapper";
 
 export {
 	ChatBubble, ChatBubbleAction,
-	ChatBubbleActionWrapper, ChatBubbleAvatar,
+	ChatBubbleActionWrapper,,
 	ChatBubbleMessage, chatBubbleMessageVariants, ChatBubbleTimestamp,
 	chatBubbleVariant
 };
