@@ -104,7 +104,7 @@ const {
 });
 
 
-const isLoading = status === 'submitting';
+const isLoading = status !== 'idle';
   const { currentAIMessage, latestUserMessage, hasActiveTool } = useMemo(() => {
     const latestAI = messages.findLastIndex((m) => m.role === 'assistant');
     const latestUser = messages.findLastIndex((m) => m.role === 'user');
