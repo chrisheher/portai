@@ -109,7 +109,7 @@ try {
       generatedBy: 'Fallback Config',
       description: 'Emergency fallback configuration'
     }
-  } as PortfolioConfig;
+  } as unknown as PortfolioConfig;
 }
 
 // Create a parser instance
