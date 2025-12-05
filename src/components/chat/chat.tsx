@@ -124,12 +124,11 @@ const isLoading = loadingSubmit;
     return result;
   }, [messages]);
 
-  const isToolInProgress = messages.some(
-    (m) =>
-      m.role === 'assistant' &&
-      m.parts?.some((part) => part.type === 'tool-invocation' && part.toolInvocation?.state !== 'result')
-  );
-
+const isToolInProgress = messages.some(
+  (m) =>
+    m.role === 'assistant' &&
+    m.parts?.some((part) => part.type === 'tool-call')
+);
   /** --- Handlers --- */
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
