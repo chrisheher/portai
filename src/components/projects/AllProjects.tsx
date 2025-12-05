@@ -12,6 +12,15 @@ interface AllProjectsProps {
     category?: string;
   };
 }
+interface Project {
+  title: string;
+  category?: string;
+  src?: string;
+  content?: React.ReactNode;
+  type?: 'project' | 'question';
+  prompt?: string;
+  // Add any other properties your Project has
+}
 
 export default function AllProjects({ data: toolData }: AllProjectsProps) {
   const [selectedProjectIndex, setSelectedProjectIndex] = useState<number | null>(null);
@@ -83,10 +92,11 @@ export default function AllProjects({ data: toolData }: AllProjectsProps) {
 
 const handleShapeClick = (item: Project) => {
   const projectTitle = item.title;
-    if (index !== -1) {
-      setSelectedProjectIndex(index);
-    }
-  };
+  const index = projectsToDisplay.findIndex(p => p.title === projectTitle);
+  if (index !== -1) {
+    setSelectedProjectIndex(index);
+  }
+};
 
   const handleCardClose = () => {
     setSelectedProjectIndex(null);
