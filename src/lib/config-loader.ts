@@ -20,7 +20,9 @@ try {
       title: 'Error Loading Config',
       email: 'error@example.com',
       handle: '@error',
-      bio: 'Error loading configuration'
+      bio: 'Error loading configuration',
+          avatar: '',  // Add this
+    fallbackAvatar: '' // Add this
     },
     education: {
       current: {
