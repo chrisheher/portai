@@ -13,9 +13,14 @@ import ToolRenderer from './tool-renderer';
 interface SimplifiedChatViewProps {
   message: UIMessage;
   isLoading: boolean;
-  
+  addToolResult?: <TOOL extends string>(params: {
+    state?: 'output-available';
+    tool: TOOL;
+    toolCallId: string;
+    output: unknown;
+    errorText?: string;
+  }) => Promise<void>;
 }
-
 const MOTION_CONFIG = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
