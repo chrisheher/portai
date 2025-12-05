@@ -27,7 +27,7 @@ export default function ToolRenderer({
          case 'analyzeJob':
   return (
     <div key={toolCallId} className="w-full overflow-hidden rounded-lg">
-      <JobAnalysisDisplay />
+      <JobAnalysisDisplay data={result} />
     </div>
   );
          
