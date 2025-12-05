@@ -142,12 +142,13 @@ export const analyzeJob = tool({
   parameters: z.object({
     jobDescription: z.string().describe('The job description text or URL to analyze'),
   }),
-  execute: async ({ jobDescription }) => {
+  execute: async ({ jobDescription }: { jobDescription: string }) => {
     if (!jobDescription || !jobDescription.trim()) {
       throw new Error('Job description is required');
     }
 
     let jobContent = jobDescription.trim();
+    
 
     // If it's a URL, return a helpful message instead of trying to fetch
     if (isURL(jobContent)) {
