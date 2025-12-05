@@ -113,12 +113,12 @@ const isLoading = loadingSubmit;
       hasActiveTool: false,
     };
 
-    if (result.currentAIMessage) {
-      result.hasActiveTool =
-        result.currentAIMessage.parts?.some(
-          (part) => part.type === 'tool-invocation' && part.toolInvocation?.state === 'result'
-        ) || false;
-    }
+  if (result.currentAIMessage) {
+  result.hasActiveTool =
+    result.currentAIMessage.parts?.some(
+      (part) => part.type === 'tool-result'
+    ) || false;
+}
 
     if (latestAI < latestUser) result.currentAIMessage = null;
     return result;
