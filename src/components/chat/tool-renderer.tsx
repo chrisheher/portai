@@ -41,7 +41,7 @@ export default function ToolRenderer({
           case 'getPresentation':
             return (
               <div key={toolCallId} className="w-full overflow-hidden rounded-lg">
-                <Presentation data={result} />
+                <Presentation />
               </div>
             );
 
