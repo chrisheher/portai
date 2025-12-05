@@ -92,14 +92,14 @@ try {
       fun: []
     },
     presetAnswers: {
-      me: '',
-      skills: '',
-      projects: '',
-      resume: '',
-      achievements: '',
-      opportunities: '',
-      fun: '',
-      professional: ''
+      me: [],
+      skills: [],
+      projects: [],
+      resume: [],
+      achievements: [],
+      opportunities: [],
+      fun: [],
+      professional: []
     },
     meta: {
       configVersion: '1.0.0',
@@ -136,14 +136,6 @@ export const systemPrompt = (() => {
 
 
 
-export const profileInfo = (() => {
-  try {
-    return configParser.generateProfileInfo();
-  } catch (error) {
-    console.error('❌ Error generating profile info:', error);
-    return {};
-  }
-})();
 
 export const skillsData = (() => {
   try {
@@ -185,21 +177,11 @@ export const resumeDetails = (() => {
   }
 })();
 
-export const internshipInfo = (() => {
-  try {
-    return configParser.generateInternshipInfo();
-  } catch (error) {
-    console.error('❌ Error generating internship info:', error);
-    return {};
-  }
-})();
 
 // Log configuration status
 console.log('🔧 Config Loader Status:');
 console.log('  - System Prompt:', systemPrompt ? '✅ Loaded' : '❌ Missing');
-console.log('  - Profile Info:', Object.keys(profileInfo).length > 0 ? '✅ Loaded' : '❌ Missing');
 console.log('  - Skills Data:', skillsData.length > 0 ? `✅ ${skillsData.length} skills` : '❌ Missing');
 console.log('  - Project Data:', projectData.length > 0 ? `✅ ${projectData.length} projects` : '❌ Missing');
 console.log('  - Preset Replies:', Object.keys(presetReplies).length > 0 ? `✅ ${Object.keys(presetReplies).length} replies` : '❌ Missing');
 console.log('  - Resume Details:', Object.keys(resumeDetails).length > 0 ? '✅ Loaded' : '❌ Missing');
-console.log('  - Internship Info:', Object.keys(internshipInfo).length > 0 ? '✅ Loaded' : '❌ Missing');

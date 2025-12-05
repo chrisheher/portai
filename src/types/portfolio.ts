@@ -1,3 +1,21 @@
+export interface PortfolioConfig {
+  personal: PersonalInfo;
+  education: Education;
+  experience: Experience[];
+  skills: Skills;
+  projects: Project[];
+  social: Social;
+  personality: Personality;
+  resume: Resume;
+  chatbot: Chatbot;
+  presetQuestions: PresetQuestions;
+
+  // ✅ Add this line so ConfigParser can access it
+  presetAnswers: presetAnswers;
+
+  meta: Meta;
+}
+
 export interface PersonalInfo {
   name: string;
   age: number;
@@ -70,20 +88,11 @@ export interface Social {
   
 }
 
-export interface Internship {
-  seeking: boolean;
-  duration: string;
-  startDate: string;
-  preferredLocation: string;
-  focusAreas: string[];
-  availability: string;
-  workStyle: string;
-  goals: string;
-}
+
 
 export interface Personality {
-  traits: string[reading];
-  interests: string[basketball];
+  traits: string[];
+  interests: string[];
   funFacts: string[];
   workingStyle: string;
   motivation: string;
@@ -99,7 +108,7 @@ export interface Resume {
 }
 
 
-export interface PresetAnswers {
+export interface presetAnswers {
   me: string;
   skills: string;
   projects: string;
@@ -128,6 +137,7 @@ export interface PresetQuestions {
   projects: string[];
   contact: string[];
   fun: string[];
+  achievements: string[];
 }
 
 export interface Meta {
@@ -137,20 +147,7 @@ export interface Meta {
   description: string;
 }
 
-export interface PortfolioConfig {
-  personal: PersonalInfo;
-  education: Education;
-  experience: Experience[];
-  skills: Skills;
-  projects: Project[];
-  social: Social;
-  internship: Internship;
-  personality: Personality;
-  resume: Resume;
-  chatbot: Chatbot;
-  presetQuestions: PresetQuestions;
-  meta: Meta;
-}
+
 
 // Utility types for component props
 export interface ProjectContentProps {
@@ -184,3 +181,5 @@ export interface SkillCategory {
   skills: string[];
   color: string;
 }
+
+

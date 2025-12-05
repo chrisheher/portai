@@ -130,6 +130,7 @@ const ProjectContent = ({ project }: { project: { title: string } }) => {
                   alt={image.alt}
                   width={800}
                   height={600}
+                  unoptimized
                   className="w-full h-auto transition-transform"
                 />
               </div>

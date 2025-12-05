@@ -18,6 +18,13 @@ interface TumblingShapesProps {
   onShapeClick?: (item: Project) => void;
 }
 
+const roughenVertices = (vertices: { x: number; y: number }[], roughness: number = 0.4) => {
+  return vertices.map(v => ({
+    x: v.x + (Math.random() - 0.5) * roughness * 50,
+    y: v.y + (Math.random() - 0.5) * roughness * 50
+  }));
+};
+
 const TumblingShapes: React.FC<TumblingShapesProps> = ({ 
   projects, 
   filterCategory,
@@ -77,14 +84,12 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
     
     const getShapeColor = (category: string, type: string) => {
       if (type === 'link') {
-        return '#3b82f6'; // Blue color for links
+        return '#3b82f6';
       }
       
-      // Your existing color logic for projects and questions
       switch (category.toLowerCase()) {
         case 'web': return '#FF6B6B';
         case 'ml/ai': return '#4ECDC4';
-        // ... rest of your categories
         default: return '#95E1D3';
       }
     };
@@ -95,15 +100,14 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
       const height = size;
       const thickness = size * 0.15;
       
-      // Create vertices for "<" shape (two lines forming an angle)
-      const vertices = [
+      const vertices = roughenVertices([
         { x: width / 2, y: -height / 2 },
         { x: width / 2 - thickness, y: -height / 2 + thickness },
         { x: -width / 2 + thickness, y: 0 },
         { x: width / 2 - thickness, y: height / 2 - thickness },
         { x: width / 2, y: height / 2 },
         { x: -width / 2, y: 0 }
-      ] as { x: number; y: number }[];
+      ], 0.3);
       
       return Bodies.fromVertices(x, y, [vertices], options);
     };
@@ -115,9 +119,7 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
       const thickness = size * 0.12;
       const curveDepth = width * 0.4;
       
-      // Approximate brace with vertices
-      const vertices = [
-        // Top curve
+      const vertices = roughenVertices([
         { x: -width / 2, y: -height / 2 },
         { x: -width / 2 + thickness, y: -height / 2 },
         { x: -width / 2 + thickness, y: -height / 4 },
@@ -130,7 +132,7 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
         { x: curveDepth - thickness, y: height / 8 },
         { x: curveDepth - thickness, y: -height / 8 },
         { x: -width / 2, y: -height / 4 }
-      ] as { x: number; y: number }[];
+      ], 0.3);
       
       return Bodies.fromVertices(x, y, [vertices], options);
     };
@@ -141,7 +143,6 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
       const height = size;
       const thickness = size * 0.12;
       
-      // Create curved parenthesis with vertices
       const segments = 12;
       const outerVertices = [];
       const innerVertices = [];
@@ -159,7 +160,7 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
         });
       }
       
-      const vertices = [...outerVertices, ...innerVertices] as { x: number; y: number }[];
+      const vertices = roughenVertices([...outerVertices, ...innerVertices], 0.3);
       return Bodies.fromVertices(x, y, [vertices], options);
     };
 
@@ -169,9 +170,7 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
       const tailLength = size * 0.3;
       const tailWidth = size * 0.15;
       
-      // Create comma as combination of circle (dot) and tail
-      const vertices = [
-        // Dot part (top circle approximation)
+      const vertices = roughenVertices([
         { x: dotRadius, y: -dotRadius },
         { x: dotRadius * 0.7, y: -dotRadius * 1.3 },
         { x: 0, y: -dotRadius * 1.4 },
@@ -179,13 +178,12 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
         { x: -dotRadius, y: -dotRadius },
         { x: -dotRadius, y: 0 },
         { x: -dotRadius * 0.7, y: dotRadius * 0.7 },
-        // Tail part
         { x: 0, y: dotRadius },
         { x: tailWidth, y: dotRadius },
         { x: -tailWidth / 2, y: tailLength },
         { x: -tailWidth, y: dotRadius },
         { x: -dotRadius * 0.7, y: dotRadius * 0.7 }
-      ] as { x: number; y: number }[];
+      ], 0.3);
       
       return Bodies.fromVertices(x, y, [vertices], options);
     };
@@ -221,22 +219,51 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
       };
 
       if (category.type === 'circle') {
-        body = Bodies.circle(category.x, category.y, category.size / 2, options);
+        const segments = 32;
+        const radius = category.size / 2;
+        const circleVertices = [];
+        for (let i = 0; i < segments; i++) {
+          const angle = (i / segments) * Math.PI * 2;
+          circleVertices.push({
+            x: Math.cos(angle) * radius,
+            y: Math.sin(angle) * radius
+          });
+        }
+        const roughCircle = roughenVertices(circleVertices, 0.3);
+        body = Bodies.fromVertices(category.x, category.y, [roughCircle], options);
       } else if (category.type === 'rectangle') {
-        body = Bodies.rectangle(category.x, category.y, category.size, category.size * .2, options);
+        const w = category.size;
+        const h = category.size * 0.2;
+        const rectVertices = roughenVertices([
+          { x: -w / 2, y: -h / 2 },
+          { x: w / 2, y: -h / 2 },
+          { x: w / 2, y: h / 2 },
+          { x: -w / 2, y: h / 2 },
+        ], 0.3);
+        body = Bodies.fromVertices(category.x, category.y, [rectVertices], options);
       } else if (category.type === 'polygon') {
         const sides = 5 + Math.floor(Math.random() * 2);
-        body = Bodies.polygon(category.x, category.y, sides, category.size / 2, options);
+        const radius = category.size / 2;
+        const polygonVertices = [];
+        for (let i = 0; i < sides; i++) {
+          const angle = (i / sides) * Math.PI * 2;
+          polygonVertices.push({
+            x: Math.cos(angle) * radius,
+            y: Math.sin(angle) * radius
+          });
+        }
+        const roughPolygon = roughenVertices(polygonVertices, 0.3);
+        body = Bodies.fromVertices(category.x, category.y, [roughPolygon], options);
       } else if (category.type === 'trapezoid') {
         const w = category.size;
         const h = category.size * 0.4;
         const topWidth = w * 0.6;
-        const vertices = [
+        const vertices = roughenVertices([
           { x: -topWidth / 2, y: -h / 2 },
           { x: topWidth / 2, y: -h / 2 },
           { x: w / 2, y: h / 2 },
           { x: -w / 2, y: h / 2 },
-        ] as { x: number; y: number }[];
+        ], 0.3);
         body = Bodies.fromVertices(category.x, category.y, [vertices], options);
       } else if (category.type === 'lessThan') {
         body = createLessThanShape(category.x, category.y, category.size, options);
@@ -301,12 +328,11 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
     // Helper function to fit text within shape bounds
     const fitTextInShape = (ctx: CanvasRenderingContext2D, text: string, maxWidth: number, maxHeight: number) => {
       const words = text.split(' ');
-      let fontSize = 14;
+      let fontSize = 12;
       let lines: string[] = [];
       let fits = false;
 
-      // Try decreasing font sizes until text fits
-      while (fontSize >= 8 && !fits) {
+      while (fontSize >= 6 && !fits) {
         ctx.font = `bold ${fontSize}px Arial`;
         lines = [];
         let currentLine = '';
@@ -324,8 +350,7 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
         }
         if (currentLine) lines.push(currentLine);
 
-        // Check if total height fits
-        const totalHeight = lines.length * (fontSize + 4);
+        const totalHeight = lines.length * (fontSize + 2);
         if (totalHeight <= maxHeight) {
           fits = true;
         } else {
@@ -355,16 +380,28 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
         ctx.fillStyle = hoveredShape === shape ? hoverColor : baseColor;
         ctx.strokeStyle = 'transparent';
         ctx.lineWidth = 0;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
 
-        // Draw shape
+        // Draw shape - the vertices already have roughness baked in
         if (shape.type === 'circle') {
+          const vertices = shape.body.vertices;
           ctx.beginPath();
-          ctx.arc(0, 0, shape.size / 2, 0, Math.PI * 2);
+          ctx.moveTo(vertices[0].x - pos.x, vertices[0].y - pos.y);
+          for (let i = 1; i < vertices.length; i++) {
+            ctx.lineTo(vertices[i].x - pos.x, vertices[i].y - pos.y);
+          }
+          ctx.closePath();
           ctx.fill();
         } else if (shape.type === 'rectangle') {
-          const w = shape.size * 1.3;
-          const h = shape.size * 0.3;
-          ctx.fillRect(-w / 2, -h / 2, w, h);
+          const vertices = shape.body.vertices;
+          ctx.beginPath();
+          ctx.moveTo(vertices[0].x - pos.x, vertices[0].y - pos.y);
+          for (let i = 1; i < vertices.length; i++) {
+            ctx.lineTo(vertices[i].x - pos.x, vertices[i].y - pos.y);
+          }
+          ctx.closePath();
+          ctx.fill();
         } else if (shape.type === 'polygon' || shape.type === 'trapezoid' || 
                    shape.type === 'lessThan' || shape.type === 'brace' || 
                    shape.type === 'paren' || shape.type === 'comma') {
@@ -378,34 +415,44 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
           ctx.fill();
         }
 
+        // Add paper texture overlay
+        ctx.globalAlpha = 0.08;
+        for (let i = 0; i < 15; i++) {
+          ctx.fillStyle = Math.random() > 0.5 ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)';
+          const texX = -shape.size/2 + Math.random() * shape.size;
+          const texY = -shape.size/2 + Math.random() * shape.size;
+          ctx.fillRect(texX, texY, Math.random() * 8, Math.random() * 8);
+        }
+        ctx.globalAlpha = 1;
+
         // Calculate available space for text based on shape type
         let maxWidth = shape.size * 0.7;
         let maxHeight = shape.size * 0.6;
-        
+
         if (shape.type === 'circle') {
-          maxWidth = shape.size * 0.7;
-          maxHeight = shape.size * 0.6;
+          maxWidth = shape.size * 0.55;
+          maxHeight = shape.size * 0.45;
         } else if (shape.type === 'rectangle') {
-          maxWidth = shape.size * 0.9;
-          maxHeight = shape.size * 0.15;
+          maxWidth = shape.size * 1.1;
+          maxHeight = shape.size * 0.2;
         } else if (shape.type === 'polygon') {
-          maxWidth = shape.size * 0.6;
-          maxHeight = shape.size * 0.6;
+          maxWidth = shape.size * 0.45;
+          maxHeight = shape.size * 0.45;
         } else if (shape.type === 'trapezoid') {
-          maxWidth = shape.size * 0.5;
-          maxHeight = shape.size * 0.3;
-        } else if (shape.type === 'lessThan') {
           maxWidth = shape.size * 0.4;
-          maxHeight = shape.size * 0.5;
-        } else if (shape.type === 'brace') {
-          maxWidth = shape.size * 0.3;
-          maxHeight = shape.size * 0.6;
-        } else if (shape.type === 'paren') {
-          maxWidth = shape.size * 0.25;
-          maxHeight = shape.size * 0.6;
-        } else if (shape.type === 'comma') {
+          maxHeight = shape.size * 0.25;
+        } else if (shape.type === 'lessThan') {
           maxWidth = shape.size * 0.3;
           maxHeight = shape.size * 0.4;
+        } else if (shape.type === 'brace') {
+          maxWidth = shape.size * 0.25;
+          maxHeight = shape.size * 0.5;
+        } else if (shape.type === 'paren') {
+          maxWidth = shape.size * 0.2;
+          maxHeight = shape.size * 0.5;
+        } else if (shape.type === 'comma') {
+          maxWidth = shape.size * 0.25;
+          maxHeight = shape.size * 0.3;
         }
 
         // Fit text within calculated bounds

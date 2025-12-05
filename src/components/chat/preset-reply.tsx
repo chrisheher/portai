@@ -11,9 +11,7 @@ import { ChatBubble, ChatBubbleMessage } from '@/components/ui/chat/chat-bubble'
 import { Presentation } from '@/components/presentation';
 import AllProjects from '@/components/projects/AllProjects';
 import Skills from '@/components/skills';
-import { Contact } from '@/components/contact';
 import Resume from '@/components/resume';
-import AvailabilityCard from '@/components/AvailabilityCard';
 
 interface PresetReplyProps {
   question: string;
@@ -55,12 +53,7 @@ export function PresetReply({ question, reply, tool, onGetAIResponse, onClose }:
           </div>
         );
       
-      case 'getContact':
-        return (
-          <div className="w-full rounded-lg mb-4">
-            <Contact />
-          </div>
-        );
+   
       
       case 'getResume':
         return (
@@ -69,12 +62,7 @@ export function PresetReply({ question, reply, tool, onGetAIResponse, onClose }:
           </div>
         );
       
-      case 'getInternship':
-        return (
-          <div className="w-full rounded-lg mb-4">
-            <AvailabilityCard />
-          </div>
-        );
+     
       
       default:
         return null;

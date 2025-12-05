@@ -87,7 +87,7 @@ export default function ChatMessageContent({
           {contentParts.map((content, i) =>
             i % 2 === 0 ? (
               // Regular text content
-              <div key={`text-${i}`} className="prose dark:prose-invert w-full">
+              <div key={`text-${i}`} className="prose dark:prose-invert w-2/3">
                 <Markdown
                   remarkPlugins={[remarkGfm]}
                   components={{

@@ -1,5 +1,4 @@
 // src/components/chat/tool-renderer.tsx
-import { Contact } from '../contact';
 import AvailabilityCard from '../AvailabilityCard';
 import { Presentation } from '../presentation';
 import AllProjects from '../projects/AllProjects';
@@ -45,19 +44,9 @@ export default function ToolRenderer({
               </div>
             );
 
-          case 'getResume':
-            return (
-              <div key={toolCallId} className="w-full rounded-lg">
-                <Resume />
-              </div>
-            );
 
-          case 'getContact':
-            return (
-              <div key={toolCallId} className="w-full rounded-lg">
-                <Contact />
-              </div>
-            );
+
+     
 
           case 'getSkills':
             return (
@@ -66,12 +55,7 @@ export default function ToolRenderer({
               </div>
             );
 
-          case 'getInternship':
-            return (
-              <div key={toolCallId} className="w-full rounded-lg">
-                <AvailabilityCard />
-              </div>
-            );
+   
 
           default:
             return (

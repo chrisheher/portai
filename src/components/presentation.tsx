@@ -3,11 +3,10 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import React from 'react';
-import { profileInfo } from '@/lib/config-loader';
 
 export function Presentation() {
   // Personal information now loaded from configuration
-  const profile = profileInfo;
+ 
 
   // Animation variants for text elements
   const textVariants = {

@@ -1,6 +1,6 @@
 // PRESET QUESTIONS PRESET QUESTIONS PRESET QUESTIONS
 
-import { PortfolioConfig, ProfileInfo } from '@/types/portfolio';
+import { PortfolioConfig } from '@/types/portfolio';
 
 class ConfigParser {
   private config: PortfolioConfig;
@@ -12,7 +12,7 @@ class ConfigParser {
   // Generate system prompt for AI chatbot
   // Generate system prompt for AI chatbot
   generateSystemPrompt(): string {
-    const { personal, education, experience, skills, projects, personality, internship } = this.config;
+    const { personal, education, experience, skills, projects, presetAnswers } = this.config;
     
     return `
 # Interview Scenario: You are a professional scout delivering a scouting report on ${personal.name}
@@ -62,12 +62,7 @@ ${projects.filter(p => p.featured).map(p => `- ${p.title}: ${p.description}`).jo
 
 
 ### Career Goals & Availability
-${internship.seeking ? `
-- Seeking: ${internship.duration} internship/position starting ${internship.startDate}
-- Focus Areas: ${internship.focusAreas.join(', ')}
-- Career Goals: ${internship.goals}
-- Availability: ${internship.availability}
-` : ''}
+
 
 ## Interview Guidelines
 
@@ -82,17 +77,7 @@ REMEMBER: You are NOT an AI assistant - you are ${personal.name} being interview
   }
 
 
-  // Generate profile information for presentation
-  generateProfileInfo(): ProfileInfo {
-    const { personal } = this.config;
-    
-    return {
-      name: personal.name,
-      age: `${personal.age} years old`,
-      location: personal.location,
-      description: personal.bio
-    };
-  }
+ 
 
   // Generate skills data with categories
   generateSkillsData() {
@@ -151,26 +136,15 @@ REMEMBER: You are NOT an AI assistant - you are ${personal.name} being interview
   // Generate preset replies based on questions
   generatePresetReplies() {
     const { personal, presetAnswers } = this.config;
-    
     const replies: Record<string, { reply: string; tool: string }> = {};
     
     // Map all "me" category questions to getPresentation
-    const meQuestions = this.config.presetQuestions.me;
-    meQuestions.forEach(question => {
-      replies[question] = {
-        reply: presetAnswers?.me || personal.bio,
-        tool: "getPresentation"
-      };
-    });
+   
 
   //vs ai      
-    replies["versus ai"] = {
-  reply: presetAnswers?.versusAI
-};
 
- replies["List your technical skills"] = {
-  reply: presetAnswers?.skillList
-};
+
+
     
     
     // Map all "professional" category questions to appropriate tools
@@ -185,11 +159,6 @@ REMEMBER: You are NOT an AI assistant - you are ${personal.name} being interview
         replies[question] = {
           reply: presetAnswers?.resume || `Here's my resume with all the details...`,
           tool: "getResume"
-        };
-      } else if (question.toLowerCase().includes('internship') || question.toLowerCase().includes('hire')) {
-        replies[question] = {
-          reply: presetAnswers?.opportunities || `Here are my current opportunities and availability...`,
-          tool: "getInternship"
         };
       } else {
         replies[question] = {

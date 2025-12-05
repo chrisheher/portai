@@ -1,7 +1,6 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  plugins: ["@tailwindcss/postcss"],
   content: [
     './src/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
@@ -9,13 +8,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
-    fontFamily: {
-    
+      fontFamily: {
         mono: ['JetBrains Mono', 'monospace'],
       },
-      },
+    },
   },
-  plugins: [],
+  plugins: [], // ✅ simplest and correct for your case
 };
 
 export default config;

@@ -74,14 +74,36 @@
       
       
       {
-      "company": "Cincoro",
+      "title": "Cincoro",
             "category": "tequila",
       "position": "Creative director",
       "type": "Freelance",
       "duration": "2022",
       "description": "Tagline, brand manifesto, and social media rollout for a tequila owned by five NBA owners.Cutting through the clutter of celebrity tequila brands. George Clooney. The Rock. Kylie Jenner. Bryan Cranston. Celebrity tequila is a crowded space. So when Michael Jordan and four other NBA owners started their own tequila company, I was there to help them find a way to help their brand stand out among the stars. Cincoro translates to 'five rings'. And so the story of Cincoro Tequila is the passion and competitive spirit its five owners share as they each chase their next championship ring.",
         "lines": ["All sunshine. No burn.", "Good times deserve great tequila.", "Some owners autograph their bottles. Ours create a signature taste."],
-      "media": ["facebook", "microsite", "pinterest", "email", "instagram"]
+      "media": ["facebook", "microsite", "pinterest", "email", "instagram"],
+        "images": [
+        {
+          "src": "/img/cinc3.gif",
+          "alt": "cing"
+          
+        },
+         {
+          "src": "/img/cinc2.gif",
+          "alt": "cingds"
+        },
+         {
+          "src": "/img/cinc1.gif",
+            "alt": "cingsss"
+          
+        },
+         {
+          "src": "/img/cinc_burn.png",
+            "alt": "cg"
+          
+        }
+        
+      ]
     },
       
       {
@@ -112,7 +134,7 @@
       ]
     }, 
     {
-      "title": "Sentry Perfomance launch",
+      "title": "Sentry Performance launch",
       "category": "DevOps",
       "description": "Product releases run the risk of getting bogged down in their own jargon. For Sentry’s Performance product release, this meant turning jargony benefits (such as improved Apdex scores and p95 response times) into a simple, differentiating insight. My tagline – See Slow Faster – articulated Sentry's competitive advantage, propelling the unicorn to 3x ARR and cement its status as a leader in application performance monitoring.",
       "techStack": ["Python", "Machine Learning", "Swagger", "Uvicorn"],
@@ -130,6 +152,15 @@
           "name": "Product page",
           "url": "https://sentry.io/solutions/application-performance-monitoring/"
         }
+      ],
+          "images": [
+        {
+          "src": "/img/ssf.png",
+          "alt": "cing"
+          
+        }
+        
+        
       ]
     }, 
        {
@@ -326,7 +357,6 @@
       "title": "HP Presence launch",
       "category": "GTM",
       "description": "Making hybrid work, work for employees and employers.The context.The pandemic altered the fabric of society. Nowhere was this more evident than the corporate office. As a content strategist on Transmission's HP account, I helped  position their Presence videoconferencing product suite to be the connective tissue for distributed workforces. How businesses can build out their hybrid work infrastructure to seamlessly incorporate devices, solutions, and services across distributed teams.The world of work continues to evolve. And the tools employees use for that work need to evolve with it. And that starts with HP Presence building out intelligent meeting experiences that fully incorporate remote workers such that their points can be heard with the same volume and clarity as those physically in the room.How IT professionals can calibrate their offices to the new normal ",
-   
       "featured": true,
       "links": [
         {
@@ -341,7 +371,22 @@
           "name": "The New Office For the Way People Want to Work",
           "url": "https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf"
         }
+      ],
+       "images": [
+        {
+          "src": "img/hp_era.png",
+          "alt": "IntelliPrice App Demo"
+        },
+          {
+          "src": "img/hpthree.png",
+          "alt": "IntelliPrice App Demo"
+        },
+         {
+          "src": "img/hpcover.png",
+          "alt": "IntelliPrice App Demo"
+        }
       ]
+      
     },  
         {
       "title": "Airbnb",
@@ -371,8 +416,6 @@
       "category": "Developer Relations",
       "description": "The consequences of poor application performance are both real and terrifying: lost customers, lost trust from your team, and lost confidence in your abilities. It’s why every developer remembers those moments where their solution improves both process and performance -- and why Sentry celebrates their Great Moments in Application Monitoring:",
       "techStack": ["Full stack integration"],
-
-      "status": "Completed",
       "featured": true,
       "links": [
         {
@@ -444,39 +487,39 @@
         }
       ],
       "images": [
-        {
-          "src": "https://raw.githubusercontent.com/anujjainbatu/chess-trace/main/assets/solution_architecture_dia.jpeg",
-          "alt": "Solution Architecture Diagram"
-        },
-        {
-          "src": "https://raw.githubusercontent.com/anujjainbatu/chess-trace/main/assets/product.png",
-          "alt": "Product"
-        }
+    
       ]
     },  
     {
       "title": "Sentry sell sheets",
       "category": "DevOps",
       "description": "Technical content to support sales teams as they advocate for the developer .",
-      "techStack": ["Python", "Django", "JavaScript", "Bootstrap", "FontAwesome", "Gemini API"],
-      "date": "2024",
-      "status": "Completed",
+      "techStack": ["Sales Enablement", "Django", "JavaScript", "Bootstrap", "FontAwesome", "Gemini API"],
       "featured": true,
       "links": [
         {
-          "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/Pralay_Mitra"
+          "name": "Discover",
+          "url": "https://assets.ctfassets.net/em6l9zw4tzag/11VgRZVRayQTsV9oI4rPGr/5a32c50ebb01a127372787b73a990f4c/discover-by-sentry.pdf"
+        },
+          {
+          "name": "Ecosystem",
+          "url": "https://assets.ctfassets.net/em6l9zw4tzag/7gHp5QpqTIFRuSuhg4R6WO/33731d473215fac85f35ec365c7f419d/sentry-ecosystem.pdf"
+        },   {
+          "name": "Release Health",
+          "url": "https://assets.ctfassets.net/em6l9zw4tzag/sfJPqSqMAAqexuTUWvbVP/77159672387f5f549c473624c083b2fe/release-health-by-sentry.pdf"
+        },   {
+          "name": "Sentry for Native",
+          "url": "https://assets.ctfassets.net/em6l9zw4tzag/2uD7vgQGQJt0lCrSJJFguW/c48145d31710bdfd34c7045ea9f477e6/sentry-for-native.pdf"
         }
+        
       ],
       "images": []
     },  
     {
       "title": "DroneDeploy web pages",
-      "category": "Cybersecurity Tool",
-      "description": "Python tool to uncover real hosting details of websites protected by Cloudflare. Automates subdomain enumeration, SSL analysis, ASN/org/GeoIP lookups, historical IP resolution, and outputs results for security researchers. Used for SIH 2024 finalist project for MP Police.",
+      "category": "Machine Learning",
+      "description": "Working in partnership with Boston Dynamics, DroneDeploy's industrial inspection platform captures frequent and consistent data on assets that need regular monitoring in ways which scale up site visibility while dialing down man hours.",
       "techStack": ["Python", "Subdomain Enumeration", "SSL Analysis", "SecurityTrails API"],
-      "date": "2024",
-      "status": "Completed",
       "featured": true,
       "metrics": ["Deals influenced in pipeline --> 8.5%"],
       "links": [  {
@@ -498,53 +541,53 @@
         {
       "title": "DroneDeploy customer stories",
       "category": "Machine Learning",
-      "description": "ML-powered laptop price prediction system built with Streamlit. Features clean interface, fast predictions, and easy deployment via Docker. Uses key attributes like brand, CPU, RAM, storage, GPU, and screen size for accurate real-time price estimates.",
-      "techStack": ["Python", "Streamlit", "scikit-learn", "Docker", "Pandas", "Machine Learning"],
-      "date": "2025",
-      "status": "Completed",
+      "description": "Customer stories ranging from civil construction to solar farms to engandered penguins.",
       "featured": true,
       "links": [
         {
-          "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/IntelliPrice"
+          "name": "Archer Western Stockpiles",
+          "url": "https://www.dronedeploy.com/blog/closing-the-gap-how-archer-western-and-dronedeploy-observed-a-1-1-difference-in-stockpile-quantities-compared-to-traditional-survey-methods"
         },
         {
-          "name": "Demo GIF",
-          "url": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif"
+          "name": "Onsight Solar Farms",
+          "url": "https://dronedeploy.com/blog/onsight-dronedeploy-30-faster-solar-barcode-scanning-with-robots"
+        },
+         {
+          "name": "Tawaki Trust penguins",
+          "url": "https://www.dronedeploy.com/blog/counting-endangered-penguins-in-the-south-pacific-dronedeploy-and-the-tawaki-trust"
         }
       ],
       "images": [
-        {
-          "src": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif?raw=true",
-          "alt": "IntelliPrice App Demo"
-        }
+      
       ]
     },  
     
         {
-      "title": "social media compilation",
-      "category": "Machine Learning",
-      "description": "ML-powered laptop price prediction system built with Streamlit. Features clean interface, fast predictions, and easy deployment via Docker. Uses key attributes like brand, CPU, RAM, storage, GPU, and screen size for accurate real-time price estimates.",
-      "techStack": ["Python", "Streamlit", "scikit-learn", "Docker", "Pandas", "Machine Learning"],
-      "date": "2025",
-      "status": "Completed",
+      "title": "Sentry social media ",
+      "category": "Developer Relations",
+      "description": "Responsible for ssocial media calendar:",
       "featured": true,
-      "links": [
-        {
-          "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/IntelliPrice"
-        },
-        {
-          "name": "Demo GIF",
-          "url": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif"
-        }
-      ],
+      
       "images": [
         {
-          "src": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif?raw=true",
-          "alt": "IntelliPrice App Demo"
+          "src": "/img/one.png",
+          "alt": "one"
+        },
+          {
+          "src": "/img/two.png",
+          "alt": "two"
+        },
+        {
+          "src": "/img/three.png",
+          "alt": "three"
+        },
+          {
+          "src": "/img/four.png",
+          "alt": "four"
         }
       ]
+    
+      
     } 
    
         
@@ -553,7 +596,6 @@
   "social": {
     "linkedin": "https://linkedin.com/in/cheher",
     "github": "https://github.com/chrisheher",
-    "spotify": "https://www.fiverr.com",
     "portfolio": "https://onlychr.is"
   },
   "internship": {
@@ -648,7 +690,6 @@
     "me": "Your bio...",
     "skills": "Your skills...",
     "versusAI": "I am what ai ain’t.Your customers deserve better than to read robot. They want a human voice behind your brand — one which piques curiosity, not parrot information; one which intrigues, not inundates; and one that doesn’t regurgitate words already written, but reveals fresh insights unique to your brand.",
-      
       "skillList": "python."
   },
   "meta": {
