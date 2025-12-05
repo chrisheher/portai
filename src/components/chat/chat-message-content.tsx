@@ -12,7 +12,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 
 export type ChatMessageContentProps = {
-  message: Message;
+  message: UIMessage;
   isLast?: boolean;
   isLoading?: boolean;
   reload?: () => Promise<string | null | undefined>;
