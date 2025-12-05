@@ -81,8 +81,8 @@ export default function AllProjects({ data: toolData }: AllProjectsProps) {
 
   const isSearchResult = Boolean(toolData?.projects);
 
-  const handleShapeClick = (projectTitle: string) => {
-    const index = projectsToDisplay.findIndex(p => p.title === projectTitle);
+const handleShapeClick = (item: Project) => {
+  const projectTitle = item.title;
     if (index !== -1) {
       setSelectedProjectIndex(index);
     }
