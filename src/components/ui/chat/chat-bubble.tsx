@@ -62,15 +62,7 @@ interface ChatBubbleAvatarProps {
   height?: number;
 }
 
-const ChatBubbleAvatar: React.FC<ChatBubbleAvatarProps> = ({
-  src,
-  fallback,
-  className,
-  width,
-  height,
-}) => (
- 
-);
+
 
 // ChatBubbleMessage
 const chatBubbleMessageVariants = cva("", {
