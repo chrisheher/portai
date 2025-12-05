@@ -71,7 +71,6 @@ const Chat: React.FC = () => {
   setMessages,
   addToolResult,
 } = useChat({
-  onResponse: () => setLoadingSubmit(false),
   onFinish: () => setLoadingSubmit(false),
   onError: (error) => {
     setLoadingSubmit(false);
