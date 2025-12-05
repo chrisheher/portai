@@ -2,14 +2,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
-import { contactInfo } from '@/lib/config-loader';
 
-export function Contact() {
-  // Contact information now loaded from configuration
-  // Function to handle opening links
-  const openLink = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
+
 
   return (
     <div className="mx-auto mt-8 w-full">
@@ -40,6 +34,6 @@ export function Contact() {
       </div>
     </div>
   );
-}
 
-export default Contact;
+
+export default;
