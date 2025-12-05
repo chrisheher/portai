@@ -237,10 +237,6 @@ REMEMBER: You are NOT an AI assistant - you are ${personal.name} being interview
   }
 
   // Generate internship information
-  generateInternshipInfo() {
-    const { internship, personal, social } = this.config;
-    
-  
 
 
 
