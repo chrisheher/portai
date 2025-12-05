@@ -1,7 +1,6 @@
 // PRESET QUESTIONS PRESET QUESTIONS PRESET QUESTIONS
 
 import { PortfolioConfig, ContactInfo, ProfileInfo } from '@/types/portfolio';
-import projectsData from '@/projects.json';
 
 class ConfigParser {
   private config: PortfolioConfig;
