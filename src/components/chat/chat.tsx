@@ -64,7 +64,7 @@ const Chat: React.FC = () => {
   const [showLoadingQuotes, setShowLoadingQuotes] = useState(false);
   const [showChatResponse, setShowChatResponse] = useState(false);
 
- const {
+const {
   messages,
   status,
   stop,
@@ -76,25 +76,35 @@ const Chat: React.FC = () => {
     setLoadingSubmit(false);
     console.error('Chat error:', error.message, error.cause);
 
-if (error.message?.includes('quota') || error.message?.includes('429')) {
-  toast.error('⚠️ API Quota Exhausted!', { duration: 6000 });
-  setErrorMessage('quota_exhausted');
-  setMessages((prev) => [
-    ...prev,
-    {
-      role: 'assistant',
-      content: '⚠️ **API Quota Exhausted**\n\nFree Gemini API limit reached. Please contact Anuj directly or use preset questions.',
-      id: Date.now().toString(),
-      parts: [
+    if (error.message?.includes('quota') || error.message?.includes('429')) {
+      toast.error('⚠️ API Quota Exhausted!', { duration: 6000 });
+      setErrorMessage('quota_exhausted');
+      setMessages((prev) => [
+        ...prev,
         {
-          type: 'text',
-          text: '⚠️ **API Quota Exhausted**\n\nFree Gemini API limit reached. Please contact Anuj directly or use preset questions.',
+          role: 'assistant',
+          content: '⚠️ **API Quota Exhausted**\n\nFree Gemini API limit reached. Please contact Anuj directly or use preset questions.',
+          id: Date.now().toString(),
+          parts: [
+            {
+              type: 'text',
+              text: '⚠️ **API Quota Exhausted**\n\nFree Gemini API limit reached. Please contact Anuj directly or use preset questions.',
+            },
+          ],
         },
-      ],
-    },
-  ]);
+      ]);
+    } else if (error.message?.includes('network')) {
+      toast.error('Network error. Please check your connection.');
+      setErrorMessage('Network error');
+    } else {
+      toast.error(`Error: ${error.message}`);
+      setErrorMessage(`Error: ${error.message}`);
+    }
+  },
 });
 
+// Derive isLoading from status for backward compatibility
+const isLoading = status === 'in_progress';
 // Derive isLoading from status for backward  // Derive isLoading from status for backward compatibility
   const isLoading = status === 'in_progress';
 
