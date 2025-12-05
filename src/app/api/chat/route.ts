@@ -2,7 +2,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { systemPrompt, presetReplies as importedPresetReplies } from '@/lib/config-loader';
-import { getInternship } from './tools/getInternship';
 import { getPresentation } from './tools/getPresentation';
 import { getProjects } from './tools/getProjects';
 import { getResume } from './tools/getResume';
@@ -18,7 +17,6 @@ const toolFunctions: Record<string, any> = {
   getProjects,
   getSkills,
   getResume,
-  getInternship,
   analyzeJob,
 };
 
