@@ -6,7 +6,7 @@ import { getPresentation } from './tools/getPresentation';
 import { getProjects } from './tools/getProjects';
 import { getResume } from './tools/getResume';
 import { getSkills } from './tools/getSkills';
-import { analyzeJob } from './tools/analyzejob';
+import { analyzeJob } from './tools/analyzeJob';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
