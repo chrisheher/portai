@@ -39,17 +39,10 @@ export function SimplifiedChatView({
   if (message.role !== 'assistant') return null;
 
   // Extract tool invocations that are in "result" state
-  const toolInvocations =
-    message.parts
-      ?.filter(
-        (part) =>
-          part.type === 'tool-invocation' &&
-          part.toolInvocation?.state === 'result'
-      )
-      .map((part) =>
-        part.type === 'tool-invocation' ? part.toolInvocation : null
-      )
-      .filter(Boolean) || [];
+const toolInvocations =
+  message.parts
+    ?.filter((part) => part.type === 'tool-result')
+    .map((part) => part) || [];
 
   // Only display the first tool (if any)
   const currentTool = toolInvocations.length > 0 ? [toolInvocations[0]] : [];
