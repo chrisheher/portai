@@ -330,7 +330,7 @@ const isToolInProgress = messages.some(
     }
   }, [initialQuery, autoSubmitted]);
 
-  const hasMessages = messages.length > 0 || loadingSubmit || presetReply || errorMessage;
+const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!errorMessage;
 
   const renderToolInvocation = (toolInvocation: any) => {
     if (toolInvocation.state === 'call') {
