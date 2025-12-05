@@ -178,7 +178,7 @@ ChatBubbleActionWrapper.displayName = "ChatBubbleActionWrapper";
 
 export {
 	ChatBubble, ChatBubbleAction,
-	ChatBubbleActionWrapper,,
+	ChatBubbleActionWrapper,
 	ChatBubbleMessage, chatBubbleMessageVariants, ChatBubbleTimestamp,
 	chatBubbleVariant
 };
