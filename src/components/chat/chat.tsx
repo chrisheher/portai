@@ -103,11 +103,8 @@ const {
   },
 });
 
-// Derive isLoading from status for backward compatibility
 
-// Derive isLoading from status for backward  // Derive isLoading from status for backward compatibility
-const isLoading = status === 'submitting' || status === 'streaming';
-
+const isLoading = status === 'submitting';
   const { currentAIMessage, latestUserMessage, hasActiveTool } = useMemo(() => {
     const latestAI = messages.findLastIndex((m) => m.role === 'assistant');
     const latestUser = messages.findLastIndex((m) => m.role === 'user');
