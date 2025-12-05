@@ -70,7 +70,6 @@ const Chat: React.FC = () => {
     stop,
     setMessages,
     addToolResult,
-    append,
   } = useChat({
     onResponse: () => setLoadingSubmit(false),
     onFinish: () => setLoadingSubmit(false),
@@ -81,19 +80,8 @@ const Chat: React.FC = () => {
       if (error.message?.includes('quota') || error.message?.includes('429')) {
         toast.error('⚠️ API Quota Exhausted!', { duration: 6000 });
         setErrorMessage('quota_exhausted');
-        append?.({
-          role: 'assistant',
-          content:
-            '⚠️ **API Quota Exhausted**\n\nFree Gemini API limit reached. Please contact Anuj directly or use preset questions.',
-        });
-      } else if (error.message?.includes('network')) {
-        toast.error('Network error. Please check your connection.');
-        setErrorMessage('Network error');
-      } else {
-        toast.error(`Error: ${error.message}`);
-        setErrorMessage(`Error: ${error.message}`);
-      }
-    },
+   
+    }
   });
 
   // Derive isLoading from status for backward compatibility
