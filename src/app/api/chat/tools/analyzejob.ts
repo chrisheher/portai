@@ -1,4 +1,6 @@
 // src/app/api/chat/tools/analyzeJob.ts
+import { tool } from "ai";
+import { z } from "zod";
 import Anthropic from '@anthropic-ai/sdk';
 // Import from root folder using relative path
 import portfolioConfig from '../../../../../portfolio-config.json';
@@ -6,10 +8,6 @@ import portfolioConfig from '../../../../../portfolio-config.json';
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
-
-interface AnalyzeJobInput {
-  jobDescription: string;
-}
 
 interface JobAnalysisResult {
   matchScore: number;
@@ -139,13 +137,12 @@ REMEMBER: Output ONLY the JSON object. No other text.`
   }
 }
 
-export const analyzeJob = {
-  name: 'analyzeJob',
+export const analyzeJob = tool({
   description: 'Analyze a job description against the candidate\'s portfolio to provide match score, strengths, gaps, and recommendations',
-  
-  async execute(input: AnalyzeJobInput): Promise<JobAnalysisResult> {
-    const { jobDescription } = input;
-
+  parameters: z.object({
+    jobDescription: z.string().describe('The job description text or URL to analyze'),
+  }),
+  execute: async ({ jobDescription }) => {
     if (!jobDescription || !jobDescription.trim()) {
       throw new Error('Job description is required');
     }
@@ -154,7 +151,6 @@ export const analyzeJob = {
 
     // If it's a URL, return a helpful message instead of trying to fetch
     if (isURL(jobContent)) {
-      // Return a special response telling user to paste the content
       return {
         matchScore: 0,
         strengths: [],
@@ -174,4 +170,4 @@ export const analyzeJob = {
 
     return analysis;
   }
-};
+});

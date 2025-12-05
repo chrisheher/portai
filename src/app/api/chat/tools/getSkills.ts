@@ -6,7 +6,7 @@ export const getSkills = tool({
   description:
     'This tool provides a comprehensive overview of technical skills, expertise, and professional qualifications.',
   parameters: z.object({}),
-  execute: async () => {
+  execute: async ({}) => {
     const config = getConfig();
     
     return {

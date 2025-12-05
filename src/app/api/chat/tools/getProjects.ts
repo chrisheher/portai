@@ -10,25 +10,10 @@ This tool retrieves Chris Heher's portfolio projects. YOU MUST extract and pass 
 
 FILTER DECISION RULES (FOLLOW THESE EXACTLY):
 1. Technology mentions → USE techStack parameter
-   - "React", "Python", "Ceros", "Gemini", "Next.js", etc.
-   - Example: "Show React projects" → {techStack: "React"}
-   
 2. Category/industry mentions → USE category parameter
-   - "SaaS", "DevOps", "Developer Relations", "GTM", "content strategy"
-   - Example: "SaaS projects" → {category: "SaaS"}
-   
 3. Quality indicators → USE featured parameter
-   - "best", "featured", "top", "favorite", "proud of"
-   - Example: "best projects" → {featured: true}
-   
 4. Specific keywords → USE keyword parameter
-   - Company names: "DroneDeploy", "Sentry", "Airbnb"
-   - Topics: "AI", "automation", "developer"
-   - Example: "Sentry projects" → {keyword: "Sentry"}
-
 5. Generic requests → NO parameters
-   - "What projects", "show all projects", "your work"
-   - Example: "What projects do you have?" → {} (no filters)
 
 IMPORTANT: Extract these from natural language. Don't require exact phrasing.`,
   
@@ -39,18 +24,12 @@ IMPORTANT: Extract these from natural language. Don't require exact phrasing.`,
     keyword: z.string().optional().describe("EXTRACT company names (DroneDeploy, Sentry, Airbnb) or topics (AI, automation) from the query"),
   }),
   
-  execute: async ({ 
-    category, 
-    techStack, 
-    featured, 
-    keyword 
-  } = {}) => {
+  execute: async ({ category, techStack, featured, keyword }) => {
     console.log('🔧 getProjects called with params:', { category, techStack, featured, keyword });
     
     let projects = projectData || [];
     console.log('📊 Total projects before filtering:', projects.length);
     
-    // ✅ LOG RAW PROJECT DATA TO SEE IF LINKS EXIST
     if (projects.length > 0) {
       console.log('🔍 Sample raw project data (first project):', JSON.stringify(projects[0], null, 2));
     }
@@ -102,7 +81,6 @@ IMPORTANT: Extract these from natural language. Don't require exact phrasing.`,
     
     console.log('✅ Final filtered projects:', projects.length);
     
-    // ✅ LOG WHAT WE'RE RETURNING
     const result = projects.map((project: any) => {
       console.log(`📦 Mapping project: ${project.title}`);
       console.log(`   - Has links property: ${!!project.links}`);

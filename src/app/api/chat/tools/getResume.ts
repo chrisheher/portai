@@ -6,7 +6,7 @@ export const getResume = tool({
   description:
     'This tool provides comprehensive resume information including professional experience, education, and achievements.',
   parameters: z.object({}),
-  execute: async () => {
+  execute: async ({}) => {
     const config = getConfig();
     
     return {
