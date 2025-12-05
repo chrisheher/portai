@@ -13,13 +13,7 @@ import ToolRenderer from './tool-renderer';
 interface SimplifiedChatViewProps {
   message: UIMessage;
   isLoading: boolean;
-  addToolResult?: <TOOL extends string>(params: {
-    state?: 'output-available';
-    tool: TOOL;
-    toolCallId: string;
-    output: unknown;
-    errorText?: string;
-  }) => Promise<void>;
+ 
 }
 const MOTION_CONFIG = {
   initial: { opacity: 0, y: 20 },
@@ -33,7 +27,7 @@ const MOTION_CONFIG = {
 export function SimplifiedChatView({
   message,
   isLoading,
-  addToolResult,
+  
 }: SimplifiedChatViewProps) {
   if (message.role !== 'assistant') return null;
 
@@ -78,13 +72,12 @@ const showTextContent = hasTextContent && (!hasTools || textContent.trim().lengt
           <div className="w-full">
             <ChatBubble variant="received" className="w-full">
               <ChatBubbleMessage className="w-full">
-                <ChatMessageContent
-                  message={message}
-                  isLast={true}
-                  isLoading={isLoading}
-                  addToolResult={addToolResult}
-                  skipToolRendering={true}
-                />
+              <ChatMessageContent
+  message={message}
+  isLast={true}
+  isLoading={isLoading}
+  skipToolRendering={true}
+/>
               </ChatBubbleMessage>
             </ChatBubble>
           </div>
