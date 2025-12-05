@@ -65,16 +65,17 @@ const Chat: React.FC = () => {
   const [showLoadingQuotes, setShowLoadingQuotes] = useState(false);
   const [showChatResponse, setShowChatResponse] = useState(false); // ✅ NEW
 
+
   const {
-    messages,
-    handleSubmit,
-    isLoading,
-    stop,
-    setMessages,
-    reload,
-    addToolResult,
-    append,
-  } = useChat({
+  messages,
+  submit,  // Changed from handleSubmit
+  isLoading,
+  stop,
+  setMessages,
+  reload,
+  addToolResult,
+  append,
+} = useChat({
     onResponse: () => setLoadingSubmit(false),
     onFinish: () => setLoadingSubmit(false),
     onError: (error) => {
@@ -443,14 +444,15 @@ const Chat: React.FC = () => {
           <div className="container mx-auto max-w-3xl px-4">
             <div className="relative flex flex-col items-center gap-3">
               <HelperBoost submitQuery={submitQuery} setInput={setInput} handlePresetReply={handlePresetReply} />
-              <ChatBottombar 
-                input={input} 
-                handleInputChange={handleInputChange} 
-                handleSubmit={onSubmit} 
-                isLoading={isLoading} 
-                stop={handleStop} 
-                isToolInProgress={isToolInProgress}
-              />
+            <ChatBottombar 
+  input={input} 
+  handleInputChange={handleInputChange} 
+  handleSubmit={onSubmit}  // This is fine, it's your local function
+  isLoading={isLoading} 
+  stop={handleStop} 
+  isToolInProgress={isToolInProgress}
+  setInput={setInput}  // Add this if ChatBottombar needs it
+/>
             </div>
           </div>
         </div>
