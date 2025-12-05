@@ -17,14 +17,11 @@ export function Contact() {
     <div className="mx-auto mt-8 w-full">
       <div className="bg-accent w-full overflow-hidden rounded-3xl px-6 py-8 font-sans sm:px-10 md:px-16 md:py-12">
         {/* Header Section */}
-        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-foreground text-3xl font-semibold md:text-4xl">
-            Contacts
-          </h2>
-          <span className="mt-2 sm:mt-0">
-            {contactInfo.handle}
-          </span>
-        </div>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+  <h2 className="text-foreground text-3xl font-semibold md:text-4xl">
+    Contacts
+  </h2>
+</div>
 
         {/* Email Section */}
         <div className="mt-8 flex flex-col md:mt-10">
