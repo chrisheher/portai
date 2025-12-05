@@ -1,6 +1,6 @@
 'use client';
 
-import { Message } from 'ai/react';
+import { Message } from 'ai';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
