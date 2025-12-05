@@ -13,10 +13,7 @@ import ToolRenderer from './tool-renderer';
 interface SimplifiedChatViewProps {
   message: Message;
   isLoading: boolean;
-  reload: (
-    chatRequestOptions?: ChatRequestOptions
-  ) => Promise<string | null | undefined>;
-  addToolResult?: (args: { toolCallId: string; result: string }) => void;
+  
 }
 
 const MOTION_CONFIG = {
@@ -32,7 +29,6 @@ const MOTION_CONFIG = {
 export function SimplifiedChatView({
   message,
   isLoading,
-  reload,
   addToolResult,
 }: SimplifiedChatViewProps) {
   if (message.role !== 'assistant') return null;
@@ -85,7 +81,6 @@ const hasTextContent = String(message.content ?? '').trim().length > 0;
                   message={message}
                   isLast={true}
                   isLoading={isLoading}
-                  reload={reload}
                   addToolResult={addToolResult}
                   skipToolRendering={true}
                 />
