@@ -16,6 +16,7 @@ interface ChatBottombarProps {
   isLoading: boolean;
   stop: () => void;
   input: string;
+  setInput: (value: string) => void;  // Add this line
   isToolInProgress: boolean;
 }
 
