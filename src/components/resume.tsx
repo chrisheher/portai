@@ -7,13 +7,13 @@ import Image from 'next/image';
 import { resumeDetails } from '@/lib/config-loader';
 
 export function Resume() {
-  // Resume details loaded from configuration
-
-  // For external URLs, open in a new tab
-
-  const url = (resumeDetails as any).downloadUrl || (resumeDetails as any).url || (resumeDetails as any).link || '#';
-
-  
+  const handleDownload = () => {
+    // For external URLs, open in a new tab
+    const url = (resumeDetails as any)?.downloadUrl || '#';
+    if (url !== '#') {
+      window.open(url, '_blank');
+    }
+  };
   return (
     <div className="mx-auto w-full py-8 font-sans">
       {/* Resume Card */}
