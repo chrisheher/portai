@@ -9,11 +9,11 @@ import { resumeDetails } from '@/lib/config-loader';
 export function Resume() {
   // Resume details loaded from configuration
 
-  const handleDownload = () => {
-    // For external URLs, open in a new tab
-    window.open(resumeDetails.downloadUrl, '_blank');
-  };
-
+  // For external URLs, open in a new tab
+  const url = resumeDetails.downloadUrl || resumeDetails.url || resumeDetails.link || '#';
+  window.open(url, '_blank');
+  
+  
   return (
     <div className="mx-auto w-full py-8 font-sans">
       {/* Resume Card */}
