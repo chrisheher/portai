@@ -142,7 +142,7 @@ export const analyzeJob = tool({
   parameters: z.object({
     jobDescription: z.string().describe('The job description text or URL to analyze'),
   }),
-  execute: async ({ jobDescription }: { jobDescription: string }) => {
+execute: async ({ jobDescription }) => {
     if (!jobDescription || !jobDescription.trim()) {
       throw new Error('Job description is required');
     }
