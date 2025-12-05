@@ -28,17 +28,16 @@ export function Resume() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-medium text-foreground">
-                {resumeDetails.title}
+                 {(resumeDetails as any)?.title}
               </h3>
               <p className="text-sm text-muted-foreground">
-                {resumeDetails.description}
-              </p>
+  {(resumeDetails as any)?.description}              </p>
               <div className="mt-1 flex text-xs text-muted-foreground">
-                <span>{resumeDetails.fileType}</span>
+                <span>  {(resumeDetails as any)?.fileType}</span>
                 <span className="mx-2">•</span>
-                <span>Updated {resumeDetails.lastUpdated}</span>
+                <span>Updated   {(resumeDetails as any)?.title}</span>
                 <span className="mx-2">•</span>
-                <span>{resumeDetails.fileSize}</span>
+                <span>  {(resumeDetails as any)?.fileSize}</span>
               </div>
             </div>
 
@@ -79,7 +78,7 @@ export function Resume() {
         
         <div className="w-full h-[600px] bg-gray-50">
           <iframe
-            src={resumeDetails.downloadUrl}
+            src=  {(resumeDetails as any)?.downloadUrl}
             width="100%"
             height="100%"
             className="border-0"
