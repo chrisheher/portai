@@ -139,17 +139,16 @@ REMEMBER: Output ONLY the JSON object. No other text.`
 
 export const analyzeJob = tool({
   description: 'Analyze a job description against the candidate\'s portfolio to provide match score, strengths, gaps, and recommendations',
-  parameters: z.object({
+  inputSchema: z.object({  // Changed from 'parameters' to 'inputSchema'
     jobDescription: z.string().describe('The job description text or URL to analyze'),
   }),
-execute: async ({ jobDescription }) => {
+  execute: async ({ jobDescription }) => {  // No type annotation needed
     if (!jobDescription || !jobDescription.trim()) {
       throw new Error('Job description is required');
     }
 
     let jobContent = jobDescription.trim();
     
-
     // If it's a URL, return a helpful message instead of trying to fetch
     if (isURL(jobContent)) {
       return {
