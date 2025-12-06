@@ -103,7 +103,7 @@ const ChatLanding: React.FC<ChatLandingProps> = ({
   );
 
   const [displayedItems, setDisplayedItems] = useState<any[]>(() => {
-    const projects = data.map(project => ({
+    const projects = data.map((project: any) => ({
       title: project.title,
       category: project.category,
       src: project.src,
