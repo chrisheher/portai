@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { useChat } from '@ai-sdk/react';
 
 // Components
-import ChatBottombar from '@/components/chat/chat-bottombar';
+import ChatBottombar from './chat-bottombar';
 import ChatLanding from '@/components/chat/chat-landing';
 import ChatMessageContent from '@/components/chat/chat-message-content';
 import { SimplifiedChatView } from '@/components/chat/simple-chat-view';
@@ -63,6 +63,7 @@ const Chat: React.FC = () => {
   const [searchResults, setSearchResults] = useState<any[] | null>(null);
   const [showLoadingQuotes, setShowLoadingQuotes] = useState(false);
   const [showChatResponse, setShowChatResponse] = useState(false);
+  const [projectDescription, setProjectDescription] = useState<{ title: string; description: string } | null>(null);
 
 const {
   messages, 
@@ -160,7 +161,7 @@ const isToolInProgress = messages.some(
     submitQueryToAI(query);
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormEvent>) => {
     e.preventDefault();
     if (!input.trim() || isToolInProgress) return;
     submitQueryToAI(input);
@@ -171,15 +172,6 @@ const isToolInProgress = messages.some(
     if (!query.trim() || isToolInProgress) return;
 
     setLoadingSubmit(true);
-    const isLikelyJobAnalysis = query.includes('http') || 
-                                query.includes('job') || 
-                                query.includes('position') ||
-                                query.includes('role') ||
-                                query.length > 200; // Long text pastes
-    
-    if (isLikelyJobAnalysis) {
-      setShowLoadingQuotes(true);
-    }
     setPresetReply(null);
 
     fetch('/api/chat', {
@@ -213,32 +205,28 @@ const isToolInProgress = messages.some(
               if (msg.tool === 'analyzeJob') {
                 setJobAnalysisData(msg.result);
                 isJobAnalysis = true;
+                setShowLoadingQuotes(true); // Show loading quotes when job analysis is detected
               }
 
               if (msg.tool === 'getProjects' && msg.result?.projects) {
                 console.log('🔍 Projects found:', msg.result.projects.length);
                 
-                // Transform projects AND their links into shapes
+                // Transform only project links into shapes (not the projects themselves)
                 const allShapes: any[] = [];
                 
                 msg.result.projects.forEach((project: any, index: number) => {
                   console.log(`\n📦 Project ${index + 1}:`, project.title);
                   console.log('   Links:', project.links);
-                  
-                  // Add the main project shape
-                  allShapes.push({
-                    title: project.title,
-                    category: project.category,
-                    type: 'project' as const,
-                    src: project.links?.[0]?.url || '',
-                    content: project.description,
-                  });
-                  console.log('   ✅ Added project shape');
 
                   // Add link shapes for each project link
-                  if (project.links && Array.isArray(project.links)) {
-                    console.log(`   🔗 Processing ${project.links.length} links...`);
-                    project.links.forEach((link: any, linkIndex: number) => {
+                  if (project.links) {
+                    // Handle both array and object formats
+                    const linksArray = Array.isArray(project.links) 
+                      ? project.links 
+                      : Object.entries(project.links).map(([name, url]) => ({ name, url: String(url) }));
+                    
+                    console.log(`   🔗 Processing ${linksArray.length} links...`);
+                    linksArray.forEach((link: any, linkIndex: number) => {
                       console.log(`      Link ${linkIndex + 1}:`, link.name, '→', link.url);
                       allShapes.push({
                         title: link.name,
@@ -250,13 +238,12 @@ const isToolInProgress = messages.some(
                       console.log(`      ✅ Added link shape: ${link.name}`);
                     });
                   } else {
-                    console.log('   ⚠️ No links array found');
+                    console.log('   ⚠️ No links found');
                   }
                 });
                 
                 console.log('\n🎨 Total shapes to render:', allShapes.length);
-                console.log('   - Projects:', allShapes.filter(s => s.type === 'project').length);
-                console.log('   - Links:', allShapes.filter(s => s.type === 'link').length);
+                console.log('   - Links only (no project shapes)');
                 
                 setSearchResults(allShapes);
                 isProjectSearch = true;
@@ -303,13 +290,13 @@ const isToolInProgress = messages.some(
         }
 
         setLoadingSubmit(false);
-        setShowLoadingQuotes(false);
+        setShowLoadingQuotes(false); // Hide loading quotes when done
       })
       .catch((err) => {
         console.error('Error fetching AI response:', err);
         toast.error('Failed to get AI response. Check console for details.');
         setLoadingSubmit(false);
-        setShowLoadingQuotes(false);
+        setShowLoadingQuotes(false); // Hide loading quotes on error
       });
   };
 
@@ -322,6 +309,21 @@ const isToolInProgress = messages.some(
     submitQuery(prompt);
   };
 
+  const handleProjectClick = (project: { title: string; description: string; links: any[] }) => {
+    console.log('📝 Project clicked, showing description:', project);
+    console.log('  Title:', project.title);
+    console.log('  Description:', project.description);
+    
+    // Clear other states
+    setPresetReply(null);
+    setErrorMessage(null);
+    
+    // Set project description
+    setProjectDescription({ title: project.title, description: project.description });
+    setShowChatResponse(true);
+    console.log('✅ State updated - chat response should show');
+  };
+
   useEffect(() => {
     if (initialQuery && !autoSubmitted) {
       setAutoSubmitted(true);
@@ -330,7 +332,7 @@ const isToolInProgress = messages.some(
     }
   }, [initialQuery, autoSubmitted]);
 
-const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!errorMessage;
+const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!errorMessage || !!projectDescription;
 
   const renderToolInvocation = (toolInvocation: any) => {
     if (toolInvocation.state === 'call') {
@@ -352,6 +354,7 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!e
         submitQuery={submitQuery} 
         handlePresetReply={handlePresetReply}
         onSendPrompt={handleLandingPrompt}
+        onProjectClick={handleProjectClick}
         hasMessages={hasMessages}
         searchResults={searchResults}
         jobAnalysisData={jobAnalysisData}
@@ -384,9 +387,29 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!e
 
             {/* Chat messages area */}
             <div className="flex-1 w-full px-2 py-0 pointer-events-none">
-              <div className="mx-auto max-w-7xl w-full pointer-events-auto">
+              <div className="mx-auto max-w-3xl w-full pointer-events-auto">
                 <AnimatePresence mode="wait">
-                  {presetReply ? (
+                  {projectDescription ? (
+                    <motion.div key="project-description" {...MOTION_CONFIG}>
+                      <ChatBubble variant="received">
+                        <ChatBubbleMessage>
+                          <ChatMessageContent 
+                            message={{
+                              id: 'project-desc',
+                              role: 'assistant',
+                              content: `**${projectDescription.title}**\n\n${projectDescription.description}`,
+                              parts: [{
+                                type: 'text',
+                                text: `**${projectDescription.title}**\n\n${projectDescription.description}`
+                              }]
+                            }}
+                            isLast={true}
+                            isLoading={false}
+                          />
+                        </ChatBubbleMessage>
+                      </ChatBubble>
+                    </motion.div>
+                  ) : presetReply ? (
                     <motion.div {...MOTION_CONFIG} className="pb-4">
                       <PresetReply 
                         question={presetReply.question} 
@@ -437,12 +460,12 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!e
         </div>
       )}
 
-      {/* Loading quotes screen */}
+      {/* Loading quotes screen - only for job analysis */}
       {showLoadingQuotes && <LoadingQuotes />}
 
       {/* Bottom Bar */}
       <ClientOnly>
-        <div className="fixed top-0 left-0 right-0 z-[500] pb-4 pt-2">
+        <div className="fixed top-0 left-0 right-0 z-[500] pb-2 pt-2">
           <div className="container mx-auto max-w-3xl px-4">
             <div className="relative flex flex-col items-center gap-3">
               <HelperBoost submitQuery={submitQuery} setInput={setInput} handlePresetReply={handlePresetReply} />

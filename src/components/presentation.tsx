@@ -85,7 +85,7 @@ export function Presentation() {
               (tag) => (
                 <span
                   key={tag}
-                  className="bg-secondary text-secondary-foreground rounded-full px-3 py-1 text-sm"
+                  className="bg-secondary text-secondary-foreground rounded-full px-3 py-1 pl-8 text-sm"
                 >
                   {tag}
                 </span>

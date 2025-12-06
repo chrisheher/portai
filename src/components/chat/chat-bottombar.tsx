@@ -53,9 +53,9 @@ export default function ChatBottombar({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full pb-12 md:pb-2"
+      className="w-full pb-12 md:pb-1"
     >
-      <form onSubmit={handleSubmit} className="fixed top-4 right-4  md:px-3">
+      <form onSubmit={handleSubmit} className="fixed top-4 right-4  md:px-1">
         <div className="mx-auto flex items-center rounded-full border border-[#E5E5E9] bg-[#e7ddde] py-2 pr-2 pl-6">
           <input
             ref={inputRef}

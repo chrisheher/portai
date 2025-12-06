@@ -83,7 +83,7 @@ export default function ChatMessageContent({
       const contentParts = part.text.split('```');
 
       return (
-        <div key={partIndex} className="w-full space-y-4">
+        <div key={partIndex} className="w-full space-y-12 pl-18">
           {contentParts.map((content, i) =>
             i % 2 === 0 ? (
               // Regular text content

@@ -108,9 +108,10 @@ const ProjectContent = ({ project }: { project: { title: string } }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:text-primary/80 flex items-center gap-2 transition-colors"
-               />
-               
-             
+              >
+                <LinkIcon className="h-4 w-4" />
+                <span>{link.name}</span>
+              </a>
             ))}
           </div>
         </div>
@@ -147,5 +148,7 @@ export const data = allProjects.map(project => ({
   category: project.category,
   title: project.title,
   src: project.src,
+  shape: project.shape, // ✅ Include shape property from JSON
+  description: project.description, // ✅ Include description from JSON
   content: <ProjectContent project={{ title: project.title }} />,
 }));

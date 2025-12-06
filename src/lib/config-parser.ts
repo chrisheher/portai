@@ -1,6 +1,6 @@
 // PRESET QUESTIONS PRESET QUESTIONS PRESET QUESTIONS
 
-import { PortfolioConfig } from '@/types/portfolio';
+import { PortfolioConfig } from './types/portfolio';
 
 class ConfigParser {
   private config: PortfolioConfig;
@@ -124,13 +124,28 @@ REMEMBER: You are NOT an AI assistant - you are ${personal.name} being interview
 
   // Generate project data for carousel
   generateProjectData() {
-    return this.config.projects.map(project => ({
-      category: project.category,
-      title: project.title,
-      src: project.images?.[0]?.src || '/placeholder.jpg',
-       links: project.links || [], // ✅ ADD THIS LINE
-      content: project
-    }));
+    console.log('🔍 ConfigParser - Raw projects from JSON:', this.config.projects.slice(0, 2));
+    
+    const mapped = this.config.projects.map(project => {
+      console.log(`📦 Mapping project "${project.title}":`, {
+        hasShape: 'shape' in project,
+        shapeValue: project.shape,
+        shapeType: typeof project.shape
+      });
+      
+      return {
+        category: project.category,
+        title: project.title,
+        src: project.images?.[0]?.src || '/placeholder.jpg',
+        shape: project.shape, // ✅ ADDED: Include shape property from JSON
+        description: project.description, // ✅ ADDED: Include description from JSON
+        links: project.links || [],
+        content: project
+      };
+    });
+    
+    console.log('🎯 ConfigParser - Mapped projects (first 2):', mapped.slice(0, 2));
+    return mapped;
   }
 
   // Generate preset replies based on questions

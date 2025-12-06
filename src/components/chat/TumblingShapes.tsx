@@ -10,6 +10,7 @@ interface Project {
   content?: React.ReactNode;
   type?: 'project' | 'question';
   prompt?: string;
+  shape?: 'circle' | 'rectangle' | 'polygon'  | 'lessThan' | 'brace' | 'comma';
 }
 
 interface TumblingShapesProps {
@@ -57,8 +58,16 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
     engineRef.current = engine;
     const world = engine.world;
     
-    engine.world.gravity.y = 0.5;
-    engine.world.gravity.x = 0;
+    engine.gravity.y = .8;  // Slightly stronger gravity
+    engine.gravity.x = 0;
+    
+    // Improve collision detection
+    engine.positionIterations = 10;  // Increased from default 6
+    engine.velocityIterations = 8;   // Increased from default 4
+    engine.constraintIterations = 4; // More constraint solving iterations
+    
+    // Reduce overlap tolerance
+    engine.enableSleeping = false;   // Keep all bodies active for better collision response
 
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -80,7 +89,7 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
       : projects;
 
     const shapes: any[] = [];
-    const shapeTypes = ['circle', 'rectangle', 'polygon', 'trapezoid', 'lessThan', 'brace', 'paren', 'comma'];
+    const shapeTypes = ['circle', 'rectangle', 'polygon', 'lessThan', 'brace', 'comma'];
     
     const getShapeColor = (category: string, type: string) => {
       if (type === 'link') {
@@ -142,7 +151,6 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
       const width = size * 0.4;
       const height = size;
       const thickness = size * 0.12;
-      
       const segments = 12;
       const outerVertices = [];
       const innerVertices = [];
@@ -194,33 +202,50 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
         return;
       }
 
-      const shapeType = shapeTypes[index % shapeTypes.length];
-      const size = 100 + Math.random() * 100;
+      // Debug: Log the project to see what shape property it has
+      console.log(`Project #${index} "${project.title}":`, {
+        hasShapeProperty: 'shape' in project,
+        shapeValue: project.shape,
+        shapeType: typeof project.shape,
+        isValidShape: project.shape && shapeTypes.includes(project.shape)
+      });
+
+      // Use shape from project data if provided, otherwise cycle through shapes
+      const shapeType = project.shape && shapeTypes.includes(project.shape) 
+        ? project.shape 
+        : shapeTypes[index % shapeTypes.length];
+      
+      console.log(`  → Using shape: "${shapeType}" (${project.shape ? 'from JSON' : 'from cycle'})`);
+      
+      const size = 150 + Math.random() * 150; // Much larger shapes (150-300px)
+      
+      const initialAngle = (Math.random() - 0.5) * 0.3;
       
       const category = {
         label: project.title,
         type: shapeType,
         size: size,
         x: (width * 0.2) + Math.random() * (width * 0.6),
-        y: -100 - (index * 150),
+        y: -100 - (index * 250), // Increased spacing from 150 to 250
         project: project,
+        initialAngle: initialAngle, // Store the initial angle
       };
 
       let body;
       const options = {
-        restitution: 0.3,
-        friction: 0.5,
-        frictionAir: 0.02,
-        density: 0.001,
-        angle: (Math.random() - 0.5) * 0.3,
+        restitution: 0.6,      // Increased bounciness for better separation
+        friction: 0.8,         // Increased friction to reduce sliding
+        frictionAir: 0.03,     // Slightly more air resistance
+        density: 0.012,        // Increased density for more weight
+        angle: initialAngle,
         render: {
           visible: false,
         },
       };
 
       if (category.type === 'circle') {
-        const segments = 32;
-        const radius = category.size / 2;
+        const segments = 24;
+        const radius = category.size / 4;
         const circleVertices = [];
         for (let i = 0; i < segments; i++) {
           const angle = (i / segments) * Math.PI * 2;
@@ -229,11 +254,11 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
             y: Math.sin(angle) * radius
           });
         }
-        const roughCircle = roughenVertices(circleVertices, 0.3);
+        const roughCircle = roughenVertices(circleVertices, .4);
         body = Bodies.fromVertices(category.x, category.y, [roughCircle], options);
       } else if (category.type === 'rectangle') {
-        const w = category.size;
-        const h = category.size * 0.2;
+        const w = category.size * .2;  // Make rectangles wider
+        const h = category.size * 0.5; // Make rectangles taller
         const rectVertices = roughenVertices([
           { x: -w / 2, y: -h / 2 },
           { x: w / 2, y: -h / 2 },
@@ -241,36 +266,8 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
           { x: -w / 2, y: h / 2 },
         ], 0.3);
         body = Bodies.fromVertices(category.x, category.y, [rectVertices], options);
-      } else if (category.type === 'polygon') {
-        const sides = 5 + Math.floor(Math.random() * 2);
-        const radius = category.size / 2;
-        const polygonVertices = [];
-        for (let i = 0; i < sides; i++) {
-          const angle = (i / sides) * Math.PI * 2;
-          polygonVertices.push({
-            x: Math.cos(angle) * radius,
-            y: Math.sin(angle) * radius
-          });
-        }
-        const roughPolygon = roughenVertices(polygonVertices, 0.3);
-        body = Bodies.fromVertices(category.x, category.y, [roughPolygon], options);
-      } else if (category.type === 'trapezoid') {
-        const w = category.size;
-        const h = category.size * 0.4;
-        const topWidth = w * 0.6;
-        const vertices = roughenVertices([
-          { x: -topWidth / 2, y: -h / 2 },
-          { x: topWidth / 2, y: -h / 2 },
-          { x: w / 2, y: h / 2 },
-          { x: -w / 2, y: h / 2 },
-        ], 0.3);
-        body = Bodies.fromVertices(category.x, category.y, [vertices], options);
-      } else if (category.type === 'lessThan') {
-        body = createLessThanShape(category.x, category.y, category.size, options);
-      } else if (category.type === 'brace') {
+       } else if (category.type === 'brace') {
         body = createBraceShape(category.x, category.y, category.size, options);
-      } else if (category.type === 'paren') {
-        body = createParenShape(category.x, category.y, category.size, options);
       } else if (category.type === 'comma') {
         body = createCommaShape(category.x, category.y, category.size, options);
       }
@@ -325,15 +322,20 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
       render.canvas.addEventListener('click', handleClick);
     }
 
-    // Helper function to fit text within shape bounds
+    // Helper function to fit text within shape bounds with extra padding
     const fitTextInShape = (ctx: CanvasRenderingContext2D, text: string, maxWidth: number, maxHeight: number) => {
       const words = text.split(' ');
-      let fontSize = 12;
+      let fontSize = 24; // Start with larger font size
       let lines: string[] = [];
       let fits = false;
+      
+      // Much more aggressive padding to account for rotation
+      const paddingFactor = 0.6; // Use only 60% of available space for safety during rotation
+      const effectiveMaxWidth = maxWidth * paddingFactor;
+      const effectiveMaxHeight = maxHeight * paddingFactor;
 
-      while (fontSize >= 6 && !fits) {
-        ctx.font = `bold ${fontSize}px Arial`;
+      while (fontSize >= 10 && !fits) { // Minimum font size of 10 instead of 6
+        ctx.font = `${fontSize}px Georgia, 'Times New Roman', serif`;
         lines = [];
         let currentLine = '';
 
@@ -341,7 +343,7 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
           const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
           const metrics = ctx.measureText(testLine);
           
-          if (metrics.width > maxWidth && currentLine) {
+          if (metrics.width > effectiveMaxWidth && currentLine) {
             lines.push(currentLine);
             currentLine = words[i];
           } else {
@@ -350,8 +352,8 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
         }
         if (currentLine) lines.push(currentLine);
 
-        const totalHeight = lines.length * (fontSize + 2);
-        if (totalHeight <= maxHeight) {
+        const totalHeight = lines.length * (fontSize + 4);
+        if (totalHeight <= effectiveMaxHeight) {
           fits = true;
         } else {
           fontSize -= 1;
@@ -426,45 +428,46 @@ const TumblingShapes: React.FC<TumblingShapesProps> = ({
         ctx.globalAlpha = 1;
 
         // Calculate available space for text based on shape type
-        let maxWidth = shape.size * 0.7;
-        let maxHeight = shape.size * 0.6;
+        // Conservative values to account for rotation
+        let maxWidth = shape.size * 0.5;   // Reduced for rotation safety
+        let maxHeight = shape.size * 0.4;  // Reduced for rotation safety
 
         if (shape.type === 'circle') {
-          maxWidth = shape.size * 0.55;
-          maxHeight = shape.size * 0.45;
+          maxWidth = shape.size * 0.4;   // More conservative for circles
+          maxHeight = shape.size * 0.35;
         } else if (shape.type === 'rectangle') {
-          maxWidth = shape.size * 1.1;
-          maxHeight = shape.size * 0.2;
+          maxWidth = shape.size * 0.5;   // Much more strict for rectangles during rotation
+          maxHeight = shape.size * 0.12; // Very conservative height for rectangles
         } else if (shape.type === 'polygon') {
-          maxWidth = shape.size * 0.45;
-          maxHeight = shape.size * 0.45;
-        } else if (shape.type === 'trapezoid') {
           maxWidth = shape.size * 0.4;
+          maxHeight = shape.size * 0.4;
+        } else if (shape.type === 'trapezoid') {
+          maxWidth = shape.size * 0.35;
           maxHeight = shape.size * 0.25;
         } else if (shape.type === 'lessThan') {
-          maxWidth = shape.size * 0.3;
-          maxHeight = shape.size * 0.4;
+          maxWidth = shape.size * 0.25;
+          maxHeight = shape.size * 0.35;
         } else if (shape.type === 'brace') {
-          maxWidth = shape.size * 0.25;
-          maxHeight = shape.size * 0.5;
+          maxWidth = shape.size * 0.22;
+          maxHeight = shape.size * 0.45;
         } else if (shape.type === 'paren') {
-          maxWidth = shape.size * 0.2;
-          maxHeight = shape.size * 0.5;
+          maxWidth = shape.size * 0.18;
+          maxHeight = shape.size * 0.45;
         } else if (shape.type === 'comma') {
-          maxWidth = shape.size * 0.25;
+          maxWidth = shape.size * 1.22;
           maxHeight = shape.size * 0.3;
         }
 
         // Fit text within calculated bounds
         const { lines, fontSize } = fitTextInShape(ctx, shape.label, maxWidth, maxHeight);
 
-        // Draw fitted text
+        // Draw fitted text (rotates with shape)
         ctx.fillStyle = hoveredShape === shape ? baseColor : hoverColor;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.font = `bold ${fontSize}px Arial`;
+        ctx.font = `${fontSize}px Georgia, 'Times New Roman', serif`;
         
-        const lineHeight = fontSize + 4;
+        const lineHeight = fontSize + 6; // Slightly more spacing
         const totalHeight = lines.length * lineHeight;
         let startY = -totalHeight / 2 + lineHeight / 2;
         

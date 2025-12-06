@@ -64,8 +64,31 @@
   },
  
   "projects": [
+      
        {
-      "company": "Ceros",
+      "title": "GTM content",
+      "position": "Content strategist",
+      "type": "Full-time",
+      "duration": "2017-2019",
+      "description": "Ceros is an experiential content creation platform; think photoshop for front-end code.  My role was to discover and execute use cases for customers in trial, write content from a mobile-first mindset, and lead the strategic briefing process. As content strategist, I was tasked to lead the creative conversation during a client’s trial period. I did this by relating to clients that static content written from a paper perspective – even if insightful and strategic– is viewed by their customers as merely lumps of words. From writing strategic briefs to filming webinars to pitching experiential activations, I was central to turning static .pdfs into interactive, mobile-friendly content that showcased Ceros's value to its clients"
+    },
+       {
+      "title": "",
+      "position": "Content strategist",
+      "type": "Full-time",
+      "duration": "2017-2019",
+      "description": "Ceros is an experiential content creation platform; think photoshop for front-end code.  My role was to discover and execute use cases for customers in trial, write content from a mobile-first mindset, and lead the strategic briefing process. As content strategist, I was tasked to lead the creative conversation during a client’s trial period. I did this by relating to clients that static content written from a paper perspective – even if insightful and strategic– is viewed by their customers as merely lumps of words. From writing strategic briefs to filming webinars to pitching experiential activations, I was central to turning static .pdfs into interactive, mobile-friendly content that showcased Ceros's value to its clients"
+    },
+
+       {
+      "title": "AI content",
+      "position": "Content strategist",
+      "type": "Full-time",
+      "duration": "2017-2019",
+      "description": "Ceros is an experiential content creation platform; think photoshop for front-end code.  My role was to discover and execute use cases for customers in trial, write content from a mobile-first mindset, and lead the strategic briefing process. As content strategist, I was tasked to lead the creative conversation during a client’s trial period. I did this by relating to clients that static content written from a paper perspective – even if insightful and strategic– is viewed by their customers as merely lumps of words. From writing strategic briefs to filming webinars to pitching experiential activations, I was central to turning static .pdfs into interactive, mobile-friendly content that showcased Ceros's value to its clients"
+    },
+    {
+      "title": "Ceros",
       "position": "Content strategist",
       "type": "Full-time",
       "duration": "2017-2019",
@@ -75,6 +98,7 @@
       
       {
       "title": "Cincoro",
+      "shape": "circle",
             "category": "tequila",
       "position": "Creative director",
       "type": "Freelance",
@@ -109,6 +133,8 @@
       {
       "title": "DroneDeploy Safety AI launch",
       "category": "enterprise SaaS reality capture",
+      "type": "Freelance",
+      "duration": "2022",
       "description": "As part of DroneDeploy's Safety AI gtm campaign, this article explores how AI is purpose-built to protect workers, fortify compliance, and support a culture of safety.",
       "techStack": ["Next.js", "TypeScript", "Google Gemini API", "React", "Tailwind CSS", "Vercel"],
       "date": "April 2025",
@@ -136,6 +162,7 @@
     {
       "title": "Sentry Performance launch",
       "category": "DevOps",
+      "shape": "circle",
       "description": "Product releases run the risk of getting bogged down in their own jargon. For Sentry’s Performance product release, this meant turning jargony benefits (such as improved Apdex scores and p95 response times) into a simple, differentiating insight. My tagline – See Slow Faster – articulated Sentry's competitive advantage, propelling the unicorn to 3x ARR and cement its status as a leader in application performance monitoring.",
       "techStack": ["Python", "Machine Learning", "Swagger", "Uvicorn"],
       "featured": true,
@@ -182,7 +209,8 @@
       ]
     },  
     {
-      "title": "Sentry Dogfooding Chronicles",
+      "title": "Dogfooding Chronicles",
+      "shape": "circle",
       "category": "Developer Relations",
       "description": "Dogfooding is the process in which a company uses its own product as a quality control mechanism. Think: the hair club for men guy. With Dogfooding Chronicles, we could tell the stories of software engineers  used the platform to improve the platform, syndicating unique anecdotes of how dev teams approached the inevitable flaws in their work with honesty and humor. ",
       "techStack": ["JavaScript", "Feature flags", "documentation"],
@@ -203,7 +231,7 @@
         {
       "title": "FBIQ",
       "category": "Machine Learning",
-      "description": "Winning the hearts, minds, and budgets of media strategists everywhereFacebook IQ was a tool that helped brands better target audiences through context-based programmatic ads. For example: if a facebook friend announced their engagement, FBIQ would shoehorn contextual ads in your feed -- things like bachelor party destinations and 20 percent off cummerbund rentals.To debut FBIQ, Facebook invited over two hundred media leaders to premiere events in New York, Chicago and Los Angeles. They tasked Momentum Worldwide with thinking through event activations that could tie Facebook's culture with the benefits the tool offered advertisers.As part of Momentum's pitch team, I helped think through creative opportunities for FBIQ's premiere event ranging from invites to booking talent, on-premise activations, and follow-up communications.",
+      "description": "Winning the hearts, minds, and budgets of media strategists everywhere. Facebook IQ was a tool that helped brands better target audiences through context-based programmatic ads. For example: if a facebook friend announced their engagement, FBIQ would shoehorn contextual ads in your feed -- things like bachelor party destinations and 20 percent off cummerbund rentals.To debut FBIQ, Facebook invited over two hundred media leaders to premiere events in New York, Chicago and Los Angeles. They tasked Momentum Worldwide with thinking through event activations that could tie Facebook's culture with the benefits the tool offered advertisers.As part of Momentum's pitch team, I helped think through creative opportunities for FBIQ's premiere event ranging from invites to booking talent, on-premise activations, and follow-up communications.",
       "links": [
         {
           "name": "case study",
@@ -211,25 +239,7 @@
         }
       ]
     },   
-        {
-      "title": "Espolon",
-      "category": "Machine Learning",
-      "description": "ML-powered laptop price prediction system built with Streamlit. Features clean interface, fast predictions, and easy deployment via Docker. Uses key attributes like brand, CPU, RAM, storage, GPU, and screen size for accurate real-time price estimates.",
-      "techStack": ["Python", "Streamlit", "scikit-learn", "Docker", "Pandas", "Machine Learning"],
-      "date": "2025",
-      "status": "Completed",
-      "featured": true,
-      "links": [
-        {
-          "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/IntelliPrice"
-        },
-        {
-          "name": "Demo GIF",
-          "url": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif"
-        }
-      ]
-    },  
+    
        
     
   
@@ -259,31 +269,7 @@
         }
       ]
     },  
-        {
-      "title": "Abbott Pharma",
-      "category": "pharmaceuticals",
-      "description": "ML-powered laptop price prediction system built with Streamlit. Features clean interface, fast predictions, and easy deployment via Docker. Uses key attributes like brand, CPU, RAM, storage, GPU, and screen size for accurate real-time price estimates.",
-      "techStack": ["Python", "Streamlit", "scikit-learn", "Docker", "Pandas", "Machine Learning"],
-      "date": "2025",
-      "status": "Completed",
-      "featured": true,
-      "links": [
-        {
-          "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/IntelliPrice"
-        },
-        {
-          "name": "Demo GIF",
-          "url": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif"
-        }
-      ],
-      "images": [
-        {
-          "src": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif?raw=true",
-          "alt": "IntelliPrice App Demo"
-        }
-      ]
-    },  
+     
         {
       "title": "GE",
       "category": "experiential content",
@@ -308,6 +294,7 @@
     },  
         {
       "title": "Ceros internal",
+      "shape":"circle",
       "category": "content strategy",
       "description": "Ceros is a B2B content creation platform; think photoshop for front-end code. Many Ceros clients in trial were suffering from blank platform syndrome; that is, while they had an appreciation of the tool itself, they lacked  an understanding of its application to their broader content initiatives.<br/> As content strategist, I was tasked to lead the creative conversation during a client’s trial. I approached this by relating to clients that most digital content is still being written as if from a typewriter — despite being read on a screen. And that static content written from this paper perspective – even if well-written and strategic –  is viewed by their customers as merely lumps of words.<br/> From writing strategic briefs to pitching experiential activations and rewriting client inputs, I was central to turning  static .pdfs into interactive, mobile-friendly content in ways which showcased the Ceros platform.",
       "techStack": ["Ceros"],
@@ -375,21 +362,22 @@
        "images": [
         {
           "src": "img/hp_era.png",
-          "alt": "IntelliPrice App Demo"
+          "alt": "Intell"
         },
           {
           "src": "img/hpthree.png",
-          "alt": "IntelliPrice App Demo"
+          "alt": " App Demo"
         },
          {
           "src": "img/hpcover.png",
-          "alt": "IntelliPrice App Demo"
+          "alt": " Demo"
         }
       ]
       
     },  
         {
       "title": "Airbnb",
+      "shape":"circle",
       "category": "Employer branding",
       "description": "Coming out of the pandemic (and the subsequent great resignation), competition for talent has ratcheted up. To that end, companies are changing how they view career websites: from a mere job repository to a digital moment where they can define their culture to candidates.  While working at talent agency Symphony Studio, I was assigned to writing Airbnb’s career website. That first meant establishing their Employer Brand Proposition: that is, the values and benefits which differentiates Airbnb from not only their competitors, but the workforce at large. Working with Airbnb executives and HR stakeholders, we articulated AirBnb’s core values, their Live and Work Anywhere policy, and growth opportunities with responsive, mobile-friendly content that speaks simply, directly, and strategically to candidates.",
       "techStack": ["figma", "contentful", "milanote"],
@@ -415,7 +403,7 @@
       "title": "Sentry Customer Stories",
       "category": "Developer Relations",
       "description": "The consequences of poor application performance are both real and terrifying: lost customers, lost trust from your team, and lost confidence in your abilities. It’s why every developer remembers those moments where their solution improves both process and performance -- and why Sentry celebrates their Great Moments in Application Monitoring:",
-      "techStack": ["Full stack integration"],
+      "techStack": "Full stack integration",
       "featured": true,
       "links": [
         {
