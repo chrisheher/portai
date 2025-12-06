@@ -79,7 +79,7 @@ const fullProject = data.find((p: any) => p.title === project.title);
       })
     : data;
 
-const cards = projectsToDisplay.map((card: any, index) => (    <Card key={card.src || card.title} card={card} index={index} layout={true} />
+const cards = projectsToDisplay.map((card: any, index: number) => (  <Card key={card.src || card.title} card={card} index={index} layout={true} />
   ));
 
   const projectCount = projectsToDisplay.length;
