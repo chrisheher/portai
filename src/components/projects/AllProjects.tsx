@@ -91,8 +91,7 @@ const cards = projectsToDisplay.map((card: any, index: number) => (  <Card key={
 
 const handleShapeClick = (item: Project) => {
   const projectTitle = item.title;
-  const index = projectsToDisplay.findIndex(p => p.title === projectTitle);
-  if (index !== -1) {
+const index = projectsToDisplay.findIndex((p: any) => p.title === projectTitle);  if (index !== -1) {
     setSelectedProjectIndex(index);
   }
 };
