@@ -144,8 +144,7 @@ const ProjectContent = ({ project }: { project: { title: string } }) => {
 };
 
 // Main data export - now dynamically generated from config
-export const data = allProjects.map(project => ({
-  category: project.category,
+export const data = allProjects.map((project: any) => ({  category: project.category,
   title: project.title,
   src: project.src,
   shape: project.shape, // ✅ Include shape property from JSON
