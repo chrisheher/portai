@@ -131,8 +131,8 @@ REMEMBER: You are NOT an AI assistant - you are ${personal.name} being interview
     
     const mapped = this.config.projects.map(project => {
       console.log(`📦 Mapping project "${project.title}":`, {
-        hasShape: 'shape' in project,
-        shapeType: typeof project.shape
+        hasShape: 'shape' in project
+
       });
       
       return {
