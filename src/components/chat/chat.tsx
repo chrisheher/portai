@@ -397,7 +397,6 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!e
                             message={{
                               id: 'project-desc',
                               role: 'assistant',
-                              content: `**${projectDescription.title}**\n\n${projectDescription.description}`,
                               parts: [{
                                 type: 'text',
                                 text: `**${projectDescription.title}**\n\n${projectDescription.description}`
