@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { useChat } from '@ai-sdk/react';
 
 // Components
-import ChatBottombar from './chat-bottombar';
+import ChatBottombar from '@/components/chat/chat-bottombar';
 import ChatLanding from '@/components/chat/chat-landing';
 import ChatMessageContent from '@/components/chat/chat-message-content';
 import { SimplifiedChatView } from '@/components/chat/simple-chat-view';
@@ -161,7 +161,7 @@ const isToolInProgress = messages.some(
     submitQueryToAI(query);
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormEvent>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!input.trim() || isToolInProgress) return;
     submitQueryToAI(input);
@@ -387,7 +387,7 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!e
 
             {/* Chat messages area */}
             <div className="flex-1 w-full px-2 py-0 pointer-events-none">
-              <div className="mx-auto max-w-3xl w-full pointer-events-auto">
+              <div className="mx-auto max-w-7xl w-full pointer-events-auto">
                 <AnimatePresence mode="wait">
                   {projectDescription ? (
                     <motion.div key="project-description" {...MOTION_CONFIG}>
@@ -465,7 +465,7 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!e
 
       {/* Bottom Bar */}
       <ClientOnly>
-        <div className="fixed top-0 left-0 right-0 z-[500] pb-2 pt-2">
+        <div className="fixed top-0 left-0 right-0 z-[500] pb-4 pt-2">
           <div className="container mx-auto max-w-3xl px-4">
             <div className="relative flex flex-col items-center gap-3">
               <HelperBoost submitQuery={submitQuery} setInput={setInput} handlePresetReply={handlePresetReply} />
