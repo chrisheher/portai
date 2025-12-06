@@ -28,7 +28,7 @@ export default function AllProjects({ data: toolData }: AllProjectsProps) {
   // Use filtered projects from tool if available, otherwise use all projects
   const projectsToDisplay = toolData?.projects 
     ? toolData.projects.map((project: any) => {
-        const fullProject = data.find(p => p.title === project.title);
+const fullProject = data.find((p: any) => p.title === project.title);
         
         if (fullProject) {
           return fullProject;
