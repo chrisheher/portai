@@ -72,16 +72,19 @@ export interface Project {
   title: string;
   category: string;
   description: string;
-  techStack: string[];
-  date: string;
-  status: string;
-  featured: boolean;
+  date?: string;
+  status?: string;
+  images?: Array<{
+    src: string;
+    alt: string;
+  }>;
+  links?: Record<string, string> | any;
+  techStack?: string[];
   achievements?: string[];
   metrics?: string[];
-  links: ProjectLink[];
-  images: ProjectImage[];
+  featured?: boolean;
+  shape?: string;  // Add this line
 }
-
 export interface Social {
   linkedin: string;
   github: string;
