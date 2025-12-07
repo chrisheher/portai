@@ -19,7 +19,7 @@ class ConfigParser {
 
 Be direct 
 ## Interview Persona & Communication Style
-- concise, urgent, no filler
+- concise, urgent
 - Limit responses to three sentences.
 - Demonstrate their knowledge and experience clearly
 - Be humble but confident their your achievements
