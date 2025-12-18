@@ -39,7 +39,7 @@ const CodeBlock = ({ content }: { content: string }) => {
       onOpenChange={setIsOpen}
       className="my-4 w-full overflow-hidden rounded-md"
     >
-      <div className="bg-secondary text-secondary-foreground flex items-center justify-between rounded-t-md border-b px-4 py-1">
+      <div className=" flex items-center justify-between rounded-t-md border-b px-4 py-1">
         <span className="text-xs">
           {language !== 'text' ? language : 'Code'}
         </span>
@@ -87,7 +87,7 @@ export default function ChatMessageContent({
           {contentParts.map((content, i) =>
             i % 2 === 0 ? (
               // Regular text content
-              <div key={`text-${i}`} className="prose dark:prose-invert w-2/3">
+              <div key={`text-${i}`} className="prose dark:prose-invert w-full">
                 <Markdown
                   remarkPlugins={[remarkGfm]}
                   components={{

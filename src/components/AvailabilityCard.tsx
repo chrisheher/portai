@@ -141,8 +141,8 @@ const AvailabilityCard = ({ data }: AvailabilityCardProps) => {
                   <li key={index}>{skill}</li>
                 )) || (
                   <>
-                    <li>Python, SQL, JavaScript, HTML/CSS</li>
-                    <li>FastAPI, Flask, Django, React.js</li>
+                    <li>Python, SQL</li>
+                    <li>FastAPI, Flask, Django</li>
                     <li>Scikit-learn, XGBoost, TensorFlow, OpenCV</li>
                     <li>OpenAI API, LangChain, LangGraph</li>
                   </>
@@ -153,7 +153,7 @@ const AvailabilityCard = ({ data }: AvailabilityCardProps) => {
                   <li key={index}>{skill}</li>
                 )) || (
                   <>
-                    <li>Docker, Git, GitHub Actions, AWS</li>
+                    <li>Docker, AWS</li>
                     <li>Firebase, Heroku, ESP32, IoT</li>
                     <li>Machine Learning, AI Agents</li>
                     <li>Web Scraping, Automation</li>

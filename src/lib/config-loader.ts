@@ -2,6 +2,8 @@
 import ConfigParser from './config-parser';
 import { PortfolioConfig } from '@/types/portfolio';
 
+
+
 // Import the configuration file - using dynamic import for better compatibility
 let portfolioConfig: PortfolioConfig;
 
@@ -15,8 +17,8 @@ try {
   portfolioConfig = {
     personal: {
       name: 'Configuration Error',
-      age: 0,
-      location: 'Unknown',
+      age: 42,
+      location: 'alameda',
       title: 'Error Loading Config',
       email: 'error@example.com',
       handle: '@error',
@@ -36,7 +38,7 @@ try {
     },
     experience: [],
     skills: {
-      programming: [],
+      programming: ['javascript'],
       ml_ai: [],
       web_development: [],
       databases: [],

@@ -20,9 +20,30 @@ const toolFunctions: Record<string, any> = {
   analyzeJob,
 };
 
-// ✅ Safety check for presetReplies
 const presetReplies = importedPresetReplies || {};
 console.log('📋 Preset replies loaded:', Object.keys(presetReplies).length);
+
+function extractKeyRequirements(jobDescription: string): string {
+  const lines = jobDescription.split('\n');
+  
+  // Look for requirements section
+  const reqStart = lines.findIndex(line => 
+    /requirements?|qualifications?|skills?|must have/i.test(line)
+  );
+    if (reqStart === -1) {
+    // No clear section, take first 500 chars
+    return jobDescription.substring(0, 500);
+  }
+  
+  // Take 10 lines after "Requirements"
+  return lines.slice(reqStart, reqStart + 10).join('\n').substring(0, 500);
+}
+
+function extractKeyQualifications(resume: string): string {
+  // For now, return first 600 chars of resume
+  // TODO: Parse actual resume structure when available
+  return resume.substring(0, 600);
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -30,6 +51,13 @@ export async function POST(req: NextRequest) {
     
     const body = await req.json();
     let messages = body.messages;
+    const customSystem = body.system;
+
+    console.log('🔍 Request details:', {
+      messagesCount: messages?.length,
+      hasCustomSystem: !!customSystem,
+      systemPreview: customSystem ? customSystem.substring(0, 100) + '...' : 'none'
+    });
 
     if (!Array.isArray(messages)) {
       console.error('❌ Invalid messages array');
@@ -39,7 +67,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check API key
     if (!process.env.ANTHROPIC_API_KEY) {
       console.error('❌ Missing ANTHROPIC_API_KEY');
       return NextResponse.json(
@@ -50,7 +77,6 @@ export async function POST(req: NextRequest) {
 
     console.log('✅ Messages received:', messages.length);
 
-    // Normalize messages
     messages = messages.map((msg: any) =>
       typeof msg === 'string' ? { role: 'user', content: msg } : msg
     );
@@ -58,7 +84,6 @@ export async function POST(req: NextRequest) {
     const lastUserMessage = messages[messages.length - 1]?.content;
     console.log('💬 Last user message:', lastUserMessage);
 
-    // ----- PRESET QUESTIONS -----
     if (lastUserMessage && presetReplies && presetReplies[lastUserMessage]) {
       console.log('🎯 Preset reply detected');
       const preset = presetReplies[lastUserMessage];
@@ -83,10 +108,10 @@ export async function POST(req: NextRequest) {
 
           console.log('✅ Tool executed successfully');
 
-          // Generate narrated summary via Claude
           const narrationResponse = await anthropic.messages.create({
             model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
             max_tokens: 1024,
+            system: customSystem || systemPrompt,
             messages: [
               {
                 role: 'user',
@@ -118,13 +143,10 @@ ${JSON.stringify(toolData, null, 2)}`
       }
     }
 
-    // ----- NORMAL CHAT WITH TOOLS -----
     console.log('🤖 Calling Claude API...');
+    console.log('🎯 Using system prompt:', customSystem ? 'CUSTOM (Devin/Scout)' : 'DEFAULT');
     
-    const response = await anthropic.messages.create({
-      model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
-      max_tokens: 2048,
-      system: `${systemPrompt}
+    const effectiveSystemPrompt = customSystem || `${systemPrompt}
 
 CRITICAL TOOL USAGE INSTRUCTIONS:
 
@@ -136,12 +158,16 @@ When the user asks about projects, you MUST analyze their query and extract filt
 - If they ask for "best", "featured", "top", or "favorite" projects → use featured: true
 
 2. JOB ANALYSIS - CRITICAL:
-When the user provides ANYTHING related to job descriptions or URLs to job postings, you MUST call the analyzeJob tool immediately.`,
+When the user provides ANYTHING related to job descriptions or URLs to job postings, you MUST call the analyzeJob tool immediately.`;
+
+    const response = await anthropic.messages.create({
+      model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
+      max_tokens: 2048,
+      system: effectiveSystemPrompt,
       messages: messages.map((msg: any) => ({
         role: msg.role,
         content: msg.content
       })),
- 
       tools: [
         {
           name: "getProjects",
@@ -193,7 +219,6 @@ When the user provides ANYTHING related to job descriptions or URLs to job posti
 
     console.log('✅ Claude response received');
 
-    // ----- HANDLE TOOL USE -----
     const toolUseContent = response.content.find(c => c.type === 'tool_use');
     
     if (toolUseContent && toolUseContent.type === 'tool_use') {
@@ -221,7 +246,6 @@ When the user provides ANYTHING related to job descriptions or URLs to job posti
 
         console.log('✅ Tool executed successfully');
 
-        // For job analysis
         if (toolName === 'analyzeJob') {
           return NextResponse.json([
             { 
@@ -233,10 +257,10 @@ When the user provides ANYTHING related to job descriptions or URLs to job posti
           ]);
         }
 
-        // Generate narrated summary
         const narrationResponse = await anthropic.messages.create({
           model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
           max_tokens: 1024,
+          system: customSystem || systemPrompt,
           messages: [{
             role: 'user',
             content: `Summarize naturally: ${JSON.stringify(toolData, null, 2)}`
@@ -253,7 +277,6 @@ When the user provides ANYTHING related to job descriptions or URLs to job posti
       }
     }
 
-    // ----- RETURN TEXT RESPONSE -----
     const textContent = response.content.find(c => c.type === 'text');
     
     if (!textContent || textContent.type !== 'text') {
@@ -264,7 +287,12 @@ When the user provides ANYTHING related to job descriptions or URLs to job posti
       );
     }
 
-    console.log('✅ Returning text response');
+    console.log('✅ Returning text response:', {
+      mode: customSystem ? 'CUSTOM' : 'DEFAULT',
+      contentLength: textContent.text.length,
+      preview: textContent.text.substring(0, 100)
+    });
+    
     return NextResponse.json([{ role: 'assistant', content: textContent.text }]);
     
   } catch (error: any) {

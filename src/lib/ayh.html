@@ -38,13 +38,13 @@ function getHVertices() {
     const stemWidth = 100;
     const totalHeight = 350;
     const archStartY = 200; // <--- THIS IS LOWERED (Was effectively 70 before)
-    const legWidth = 70;
+    const legWidth = 40;
     const radius = 80;
     
     // 1. LEFT STEM (The tall part)
     vertices.push({ x: 0, y: totalHeight });        // Bottom Left
     vertices.push({ x: 15, y: 15 });                 // Top Left (tapered)
-    vertices.push({ x: stemWidth, y: 0 });          // Top Right of Stem
+    vertices.push({ x: stemWidth, y: 20 });          // Top Right of Stem
     
     // 2. THE "NECK" (The straight line down to the arch)
     vertices.push({ x: stemWidth, y: archStartY }); 

@@ -3,8 +3,7 @@
 import {
   ChatBubble,
   ChatBubbleMessage,
-} from '@/components/ui/chat/chat-bubble';
-import { ChatRequestOptions } from 'ai';
+} from '../ui/chat/chat-bubble';
 import { UIMessage } from 'ai';
 import { motion } from 'framer-motion';
 import ChatMessageContent from './chat-message-content';
@@ -13,8 +12,8 @@ import ToolRenderer from './tool-renderer';
 interface SimplifiedChatViewProps {
   message: UIMessage;
   isLoading: boolean;
- 
 }
+
 const MOTION_CONFIG = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
@@ -27,31 +26,37 @@ const MOTION_CONFIG = {
 export function SimplifiedChatView({
   message,
   isLoading,
-  
 }: SimplifiedChatViewProps) {
   if (message.role !== 'assistant') return null;
 
   // Extract tool invocations that are in "result" state
-const toolInvocations =
-  message.parts
-    ?.filter((part) => part.type === 'tool-result')
-    .map((part) => part) || [];
+  const toolInvocations =
+    message.parts
+      ?.filter((part) => part.type === 'tool-result')
+      .map((part) => part) || [];
 
   // Only display the first tool (if any)
   const currentTool = toolInvocations.length > 0 ? [toolInvocations[0]] : [];
 
-  // Check if we have meaningful text content (more than just confirmations)
-const textContent = message.parts
-  ?.filter((part) => part.type === 'text')
-  .map((part) => part.type === 'text' ? part.text : '')
-  .join('') || '';
-const hasTextContent = textContent.trim().length > 0;
+  // Check if we have meaningful text content
+  const textContent = message.parts
+    ?.filter((part) => part.type === 'text')
+    .map((part) => part.type === 'text' ? part.text : '')
+    .join('') || '';
+  
+  const hasTextContent = textContent.trim().length > 0;
   const hasTools = currentTool.length > 0;
   
-  // If we have tools, minimize text content to avoid redundancy
-const showTextContent = hasTextContent && (!hasTools || textContent.trim().length > 50);
+  // For text-only responses (like Devin mode), always show text
+  // For tool responses, show text if it's substantial (> 50 chars)
+  const showTextContent = hasTextContent && (!hasTools || textContent.trim().length > 50);
 
-  console.log('currentTool', currentTool);
+  console.log('SimplifiedChatView:', { 
+    hasTools, 
+    hasTextContent, 
+    showTextContent,
+    textLength: textContent.length 
+  });
 
   return (
     <motion.div {...MOTION_CONFIG} className="flex h-full w-full flex-col px-4">
@@ -67,18 +72,27 @@ const showTextContent = hasTextContent && (!hasTools || textContent.trim().lengt
           </div>
         )}
 
-        {/* Text content - only show if meaningful and not redundant with tools */}
+        {/* Text content - always show for text-only responses */}
         {showTextContent && (
           <div className="w-full">
             <ChatBubble variant="received" className="w-full">
               <ChatBubbleMessage className="w-full">
-              <ChatMessageContent
-  message={message}
-  isLast={true}
-  isLoading={isLoading}
-  skipToolRendering={true}
-/>
+                <ChatMessageContent
+                  message={message}
+                  isLast={true}
+                  isLoading={isLoading}
+                  skipToolRendering={true}
+                />
               </ChatBubbleMessage>
+            </ChatBubble>
+          </div>
+        )}
+
+        {/* Loading state when no content yet */}
+        {!hasTextContent && !hasTools && isLoading && (
+          <div className="w-full">
+            <ChatBubble variant="received" className="w-full">
+              <ChatBubbleMessage isLoading />
             </ChatBubble>
           </div>
         )}

@@ -1,326 +1,761 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useRef, memo } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import dynamic from 'next/dynamic';
-import { data } from '@/components/projects/ConfigData';
-import { getConfig } from '@/lib/config-loader';
-import { JobAnalysisDisplay } from '@/components/chat/JobAnalysisDisplay';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import TumblingShapes from './TumblingShapes';
 
-const TumblingShapes = dynamic(() => import('./TumblingShapes'), { ssr: false });
+// Inline Carousel Component - SPLIT SCREEN LAYOUT
+function CarouselContent({ carouselData }: { 
+  carouselData: { 
+    images: { src: string; alt: string; url?: string }[];
+    title: string;
+    description?: string;
+    campaignListDescription?: string;
+    impact?: { stat: string }[];
+  } 
+}) {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-// ✅ Memoized wrapper to prevent re-renders
-const MemoizedTumblingShapes = memo(({ 
-  shapeKey, 
-  projects, 
-  onShapeClick 
-}: { 
-  shapeKey: number; 
-  projects: any[]; 
-  onShapeClick: (item: any) => void;
-}) => {
-  console.log('🎨 TumblingShapes rendering with key:', shapeKey);
-  return (
-    <TumblingShapes 
-      key={shapeKey}
-      projects={projects}
-      onShapeClick={onShapeClick}
-    />
-  );
-}, (prevProps, nextProps) => {
-  return prevProps.shapeKey === nextProps.shapeKey;
-});
-
-MemoizedTumblingShapes.displayName = 'MemoizedTumblingShapes';
-
-interface ChatLandingProps {
-  submitQuery: (query: string) => void;
-  handlePresetReply: (question: string, reply: string, tool: string) => void;
-  onSendPrompt: (prompt: string) => void;
-  onProjectClick?: (project: { title: string; description: string; links: any[] }) => void;
-  hasMessages?: boolean;
-  searchResults?: any[] | null;
-  jobAnalysisData?: any | null;
-  children?: React.ReactNode;
-}
-
-const ChatLanding: React.FC<ChatLandingProps> = ({ 
-  submitQuery,
-  handlePresetReply,
-  onSendPrompt,
-  onProjectClick,
-  hasMessages = false,
-  searchResults = null,
-  jobAnalysisData = null,
-  children 
-}) => {
-  const [showJobAnalysis, setShowJobAnalysis] = useState(false);
-  const [shapeKey, setShapeKey] = useState(0);
-
-  // Get configuration
-  const config = getConfig();
-
-  const allProjects = useMemo(() => data.map((project: any) => ({
-    title: project.title,
-    category: project.category,
-    src: project.src,
-    content: project.content,
-    type: 'project' as const,
-    shape: project.shape, // ✅ Include shape property from JSON
-  })), []);
-
-  const leftQuestions = useMemo(() => [
-    {
-      text: '.me',
-      subQuestions: [
-        { label: 'top projects', path: '/me/projects', category: 'question', prompt: 'Show me your top projects' },
-        { label: 'Which project are you most proud of?', path: '/me/proud', category: 'question', prompt: 'Which project are you most proud of?' },
-        { label: 'What kind of?', path: '/me/specialization', category: 'question', prompt: 'What kind of work do you specialize in?' },
-      ],
-    },
-    {
-      text: '.value',
-      subQuestions: [
-        { label: 'Walk me through your professional experience', path: '/value/experience', category: 'question', prompt: 'Walk me through your professional experience' },
-        { label: 'versus AI', path: '/value/challenge', category: 'question', prompt: 'versus AI' },
-        { label: 'What are your technical skills?', path: '/value/skills', category: 'question', prompt: 'What are your technical skills?' },
-      ],
-    },
-  ], []);
-
-  const questionShapes = useMemo(() => leftQuestions.flatMap(section => 
-    section.subQuestions.map(q => ({
-      title: q.label,
-      category: 'question',
-      type: 'question' as const,
-      prompt: q.prompt,
-    }))
-  ), [leftQuestions]);
-
-  const allTumblingItems = useMemo(() => 
-    [...allProjects, ...questionShapes], 
-    [allProjects, questionShapes]
-  );
-
-  const [displayedItems, setDisplayedItems] = useState<any[]>(() => {
-    const projects = data.map((project: any) => ({
-      title: project.title,
-      category: project.category,
-      src: project.src,
-      content: project.content,
-      type: 'project' as const,
-      shape: project.shape, // ✅ Include shape property from JSON
-    }));
-
-    const questions = [
-      {
-        text: '.me',
-        subQuestions: [
-          { label: 'top projects', path: '/me/projects', category: 'question', prompt: 'Show me your top projects' },
-          { label: 'Which project?', path: '/me/proud', category: 'question', prompt: 'Which project are you most proud of?' },
-          { label: 'specialize in?', path: '/me/specialization', category: 'question', prompt: 'What kind of work do you specialize in?' },
-        ],
-      },
-      {
-        text: '.value',
-        subQuestions: [
-          { label: 'professional', path: '/value/experience', category: 'question', prompt: 'Walk me through your professional experience' },
-          { label: 'versus AI', path: '/value/challenge', category: 'question', prompt: 'versus AI' },
-          { label: 'technical skills?', path: '/value/skills', category: 'question', prompt: 'What are your technical skills?' },
-        ],
-      },
-    ].flatMap(section => 
-      section.subQuestions.map(q => ({
-        title: q.label,
-        category: 'question',
-        type: 'question' as const,
-        prompt: q.prompt,
-      }))
-    );
-
-    return [...projects, ...questions];
-  });
-
-  const searchResultsRef = useRef(searchResults);
-  
-  useEffect(() => {
-    if (searchResultsRef.current !== searchResults && searchResults && searchResults.length > 0) {
-      console.log('🪣 NEW BUCKET TOSS!');
-      setDisplayedItems(searchResults);
-      setShapeKey(prev => prev + 1);
-      searchResultsRef.current = searchResults;
-    }
-  }, [searchResults]);
-
-  // Show job analysis modal when data arrives
-  useEffect(() => {
-    if (jobAnalysisData) {
-      setShowJobAnalysis(true);
-    }
-  }, [jobAnalysisData]);
-
-const handleShapeClick = useMemo(() => (item: any) => {
-    if (item.type === 'project') {
-      console.log('🎯 Project clicked:', item.title);
-      
-      // Get links directly from config
-      const projectData = config.projects.find(p => p.title === item.title);
-      
-      console.log('📂 Found project data:', projectData);
-      console.log('🔗 Links raw:', projectData?.links);
-      
-      if (projectData && projectData.links) {
-        // Ensure links is an object before converting
-        let linksArray: any[] = [];
-        
-        if (typeof projectData.links === 'object' && !Array.isArray(projectData.links)) {
-          linksArray = Object.entries(projectData.links).map(([name, url]) => {
-            console.log(`   Converting link: ${name} → ${url}`);
-            return {
-              title: name,
-              category: 'link',
-              type: 'link' as const,
-              url: String(url)
-            };
-          });
-        } else if (Array.isArray(projectData.links)) {
-          // Already an array
-          console.log('✅ Links already array:', projectData.links);
-          linksArray = projectData.links.map(link => ({
-            title: link.name,
-            category: 'link',
-            type: 'link' as const,
-            url: link.url
-          }));
-        } else {
-          console.warn('⚠️ Links is not an object or array:', typeof projectData.links);
-        }
-        
-        console.log('✅ Final links array:', linksArray);
-        
-        // Notify parent component about project click
-        if (onProjectClick) {
-          onProjectClick({
-            title: projectData.title,
-            description: projectData.description,
-            links: linksArray
-          });
-        }
-        
-        // Update displayed items to show links as tumbling shapes
-        setDisplayedItems(linksArray);
-        setShapeKey(prev => prev + 1);
-      } else {
-        console.warn('⚠️ No project data or links found');
-      }
-    } else if (item.type === 'link') {
-      // ✅ Open link in new tab
-      window.open(item.url, '_blank', 'noopener,noreferrer');
-    } else if (item.type === 'question') {
-      onSendPrompt(item.prompt);
-    }
-  }, [config.projects, onSendPrompt, onProjectClick]);
-
-  const handleJobAnalysisClose = () => {
-    setShowJobAnalysis(false);
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % carouselData.images.length);
   };
 
-  useEffect(() => {
-    document.documentElement.style.height = '100%';
-    document.body.style.height = '100%';
-    document.body.style.margin = '0';
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, []);
+  const goToPrevious = () => {
+    setCurrentIndex((prev) => (prev - 1 + carouselData.images.length) % carouselData.images.length);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentIndex(index);
+  };
+
+  const handleImageClick = () => {
+    if (carouselData.images[currentIndex].url) {
+      window.open(carouselData.images[currentIndex].url, '_blank');
+    }
+  };
 
   return (
-    <>
-      {/* TUMBLING SHAPES - Always visible in background */}
-      <div className="fixed inset-0 z-10 bg-[#d4c4b0] pointer-events-none">
-        <div className="pointer-events-auto">
-          {displayedItems.length > 0 && (
-            <MemoizedTumblingShapes 
-              shapeKey={shapeKey}
-              projects={displayedItems}
-              onShapeClick={handleShapeClick}
-            />
+    <div className="fixed inset-0 z-[601] bg-[#dcd3c3] flex">
+      {/* LEFT HALF - Description & Impact */}
+      <div className="w-1/2 h-full overflow-y-auto p-12 flex flex-col justify-center">
+        <div className="max-w-xl mx-auto">
+          {/* Title */}
+          <h2 className="text-[#8c6a48] text-3xl font-bold mb-6">
+            Cincoro Tequila | brand launch
+          </h2>
+
+          {/* Campaign List Description */}
+          {carouselData.campaignListDescription && (
+            <p className="text-[#8c6a48] text-lg leading-relaxed mb-8">
+              {carouselData.campaignListDescription}
+            </p>
+          )}
+
+          {/* Description */}
+          {carouselData.description && (
+            <p className="text-[#8c6a48] text-base leading-relaxed mb-8">
+              {carouselData.description}
+            </p>
+          )}
+
+          {/* Impact Stats */}
+          {carouselData.impact && carouselData.impact.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="text-[#8c6a48] text-2xl font-semibold mb-4">Impact</h3>
+              {carouselData.impact.map((item, index) => (
+                <div key={index} className="flex items-start gap-3">
+                  <div className="w-2 h-2 rounded-full bg-[#8c6a48] mt-2 flex-shrink-0" />
+                  <p className="text-[#8c6a48] text-base leading-relaxed">
+                    {item.stat}
+                  </p>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>
 
-      {/* JOB ANALYSIS MODAL */}
-      <AnimatePresence>
-        {showJobAnalysis && jobAnalysisData && (
-          <JobAnalysisModal
-            data={jobAnalysisData}
-            onClose={handleJobAnalysisClose}
-          />
-        )}
-      </AnimatePresence>
-    </>
-  );
-};
+      {/* RIGHT HALF - Carousel */}
+      <div className="w-1/2 h-full flex items-center justify-center p-12">
+        <div className="pt-8 w-xl max-w-2xl">
+          {/* Carousel Container */}
+          <div className="relative w-full aspect-square rounded-xl overflow-hidden shadow-2xl">
+            {/* Main Image */}
+            <div
+              onClick={handleImageClick}
+              className="w-full h-full flex items-center justify-center"
+              style={{ cursor: carouselData.images[currentIndex].url ? 'pointer' : 'default' }}
+            >
+              <img
+                src={carouselData.images[currentIndex].src}
+                alt={carouselData.images[currentIndex].alt}
+                className="max-w-full max-h-full object-contain"
+              />
+            </div>
 
-// Job Analysis Modal Component
-function JobAnalysisModal({ data, onClose }: { data: any; onClose: () => void }) {
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
+            {/* Navigation Arrows */}
+            {carouselData.images.length > 1 && (
+              <>
+                <button
+                  onClick={goToPrevious}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-[rgba(94,70,49,0.8)] text-[#dcd3c3] w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold hover:bg-[rgba(94,70,49,0.95)] transition-all z-10"
+                >
+                  ‹
+                </button>
 
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('keydown', handleKeyDown);
+                <button
+                  onClick={goToNext}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-[rgba(94,70,49,0.8)] text-[#dcd3c3] w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold hover:bg-[rgba(94,70,49,0.95)] transition-all z-10"
+                >
+                  ›
+                </button>
+              </>
+            )}
 
-    return () => {
-      document.body.style.overflow = 'auto';
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onClose]);
-
-  return (
-    <div className="fixed inset-0 z-[200] h-screen overflow-auto">
-      <div
-        className="fixed inset-0 h-full w-full bg-black/80 backdrop-blur-lg"
-        onClick={onClose}
-      />
-      <div
-        className="relative z-[210] mx-auto my-8 h-fit max-w-5xl rounded-2xl bg-white font-sans dark:bg-neutral-900"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close button */}
-        <div className="sticky top-4 z-[220] flex justify-end px-8 pt-8 md:px-14 md:pt-8">
-          <button
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-black/90 shadow-md dark:bg-white/90"
-            onClick={onClose}
-          >
-            <svg className="h-6 w-6 text-neutral-100 dark:text-neutral-900" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 6 6 18" />
-              <path d="M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Header */}
-        <div className="relative px-8 pt-2 pb-0 md:px-14">
-          <div>
-            <p className="text-base font-medium text-black dark:text-white">
-              Job Analysis
-            </p>
-            <p className="mt-4 text-2xl font-semibold text-neutral-700 md:text-5xl dark:text-white">
-              {data.jobTitle || 'Position Analysis'}
-            </p>
+            {/* Image counter */}
+            <div className="absolute bottom-4 right-4 bg-[rgba(94,70,49,0.8)] text-[#dcd3c3] px-4 py-2 rounded-full text-sm">
+              {currentIndex + 1} / {carouselData.images.length}
+            </div>
           </div>
-        </div>
 
-        {/* Content */}
-        <div className="px-8 pt-8 pb-14 md:px-14">
-          <JobAnalysisDisplay data={data} />
+          {/* Thumbnail Navigation */}
+          {carouselData.images.length > 1 && (
+            <div className="flex justify-center gap-2 mt-6 flex-wrap">
+              {carouselData.images.map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className="w-16 h-16 rounded-lg overflow-hidden transition-all"
+                  style={{
+                    border: index === currentIndex ? '3px solid #dcd3c3' : '2px solid rgba(220,211,195,0.5)',
+                    opacity: index === currentIndex ? 1 : 0.6
+                  }}
+                >
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Instagram link hint */}
+          {carouselData.images[currentIndex].url && (
+            <p className="text-center text-[#dcd3c3] text-sm mt-4 italic">
+              Click image to view on Instagram
+            </p>
+          )}
         </div>
       </div>
+    </div>
+  );
+}
+
+interface Link {
+  name: string;
+  url: string;
+  shape?: 'letterC' | 'letterH' | 'letterR' | 'letterI' | 'letterS';
+}
+
+interface Project {
+  title: string;
+  links?: Link[];
+  category?: string;
+  type?: 'project' | 'link' | 'campaign' | 'image' | 'question';  // ⬅️ ADD 'question'
+  url?: string;
+  promptMode?: string;
+  description?: string;
+  campaignListDescription?: string;
+  imageSrc?: string;
+  images?: { src: string; alt: string; url?: string }[];
+  impact?: { stat: string }[];
+  campaignTitle?: string;
+}
+
+interface ChatLandingProps {
+  config: {
+    projects: Project[];
+  };
+  onChatCenter?: (centered: boolean) => void;
+  onSkillsClick?: () => void;
+  onDevinModeClick?: () => void;
+  onScoutModeClick?: () => void;
+  onCooperModeClick?: () => void;
+  onCreativeModeClick?: () => void;
+  onInsecureModeClick?: () => void;
+  onJobAnalysisOpen?: () => void;
+  onJobAnalysisClose?: () => void;
+  hideDescriptionBox?: boolean;
+    activePromptDescription?: string;  // ⬅️ ADD
+
+}
+
+function ChatLanding({ 
+  config, 
+  onChatCenter, 
+  onSkillsClick, 
+  onDevinModeClick,
+  onScoutModeClick,
+  onCooperModeClick,
+  onCreativeModeClick,
+  onInsecureModeClick,
+  onJobAnalysisOpen,
+  onJobAnalysisClose,
+  hideDescriptionBox = false,
+    activePromptDescription // ⬅️ ADD THIS
+
+}: ChatLandingProps) {
+  const [displayedItems, setDisplayedItems] = useState<Project[]>([]);
+  const [mode, setMode] = useState<'initial' | 'links'>('initial');
+  const [chatCentered, setChatCentered] = useState(false);
+  const [promptModeActive, setPromptModeActive] = useState(false);
+const [localDescription, setLocalDescription] = useState<string | null>(null);  
+  const [carouselData, setCarouselData] = useState<{
+    images: { src: string; alt: string; url?: string }[];
+    title: string;
+    description?: string;
+    campaignListDescription?: string;
+      impact?: { stat: string }[];  // ⬅️ ADD THIS LINE
+
+  } | null>(null);
+
+  // Debug logging for displayedItems
+  useEffect(() => {
+    console.log('🔍 displayedItems changed:', displayedItems);
+    console.log('🔍 Mode:', mode);
+    console.log('🔍 chatCentered:', chatCentered);
+  }, [displayedItems, mode, chatCentered]);
+
+  // Force background color on body element based on mode
+  useEffect(() => {
+    const backgroundColor = mode === 'initial' ? '#8c6a48' : '#dcd3c3';
+    
+    document.body.style.setProperty('background-color', backgroundColor, 'important');
+    document.documentElement.style.setProperty('background-color', backgroundColor, 'important');
+    
+    const parentContainer = document.body.firstElementChild as HTMLElement;
+    if (parentContainer && parentContainer.classList.contains('flex')) {
+      parentContainer.style.setProperty('background-color', backgroundColor, 'important');
+    }
+    
+    console.log('🎨 Background FORCED to:', backgroundColor, 'for mode:', mode);
+    
+    return () => {
+      document.body.style.backgroundColor = '';
+      document.documentElement.style.backgroundColor = '';
+    };
+  }, [mode, chatCentered]);
+
+  // Initial 5 letters (C, H, R, I, S)
+  const initialProjects = useMemo(() => [
+    { title: 'campaigns', type: 'project' as const },
+    { title: 'human ai', type: 'project' as const },
+    { title: 'readable tech content', type: 'project' as const },
+    { title: 'interactive', type: 'project' as const },
+    { title: 'skill scan', type: 'project' as const }
+  ], []);
+
+  // R-related links
+  const rLinks: Link[] = [
+    { name: "blog | Why debugging Javascript sucks", url: "https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/", shape: 'letterC' },
+    { name: "white paper | More Tools, More Problems", url: "https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf", shape: 'letterH' },
+    { name: "experiential content | Aviation turboprop", url: "https://www.ceros.com/inspire/project/ge-aviation-1", shape: 'letterS' },
+    { name: "blog | Measuring UX with Web Vitals", url: "https://blog.sentry.io/measuring-user-experience-with-web-vitals/", shape: 'letterI' },
+    { name: "blog | Great moments in application monitoring", url: "https://blog.sentry.io/great-moments-in-application-monitoring/", shape: 'letterS' },
+    { name: "guide | Safety, smarter: AI and your work site", url: "https://www.dronedeploy.com/blog/safety-smarter-artificial-intelligence-and-your-work-site", shape: 'letterH' },
+    { name: "guide | Ultimate guide to facade inspections", url: "https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections", shape: 'letterH' },
+    { name: "blog | Python 3 compatibility", url: "https://blog.sentry.io/python-3-compatibility-what-to-know/", shape: 'letterI' }
+  ];
+
+  // I-related links
+  const iLinks: Link[] = [
+    { name: "Sentry | Enterprise page", url: "https://www.sentry.dev/for/enterprise/" },
+    { name: "Sentry | performance monitoring", url: "https://www.sentry.dev/solutions/application-performance-monitoring/" },
+    { name: "Sentry | full stack monitoring", url: "https://sentry.io/for/full-stack/" },
+    { name: "Airbnb | career site", url: "https://careers.airbnb.com" },
+    { name: "DroneDeploy | Ground robotics", url: "https://example.com/link5" },
+    { name: "DroneDeploy | Safety AI", url: "https://www.dronedeploy.com/product/safety-ai" },
+    { name: "DroneDeploy | Data on Demand ", url: "https://www.dronedeploy.com/data-on-demand" },
+    { name: "DroneDeploy | industrial inspection", url: "https://www.dronedeploy.com/product/robotic-industrial-inspection" }
+  ];
+
+  const handleShapeClick = useCallback((item: Project) => {
+    console.log('📍 Shape clicked:', item.title, item);
+    
+    // HANDLE LINKS MODE - When user clicks a tumbled shape
+    if (mode === 'links') {
+      // Check if it's a prompt mode shape (from H click)
+      if (item.promptMode) {
+        console.log('🎯 Prompt mode shape clicked:', item.promptMode);
+        
+        // Update description when prompt mode is clicked
+setLocalDescription(item.description || null);
+        
+        setChatCentered(true);
+        onChatCenter?.(true);
+        
+        if (item.promptMode === 'devin') {
+          onDevinModeClick?.();
+        } else if (item.promptMode === 'scout') {
+          onScoutModeClick?.();
+        } else if (item.promptMode === 'cooper') {
+          onCooperModeClick?.();
+        } else if (item.promptMode === 'creative') {
+          onCreativeModeClick?.();
+        } else if (item.promptMode === 'insecure') {
+          onInsecureModeClick?.();
+        }
+        return;
+      }
+      
+      // Check if it's a campaign project
+      if (item.type === 'campaign') {
+        console.log('📢 Campaign clicked:', item.title);
+        
+        // Special handling for Cincoro - show carousel instead of tumbling links
+        if (item.title === 'Cincoro tequila | brand launch' && item.images && item.images.length > 0) {
+          console.log('🎠 Showing Cincoro carousel');
+          // Set displayedItems with carousel data to trigger description box
+          setDisplayedItems([{
+            title: item.title,
+            type: 'campaign' as const,
+            description: item.description,
+            campaignListDescription: item.campaignListDescription,
+            images: item.images
+          }]);
+          setCarouselData({
+            images: item.images,
+            title: item.title,
+            description: item.description,
+            campaignListDescription: item.campaignListDescription,
+            impact: item.impact
+          });
+          return;
+        }
+        
+        // For other campaigns - tumble links normally
+        const linkShapes = (item.links || []).map((link: Link) => ({
+          title: link.name,
+          url: link.url,
+          type: 'link' as const,
+          description: item.description,
+          campaignListDescription: item.campaignListDescription,
+          impact: item.impact,
+          campaignTitle: item.title
+        }));
+        
+        console.log(`📢 Showing ${linkShapes.length} links`);
+        console.log(`📊 Campaign impact:`, item.impact);
+        
+        setDisplayedItems(linkShapes);
+        return;
+      }
+      
+      // Regular link click - just open URL
+      if (item.type === 'link' || item.type === 'image') {
+        if (item.url) {
+          console.log('🔗 Opening link:', item.url);
+          window.open(item.url, '_blank');
+          return;
+        }
+      }
+    }
+    
+    // HANDLE INITIAL MODE - When user clicks CHRIS letters
+    
+    // C CLICK - Show campaigns
+    if (item.title === 'campaigns') {
+      console.log('📢 C clicked - showing campaigns');
+      
+      const hardcodedCampaigns: Project[] = [
+        {
+          title: 'DroneDeploy | Safety AI launch',
+          type: 'campaign' as const,
+          links: [
+            { name: 'awareness | use case', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections' },
+            { name: 'awareness | white paper', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf' },
+            { name: 'consideration | blog post', url: 'https://www.dronedeploy.com/blog/safety-smarter-artificial-intelligence-and-your-work-site' },
+            { name: 'evaluation | product page', url: 'https://www.dronedeploy.com/product/safety-ai' },
+            { name: 'retention | documentation', url: 'https://help.dronedeploy.com/hc/en-us/articles/26738008595479-What-is-Safety-AI' }
+          ],
+          description: 'DroneDeploy | Safety AI launch',
+          campaignListDescription: 'GTM campaign exploring how AI can be purpose-built to protect workers, fortify compliance, and support a culture of safety.',
+          impact: [
+            { stat: '71 Total Opportunities created in the quarter-to-date (QTD)' },
+            { stat: '$6,525 Closed Won — confirmed value captured from Safety AI-related pipeline.' },
+            { stat: '70 companies engaged in trial walks, indicating healthy conversion from awareness to hands-on experience.' },
+            { stat: '8,459 LinkedIn impressions and 641 engagements on Post 1 — indicating high visibility and meaningful interaction on social' }
+          ]
+        },
+        {
+          title: 'Sentry | Performance launch',
+          type: 'campaign' as const,
+          links: [
+            { name: 'Blog post', url: 'https://blog.sentry.io/how-slow-is-slow/' },
+            { name: 'Product release', url: 'https://blog.sentry.io/see-slow-faster-with-performance-monitoring/' },
+            { name: 'product page', url: 'https://sentry.io/solutions/application-performance-monitoring/' },
+            { name: 'customer story', url: 'https://sentry.io/customers/atlassian-jira/' },
+            { name: 'webinar', url: 'https://www.youtube.com/watch?v=J0tAK6dKY3Y/' }
+          ],
+          images: [],
+          description: 'See Slow Faster campaign',
+          campaignListDescription: 'Product releases run the risk of getting bogged down in their own technical benefits. For Sentry\'s Performance monitoring release, this meant turning jargony features (such as improved visibility into p95 response times) into a simple, differentiating insight -- See Slow Faster',
+          impact: [
+            { stat: '$1.8M in Performance Product Pipeline (QTD) — demonstrating strong developer interest in APM tooling' },
+            { stat: '12,400 total landing page visits across Performance launch assets — strong initial awareness' },
+            { stat: '"See Slow Faster" campaign hub generated 3,480 visits with 4:22 avg. time on page (2.3x site average)' },
+            { stat: '312 companies initiated Performance trial during launch window (vs. 89 in pre-launch quarter)' }
+          ]
+        },
+        {
+          title: 'Cincoro tequila | brand launch',
+          type: 'campaign' as const,
+          impact: [
+            { stat: ' 2-3x higher engagement rates with consistent posting schedules' },
+            { stat: 'building social audience to 110K+ followers across platforms while the brand achieved 1.5M bottles sold and 23 industry awards' },
+            { stat: '"See Slow Faster" campaign hub generated 3,480 visits with 4:22 avg. time on page (2.3x site average)' },
+            { stat: '312 companies initiated Performance trial during launch window (vs. 89 in pre-launch quarter)' }
+          ],
+          images: [
+            { src: '/img/cinc_playing.gif', alt: 'Cincoro post 1', url: 'https://www.instagram.com/p/CNqhlFoLAuU/' },
+            { src: '/img/image169.jpeg', alt: 'Cincoro post 2', url: 'https://www.instagram.com/p/CpgLHfgurJr/' },
+            { src: '/img/cinc3.gif', alt: 'Cincoro post 3', url: 'https://www.instagram.com/p/CVlF6J5A9_O/' },
+            { src: '/img/cincauto.png', alt: 'Cincoro post 4', url: 'https://www.instagram.com/cincoro/reel/CNqhlFoLAuU/' },
+            { src: '/img/cinc_allgolf.png', alt: 'Cincoro post 5', url: 'https://www.instagram.com/cincoro/p/CM2vt1lFZoN/' },
+            { src: '/img/cinc_two.png', alt: 'Cincoro post 6', url: 'https://www.instagram.com/cincoro/reel/COawLN1rgGN/' },
+            { src: '/img/cinc_coil.png', alt: 'Cincoro post 7', url: 'https://www.instagram.com/cincoro/reel/CObVXBIFp2C/' },
+            { src: '/img/cincteam.png', alt: 'Cincoro post 8', url: 'https://www.instagram.com/p/CPG-y9DFjIY/' }
+          ],
+          campaignListDescription: 'George Clooney. The Rock. Kendall Jenner. Bryan Cranston. Celebrity tequila is a crowded space. So when Michael Jordan and four other NBA owners started their own tequila company, I was there to help them find a way to help their brand stand out among the stars. Cincoro translates to "five rings". And so the story of Cincoro Tequila is the passion and competitive spirit its five owners share as they each chase their next championship ring.'
+        },
+        {
+          title: 'HP | Presence launch',
+          type: 'campaign' as const,
+          links: [
+            { name: 'The new era of work', url: 'https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf' },
+            { name: 'A New Blueprint for an Uncertain World', url: 'https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf' },
+            { name: 'Get ready today to do tomorrow\'s work', url: 'https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf' },
+            { name: 'The New Office For the Way People Want to Work', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf' }
+          ],
+          description: 'Hybrid work white papers',
+          campaignListDescription: 'The pandemic altered the fabric of society. And nowhere was this more evident than in the office. As HP\'s content strategist, I helped position their Presence videoconferencing suite to be the connective tissue for distributed workforces.',
+          impact: [
+            { stat: '8,940 total white paper downloads across all 10 assets in launch quarter' },
+            { stat: '~2.5k MQLs generated from white paper download forms' },
+            { stat: '$680K in closed-won deals with white paper download in buyer journey — direct revenue attribution' },
+            { stat: 'White paper landing pages drove 34,200 total site visits -- 67% of which were organic' }
+          ]
+        },
+        {
+          title: 'Sentry | Dogfooding Chronicles',
+          type: 'campaign' as const,
+          links: [
+           
+             { name: 'Go-Getting Lazy loading', url: 'https://blog.sentry.io/go-getting-lazy-loading/', shape: 'letterC' as const },
+            { name: 'Using Sentry Performance to get Sentry Performant', url: 'https://blog.sentry.io/using-sentry-performance-to-make-sentry-performant', shape: 'letterH' as const },
+          
+            { name: 'Verifying large refactors with Sentry', url: 'https://blog.sentry.io/verifying-large-refactors-in-production-with-sentry/?original_referrer=https%3A%2F%2Fwww.google.com%2F', shape: 'letterC' as const },
+            { name: 'Thinking backward, moving forward', url: 'https://blog.sentry.io/dogfooding-chronicles-thinking-backward-moving-forward' },
+            { name: 'Patching a flood of 404s', url: 'https://blog.sentry.io/patching-a-flood-of-404s/' }
+          ],
+          impact: [
+            { stat: '8,940 total white paper downloads across all 10 assets in launch quarter' },
+            { stat: '~2.5k MQLs generated from white paper download forms' },
+            { stat: '$680K in closed-won deals with white paper download in buyer journey — direct revenue attribution' },
+            { stat: 'White paper landing pages drove 34,200 total site visits -- 67% of which were organic' }
+          ],
+          description: 'Developer relations content',
+          campaignListDescription: 'Dogfooding is the practice of sampling your own product before the public does. For actual dogfood executives, this means chowing down on their own kibble as a literal gut-check. For Sentry, this meant developers using their own application monitoring platform as a way to troubleshoot hiccups in the codebase.'
+        }
+      ];
+      
+      setDisplayedItems(hardcodedCampaigns);
+      setMode('links');
+      return;
+    }
+    
+    // H CLICK - Show prompt modes
+    if (item.title === 'human ai') {
+      console.log('🎯 H clicked - creating prompt mode shapes');
+      
+      // Set initial description
+      setLocalDescription('Conversational Design \n' + '\n' +
+'Cooper the Super is an ICP created from my experience at DroneDeploy. \n' +  'Hank Hardass is a former basketball scout I hired to evaluate me.\n' + 'Randy the ruminator helps with the creative process\n' + ' Insecure AI reinforces.\n' + 'Surly Devin is a cynical spinoff of Devin AI\'s coding bot ');
+
+      const promptModes = [
+        {
+          title: 'Cooper the Super', 
+          type: 'link' as const,
+          promptMode: 'cooper',
+          url: '#cooper',
+          description: 'A construction superintendent who traded clipboards for drones. Ask about reality capture, jobsite technology, or why manual documentation is killing productivity.'
+        }, 
+        {
+          title: 'Hank Hardass',
+          type: 'link' as const,
+          promptMode: 'scout',
+          url: '#scout',
+          description: 'Your professional scout analyzing Christopher Heher\'s portfolio basketball. Get honest assessments, competitive comparisons, and strategic career guidance.'
+        },
+       
+        {
+          title: 'randy the rumninator',
+          type: 'link' as const,
+          promptMode: 'creative',
+          url: '#creative',
+          description: 'The affective dimension of creativity.'
+        },
+        {
+          title: 'Insecure AI',
+          type: 'link' as const,
+          promptMode: 'insecure',
+          url: '#insecure',
+          description: 'Hey-o i\'m an anxious AI assistant.'
+        },
+
+        {
+          title: 'Surly Devin',
+          type: 'link' as const,
+          promptMode: 'devin',
+          url: '#devin',
+          description: 'A sardonic senior engineer who cuts through observability theater and marketing BS. Ask about monitoring, instrumentation, or why most dashboards are useless.'
+        }
+      ];
+      
+      setDisplayedItems(promptModes);
+      setMode('links');
+      setPromptModeActive(true);
+      return;
+    }
+    
+    // R CLICK - Show tech content
+    if (item.title === 'readable tech content') {
+      console.log('📄 R clicked - showing tech content links');
+      const linkProjects = rLinks.map(link => ({
+        title: link.name,
+        url: link.url,
+        shape: link.shape,
+        type: 'link' as const,
+        description: 'Dev tools, construction infrastructure, and modern engineering practices, all written at eye level for technical audiences.'
+      }));
+      
+      setDisplayedItems(linkProjects);
+      setMode('links');
+      return;
+    }
+    
+    // I CLICK - Show interactive
+    if (item.title === 'interactive') {
+      console.log('🎮 I clicked - showing interactive links');
+      const linkProjects = iLinks.map(link => ({
+        title: link.name,
+        url: link.url,
+        type: 'link' as const,
+        description: 'Written for the screen, not the page.'
+      }));
+      
+      setDisplayedItems(linkProjects);
+      setMode('links');
+      return;
+    }
+    
+    // S CLICK - Job analysis
+    if (item.title === 'skill scan') {
+      console.log('💼 S clicked - activating job analysis mode');
+      
+      setDisplayedItems(initialProjects);
+      setMode('links');
+      setChatCentered(true);
+      onChatCenter?.(true);
+      onSkillsClick?.();
+      onJobAnalysisOpen?.();
+      
+      return;
+    }
+  }, [mode, initialProjects, rLinks, iLinks, onChatCenter, onDevinModeClick, onScoutModeClick, onCooperModeClick, onCreativeModeClick, onInsecureModeClick, onJobAnalysisOpen, onSkillsClick]);
+
+  const handleBackClick = () => {
+    console.log('⬅️ Back button clicked');
+    
+    setDisplayedItems([]);
+    setMode('initial');
+    setChatCentered(false);
+    setPromptModeActive(false);
+    setCarouselData(null);
+    setLocalDescription(null);
+    onChatCenter?.(false);
+    onJobAnalysisClose?.();
+    
+    console.log('✅ State reset complete');
+  };
+
+  return (
+    <div style={{ 
+      position: 'relative', 
+      width: '100%', 
+      height: '100vh',
+      backgroundColor: mode === 'initial' ? '#8c6a48' : '#dcd3c3'
+    }}>
+      {/* Background overlay */}
+      {(mode === 'links' || chatCentered) && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: '#dcd3c3',
+          zIndex: 100
+        }} />
+      )}
+      
+      {/* Back button for links mode (except when chat is centered) */}
+      {mode === 'links' && !chatCentered && (
+        <button
+          onClick={handleBackClick}
+          style={{
+            position: 'absolute',
+            top: '20px',
+            left: '20px',
+            zIndex: 1000,
+            padding: '5px 10px',
+            background: '#5e4631',
+            color: '#dcd3c3',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: 'bold'
+          }}
+        >
+          ← back
+        </button>
+      )}
+      
+      {/* Description box */}
+      {!hideDescriptionBox && mode === 'links' && ((displayedItems.length > 0 && (displayedItems[0].description || displayedItems[0].campaignListDescription || displayedItems[0].impact || carouselData)) || promptModeActive) && (
+        <div 
+          style={{
+            position: 'absolute',
+            top: '68px',
+            right: '500px',
+            zIndex: 601,
+            maxWidth: '750px',
+            maxHeight: '85vh',
+            padding: '20px',
+            background: '#dcd3c3f2',
+            color: '#5e4631',
+            borderRadius: '10px',
+            fontSize: '18px',
+            lineHeight: '1.6',
+            textAlign: 'left',
+            overflowY: 'auto',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
+          }}
+          className="hide-webkit-scrollbar whitespace-pre-line"
+        >
+          {carouselData ? (
+            <CarouselContent carouselData={carouselData} />
+          ) : promptModeActive ? (
+            // Show activePromptDescription for prompt modes
+            activePromptDescription || localDescription || 'XXXXX'
+          ) : displayedItems[0]?.type === 'campaign' ? (
+            'Authentic product narratives that have piqued curiosity in customers, gained traction for marketing, and built pipeline for sales.'
+          ) : (
+            <>
+              {displayedItems[0]?.campaignTitle && (
+                <div style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '12px' }}>
+                  {displayedItems[0].campaignTitle}
+                </div>
+              )}
+              
+              {displayedItems[0]?.description && (
+                <div style={{ marginBottom: '8px' }}>
+                  {displayedItems[0].description}
+                </div>
+              )}
+              
+              {displayedItems[0]?.campaignListDescription && (
+                <div style={{ marginBottom: '11px' }}>
+                  {displayedItems[0].campaignListDescription}
+                </div>
+              )}
+              
+              {displayedItems[0]?.impact && displayedItems[0].impact.length > 0 && (
+                <div style={{ marginTop: '12px' }}>
+                  <div style={{ fontWeight: 'bold', marginBottom: '12px', fontSize: '12px' }}>
+                    Impact & Results:
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: '20px', lineHeight: '1', fontSize: '14px', listStyle: 'disc' }}>
+                    {displayedItems[0].impact.map((item, index) => (
+                      <li key={index} style={{ marginBottom: '8px' }}>
+                        {item.stat}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+      
+      {/* Back button when chat is centered */}
+      {chatCentered && (
+        <button
+          onClick={handleBackClick}
+          style={{
+            position: 'absolute',
+            top: '20px',
+            left: '20px',
+            zIndex: 10000,
+            padding: '10px 20px',
+            background: '#5e4631',
+            color: '#dcd3c3',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontFamily: 'Arial',
+            fontSize: '16px',
+            fontWeight: 'bold'
+          }}
+        >
+          ← Back
+        </button>
+      )}
+      
+      {/* Initial mode text */}
+      {mode === 'initial' && (
+        <div style={{
+          position: 'absolute',
+          
+          top: '20%',
+          left: '60%',
+          transform: 'translate(-50%, -50%)',
+          maxWidth: '700px',
+          color: '#dcd3c3',
+          fontSize: '18px',
+          lineHeight: '1.3',
+          textAlign: 'left',
+          zIndex: 700,
+          padding: '20px'
+        }}>
+          Chris creates content for brands and businesses who see ai as the fire, not the chef.
+          <br/><br/>
+          vibe coded in typescript + tailwind + matter.js
+        </div>
+      )}
+      
+      {/* Tumbling shapes - hide when chat is centered */}
+      {!chatCentered && (
+        <TumblingShapes
+          projects={mode === 'initial' ? initialProjects : displayedItems}
+          onShapeClick={handleShapeClick}
+          mode={mode}
+        />
+      )}
     </div>
   );
 }

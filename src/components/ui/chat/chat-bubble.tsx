@@ -61,8 +61,10 @@ ChatBubble.displayName = "ChatBubble";
 const chatBubbleMessageVariants = cva("", {
   variants: {
     variant: {
+   
+     
       received:
-        "text-secondary-foreground font-mono rounded-lg py-2 pl-18",
+        "text-secondary-foreground kc-gangster rounded-lg py-2 pl-18",
       sent: "p-2 px-5 bg-[#007AFF] text-primary-foreground rounded-3xl",
     },
     layout: {

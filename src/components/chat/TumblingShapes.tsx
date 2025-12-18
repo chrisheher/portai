@@ -2,530 +2,731 @@
 
 import React, { useEffect, useRef } from 'react';
 import Matter from 'matter-js';
+var decomp = require('poly-decomp');
+
+// Set up poly-decomp for Matter.js
+if (typeof window !== 'undefined') {
+  Matter.Common.setDecomp(decomp);
+}
+
 
 interface Project {
   title: string;
   category?: string;
   src?: string;
   content?: React.ReactNode;
-  type?: 'project' | 'question';
+type?: 'project' | 'link' | 'campaign' | 'image' | 'question';
   prompt?: string;
-  shape?: 'circle' | 'rectangle' | 'polygon'  | 'lessThan' | 'brace' | 'comma';
+  shape?: 'letterH' | 'letterC' | 'letterR' | 'letterI' | 'letterS';
+  imageSrc?: string;  // ← ADD THIS
+  url?: string;       // ← ADD THIS
 }
+
 
 interface TumblingShapesProps {
   projects?: Project[];
   filterCategory?: string;
   onShapeClick?: (item: Project) => void;
+  mode?: 'initial' | 'links';
+  chatCentered?: boolean;
 }
 
-const roughenVertices = (vertices: { x: number; y: number }[], roughness: number = 0.4) => {
-  return vertices.map(v => ({
-    x: v.x + (Math.random() - 0.5) * roughness * 50,
-    y: v.y + (Math.random() - 0.5) * roughness * 50
-  }));
-};
-
-const TumblingShapes: React.FC<TumblingShapesProps> = ({ 
-  projects, 
-  filterCategory,
-  onShapeClick 
-}) => {
+const TumblingShapes: React.FC<TumblingShapesProps> = ({ projects = [], filterCategory, onShapeClick, mode = 'initial', chatCentered = false }) => {
   const sceneRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const renderRef = useRef<Matter.Render | null>(null);
-  const runnerRef = useRef<Matter.Runner | null>(null);
+const bodiesRef = useRef<{ body: Matter.Body; project: Project; shapeType?: string }[]>([]);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const hoveredBodyRef = useRef<Matter.Body | null>(null);
 
   useEffect(() => {
-    if (!projects || !Array.isArray(projects) || projects.length === 0) {
-      console.log('TumblingShapes: No valid projects provided');
-      return;
-    }
+    if (!sceneRef.current) return;
 
-    if (!sceneRef.current) {
-      console.log('TumblingShapes: No scene ref');
-      return;
-    }
-
-    if (engineRef.current) {
-      console.log('TumblingShapes: Already initialized, skipping');
-      return;
-    }
-
-    const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Events } = Matter;
+    const Engine = Matter.Engine,
+          Render = Matter.Render,
+          Runner = Matter.Runner,
+          Bodies = Matter.Bodies,
+          Body = Matter.Body,
+          Composite = Matter.Composite,
+          Mouse = Matter.Mouse,
+          MouseConstraint = Matter.MouseConstraint,
+          Events = Matter.Events;
 
     const engine = Engine.create();
     engineRef.current = engine;
     const world = engine.world;
-    
-    engine.gravity.y = .8;  // Slightly stronger gravity
-    engine.gravity.x = 0;
-    
-    // Improve collision detection
-    engine.positionIterations = 10;  // Increased from default 6
-    engine.velocityIterations = 8;   // Increased from default 4
-    engine.constraintIterations = 4; // More constraint solving iterations
-    
-    // Reduce overlap tolerance
-    engine.enableSleeping = false;   // Keep all bodies active for better collision response
-
-    const width = window.innerWidth;
-    const height = window.innerHeight;
 
     const render = Render.create({
       element: sceneRef.current,
       engine: engine,
       options: {
-        width,
-        height,
+        width: window.innerWidth,
+        height: window.innerHeight,
         wireframes: false,
-        background: '#d4c4b0',
-      },
+background: mode === 'initial' ? '#8c6a48' : '#dcd3c3'
+      }
     });
     renderRef.current = render;
-
-    const displayProjects = filterCategory 
-      ? projects.filter(p => p.category?.toLowerCase() === filterCategory.toLowerCase())
-      : projects;
-
-    const shapes: any[] = [];
-    const shapeTypes = ['circle', 'rectangle', 'polygon', 'lessThan', 'brace', 'comma'];
+    canvasRef.current = render.canvas;
     
-    const getShapeColor = (category: string, type: string) => {
-      if (type === 'link') {
-        return '#3b82f6';
-      }
-      
-      switch (category.toLowerCase()) {
-        case 'web': return '#FF6B6B';
-        case 'ml/ai': return '#4ECDC4';
-        default: return '#95E1D3';
-      }
-    };
-
-    // Helper function to create "<" shape
-    const createLessThanShape = (x: number, y: number, size: number, options: any) => {
-      const width = size * 0.6;
-      const height = size;
-      const thickness = size * 0.15;
-      
-      const vertices = roughenVertices([
-        { x: width / 2, y: -height / 2 },
-        { x: width / 2 - thickness, y: -height / 2 + thickness },
-        { x: -width / 2 + thickness, y: 0 },
-        { x: width / 2 - thickness, y: height / 2 - thickness },
-        { x: width / 2, y: height / 2 },
-        { x: -width / 2, y: 0 }
-      ], 0.3);
-      
-      return Bodies.fromVertices(x, y, [vertices], options);
-    };
-
-    // Helper function to create "}" shape
-    const createBraceShape = (x: number, y: number, size: number, options: any) => {
-      const width = size * 0.5;
-      const height = size;
-      const thickness = size * 0.12;
-      const curveDepth = width * 0.4;
-      
-      const vertices = roughenVertices([
-        { x: -width / 2, y: -height / 2 },
-        { x: -width / 2 + thickness, y: -height / 2 },
-        { x: -width / 2 + thickness, y: -height / 4 },
-        { x: curveDepth, y: -height / 8 },
-        { x: curveDepth, y: height / 8 },
-        { x: -width / 2 + thickness, y: height / 4 },
-        { x: -width / 2 + thickness, y: height / 2 },
-        { x: -width / 2, y: height / 2 },
-        { x: -width / 2, y: height / 4 },
-        { x: curveDepth - thickness, y: height / 8 },
-        { x: curveDepth - thickness, y: -height / 8 },
-        { x: -width / 2, y: -height / 4 }
-      ], 0.3);
-      
-      return Bodies.fromVertices(x, y, [vertices], options);
-    };
-
-    // Helper function to create ")" shape
-    const createParenShape = (x: number, y: number, size: number, options: any) => {
-      const width = size * 0.4;
-      const height = size;
-      const thickness = size * 0.12;
-      const segments = 12;
-      const outerVertices = [];
-      const innerVertices = [];
-      
-      for (let i = 0; i <= segments; i++) {
-        const angle = (i / segments - 0.5) * Math.PI;
-        const radius = height / 2;
-        outerVertices.push({
-          x: -Math.cos(angle) * width / 2,
-          y: Math.sin(angle) * radius
-        });
-        innerVertices.unshift({
-          x: -(Math.cos(angle) * width / 2 + thickness),
-          y: Math.sin(angle) * (radius - thickness)
-        });
-      }
-      
-      const vertices = roughenVertices([...outerVertices, ...innerVertices], 0.3);
-      return Bodies.fromVertices(x, y, [vertices], options);
-    };
-
-    // Helper function to create "," shape
-    const createCommaShape = (x: number, y: number, size: number, options: any) => {
-      const dotRadius = size * 0.2;
-      const tailLength = size * 0.3;
-      const tailWidth = size * 0.15;
-      
-      const vertices = roughenVertices([
-        { x: dotRadius, y: -dotRadius },
-        { x: dotRadius * 0.7, y: -dotRadius * 1.3 },
-        { x: 0, y: -dotRadius * 1.4 },
-        { x: -dotRadius * 0.7, y: -dotRadius * 1.3 },
-        { x: -dotRadius, y: -dotRadius },
-        { x: -dotRadius, y: 0 },
-        { x: -dotRadius * 0.7, y: dotRadius * 0.7 },
-        { x: 0, y: dotRadius },
-        { x: tailWidth, y: dotRadius },
-        { x: -tailWidth / 2, y: tailLength },
-        { x: -tailWidth, y: dotRadius },
-        { x: -dotRadius * 0.7, y: dotRadius * 0.7 }
-      ], 0.3);
-      
-      return Bodies.fromVertices(x, y, [vertices], options);
-    };
-
-    displayProjects.forEach((project, index) => {
-      if (!project || !project.title) {
-        console.warn('Invalid project at index', index);
-        return;
-      }
-
-      // Debug: Log the project to see what shape property it has
-      console.log(`Project #${index} "${project.title}":`, {
-        hasShapeProperty: 'shape' in project,
-        shapeValue: project.shape,
-        shapeType: typeof project.shape,
-        isValidShape: project.shape && shapeTypes.includes(project.shape)
-      });
-
-      // Use shape from project data if provided, otherwise cycle through shapes
-      const shapeType = project.shape && shapeTypes.includes(project.shape) 
-        ? project.shape 
-        : shapeTypes[index % shapeTypes.length];
-      
-      console.log(`  → Using shape: "${shapeType}" (${project.shape ? 'from JSON' : 'from cycle'})`);
-      
-      const size = 150 + Math.random() * 150; // Much larger shapes (150-300px)
-      
-      const initialAngle = (Math.random() - 0.5) * 0.3;
-      
-      const category = {
-        label: project.title,
-        type: shapeType,
-        size: size,
-        x: (width * 0.2) + Math.random() * (width * 0.6),
-        y: -100 - (index * 250), // Increased spacing from 150 to 250
-        project: project,
-        initialAngle: initialAngle, // Store the initial angle
-      };
-
-      let body;
-      const options = {
-        restitution: 0.6,      // Increased bounciness for better separation
-        friction: 0.8,         // Increased friction to reduce sliding
-        frictionAir: 0.03,     // Slightly more air resistance
-        density: 0.012,        // Increased density for more weight
-        angle: initialAngle,
-        render: {
-          visible: false,
-        },
-      };
-
-      if (category.type === 'circle') {
-        const segments = 24;
-        const radius = category.size / 4;
-        const circleVertices = [];
-        for (let i = 0; i < segments; i++) {
-          const angle = (i / segments) * Math.PI * 2;
-          circleVertices.push({
-            x: Math.cos(angle) * radius,
-            y: Math.sin(angle) * radius
-          });
-        }
-        const roughCircle = roughenVertices(circleVertices, .4);
-        body = Bodies.fromVertices(category.x, category.y, [roughCircle], options);
-      } else if (category.type === 'rectangle') {
-        const w = category.size * .2;  // Make rectangles wider
-        const h = category.size * 0.5; // Make rectangles taller
-        const rectVertices = roughenVertices([
-          { x: -w / 2, y: -h / 2 },
-          { x: w / 2, y: -h / 2 },
-          { x: w / 2, y: h / 2 },
-          { x: -w / 2, y: h / 2 },
-        ], 0.3);
-        body = Bodies.fromVertices(category.x, category.y, [rectVertices], options);
-       } else if (category.type === 'brace') {
-        body = createBraceShape(category.x, category.y, category.size, options);
-      } else if (category.type === 'comma') {
-        body = createCommaShape(category.x, category.y, category.size, options);
-      }
-
-      if (body) {
-        shapes.push({ body, ...category });
-        Composite.add(world, body);
-      }
-    });
-
-    const walls = [
-      Bodies.rectangle(width / 2, height, width, 100, { isStatic: true, render: { visible: false } }),
-      Bodies.rectangle(-25, height / 2, 50, height, { isStatic: true, render: { visible: false } }),
-      Bodies.rectangle(width + 25, height / 2, 50, height, { isStatic: true, render: { visible: false } }),
-    ];
-    Composite.add(world, walls);
-
-    const mouse = Mouse.create(render.canvas);
-    const mouseConstraint = MouseConstraint.create(engine, {
-      mouse,
-      constraint: { stiffness: 0.2, render: { visible: false } },
-    });
-    Composite.add(world, mouseConstraint);
-
-    let hoveredShape: any = null;
-
-    const handleMouseMove = () => {
-      const mousePos = mouse.position;
-      hoveredShape = null;
-
-      shapes.forEach((shape) => {
-        const dist = Math.hypot(mousePos.x - shape.body.position.x, mousePos.y - shape.body.position.y);
-        if (dist < shape.size / 2) hoveredShape = shape;
-      });
-
-      if (render.canvas) {
-        render.canvas.style.cursor = hoveredShape ? 'pointer' : 'default';
-      }
-    };
-
-    const handleClick = () => {
-      if (hoveredShape && hoveredShape.project) {
-        console.log('Clicked item:', hoveredShape.project);
-        if (onShapeClick) {
-          onShapeClick(hoveredShape.project);
-        }
-      }
-    };
-
+    // Set canvas z-index to appear above beige overlay (z-index 500)
     if (render.canvas) {
-      render.canvas.addEventListener('mousemove', handleMouseMove);
-      render.canvas.addEventListener('click', handleClick);
+      render.canvas.style.position = 'relative';
+      render.canvas.style.zIndex = '600';  // Above overlay (500) but below UI (1000+)
     }
 
-    // Helper function to fit text within shape bounds with extra padding
-    const fitTextInShape = (ctx: CanvasRenderingContext2D, text: string, maxWidth: number, maxHeight: number) => {
-      const words = text.split(' ');
-      let fontSize = 24; // Start with larger font size
-      let lines: string[] = [];
-      let fits = false;
+    // ===== LETTER H (1.6x) =====
+    function getHVertices() {
+      const vertices = [];
+      const stemWidth = 90;
+      const totalHeight = 400;
+      const archStartY = 230;
+      const legWidth = 62;
+      const radius = 80;
       
-      // Much more aggressive padding to account for rotation
-      const paddingFactor = 0.6; // Use only 60% of available space for safety during rotation
-      const effectiveMaxWidth = maxWidth * paddingFactor;
-      const effectiveMaxHeight = maxHeight * paddingFactor;
+      vertices.push({ x: 0, y: totalHeight });
+      vertices.push({ x: 0, y: -10 });
+      vertices.push({ x: stemWidth, y: 0 });
+      vertices.push({ x: stemWidth, y: archStartY });
 
-      while (fontSize >= 10 && !fits) { // Minimum font size of 10 instead of 6
-        ctx.font = `${fontSize}px Georgia, 'Times New Roman', serif`;
-        lines = [];
-        let currentLine = '';
+      const archCx = stemWidth + 0;
+      const archCy = archStartY + radius;
 
-        for (let i = 0; i < words.length; i++) {
-          const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
-          const metrics = ctx.measureText(testLine);
-          
-          if (metrics.width > effectiveMaxWidth && currentLine) {
-            lines.push(currentLine);
-            currentLine = words[i];
-          } else {
-            currentLine = testLine;
-          }
-        }
-        if (currentLine) lines.push(currentLine);
-
-        const totalHeight = lines.length * (fontSize + 4);
-        if (totalHeight <= effectiveMaxHeight) {
-          fits = true;
-        } else {
-          fontSize -= 1;
-        }
+      for (let i = 0; i <= 20; i++) {
+        const angle = -Math.PI / 2 + (i / 20) * (Math.PI / 2);
+        vertices.push({
+          x: archCx + radius * Math.cos(angle),
+          y: archCy + radius * Math.sin(angle)
+        });
       }
 
-      return { lines, fontSize };
-    };
+      const rightLegX = archCx + radius;
+      vertices.push({ x: rightLegX + 8, y: totalHeight });
+      vertices.push({ x: rightLegX - legWidth + 16, y: totalHeight });
 
-    // Custom rendering with smart text fitting
-    Events.on(render, 'afterRender', () => {
-      const ctx = render.context;
-      
-      shapes.forEach((shape) => {
-        const pos = shape.body.position;
-        const angle = shape.body.angle;
-
-        ctx.save();
-        ctx.translate(pos.x, pos.y);
-        ctx.rotate(angle);
-        
-        const isQuestion = shape.project.type === 'question';
-        const baseColor = isQuestion ? '#a37d8f' : '#7d8fa3';
-        const hoverColor = '#d4c4b0';
-        
-        ctx.fillStyle = hoveredShape === shape ? hoverColor : baseColor;
-        ctx.strokeStyle = 'transparent';
-        ctx.lineWidth = 0;
-        ctx.lineJoin = 'round';
-        ctx.lineCap = 'round';
-
-        // Draw shape - the vertices already have roughness baked in
-        if (shape.type === 'circle') {
-          const vertices = shape.body.vertices;
-          ctx.beginPath();
-          ctx.moveTo(vertices[0].x - pos.x, vertices[0].y - pos.y);
-          for (let i = 1; i < vertices.length; i++) {
-            ctx.lineTo(vertices[i].x - pos.x, vertices[i].y - pos.y);
-          }
-          ctx.closePath();
-          ctx.fill();
-        } else if (shape.type === 'rectangle') {
-          const vertices = shape.body.vertices;
-          ctx.beginPath();
-          ctx.moveTo(vertices[0].x - pos.x, vertices[0].y - pos.y);
-          for (let i = 1; i < vertices.length; i++) {
-            ctx.lineTo(vertices[i].x - pos.x, vertices[i].y - pos.y);
-          }
-          ctx.closePath();
-          ctx.fill();
-        } else if (shape.type === 'polygon' || shape.type === 'trapezoid' || 
-                   shape.type === 'lessThan' || shape.type === 'brace' || 
-                   shape.type === 'paren' || shape.type === 'comma') {
-          const vertices = shape.body.vertices;
-          ctx.beginPath();
-          ctx.moveTo(vertices[0].x - pos.x, vertices[0].y - pos.y);
-          for (let i = 1; i < vertices.length; i++) {
-            ctx.lineTo(vertices[i].x - pos.x, vertices[i].y - pos.y);
-          }
-          ctx.closePath();
-          ctx.fill();
-        }
-
-        // Add paper texture overlay
-        ctx.globalAlpha = 0.08;
-        for (let i = 0; i < 15; i++) {
-          ctx.fillStyle = Math.random() > 0.5 ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)';
-          const texX = -shape.size/2 + Math.random() * shape.size;
-          const texY = -shape.size/2 + Math.random() * shape.size;
-          ctx.fillRect(texX, texY, Math.random() * 8, Math.random() * 8);
-        }
-        ctx.globalAlpha = 1;
-
-        // Calculate available space for text based on shape type
-        // Conservative values to account for rotation
-        let maxWidth = shape.size * 0.5;   // Reduced for rotation safety
-        let maxHeight = shape.size * 0.4;  // Reduced for rotation safety
-
-        if (shape.type === 'circle') {
-          maxWidth = shape.size * 0.4;   // More conservative for circles
-          maxHeight = shape.size * 0.35;
-        } else if (shape.type === 'rectangle') {
-          maxWidth = shape.size * 0.5;   // Much more strict for rectangles during rotation
-          maxHeight = shape.size * 0.12; // Very conservative height for rectangles
-        } else if (shape.type === 'polygon') {
-          maxWidth = shape.size * 0.4;
-          maxHeight = shape.size * 0.4;
-        } else if (shape.type === 'trapezoid') {
-          maxWidth = shape.size * 0.35;
-          maxHeight = shape.size * 0.25;
-        } else if (shape.type === 'lessThan') {
-          maxWidth = shape.size * 0.25;
-          maxHeight = shape.size * 0.35;
-        } else if (shape.type === 'brace') {
-          maxWidth = shape.size * 0.22;
-          maxHeight = shape.size * 0.45;
-        } else if (shape.type === 'paren') {
-          maxWidth = shape.size * 0.18;
-          maxHeight = shape.size * 0.45;
-        } else if (shape.type === 'comma') {
-          maxWidth = shape.size * 1.22;
-          maxHeight = shape.size * 0.3;
-        }
-
-        // Fit text within calculated bounds
-        const { lines, fontSize } = fitTextInShape(ctx, shape.label, maxWidth, maxHeight);
-
-        // Draw fitted text (rotates with shape)
-        ctx.fillStyle = hoveredShape === shape ? baseColor : hoverColor;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.font = `${fontSize}px Georgia, 'Times New Roman', serif`;
-        
-        const lineHeight = fontSize + 6; // Slightly more spacing
-        const totalHeight = lines.length * lineHeight;
-        let startY = -totalHeight / 2 + lineHeight / 2;
-        
-        lines.forEach((line) => {
-          ctx.fillText(line, 0, startY);
-          startY += lineHeight;
+      const innerRadius = radius - legWidth + 16;
+      for (let i = 0; i <= 15; i++) {
+        const angle = 0 - (i / 15) * (Math.PI / 2);
+        vertices.push({
+          x: archCx + innerRadius * Math.cos(angle),
+          y: archCy + innerRadius * Math.sin(angle) + 32
         });
-        
-        ctx.restore();
+      }
+
+      vertices.push({ x: stemWidth, y: totalHeight });
+      return vertices;
+    }
+
+    // ===== LETTER C (1.6x) =====
+    function getCVertices() {
+      const vertices = [];
+      const radius = 176;
+      const thickness = 152;
+      const segments = 40;
+
+      for (let i = 0; i <= segments; i++) {
+        const angle = (Math.PI * 0.6) + (i / segments) * (Math.PI * 1.00);
+        vertices.push({
+          x: Math.cos(angle) * radius,
+          y: Math.sin(angle) * radius
+        });
+      }
+
+      const innerRadius = radius - thickness;
+      for (let i = segments; i >= 0; i--) {
+        const angle = (Math.PI * 0.55) + (i / segments) * (Math.PI * 1.15);
+        vertices.push({
+          x: Math.cos(angle) * innerRadius,
+          y: Math.sin(angle) * innerRadius
+        });
+      }
+
+      return vertices;
+    }
+
+    // ===== LETTER R (1.6x) =====
+    function getRVertices() {
+      const vertices = [];
+      const stemWidth = 96;
+      const totalHeight = 332;
+      const shoulderRadius = 294;
+      const shoulderStartY = 198;
+
+      vertices.push({ x: 0, y: totalHeight });
+      vertices.push({ x: 16, y: 16 });
+      vertices.push({ x: stemWidth, y: 0 });
+      vertices.push({ x: stemWidth, y: shoulderStartY });
+
+      const shoulderCx = stemWidth;
+      const shoulderCy = shoulderStartY + shoulderRadius * 0.3;
+
+      for (let i = 0; i <= 20; i++) {
+        const angle = -Math.PI / 2 + (i / 20) * (Math.PI / 4.9);
+        vertices.push({
+          x: shoulderCx + Math.cos(angle) * shoulderRadius * 0.5,
+          y: shoulderCy + Math.sin(angle) * shoulderRadius * 0.9
+        });
+      }
+
+      const innerRadius = shoulderRadius * 0.55;
+      for (let i = 20; i >= 0; i--) {
+        const angle = -Math.PI / 2 + (i / 20) * (Math.PI / 6.9);
+        vertices.push({
+          x: shoulderCx + Math.cos(angle) * innerRadius,
+          y: shoulderCy + Math.sin(angle) * innerRadius + 16
+        });
+      }
+
+      vertices.push({ x: stemWidth, y: shoulderStartY + 32 });
+      vertices.push({ x: stemWidth, y: totalHeight });
+      return vertices;
+    }
+
+    // ===== LETTER I (1.6x) =====
+    function getIVertices() {
+      const vertices = [];
+      const width = 96;
+      const height = 302;
+      const dotRadius = 64;
+      const dotGap = 4.6;
+
+      vertices.push({ x: -width / 2, y: height / 2.1 });
+      vertices.push({ x: -width / 2, y: -height / 2.1 });
+      vertices.push({ x: -width / 2, y: -height / 2 - dotGap });
+
+      const dotCenterY = -height / 2 - dotGap - dotRadius;
+      const segments = 20;
+
+      for (let i = 0; i <= segments; i++) {
+        const angle = Math.PI + (i / segments) * Math.PI * 1.4;
+        vertices.push({
+          x: Math.cos(angle) * dotRadius,
+          y: dotCenterY + Math.sin(angle) * dotRadius
+        });
+      }
+
+      vertices.push({ x: width / 2, y: -height / 2 - dotGap });
+      vertices.push({ x: width / 2, y: -height / 2 });
+      vertices.push({ x: width / 2, y: height / 2 });
+      return vertices;
+    }
+
+    // ===== TOP C SHAPE (1.6x) =====
+    function getTopCVertices() {
+      const vertices = [];
+      const radius = 160;
+      const thickness = 72;
+      const segments = 40;
+
+      for (let i = 0; i <= segments; i++) {
+        const angle = (Math.PI * 0.65) + (i / segments) * (Math.PI * 1.0);
+        vertices.push({
+          x: Math.cos(angle) * radius,
+          y: Math.sin(angle) * radius
+        });
+      }
+
+      const innerRadius = radius - thickness;
+      for (let i = segments; i >= 0; i--) {
+        const angle = (Math.PI * 0.55) + (i / segments) * (Math.PI * 1.15);
+        vertices.push({
+          x: Math.cos(angle) * innerRadius,
+          y: Math.sin(angle) * innerRadius
+        });
+      }
+
+      return vertices;
+    }
+
+    // ===== BOTTOM C SHAPE (1.6x) =====
+    function getBottomCVertices() {
+      const vertices = [];
+      const radius = 144;
+      const thickness = 64;
+      const segments = 25;
+
+      for (let i = 0; i <= segments; i++) {
+        const angle = (Math.PI * 1.65) + (i / segments) * (Math.PI * 1.3);
+        vertices.push({
+          x: Math.cos(angle) * radius,
+          y: Math.sin(angle) * radius
+        });
+      }
+
+      const innerRadius = radius - thickness;
+      for (let i = segments; i >= 0; i--) {
+        const angle = (Math.PI * 1.65) + (i / segments) * (Math.PI * 1.0);
+        vertices.push({
+          x: Math.cos(angle) * innerRadius,
+          y: Math.sin(angle) * innerRadius
+        });
+      }
+
+      return vertices;
+    }
+
+    // Create shapes based on mode
+    const letterShapes = ['letterC', 'letterH', 'letterR', 'letterI', 'letterS'];
+    const projectBodies: Matter.Body[] = [];
+    bodiesRef.current = [];
+
+    // Use provided projects or default to 5 letters
+    const itemsToRender = projects.length > 0 ? projects : [
+      { title: 'campaigns', type: 'project' as const },
+      { title: 'human ai', type: 'project' as const },
+      { title: 'reputable tech content', type: 'project' as const },
+      { title: 'interactive', type: 'project' as const },
+      { title: 'skill scan', type: 'project' as const }
+    ];
+
+    itemsToRender.forEach((project, index) => {
+      let shapeType: string;
+            const isImageType = project.type === 'image' && project.imageSrc;
+
+      // In initial mode, assign specific letters to specific titles
+      if (mode === 'initial') {
+        switch (project.title) {
+          case 'campaigns':
+            shapeType = 'letterC';
+            break;
+          case 'human ai':
+            shapeType = 'letterH';
+            break;
+          case 'reputable tech content':
+            shapeType = 'letterR';
+            break;
+          case 'interactive':
+            shapeType = 'letterI';
+            break;
+          case 'skill scan':
+            shapeType = 'letterS';
+            break;
+          default:
+            shapeType = letterShapes[index % letterShapes.length];
+        }
+     } else {
+  // Check manual shape first
+  if ((project as any).shape) {
+    shapeType = (project as any).shape;  // Use manual shape
+    console.log(`🎨 Manual: "${project.title}" → ${shapeType}`);
+  } else if (project.title.length > 40) {
+    shapeType = 'letterH';  // Auto H for long titles
+  } else if (index < letterShapes.length) {
+    shapeType = letterShapes[index];  // Sequential
+  } else {
+    shapeType = letterShapes[Math.floor(Math.random() * letterShapes.length)];  // Random
+  }
+}
+      
+      // Position items across screen
+      const spacing = window.innerWidth / (itemsToRender.length + 1);
+      const x = spacing * (index + 1);
+      const y = -300 - (Math.floor(index) * 900);
+
+      
+      let body: Matter.Body;
+
+      // Check if this is an image - make the shape invisible
+
+      
+      // Color scheme: Initial mode = beige shapes, Links mode = brown shapes
+      let fillColor: string;
+      let strokeColor: string;
+      
+      if (isImageType) {
+        fillColor = 'rgba(0,0,0,0)';  // Transparent for images
+        strokeColor = 'rgba(0,0,0,0)';
+      } else if (mode === 'initial') {
+        fillColor = '#dcd3c3';  // Beige shapes in initial mode
+        strokeColor = '#dcd3c3';
+        console.log('Initial mode - creating shape with beige:', fillColor);
+      } else {
+        fillColor = '#5e4631';  // Brown shapes in links mode
+        strokeColor = '#5e4631';
+        console.log('Links mode - creating shape with brown:', fillColor);
+      }
+
+      switch (shapeType) {
+        case 'letterC':
+          body = Bodies.fromVertices(x, y, [getCVertices()], {
+            render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
+            restitution: 0.1,
+            friction: 1,
+            slop: .02
+          }, true);
+          break;
+        case 'letterH':
+          body = Bodies.fromVertices(x, y, [getHVertices()], {
+            render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
+            restitution: 0.1,
+            friction: 50,
+            slop: .02
+          }, true);
+          break;
+        case 'letterR':
+          body = Bodies.fromVertices(x, y, [getRVertices()], {
+            render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
+            restitution: 0.1,
+            friction: 50,
+            slop: .02
+          }, true);
+          break;
+        case 'letterI':
+          body = Bodies.fromVertices(x, y, [getIVertices()], {
+            render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
+            restitution: 0.1,
+            friction: 50,
+            slop: .02
+          }, true);
+          break;
+        case 'letterS':
+        default:
+          body = Body.create({
+            parts: [
+              Bodies.fromVertices(x, y - 80, [getTopCVertices()], {
+                render: { fillStyle: fillColor }
+              }),
+              Bodies.fromVertices(x, y + 80, [getBottomCVertices()], {
+                render: { fillStyle: fillColor }
+              })
+            ]
+          });
+          break;
+      }
+
+      projectBodies.push(body);
+      bodiesRef.current.push({ 
+        body, 
+        project: project,
+        shapeType: shapeType  // Store shape type for rotation logic
       });
     });
+
+    const ground = Bodies.rectangle(window.innerWidth / 2, window.innerHeight, window.innerWidth, 60, {
+      isStatic: true,
+      render: { fillStyle: '#5e4631' }
+    });
+
+    const leftWall = Bodies.rectangle(-30, window.innerHeight / 2, 30, window.innerHeight * 2, {
+      isStatic: true,
+      render: { fillStyle: '#5e4631' }
+    });
+
+    const rightWall = Bodies.rectangle(window.innerWidth + 30, window.innerHeight / 2, 30, window.innerHeight * 2, {
+      isStatic: true,
+      render: { fillStyle: '#5e4631' }
+    });
+
+    Composite.add(world, [...projectBodies, ground, leftWall, rightWall]);
 
     Render.run(render);
     const runner = Runner.create();
-    runnerRef.current = runner;
     Runner.run(runner, engine);
 
-    return () => {
-      console.log('🧹 Cleaning up TumblingShapes');
-      
-      if (render.canvas) {
-        render.canvas.removeEventListener('mousemove', handleMouseMove);
-        render.canvas.removeEventListener('click', handleClick);
-      }
-      
-      if (renderRef.current) {
-        Render.stop(renderRef.current);
-        renderRef.current = null;
-      }
-      
-      if (runnerRef.current) {
-        Runner.stop(runnerRef.current);
-        runnerRef.current = null;
-      }
-      
-      if (engineRef.current) {
-        Composite.clear(engineRef.current.world, false);
-        Engine.clear(engineRef.current);
-        engineRef.current = null;
-      }
-      
-      if (render.canvas && render.canvas.parentNode) {
-        render.canvas.remove();
-      }
+    // Manual animation loop
+    const delta = 1000 / 160;
+    engine.timing.timeScale = 0.5;
+
+    let animationFrameId: number;
+    const animate = () => {
+      Engine.update(engine, delta);
+      animationFrameId = requestAnimationFrame(animate);
     };
-  }, [projects, filterCategory, onShapeClick]);
+    animate();
 
-  if (!projects || !Array.isArray(projects) || projects.length === 0) {
-    return (
-      <div className="w-full h-full flex items-center justify-center bg-[#d4c4b0]">
-        <p className="text-neutral-600 dark:text-neutral-400">No projects to display</p>
-      </div>
-    );
+    // Draw text labels and images on shapes
+    // Preload images
+    const imageCache = new Map<string, HTMLImageElement>();
+    
+    bodiesRef.current.forEach(({ project }) => {
+      if ((project as any).imageSrc) {
+        const img = new Image();
+        img.src = (project as any).imageSrc;
+        imageCache.set((project as any).imageSrc, img);
+      }
+    });
+    
+    Events.on(render, 'afterRender', () => {
+      const context = render.context;
+      
+      // Smaller font for links mode to fit better inside shapes
+      const fontSize = mode === 'links' ? '17px' : '20px';  // Reduced
+      context.font = `${fontSize} "kcgangster", Arial`;
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+
+      bodiesRef.current.forEach(({ body, project, shapeType }) => {
+        const { position, angle } = body;
+        
+        // Check if this is an image shape
+        const isImageShape = (project as any).type === 'image' && (project as any).imageSrc;
+        
+        if (isImageShape) {
+          // Render image WITH physics (shape is invisible)
+          const imageSrc = (project as any).imageSrc;
+          const img = imageCache.get(imageSrc);
+          
+          if (img && img.complete) {
+            context.save();
+            context.translate(position.x, position.y);
+            context.rotate(angle);
+            
+            // Apply additional 90-degree rotation for vertical orientation
+            if (mode === 'links') {
+              context.rotate(-Math.PI / 2);
+            }
+            
+            const imgWidth = 170;
+            const imgHeight = 170;
+            context.drawImage(img, -imgWidth/2, -imgHeight/2, imgWidth, imgHeight);
+            
+            context.restore();
+          }
+        } else {
+          // Render text (existing logic)
+          const isHovered = hoveredBodyRef.current?.id === body.id;
+          
+          // Color scheme: Initial mode = brown text on beige shapes
+          //               Links mode = beige text on brown shapes
+          if (mode === 'initial') {
+            context.fillStyle = isHovered ? '#dcd3c3' : '#5e4631';  // Brown text (beige when hovered)
+          } else {
+            context.fillStyle = isHovered ? '#5e4631' : '#dcd3c3';  // Beige text (brown when hovered)
+          }
+          
+          context.save();
+          context.translate(position.x, position.y);
+          
+          // First rotate to match the body's rotation
+          context.rotate(angle);
+          
+          // Then apply additional rotation based on shape type (all modes)
+          if (shapeType === 'letterH' || shapeType === 'letterR') {
+            // H, R, I shapes: 90-degree counterclockwise rotation
+            context.rotate(-Math.PI / 2);
+          } else if (shapeType === 'letterC'  ) {
+      context.rotate(3 * -Math.PI / 1.58);
+            context.rotate(Math.PI / 2);
+          }  
+          else if (shapeType === 'letterS'  ) {
+      context.rotate( -Math.PI / 2);
+       
+          }  
+          else if (shapeType === 'letterI' ) {
+                    context.rotate(3 * -Math.PI / 2);
+                 
+
+          } else if (mode === 'links') {
+            // All other shapes in links mode: default 90-degree counterclockwise
+            context.rotate(-Math.PI / 2);
+          }
+          
+          // Truncate long titles for links mode with better padding
+          let displayTitle = project.title;
+          if (mode === 'links') {
+            // Truncate to fit inside shapes
+            const maxLength = 70;  // Increased from 20
+            if (displayTitle.length > maxLength) {
+              displayTitle = displayTitle.substring(0, maxLength) + '...';
+            }
+          }
+          
+          // Apply offsets for text positioning inside shapes
+          let xOffset = 0;
+          let yOffset = 0;
+          
+          if (mode === 'links') {
+            // Links mode: offset all text to the right
+          if ( shapeType === 'letterH') {
+              // All rotated shapes (C, H, R, I) get same offset
+              xOffset = 20;  // Push left (up when rotated)
+              yOffset = -12;    // Centered vertically
+            }
+                 if ( shapeType === 'letterR') {
+              // All rotated shapes (C, H, R, I) get same offset
+              xOffset = -30;  // Push left (up when rotated)
+              yOffset = -25;    // Centered vertically
+            }
+               if ( shapeType === 'letterI') {
+              // All rotated shapes (C, H, R, I) get same offset
+              xOffset = 50;  // Push left (up when rotated)
+              yOffset = 15;    // Centered vertically
+            }
+          } else if (mode === 'initial') {
+            // Initial mode: specific offsets for rotated shapes based on shape type
+            
+            if ( shapeType === 'letterH' || shapeType === 'letterR') {
+              // All rotated shapes (C, H, R, I) get same offset
+              xOffset = -30;  // Push left (up when rotated)
+              yOffset = -32;    // Centered vertically
+            }
+            
+            // S shape (letterS) doesn't need offset (not rotated)
+          }
+          
+          context.fillText(displayTitle, xOffset, yOffset);
+          context.restore();
+        }
+      });
+    });
+
+    // Mouse Control
+    const mouse = Mouse.create(render.canvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
+      mouse: mouse,
+      constraint: { stiffness: 0.2, render: { visible: false } }
+    });
+    Composite.add(world, mouseConstraint);
+
+    // Store original colors for all bodies and their parts
+    const originalColors = new Map();
+    bodiesRef.current.forEach(({ body, project }) => {
+      // For images, store transparent as original color
+      const isImageType = (project as any).type === 'image';
+      
+      // Original colors depend on mode:
+      // Initial mode: beige shapes, Links mode: brown shapes
+      let originalFill: string;
+      let originalStroke: string;
+      
+      if (isImageType) {
+        originalFill = 'rgba(0,0,0,0)';
+        originalStroke = 'rgba(0,0,0,0)';
+      } else if (mode === 'initial') {
+        originalFill = '#dcd3c3';  // Beige in initial mode
+        originalStroke = '#dcd3c3';
+      } else {
+        originalFill = '#5e4631';  // Brown in links mode
+        originalStroke = '#5e4631';
+      }
+      
+      // Store color for main body
+      originalColors.set(body.id, {
+        fill: originalFill,
+        stroke: originalStroke
+      });
+      
+      // Store colors for compound body parts (like S letter)
+      if (body.parts && body.parts.length > 1) {
+        body.parts.forEach(part => {
+          if (part.id !== body.id) {  // Don't duplicate the main body
+            originalColors.set(part.id, {
+              fill: originalFill,
+              stroke: originalStroke
+            });
+          }
+        });
+      }
+    });
+
+    // Hover detection
+    Events.on(mouseConstraint, 'mousemove', (event) => {
+      const mousePosition = event.mouse.position;
+   let foundHover: Matter.Body | null = null;  // ✅ Explicitly typed
+
+      
+      bodiesRef.current.forEach(({ body }) => {
+        if (Matter.Bounds.contains(body.bounds, mousePosition)) {
+          const vertices = body.vertices;
+          if (Matter.Vertices.contains(vertices, mousePosition)) {
+            foundHover = body;
+          }
+        }
+      });
+      
+      // Update colors based on hover
+      if (foundHover !== hoveredBodyRef.current) {
+        // Reset previous hover
+        if (hoveredBodyRef.current) {
+          const original = originalColors.get(hoveredBodyRef.current.id);
+          if (original) {  // Safety check
+            hoveredBodyRef.current.render.fillStyle = original.fill;
+            hoveredBodyRef.current.render.strokeStyle = original.stroke;
+            
+            if (hoveredBodyRef.current.parts && hoveredBodyRef.current.parts.length > 1) {
+              hoveredBodyRef.current.parts.forEach(part => {
+                part.render.fillStyle = original.fill;
+              });
+            }
+          }
+        }
+        
+
+if (foundHover) {
+  // Capture foundHover to avoid TypeScript narrowing issues
+const currentHover: Matter.Body = foundHover;  // ← Explicit type annotation
+  const bodyMapping = bodiesRef.current.find(m => m.body === foundHover!);
+
+  // Check if this is an image shape - don't change color if it is
+  const isImage = bodyMapping && (bodyMapping.project as any).type === 'image';
+  
+  if (!isImage) {
+    // Hover color depends on mode:
+    // Initial mode: brown hover (dark on light)
+    // Links mode: beige hover (light on dark)
+    const hoverColor = mode === 'initial' ? '#5e4631' : '#dcd3c3';
+    
+    currentHover.render.fillStyle = hoverColor;
+    currentHover.render.strokeStyle = hoverColor;
+    
+    if (currentHover.parts && currentHover.parts.length > 1) {
+      currentHover.parts.forEach(part => {
+        part.render.fillStyle = hoverColor;
+      });
+    }
   }
+  // For images, do nothing - shape stays transparent
+}
 
-  return (
-    <div ref={sceneRef} className="w-full h-full relative overflow-hidden" />
-  );
+
+hoveredBodyRef.current = foundHover;
+      }
+      });     
+    // Click handler with popup
+    Events.on(mouseConstraint, 'mousedown', (event) => {
+      const mousePosition = event.mouse.position;
+      
+      for (const bodyMapping of bodiesRef.current) {
+        if (Matter.Bounds.contains(bodyMapping.body.bounds, mousePosition)) {
+          const vertices = bodyMapping.body.vertices;
+          if (Matter.Vertices.contains(vertices, mousePosition)) {
+            // Only show alert if not in links mode
+           
+            // Call the callback
+            if (onShapeClick) {
+              onShapeClick(bodyMapping.project);
+            }
+            break;
+          }
+        }
+      }
+    });
+
+    // Cursor styles
+    render.canvas.style.cursor = 'grab';
+    Events.on(mouseConstraint, 'startdrag', () => {
+      render.canvas.style.cursor = 'grabbing';
+    });
+    Events.on(mouseConstraint, 'enddrag', () => {
+      render.canvas.style.cursor = 'grab';
+    });
+
+    // Cleanup
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      Render.stop(render);
+      Runner.stop(runner);
+      Composite.clear(world, false);
+      Engine.clear(engine);
+      render.canvas.remove();
+      render.textures = {};
+    };
+  }, 
+  [projects, filterCategory, onShapeClick]);
+
+  return <div ref={sceneRef} style={{ width: '100%', height: '100vh' }} />;
 };
 
 export default TumblingShapes;

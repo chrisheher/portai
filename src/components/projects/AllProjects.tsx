@@ -1,4 +1,4 @@
-"use client";
+/*"use client";
 import { Card, Carousel } from "@/components/projects/apple-cards-carousel";
 import { data } from "@/components/projects/ConfigData";
 import TumblingShapes from "@/components/chat/TumblingShapes";
@@ -128,7 +128,7 @@ const index = projectsToDisplay.findIndex((p: any) => p.title === projectTitle);
             onShapeClick={handleShapeClick}
           />
 
-          {/* Render the selected card modal */}
+       
           <AnimatePresence>
             {selectedProjectIndex !== null && (
               <CardModal
@@ -145,7 +145,7 @@ const index = projectsToDisplay.findIndex((p: any) => p.title === projectTitle);
 
 // Separate card modal component
 function CardModal({ card, onClose }: { card: any; onClose: () => void }) {
-  const containerRef = useState<HTMLDivElement | null>(null);
+  const containerRef = useState<HTMLDivElement>(null);
 
   useState(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -173,7 +173,7 @@ function CardModal({ card, onClose }: { card: any; onClose: () => void }) {
         className="relative z-[110] mx-auto my-8 h-fit max-w-3xl rounded-2xl bg-white font-sans dark:bg-neutral-900"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
+
         <div className="sticky top-4 z-[120] flex justify-end px-8 pt-8 md:px-14 md:pt-8">
           <button
             className="flex h-8 w-8 items-center justify-center rounded-full bg-black/90 shadow-md dark:bg-white/90"
@@ -186,7 +186,7 @@ function CardModal({ card, onClose }: { card: any; onClose: () => void }) {
           </button>
         </div>
 
-        {/* Header */}
+   
         <div className="relative px-8 pt-2 pb-0 md:px-14">
           <div>
             <p className="text-base font-medium text-black dark:text-white">
@@ -198,9 +198,9 @@ function CardModal({ card, onClose }: { card: any; onClose: () => void }) {
           </div>
         </div>
 
-        {/* Content */}
+
         <div className="px-8 pt-8 pb-14 md:px-14">{card.content}</div>
       </div>
     </div>
   );
-}
+}*/

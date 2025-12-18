@@ -17,7 +17,7 @@ const inter = Inter({
 // Metadata for the site
 export const metadata: Metadata = {
   title: {
-    default: "Chris Heher - Full-stack Developer Portfolio",
+    default: "Chris Heher ",
     template: "%s | Chris Heher Portfolio",
   },
   description:
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://onlychr.is",
     title: "Chris Heher - Full-stack Developer Portfolio",
-    description: "Portfolio showcasing AI-powered projects, IoT systems, and full-stack development.",
+    description: "Portfolio showcasing conversational design.",
     siteName: "Chris Heher Portfolio",
   },
 };

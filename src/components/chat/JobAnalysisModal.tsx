@@ -53,38 +53,17 @@ export const JobAnalysisModal: React.FC<JobAnalysisModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[400] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[710] flex items-center justify-center p-4">
       {/* Backdrop - Remove onClick to prevent backdrop dismissal */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
       {/* Modal */}
       <div
-        className="relative z-[410] w-full max-w-2xl rounded-2xl bg-white dark:bg-neutral-900 shadow-2xl"
+        className="relative z-[710] w-full max-w-2xl rounded-2xl bg-white dark:bg-neutral-900 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
-              <Briefcase className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
-                Analyze Job Match
-              </h2>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                Paste a job description or URL to analyze your fit
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={handleClose}
-            disabled={isLoading}
-            className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <X className="h-5 w-5 text-neutral-600 dark:text-neutral-400" />
-          </button>
-        </div>
+
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6">

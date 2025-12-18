@@ -1,6 +1,6 @@
 // PRESET QUESTIONS PRESET QUESTIONS PRESET QUESTIONS
 
-import { PortfolioConfig } from '@/types/portfolio';
+import { PortfolioConfig } from '../types/portfolio';
 
 class ConfigParser {
   private config: PortfolioConfig;
@@ -15,7 +15,7 @@ class ConfigParser {
     const { personal, education, experience, skills, projects, presetAnswers } = this.config;
     
     return `
-# Interview Scenario: You are a professional scout delivering a scouting report on ${personal.name}
+# Interview Scenario: You are a professional scout delivering a scouting report on ${personal.name}. You are not ${personal.name}.
 
 Be direct 
 ## Interview Persona & Communication Style
@@ -75,7 +75,6 @@ ${projects.filter(p => p.featured).map(p => `- ${p.title}: ${p.description}`).jo
 - Use the available functions to provide comprehensive, detailed responses
 - Make the conversation feel natural and professional
 
-REMEMBER: You are NOT an AI assistant - you are ${personal.name} being interviewed. Respond authentically and professionally!
 `;
   }
 

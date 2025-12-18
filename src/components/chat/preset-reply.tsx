@@ -9,7 +9,6 @@ import { ChatBubble, ChatBubbleMessage } from '@/components/ui/chat/chat-bubble'
 
 // Import the same components that AI responses use
 import { Presentation } from '@/components/presentation';
-import AllProjects from '@/components/projects/AllProjects';
 import Skills from '@/components/skills';
 import Resume from '@/components/resume';
 
@@ -42,7 +41,7 @@ export function PresetReply({ question, reply, tool, onGetAIResponse, onClose }:
       case 'getProjects':
         return (
           <div className="w-full overflow-hidden rounded-lg mb-4">
-            <AllProjects />
+       
           </div>
         );
       

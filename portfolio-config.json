@@ -5,7 +5,7 @@
     "title": "writer | marketer | conversational design",
     "email": "chrisheher@gmail.com",
     "phone": "5106714398",
-    "bio": "Content is context."
+    "bio": "I am what ai ain't"
     
   },
   "education": {
@@ -38,7 +38,7 @@
       "position": "Technical Content Strategist",
       "type": "Full time",
       "duration": "2020-2022",
-      "description": "Sentry is used by millions of developers to monitor their applications. There I wrote content and copy that defined the developer experience: blogs, video scripts, social, website, drip campaigns, and long-form. Product releases run the risk of getting bogged down in their own jargon. For Sentry’s Performance product release, this meant turning jargony benefits (such as improved Apdex scores and p95 response times) into a simple, differentiating insight.My tagline – See Slow Faster – articulated Sentry's competitive advantage, propelling the unicorn to 3x ARR and cement its status as a leader in application performance monitoring.",
+      "description": "Sentry is used by millions of developers to monitor their applications. There I wrote content and copy that defined the developer experience: blogs, video scripts, social, website, drip campaigns, and long-form. Product releases run the risk of getting bogged down in their own jargon. For Sentry's Performance product release, this meant turning jargony benefits (such as improved Apdex scores and p95 response times) into a simple, differentiating insight.My tagline - See Slow Faster - articulated Sentry's competitive advantage, propelling the unicorn to 3x ARR and cement its status as a leader in application performance monitoring.",
           "impact": ["11% Deals influenced in pipeline", "Engagement rate to take meaningful action 1.7%"],
       "technologies": ["Python", "Javascript", "Jamstack", "Next.js"]
     },
@@ -54,12 +54,12 @@
    
   ],
   "skills": {
-    "programming": ["Python", "JavaScript", "SQL", "HTML/CSS", "TypeScript"],
+    "programming": ["Python", "JavaScript", "SQL", "HTML/CSS", "matter.js", "tailwind", "TypeScript"],
     "ml_ai": ["OpenAI API", "LLM Agents", "ChatGPT Integration", "Hugging Face"],
     "web_development": ["React.js", "Next.js", "FastAPI", "Tailwind CSS", "Node.js"],
     "databases": ["PostgreSQL", "MySQL"],
-    "devops_cloud": ["Docker", "Git", "GitHub Actions", "CI/CD", "AWS (EC2/S3)", "Firebase", "Heroku"],
-    "iot_hardware": ["Arduino",  "Hardware Development", "IoT Systems", "Raspberry Pi"],
+    "devops_cloud": ["Git", "GitHub Actions", "Vercel", "Sentry", "AWS (EC2/S3)"],
+    "iot_hardware": ["Arduino", "Raspberry Pi"],
     "soft_skills": ["Problem Solving", "Team Leadership", "Project Management", "Communication", "Learning Agility", "Innovation"]
   },
  
@@ -70,14 +70,14 @@
       "position": "Content strategist",
       "type": "Full-time",
       "duration": "2017-2019",
-      "description": "Ceros is an experiential content creation platform; think photoshop for front-end code.  My role was to discover and execute use cases for customers in trial, write content from a mobile-first mindset, and lead the strategic briefing process. As content strategist, I was tasked to lead the creative conversation during a client’s trial period. I did this by relating to clients that static content written from a paper perspective – even if insightful and strategic– is viewed by their customers as merely lumps of words. From writing strategic briefs to filming webinars to pitching experiential activations, I was central to turning static .pdfs into interactive, mobile-friendly content that showcased Ceros's value to its clients"
+      "description": "Ceros is an experiential content creation platform; think photoshop for front-end code.  My role was to discover and execute use cases for customers in trial, write content from a mobile-first mindset, and lead the strategic briefing process. As content strategist, I was tasked to lead the creative conversation during a client's trial period. I did this by relating to clients that static content written from a paper perspective - even if insightful and strategic- is viewed by their customers as merely lumps of words. From writing strategic briefs to filming webinars to pitching experiential activations, I was central to turning static .pdfs into interactive, mobile-friendly content that showcased Ceros's value to its clients"
     },
        {
       "title": "",
       "position": "Content strategist",
       "type": "Full-time",
       "duration": "2017-2019",
-      "description": "Ceros is an experiential content creation platform; think photoshop for front-end code.  My role was to discover and execute use cases for customers in trial, write content from a mobile-first mindset, and lead the strategic briefing process. As content strategist, I was tasked to lead the creative conversation during a client’s trial period. I did this by relating to clients that static content written from a paper perspective – even if insightful and strategic– is viewed by their customers as merely lumps of words. From writing strategic briefs to filming webinars to pitching experiential activations, I was central to turning static .pdfs into interactive, mobile-friendly content that showcased Ceros's value to its clients"
+      "description": "Ceros is an experiential content creation platform; think photoshop for front-end code.  My role was to discover and execute use cases for customers in trial, write content from a mobile-first mindset, and lead the strategic briefing process. As content strategist, I was tasked to lead the creative conversation during a client's trial period. I did this by relating to clients that static content written from a paper perspective - even if insightful and strategic- is viewed by their customers as merely lumps of words. From writing strategic briefs to filming webinars to pitching experiential activations, I was central to turning static .pdfs into interactive, mobile-friendly content that showcased Ceros's value to its clients"
     },
 
        {
@@ -85,27 +85,33 @@
       "position": "Content strategist",
       "type": "Full-time",
       "duration": "2017-2019",
-      "description": "Ceros is an experiential content creation platform; think photoshop for front-end code.  My role was to discover and execute use cases for customers in trial, write content from a mobile-first mindset, and lead the strategic briefing process. As content strategist, I was tasked to lead the creative conversation during a client’s trial period. I did this by relating to clients that static content written from a paper perspective – even if insightful and strategic– is viewed by their customers as merely lumps of words. From writing strategic briefs to filming webinars to pitching experiential activations, I was central to turning static .pdfs into interactive, mobile-friendly content that showcased Ceros's value to its clients"
+      "description": "Ceros is an experiential content creation platform; think photoshop for front-end code.  My role was to discover and execute use cases for customers in trial, write content from a mobile-first mindset, and lead the strategic briefing process. As content strategist, I was tasked to lead the creative conversation during a client's trial period. I did this by relating to clients that static content written from a paper perspective - even if insightful and strategic - is viewed by their customers as merely lumps of words. From writing strategic briefs to filming webinars to pitching experiential activations, I was central to turning static .pdfs into interactive, mobile-friendly content that showcased Ceros's value to its clients"
     },
     {
       "title": "Ceros",
       "position": "Content strategist",
       "type": "Full-time",
       "duration": "2017-2019",
-      "description": "Ceros is an experiential content creation platform; think photoshop for front-end code.  My role was to discover and execute use cases for customers in trial, write content from a mobile-first mindset, and lead the strategic briefing process. As content strategist, I was tasked to lead the creative conversation during a client’s trial period. I did this by relating to clients that static content written from a paper perspective – even if insightful and strategic– is viewed by their customers as merely lumps of words. From writing strategic briefs to filming webinars to pitching experiential activations, I was central to turning static .pdfs into interactive, mobile-friendly content that showcased Ceros's value to its clients"
+      "description": "Ceros is an experiential content creation platform; think photoshop for front-end code.  My role was to discover and execute use cases for customers in trial, write content from a mobile-first mindset, and lead the strategic briefing process. As content strategist, I was tasked to lead the creative conversation during a client's trial period. I did this by relating to clients that static content written from a paper perspective - even if insightful and strategic - is viewed by their customers as merely lumps of words. From writing strategic briefs to filming webinars to pitching experiential activations, I was central to turning static .pdfs into interactive, mobile-friendly content that showcased Ceros's value to its clients"
     },
       
       
       {
-      "title": "Cincoro",
-      "shape": "circle",
+      "title": "Cincoro tequila | brand launch",
             "category": "tequila",
       "position": "Creative director",
       "type": "Freelance",
       "duration": "2022",
-      "description": "Tagline, brand manifesto, and social media rollout for a tequila owned by five NBA owners.Cutting through the clutter of celebrity tequila brands. George Clooney. The Rock. Kylie Jenner. Bryan Cranston. Celebrity tequila is a crowded space. So when Michael Jordan and four other NBA owners started their own tequila company, I was there to help them find a way to help their brand stand out among the stars. Cincoro translates to 'five rings'. And so the story of Cincoro Tequila is the passion and competitive spirit its five owners share as they each chase their next championship ring.",
+      "description": "Tagline, brand manifesto, and social media rollout for a tequila owned by five NBA owners.Cutting through the clutter of celebrity tequila brands. George Clooney. The Rock. KEndall Jenner. Bryan Cranston. Celebrity tequila is a crowded space. So when Michael Jordan and four other NBA owners started their own tequila company, I was there to help them find a way to help their brand stand out among the stars. Cincoro translates to 'five rings'. And so the story of Cincoro Tequila is the passion and competitive spirit its five owners share as they each chase their next championship ring.",
         "lines": ["All sunshine. No burn.", "Good times deserve great tequila.", "Some owners autograph their bottles. Ours create a signature taste."],
       "media": ["facebook", "microsite", "pinterest", "email", "instagram"],
+        "links": [
+       
+        {
+          "name": "home page",
+          "url": "https://www.cincoro.com/"
+        }
+      ],
         "images": [
         {
           "src": "/img/cinc3.gif",
@@ -131,7 +137,7 @@
     },
       
       {
-      "title": "DroneDeploy Safety AI launch",
+      "title": "DroneDeploy | Safety AI launch",
       "category": "enterprise SaaS reality capture",
       "type": "Freelance",
       "duration": "2022",
@@ -141,17 +147,25 @@
    
            "images": [
         {
-          "src": "https://raw.githubusercontent.com/anujjainbatu/insurance-premium-prediction-fastapi/main/assets/demo.gif",
-          "alt": "Insurance Premium Prediction API Demo"
+      
         }],
       "links": [
+       
         {
-          "name": "blog post",
+          "name": "guide to facade inspections",
+          "url": "https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections"
+        },
+          {
+          "name": "More tools more problems",
+          "url": "https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf"
+        },
+        {
+          "name": "Safety Smarter",
           "url": "https://www.dronedeploy.com/blog/safety-smarter-artificial-intelligence-and-your-work-site"
         },
           {
-          "name": "demo video",
-          "url": "https://www.youtube.com/watch?v=yewTE_X6PLwonedeploy.com/product/safety-ai"
+          "name": "Within Striking Distance: Underground utilities and your work site",
+          "url": "https://www.dronedeploy.com/blog/within-striking-distance-risks-and-consequences-of-manual-utility-mapping"
         },
         {
           "name": "Product page",
@@ -160,7 +174,7 @@
       ]
     }, 
     {
-      "title": "Sentry Performance launch",
+      "title": "Sentry | Performance launch",
       "category": "DevOps",
       "shape": "circle",
       "description": "Product releases run the risk of getting bogged down in their own jargon. For Sentry’s Performance product release, this meant turning jargony benefits (such as improved Apdex scores and p95 response times) into a simple, differentiating insight. My tagline – See Slow Faster – articulated Sentry's competitive advantage, propelling the unicorn to 3x ARR and cement its status as a leader in application performance monitoring.",
@@ -198,18 +212,11 @@
       "featured": true,
       "metrics": ["25+ Projects Delivered", "60% Manual Work Reduction"],
       "links": [
-        {
-          "name": "Fiverr Profile",
-          "url": "https://www.fiverr.com"
-        },
-        {
-          "name": "GitHub",
-          "url": "https://github.com/anujjainbatu"
-        }
+       
       ]
     },  
     {
-      "title": "Dogfooding Chronicles",
+      "title": "Sentry | Dogfooding Chronicles",
       "shape": "circle",
       "category": "Developer Relations",
       "description": "Dogfooding is the process in which a company uses its own product as a quality control mechanism. Think: the hair club for men guy. With Dogfooding Chronicles, we could tell the stories of software engineers  used the platform to improve the platform, syndicating unique anecdotes of how dev teams approached the inevitable flaws in their work with honesty and humor. ",
@@ -253,19 +260,11 @@
       "status": "Completed",
       "featured": true,
       "links": [
-        {
-          "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/IntelliPrice"
-        },
-        {
-          "name": "Demo GIF",
-          "url": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif"
-        }
+    
       ],
       "images": [
         {
-          "src": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif?raw=true",
-          "alt": "IntelliPrice App Demo"
+    
         }
       ]
     },  
@@ -301,20 +300,10 @@
 
       "featured": true,
       "links": [
-        {
-          "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/IntelliPrice"
-        },
-        {
-          "name": "Demo GIF",
-          "url": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif"
-        }
+    
       ],
       "images": [
-        {
-          "src": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif?raw=true",
-          "alt": "IntelliPrice App Demo"
-        }
+  
       ]
     },  
         {
@@ -324,24 +313,12 @@
       "techStack": ["Python", "Streamlit", "scikit-learn", "Docker", "Pandas", "Machine Learning"],
       "featured": true,
       "links": [
-        {
-          "name": "GitHub",
-          "url": "https://github.com/anujjainbatu/IntelliPrice"
-        },
-        {
-          "name": "Demo GIF",
-          "url": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif"
-        }
-      ],
+       ],
       "images": [
-        {
-          "src": "https://github.com/anujjainbatu/IntelliPrice/blob/main/assets/demo.gif?raw=true",
-          "alt": "IntelliPrice App Demo"
-        }
       ]
     },  
         {
-      "title": "HP Presence launch",
+      "title": "HP | Presence launch",
       "category": "GTM",
       "description": "Making hybrid work, work for employees and employers.The context.The pandemic altered the fabric of society. Nowhere was this more evident than the corporate office. As a content strategist on Transmission's HP account, I helped  position their Presence videoconferencing product suite to be the connective tissue for distributed workforces. How businesses can build out their hybrid work infrastructure to seamlessly incorporate devices, solutions, and services across distributed teams.The world of work continues to evolve. And the tools employees use for that work need to evolve with it. And that starts with HP Presence building out intelligent meeting experiences that fully incorporate remote workers such that their points can be heard with the same volume and clarity as those physically in the room.How IT professionals can calibrate their offices to the new normal ",
       "featured": true,
@@ -379,7 +356,7 @@
       "title": "Airbnb",
       "shape":"circle",
       "category": "Employer branding",
-      "description": "Coming out of the pandemic (and the subsequent great resignation), competition for talent has ratcheted up. To that end, companies are changing how they view career websites: from a mere job repository to a digital moment where they can define their culture to candidates.  While working at talent agency Symphony Studio, I was assigned to writing Airbnb’s career website. That first meant establishing their Employer Brand Proposition: that is, the values and benefits which differentiates Airbnb from not only their competitors, but the workforce at large. Working with Airbnb executives and HR stakeholders, we articulated AirBnb’s core values, their Live and Work Anywhere policy, and growth opportunities with responsive, mobile-friendly content that speaks simply, directly, and strategically to candidates.",
+      "description": "Coming out of the pandemic (and the subsequent great resignation), competition for talent has ratcheted up. To that end, companies are changing how they view career websites: from a mere job repository to a digital moment where they can define their culture to candidates.  While working at talent agency Symphony Studio, I was assigned to writing Airbnb's career website. That first meant establishing their Employer Brand Proposition: that is, the values and benefits which differentiates Airbnb from not only their competitors, but the workforce at large. Working with Airbnb executives and HR stakeholders, we articulated AirBnb's core values, their Live and Work Anywhere policy, and growth opportunities with responsive, mobile-friendly content that speaks simply, directly, and strategically to candidates.",
       "techStack": ["figma", "contentful", "milanote"],
       "featured": true,
       "links": [
@@ -425,8 +402,7 @@
       ],
       "images": [
         {
-          "src": "https://raw.githubusercontent.com/anujjainbatu/spamsense/main/assets/demo.gif",
-          "alt": "SpamSense Demo"
+   
         }
       ]
     },  
@@ -480,7 +456,7 @@
     },  
     {
       "title": "Sentry sell sheets",
-      "category": "DevOps",
+      "category": "application monitoring",
       "description": "Technical content to support sales teams as they advocate for the developer .",
       "techStack": ["Sales Enablement", "Django", "JavaScript", "Bootstrap", "FontAwesome", "Gemini API"],
       "featured": true,
@@ -505,7 +481,7 @@
     },  
     {
       "title": "DroneDeploy web pages",
-      "category": "Machine Learning",
+      "category": "enterprise SaaS reality capture",
       "description": "Working in partnership with Boston Dynamics, DroneDeploy's industrial inspection platform captures frequent and consistent data on assets that need regular monitoring in ways which scale up site visibility while dialing down man hours.",
       "techStack": ["Python", "Subdomain Enumeration", "SSL Analysis", "SecurityTrails API"],
       "featured": true,
@@ -528,7 +504,7 @@
     },  
         {
       "title": "DroneDeploy customer stories",
-      "category": "Machine Learning",
+      "category": "reality capture",
       "description": "Customer stories ranging from civil construction to solar farms to engandered penguins.",
       "featured": true,
       "links": [

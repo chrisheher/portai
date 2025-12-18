@@ -1,11 +1,10 @@
-
 // src/components/chat/chat-bottombar.tsx
 'use client';
 
 import { ChatRequestOptions } from 'ai';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface ChatBottombarProps {
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -16,18 +15,20 @@ interface ChatBottombarProps {
   isLoading: boolean;
   stop: () => void;
   input: string;
-  setInput: (value: string) => void;  // Add this line
+  setInput: (value: string) => void;
   isToolInProgress: boolean;
+  countdown?: number | null;  // Add this to receive countdown from parent
 }
 
 export default function ChatBottombar({
-  input = ' ',
+  input = '',
   setInput,
   handleInputChange,
   handleSubmit,
   isLoading,
   stop,
   isToolInProgress,
+  countdown = null,  // Receive countdown from parent
 }: ChatBottombarProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -47,33 +48,33 @@ export default function ChatBottombar({
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, [inputRef]);
+  }, []);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="w-full pb-12 md:pb-1"
+      initial={{ opacity: 0, y: 0 }}
+      animate={{ opacity: 1, x: 400, y: -130 }}
+      className="w-full pb-0 md:pb-12"
     >
-      <form onSubmit={handleSubmit} className="fixed top-4 right-4  md:px-1">
-        <div className="mx-auto flex items-center rounded-full border border-[#E5E5E9] bg-[#e7ddde] py-2 pr-2 pl-6">
+      <form onSubmit={handleSubmit} className="fixed">
+        <div className="flex rounded-full border border-[#E5E5E9] bg-[#dcd3c3]">
           <input
             ref={inputRef}
             type="text"
             value={input}
-  onChange={handleInputChange}  // ✅ use the parent handler
+            onChange={handleInputChange}
             onKeyDown={handleKeyPress}
             placeholder={
-              isToolInProgress ? 'Tool is in progress...' : 'Ask me '
+              isToolInProgress ? 'Tool is in progress...' : 'paste text, no links'
             }
-            className="text-md w-full border-none bg-transparent text-black placeholder:text-gray-500 focus:outline-none"
+            className="text-md w-64 border-none bg-transparent p-4 text-black placeholder:text-gray-500 focus:outline-none"
             disabled={isToolInProgress || isLoading}
           />
 
           <button
             type="submit"
-disabled={isLoading || !(input?.trim()) || isToolInProgress}
-            className="flex items-center justify-center rounded-full bg-[#0171E3] p-2 text-white disabled:opacity-50"
+            disabled={isLoading || !(input?.trim()) || isToolInProgress}
+            className="flex items-center justify-center rounded-full bg-[#0171E3] p-4 text-black disabled:opacity-50"
             onClick={(e) => {
               if (isLoading) {
                 e.preventDefault();
@@ -81,9 +82,16 @@ disabled={isLoading || !(input?.trim()) || isToolInProgress}
               }
             }}
           >
-            <ArrowRight className="h-6 w-6" />
+            <ArrowRight className="h-7 w-7" />
           </button>
         </div>
+        
+        {/* Countdown display */}
+        {countdown !== null && countdown > 0 && (
+          <div className="mt-2 text-center text-sm text-gray-600">
+            Analyzing job... {countdown}s
+          </div>
+        )}
       </form>
     </motion.div>
   );

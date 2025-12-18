@@ -1,7 +1,6 @@
 // src/components/chat/tool-renderer.tsx
 import AvailabilityCard from '../AvailabilityCard';
 import { Presentation } from '../presentation';
-import AllProjects from '../projects/AllProjects';
 import Resume from '../resume';
 import Skills from '../skills';
 import { JobAnalysisDisplay } from './JobAnalysisDisplay';
@@ -33,7 +32,7 @@ export default function ToolRenderer({
          case 'getProjects':
             return (
               <div key={toolCallId} className="w-full overflow-hidden rounded-lg">
-                <AllProjects />
+            
               </div>
             );
 
