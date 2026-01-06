@@ -50,14 +50,14 @@ interface JobAnalysisProps {
 export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
   const getScoreColor = (score: number) => {
     if (score >= 80) return { bg: 'rgba(34, 197, 94, 0.1)', border: 'rgba(34, 197, 94, 0.3)', text: '#22c55e' };
-    if (score >= 60) return { bg: 'rgba(234, 179, 8, 0.1)', border: 'rgba(234, 179, 8, 0.3)', text: '#eab308' };
+    if (score >= 60) return { bg: 'rgba(234, 179, 8, 0)', border: 'rgba(234, 179, 8, 0)', text: '#ffffffff' };
     return { bg: 'rgba(239, 68, 68, 0.1)', border: 'rgba(239, 68, 68, 0.3)', text: '#ef4444' };
   };
 
   const getPriorityColor = (priority?: string) => {
     if (priority === 'high') return { bg: 'rgba(34, 197, 94, 0.1)', text: '#22c55e' };
-    if (priority === 'medium') return { bg: 'rgba(234, 179, 8, 0.1)', text: '#eab308' };
-    return { bg: 'rgba(148, 163, 184, 0.1)', text: '#94a3b8' };
+    if (priority === 'medium') return { bg: 'rgba(234, 179, 8, 0.1)', text: '#edededff' };
+    return { bg: 'rgba(148, 163, 184, 0.1)', text: '#ffffffff' };
   };
 
   const scoreColors = getScoreColor(data.matchScore);
@@ -72,7 +72,7 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
 
   return (
     <div style={{
-      background: 'rgba(215, 215, 217, 0.27)',
+      background: 'rgba(0, 0, 0, 0.27)',
       borderRadius: '16px',
       border: '1px solid rgba(192, 178, 178, 0.1)',
       overflow: 'hidden',
@@ -87,10 +87,10 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
           {/* Circular Progress */}
           <div style={{
-            width: '85px',
-            height: '85px',
+            width: '95px',
+            height: '95px',
             borderRadius: '50%',
-            background: '#8c6a48',
+            background: 'rgba(9, 7, 23, 0.25)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -99,7 +99,7 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
             <div style={{ fontSize: '2rem', fontWeight: '700', color: scoreColors.text }}>
               {data.matchScore}%
             </div>
-            <div style={{ fontSize: '0.7rem', color: '#8b8b8bff', textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '0.7rem', color: '#ffffffff', textTransform: 'uppercase' }}>
               Match
             </div>
           </div>
@@ -188,7 +188,7 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
                     background: strength.confidence === 'high' 
                       ? 'rgba(34, 197, 94, 0.2)' 
                       : strength.confidence === 'medium'
-                      ? 'rgba(234, 179, 8, 0.2)'
+                      ? 'rgba(234, 179, 8, 0.01)'
                       : 'rgba(148, 163, 184, 0.2)',
                     color: strength.confidence === 'high' 
                       ? '#22c55e' 
@@ -249,7 +249,7 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
                   }}>
                     <div style={{ 
                       fontWeight: '600', 
-                      color: '#f1f5f9',
+                      color: 'rgba(255, 255, 255, 1)',
                       fontSize: '1rem',
                       flex: 1
                     }}>
@@ -264,7 +264,7 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
                         ? 'rgba(239, 68, 68, 0.2)' 
                         : gap.severity === 'moderate'
                         ? 'rgba(245, 158, 11, 0.2)'
-                        : 'rgba(148, 163, 184, 0.2)',
+                        : 'rgba(255, 255, 255, 0.2)',
                       color: gap.severity === 'critical' 
                         ? '#ef4444' 
                         : gap.severity === 'moderate'
@@ -278,7 +278,7 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
                   </div>
                   <div style={{ 
                     fontSize: '0.9rem', 
-                    color: '#cbd5e1',
+                    color: 'rgba(255, 255, 255, 1',
                     paddingLeft: '1rem',
                     borderLeft: '3px solid rgba(245, 158, 11, 0.3)',
                     lineHeight: '1.5',
@@ -409,7 +409,7 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
               color: '#dbdbdbff'
             }}>
              
-           <div style={{ marginTop: '1rem', fontSize: '1.075rem', color: '#94a3b8' }}>
+           <div style={{ marginTop: '1rem', fontSize: '1.475rem', color: '#ffffffff' }}>
   ATS Keyword Coverage: {Math.round(keywordCoverage)}% 
   ({data.atsKeywords?.critical.length || 0} critical + {data.atsKeywords?.recommended.length || 0} recommended)
 </div>
@@ -418,18 +418,18 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
             <div style={{ display: 'grid', gap: '1rem' }}>
               {data.atsKeywords.critical.length > 0 && (
                 <div style={{
-                  background: 'rgba(239, 68, 68, 0.05)',
-                  border: '1px solid rgba(239, 68, 68, 0.2)',
+                  background: 'rgba(239, 68, 68, 0.01)',
+                  border: '.1px solid rgba(239, 68, 68, 0.2)',
                   borderRadius: '10px',
                   padding: '1rem 1.25rem'
                 }}>
                   <div style={{ 
                     fontWeight: '600', 
-                    color: '#fca5a5',
+                    color: '#fbfbfbff',
                     marginBottom: '0.625rem',
-                    fontSize: '0.875rem'
+                    fontSize: '1.475rem'
                   }}>
-                Technical skills
+                Hard skills
                   </div>
                   <div style={{
                     display: 'flex',
@@ -439,11 +439,11 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
                     {data.atsKeywords.critical.map((keyword, idx) => (
                       <span key={idx} style={{
                         padding: '0.375rem 0.75rem',
-                        background: 'rgba(239, 68, 68, 0.15)',
-                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                        background: 'rgba(211, 189, 189, 0.15)',
+                        border: '1px solid rgba(223, 192, 192, 0.3)',
                         borderRadius: '6px',
                         fontSize: '0.85rem',
-                        color: '#fecaca',
+                        color: '#d0cdcdff',
                         fontFamily: 'monospace'
                       }}>
                         {keyword}
@@ -455,16 +455,16 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
 
               {data.atsKeywords.recommended.length > 0 && (
                 <div style={{
-                  background: 'rgba(99, 102, 241, 0.05)',
-                  border: '1px solid rgba(99, 102, 241, 0.2)',
+                  background: 'rgba(228, 228, 237, 0.05)',
+                  border: '.5px solid rgba(99, 102, 241, 0.2)',
                   borderRadius: '10px',
                   padding: '1rem 1.25rem'
                 }}>
                   <div style={{ 
                     fontWeight: '600', 
-                    color: '#c7d2fe',
+                    color: '#cfcfcfff',
                     marginBottom: '0.625rem',
-                    fontSize: '0.875rem'
+                    fontSize: '1.475rem'
                   }}>
                   Soft skills
                   </div>
@@ -476,11 +476,11 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
                     {data.atsKeywords.recommended.map((keyword, idx) => (
                       <span key={idx} style={{
                         padding: '0.375rem 0.75rem',
-                        background: 'rgba(99, 102, 241, 0.15)',
-                        border: '1px solid rgba(99, 102, 241, 0.3)',
+                        background: 'rgba(195, 196, 236, 0.15)',
+                        border: '1px solid rgba(214, 215, 234, 0.3)',
                         borderRadius: '6px',
                         fontSize: '0.85rem',
-                        color: '#c7d2fe',
+                        color: '#d9dceaff',
                         fontFamily: 'monospace'
                       }}>
                         {keyword}

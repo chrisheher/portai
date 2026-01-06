@@ -482,7 +482,7 @@ setLocalDescription(item.description || null);
       
       // Set initial description
       setLocalDescription('Conversational Design \n' + '\n' +
-'Cooper the Super is a customer persona trained on the content I produced at DroneDeploy. \n' +  'Hank assesses my talents, skills, and intangibles through a basketball lens.\n' + 'Randy the ruminator provides context + support for the creative process\n' + ' Gaslight a bot with Insecure Aidan.\n' + 'Surly Devin is a cynical spinoff of Devin AI\'s coding bot ');
+'Cooper the Super is a customer persona trained on the content I produced at DroneDeploy. \n' +  'Hank assesses my talents, skills, and intangibles through a basketball lens.\n' + 'Ruminatrix provides support for the creative process\n' + ' Gaslight a bot with Insecure Aidan.\n' + 'Surly Devin is a cynical spinoff of Devin AI\'s coding bot ');
 
       const promptModes = [
         {

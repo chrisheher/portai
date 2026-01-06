@@ -58,8 +58,7 @@ function isURL(text: string): boolean {
 }
 
 /**
- * Pre-analyze keywords by matching portfolio ATS keywords against job description
- * This provides fast, guaranteed accurate keyword detection
+ * Pre-analyze keywords - OPTIMIZED with simple includes check first
  */
 function extractMatchingKeywords(
   jobText: string, 
@@ -78,41 +77,27 @@ function extractMatchingKeywords(
     }
   };
 
-  // Check each category for matches
   Object.entries(portfolioKeywords).forEach(([category, keywords]) => {
     keywords.forEach((keyword: string) => {
       const keywordLower = keyword.toLowerCase();
       
-      // Check for exact match or word boundary match
+      // Fast path: simple includes check first
+      if (!jobLower.includes(keywordLower)) return;
+      
+      // Only do regex if simple check passes
       const regex = new RegExp(`\\b${keywordLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
       
-      if (regex.test(jobLower)) {
+      if (regex.test(jobText)) {
         const categoryKey = category as keyof typeof matches.categories;
         matches.categories[categoryKey].push(keyword);
         
-        // Prioritize based on category
         if (category === 'core' || category === 'technical') {
-          if (!matches.critical.includes(keyword)) {
-            matches.critical.push(keyword);
-          }
+          matches.critical.push(keyword);
         } else {
-          if (!matches.recommended.includes(keyword)) {
-            matches.recommended.push(keyword);
-          }
+          matches.recommended.push(keyword);
         }
       }
     });
-  });
-
-  console.log('🔍 Keyword extraction results:', {
-    critical: matches.critical.length,
-    recommended: matches.recommended.length,
-    byCategory: {
-      core: matches.categories.core.length,
-      technical: matches.categories.technical.length,
-      tools: matches.categories.tools.length,
-      soft: matches.categories.soft.length
-    }
   });
 
   return matches;
@@ -120,131 +105,142 @@ function extractMatchingKeywords(
 
 async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisResult> {
   try {
-    console.log('⏱️ Starting job analysis...');
-    const startTime = Date.now();
+    console.error('\n🔥 === JOB ANALYSIS START ===');
+    const totalStart = Date.now();
     
-    // Step 1: Pre-extract keyword matches (fast, accurate)
+    // Step 1: Extract keywords
     const extractStart = Date.now();
     const keywordMatches = extractMatchingKeywords(jobContent, portfolioConfig.ATSKeywords);
-    console.log(`⏱️ Keyword extraction took ${Date.now() - extractStart}ms`);
+    console.error(`⏱️  Keyword extraction: ${Date.now() - extractStart}ms`);
+    console.error(`   Found: ${keywordMatches.critical.length} critical, ${keywordMatches.recommended.length} recommended`);
     
-    // Step 2: Send to Claude for intelligent analysis
-    console.log('📤 Calling Claude API...');
+    // Step 2: Truncate job description if too long
+    const maxJobLength = 4000;
+    const truncatedJob = jobContent.length > maxJobLength
+      ? jobContent.slice(0, maxJobLength) + '\n\n[Job description truncated for analysis]'
+      : jobContent;
+    
+    console.error(`📄 Job length: ${jobContent.length} chars (${truncatedJob.length} sent to API)`);
+    
+    // Step 3: Call Claude API with PROMPT CACHING
     const apiStart = Date.now();
+    console.error('📤 Calling Claude API with prompt caching...');
     
     const response = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 2500,
-      temperature: 1,
-      messages: [
+      model: 'claude-haiku-4-5-20251001', // FASTER than Haiku for structured output
+      max_tokens: 2000, // Reduced from 2500
+      temperature: 0, // Changed from 1 for consistency
+      system: [
         {
-          role: 'user',
-          content: `Analyze this job for Chris Heher. Output ONLY valid JSON.
-          
+          type: "text",
+          text: "You analyze job descriptions against a candidate's portfolio. Always respond with ONLY valid JSON, no markdown blocks. BE CONCISE - use short phrases in evidence/suggestions fields (max 10-15 words each).",
+          cache_control: { type: "ephemeral" } // Cache this
+        },
+        {
+          type: "text",
+          text: `CANDIDATE PORTFOLIO:
+${JSON.stringify(portfolioConfig, null, 2)}`,
+          cache_control: { type: "ephemeral" } // Cache the portfolio!
+        }
+      ],
+      messages: [{
+        role: 'user',
+        content: `Analyze this job description for the candidate.
 
-PRE-IDENTIFIED KEYWORD MATCHES (from portfolio):
-Critical matches (core/technical skills): ${keywordMatches.critical.join(', ')}
-Recommended matches (tools/soft skills): ${keywordMatches.recommended.join(', ')}
-
-Breakdown by category:
-- Core skills matched: ${keywordMatches.categories.core.join(', ') || 'none'}
-- Technical skills matched: ${keywordMatches.categories.technical.join(', ') || 'none'}
-- Tools matched: ${keywordMatches.categories.tools.join(', ') || 'none'}
-- Soft skills matched: ${keywordMatches.categories.soft.join(', ') || 'none'}
-
-CHRIS'S FULL PORTFOLIO:
-${JSON.stringify(portfolioConfig, null, 2)}
+PRE-MATCHED KEYWORDS (confirmed matches from portfolio):
+Critical: ${keywordMatches.critical.join(', ')}
+Recommended: ${keywordMatches.recommended.join(', ')}
 
 JOB DESCRIPTION:
-${jobContent}
+${truncatedJob}
 
-ANALYSIS INSTRUCTIONS:
-1. Use the pre-identified matches as your foundation - these are CONFIRMED keyword matches
-2. In "atsKeywords.critical": Include the pre-identified critical matches + any additional exact matches you find
-3. In "atsKeywords.recommended": Include the pre-identified recommended matches + any IMPLIED skills that match Chris's experience
-4. In "atsKeywords.phrasingsToUse": Extract exact phrasings/terminology from the job description that Chris should mirror in his application
-5. Build strengths based on these keyword matches and Chris's actual experience
-6. Identify gaps where job requirements don't match Chris's portfolio keywords
-
-Format:
+Return this EXACT JSON structure with NO markdown:
 {
   "matchScore": 75,
-  "strengths": [{"category": "type", "match": "requirement", "evidence": "example", "confidence": "high"}],
-  "gaps": [{"requirement": "skill", "severity": "moderate", "suggestion": "advice"}],
-  "standoutQualities": ["strength"],
+  "strengths": [
+    {
+      "category": "Technical Skills",
+      "match": "React Development",
+      "evidence": "3 years building React applications",
+      "confidence": "high"
+    }
+  ],
+  "gaps": [
+    {
+      "requirement": "Python",
+      "severity": "moderate",
+      "suggestion": "Consider highlighting transferable backend experience"
+    }
+  ],
+  "standoutQualities": ["Full-stack expertise", "DevRel background"],
   "atsKeywords": {
-    "critical": ["keywords that MUST appear in application"],
-    "recommended": ["keywords that should appear for strong match"],
-    "phrasingsToUse": ["exact phrases from job description to mirror"]
+    "critical": ["react", "typescript", "next.js"],
+    "recommended": ["agile", "scrum"],
+    "phrasingsToUse": ["user-centric design", "cross-functional collaboration"]
   },
-  "recommendations": {"coverLetterFocus": ["point"], "skillsToHighlight": ["skill"], "projectsToFeature": ["project"], "narrativeStrategy": "story", "applicationPriority": "high"},
-  "summary": "Write 2-3 sentences covering: biggest strength, competitive advantage in the client's industry. Keep response under 50 words. Do not mention the percentage match."
-
-
+  "recommendations": {
+    "coverLetterFocus": ["Highlight React projects"],
+    "skillsToHighlight": ["TypeScript", "Component architecture"],
+    "projectsToFeature": ["DroneDeploy dashboard", "Airbnb clone"],
+    "narrativeStrategy": "Position as technical leader with startup experience",
+    "applicationPriority": "high"
+  },
+  "summary": "Strong match with 80% keyword coverage. Technical skills align perfectly with role requirements."
 }`
-        }
-      ]
+      }]
     });
 
     const apiTime = Date.now() - apiStart;
-    console.log(`⏱️ API call completed in ${apiTime}ms`);
-    console.log(`📊 Tokens: ${response.usage?.input_tokens || 'unknown'} in, ${response.usage?.output_tokens || 'unknown'} out`);
+    console.error(`⏱️  API call: ${apiTime}ms`);
+    console.error(`📊 Tokens: ${response.usage.input_tokens} in, ${response.usage.output_tokens} out`);
+    
+    // Check if we got cache hits
+    if (response.usage && 'cache_creation_input_tokens' in response.usage) {
+      console.error(`💾 Cache: ${(response.usage as any).cache_creation_input_tokens || 0} created, ${(response.usage as any).cache_read_input_tokens || 0} read`);
+    }
 
-    // Step 3: Parse Claude's response
+    // Step 4: Parse response
+    const parseStart = Date.now();
     const textContent = response.content.find(c => c.type === 'text');
     if (!textContent || textContent.type !== 'text') {
       throw new Error('No text content in Claude response');
     }
 
-    let responseText = textContent.text.trim();
-    
-    console.log('📝 Raw Claude response (first 300 chars):', responseText.substring(0, 300));
-    
-    const parseStart = Date.now();
-    
-    // Strip markdown code blocks aggressively
-    responseText = responseText
+    let responseText = textContent.text.trim()
       .replace(/^```json\s*/i, '')
       .replace(/^```\s*/i, '')
       .replace(/```\s*$/i, '')
       .trim();
     
-    // Extract JSON if still wrapped in text
+    // Extract JSON if wrapped
     if (!responseText.startsWith('{')) {
-      console.warn('⚠️ Response does not start with JSON, attempting extraction...');
       const jsonMatch = responseText.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         responseText = jsonMatch[0];
-        console.log('✅ Extracted JSON from response');
       } else {
-        throw new Error(`Claude did not return valid JSON. Response preview: ${responseText.substring(0, 200)}`);
+        throw new Error('Claude did not return valid JSON');
       }
     }
     
-    // Parse JSON
     let parsed: JobAnalysisResult;
     try {
       parsed = JSON.parse(responseText);
     } catch (parseError) {
       console.error('❌ JSON Parse Error:', parseError);
-      console.error('📄 Failed JSON (first 500 chars):', responseText.substring(0, 500));
+      console.error('📄 Failed JSON preview:', responseText.substring(0, 300));
       throw new Error(`Failed to parse JSON: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`);
     }
 
-    const parseTime = Date.now() - parseStart;
-    console.log(`⏱️ JSON parsing took ${parseTime}ms`);
+    console.error(`⏱️  JSON parsing: ${Date.now() - parseStart}ms`);
 
-    // Step 4: Merge pre-matched keywords with Claude's analysis
-    console.log('🔗 Merging keyword matches...');
+    // Step 5: Merge pre-matched keywords
     if (!parsed.atsKeywords) {
-      // If Claude didn't return keywords, use our pre-matched ones
       parsed.atsKeywords = {
         critical: keywordMatches.critical,
         recommended: keywordMatches.recommended,
         phrasingsToUse: []
       };
     } else {
-      // Combine and deduplicate - ensure pre-matched keywords are included
       parsed.atsKeywords.critical = [...new Set([
         ...keywordMatches.critical,
         ...(parsed.atsKeywords.critical || [])
@@ -255,38 +251,19 @@ Format:
         ...(parsed.atsKeywords.recommended || [])
       ])];
       
-      // phrasingsToUse comes purely from Claude's analysis
-      if (!parsed.atsKeywords.phrasingsToUse) {
-        parsed.atsKeywords.phrasingsToUse = [];
-      }
+      parsed.atsKeywords.phrasingsToUse = parsed.atsKeywords.phrasingsToUse || [];
     }
 
     // Validate required fields
-    if (typeof parsed.matchScore !== 'number') {
-      throw new Error('Missing or invalid matchScore');
-    }
-    if (!Array.isArray(parsed.strengths)) {
-      throw new Error('Missing or invalid strengths array');
-    }
-    if (!Array.isArray(parsed.gaps)) {
-      throw new Error('Missing or invalid gaps array');
-    }
-    if (!parsed.summary) {
-      throw new Error('Missing summary');
-    }
+    if (typeof parsed.matchScore !== 'number') throw new Error('Missing matchScore');
+    if (!Array.isArray(parsed.strengths)) throw new Error('Missing strengths');
+    if (!Array.isArray(parsed.gaps)) throw new Error('Missing gaps');
+    if (!parsed.summary) throw new Error('Missing summary');
 
-    const totalTime = Date.now() - startTime;
-    console.log('✅ Job analysis complete:', {
-      totalTime: `${totalTime}ms`,
-      matchScore: parsed.matchScore,
-      strengths: parsed.strengths.length,
-      gaps: parsed.gaps.length,
-      atsKeywords: {
-        critical: parsed.atsKeywords.critical.length,
-        recommended: parsed.atsKeywords.recommended.length,
-        phrasings: parsed.atsKeywords.phrasingsToUse.length
-      }
-    });
+    const totalTime = Date.now() - totalStart;
+    console.error(`✅ ANALYSIS COMPLETE: ${totalTime}ms`);
+    console.error(`   Match: ${parsed.matchScore}%, Strengths: ${parsed.strengths.length}, Gaps: ${parsed.gaps.length}`);
+    console.error('🔥 === JOB ANALYSIS END ===\n');
 
     return parsed;
 
@@ -294,7 +271,6 @@ Format:
     console.error('❌ analyzeJobDescription error:', {
       error,
       message: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined
     });
     throw error;
   }
@@ -306,8 +282,8 @@ export const analyzeJob = tool({
     jobDescription: z.string().describe('The job description text or URL to analyze'),
   }),
   execute: async ({ jobDescription }) => {
-    const totalStart = Date.now();
-    console.log('🚀 Job analysis started');
+    console.error('\n🚀 === ANALYZE JOB TOOL CALLED ===');
+    const toolStart = Date.now();
     
     try {
       if (!jobDescription || !jobDescription.trim()) {
@@ -316,7 +292,7 @@ export const analyzeJob = tool({
 
       let jobContent = jobDescription.trim();
       
-      // If it's a URL, return a helpful message
+      // If it's a URL, return helpful message
       if (isURL(jobContent)) {
         return {
           matchScore: 0,
@@ -332,11 +308,9 @@ export const analyzeJob = tool({
         };
       }
 
-      // Analyze the job description using hybrid approach
       const analysis = await analyzeJobDescription(jobContent);
 
-      const totalTime = Date.now() - totalStart;
-      console.log(`✅ Total execution time: ${totalTime}ms (${(totalTime/1000).toFixed(1)}s)`);
+      console.error(`✅ TOOL EXECUTION COMPLETE: ${Date.now() - toolStart}ms\n`);
 
       return analysis;
 
@@ -346,7 +320,6 @@ export const analyzeJob = tool({
         message: error instanceof Error ? error.message : 'Unknown error'
       });
       
-      // Return a user-friendly error
       return {
         matchScore: 0,
         strengths: [],
