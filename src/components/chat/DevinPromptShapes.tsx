@@ -21,12 +21,12 @@ const DEVOPS_PROMPTS = [
 const SCOUT_PROMPTS = [
   "what is chris's best position",
   "what products and competitors of chris's clients would be a matchup nightmare",
-  "list other roles chris could conceivably perform outside marketing function",
+  "list five of Chris's clients and compare those challenges to a legendary nba defense",
   "Generate a scouting report"
 ];
 
 const COOPER_PROMPTS = [
-  "Why are tape measures and clipboards killing construction productivity?",
+  "what aspect of site visibility do people underestimate?",
   "Compare manual documentation to drone-based capture",
   "What's the biggest waste of time on a construction site?",
   "How can drones solve safety compliance issues?",

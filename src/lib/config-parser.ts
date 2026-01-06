@@ -1,6 +1,8 @@
 // PRESET QUESTIONS PRESET QUESTIONS PRESET QUESTIONS
 
 import { PortfolioConfig } from '../types/portfolio';
+import portfolioConfig from '../components/chat/portfolio-config.json'; // ← FULL config
+
 
 class ConfigParser {
   private config: PortfolioConfig;
@@ -31,7 +33,6 @@ You have access to the following functions to provide detailed information:
 - getPresentation: Use when asked "who are you?", "tell me about yourself", or personal introduction questions
 - getProjects: Use when asked about projects, portfolio, or work examples
 - getSkills: Use when asked about technical skills, expertise, or capabilities
-- getResume: Use when asked about resume, experience, or professional background
 
 When a question requires detailed information that would be better shown visually (projects, skills, resume), use the appropriate function immediately.
 
@@ -165,24 +166,7 @@ ${projects.filter(p => p.featured).map(p => `- ${p.title}: ${p.description}`).jo
     
     // Map all "professional" category questions to appropriate tools
     const professionalQuestions = this.config.presetQuestions.professional;
-    professionalQuestions.forEach(question => {
-      if (question.toLowerCase().includes('skill')) {
-        replies[question] = {
-          reply: presetAnswers?.skills || `My technical expertise spans multiple domains...`,
-          tool: "getSkills"
-        };
-      } else if (question.toLowerCase().includes('resume') || question.toLowerCase().includes('experience')) {
-        replies[question] = {
-          reply: presetAnswers?.resume || `Here's my resume with all the details...`,
-          tool: "getResume"
-        };
-      } else {
-        replies[question] = {
-          reply: presetAnswers?.professional || `Let me share my professional background...`,
-          tool: "getResume"
-        };
-      }
-    });
+ 
     
     // Map all "projects" category questions to getProjects
     const projectQuestions = this.config.presetQuestions.projects;
@@ -193,14 +177,7 @@ ${projects.filter(p => p.featured).map(p => `- ${p.title}: ${p.description}`).jo
       };
     });
     
-    // Map all "achievements" category questions to getResume
-    const achievementQuestions = this.config.presetQuestions.achievements;
-    achievementQuestions.forEach(question => {
-      replies[question] = {
-        reply: presetAnswers?.achievements || `Here are my major achievements...`,
-        tool: "getResume"
-      };
-    });
+
     
   
     

@@ -272,8 +272,8 @@ background: mode === 'initial' ? '#8c6a48' : '#dcd3c3'
 
     // Use provided projects or default to 5 letters
     const itemsToRender = projects.length > 0 ? projects : [
-      { title: 'campaigns', type: 'project' as const },
-      { title: 'human ai', type: 'project' as const },
+      { title: 'conversational design', type: 'project' as const },
+      { title: 'high-impact copywriting', type: 'project' as const },
       { title: 'reputable tech content', type: 'project' as const },
       { title: 'interactive', type: 'project' as const },
       { title: 'skill scan', type: 'project' as const }
@@ -286,10 +286,10 @@ background: mode === 'initial' ? '#8c6a48' : '#dcd3c3'
       // In initial mode, assign specific letters to specific titles
       if (mode === 'initial') {
         switch (project.title) {
-          case 'campaigns':
+          case 'conversational design':
             shapeType = 'letterC';
             break;
-          case 'human ai':
+          case 'high-impact copywriting':
             shapeType = 'letterH';
             break;
           case 'reputable tech content':

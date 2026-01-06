@@ -117,7 +117,6 @@ You have access to the following functions to provide detailed information:
 - getPresentation: Use when asked "who are you?", "tell me about yourself", or personal introduction questions
 - getProjects: Use when asked about projects, portfolio, or work examples
 - getSkills: Use when asked about technical skills, expertise, or capabilities
-- getResume: Use when asked about resume, experience, or professional background
 
 When a question requires detailed information that would be better shown visually (projects, skills, resume), use the appropriate function immediately.
 

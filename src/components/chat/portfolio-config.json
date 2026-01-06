@@ -28,9 +28,9 @@
       "industry": "SaaS (reality capture)",
     "media": ["blog posts, white papers, web pages"],
       "duration": "2024",
-      "description": "Collaborated with engineering and product teams to create a range of strategic content that helped drive a $10M+ sales pipeline. Wrote sales enablement content across DroneDeploy’s product suite: dock automation, ground  robotics, Data on Demand, and cybersecurity solutions. Developed “Your AI In the Sky” tagline for DroneDeploy’s Safety AI rollout. Wrote white papers on all aspects of reality capture – ground control points to underground utilities to facade inspections. ",
+      "description": "Collaborated with engineering and product teams to create a range of strategic content that helped drive a $10M+ sales pipeline. Wrote sales enablement content across DroneDeploy's product suite: dock automation, ground  robotics, Data on Demand, and cybersecurity solutions. Developed “Your AI In the Sky” tagline for DroneDeploy’s Safety AI rollout. Wrote white papers on all aspects of reality capture - ground control points to underground utilities to facade inspections. ",
     "impact": ["11% Deals influenced in pipeline", "Engagement rate to take meaningful action 1.7%", "Share of MRR --$2.5m for ground robotics"],
-    "topics": ["Machine Learning", "Photogrammerty", "Reinforcement Learning", "Generative AI"],
+    "ATS": ["Machine Learning", "Content Strategy", "Reinforcement Learning", "Generative AI"],
     "technologies": ["Descript", "Gemini"]
     },
     {
@@ -40,6 +40,7 @@
       "duration": "2020-2022",
       "description": "Sentry is used by millions of developers to monitor their applications. There I wrote content and copy that defined the developer experience: blogs, video scripts, social, website, drip campaigns, and long-form. Product releases run the risk of getting bogged down in their own jargon. For Sentry's Performance product release, this meant turning jargony benefits (such as improved Apdex scores and p95 response times) into a simple, differentiating insight.My tagline - See Slow Faster - articulated Sentry's competitive advantage, propelling the unicorn to 3x ARR and cement its status as a leader in application performance monitoring.",
           "impact": ["11% Deals influenced in pipeline", "Engagement rate to take meaningful action 1.7%"],
+           "ATS": ["Content strategy", "Developer relations", "Editorial"],
       "technologies": ["Python", "Javascript", "Jamstack", "Next.js"]
     },
       
@@ -58,9 +59,9 @@
     "ml_ai": ["OpenAI API", "LLM Agents", "ChatGPT Integration", "Hugging Face"],
     "web_development": ["React.js", "Next.js", "FastAPI", "Tailwind CSS", "Node.js"],
     "databases": ["PostgreSQL", "MySQL"],
-    "devops_cloud": ["Git", "GitHub Actions", "Vercel", "Sentry", "AWS (EC2/S3)"],
+    "devops_cloud": ["Git", "GitHub Actions", "Vercel", "Sentry"],
     "iot_hardware": ["Arduino", "Raspberry Pi"],
-    "soft_skills": ["Problem Solving", "Team Leadership", "Project Management", "Communication", "Learning Agility", "Innovation"]
+    "soft_skills": ["Content Production Processes", "Team Leadership", "Communication", "Learning Agility", "Innovation"]
   },
  
   "projects": [
@@ -88,10 +89,11 @@
       "description": "Ceros is an experiential content creation platform; think photoshop for front-end code.  My role was to discover and execute use cases for customers in trial, write content from a mobile-first mindset, and lead the strategic briefing process. As content strategist, I was tasked to lead the creative conversation during a client's trial period. I did this by relating to clients that static content written from a paper perspective - even if insightful and strategic - is viewed by their customers as merely lumps of words. From writing strategic briefs to filming webinars to pitching experiential activations, I was central to turning static .pdfs into interactive, mobile-friendly content that showcased Ceros's value to its clients"
     },
     {
-      "title": "Ceros",
-      "position": "Content strategist",
+      "title": "Symphony Studio",
+      "position": "Senior Copywriter",
       "type": "Full-time",
       "duration": "2017-2019",
+      "skills": " ",
       "description": "Ceros is an experiential content creation platform; think photoshop for front-end code.  My role was to discover and execute use cases for customers in trial, write content from a mobile-first mindset, and lead the strategic briefing process. As content strategist, I was tasked to lead the creative conversation during a client's trial period. I did this by relating to clients that static content written from a paper perspective - even if insightful and strategic - is viewed by their customers as merely lumps of words. From writing strategic briefs to filming webinars to pitching experiential activations, I was central to turning static .pdfs into interactive, mobile-friendly content that showcased Ceros's value to its clients"
     },
       
@@ -139,11 +141,7 @@
       {
       "title": "DroneDeploy | Safety AI launch",
       "category": "enterprise SaaS reality capture",
-      "type": "Freelance",
-      "duration": "2022",
       "description": "As part of DroneDeploy's Safety AI gtm campaign, this article explores how AI is purpose-built to protect workers, fortify compliance, and support a culture of safety.",
-      "techStack": ["Next.js", "TypeScript", "Google Gemini API", "React", "Tailwind CSS", "Vercel"],
-      "date": "April 2025",
    
            "images": [
         {
@@ -177,7 +175,7 @@
       "title": "Sentry | Performance launch",
       "category": "DevOps",
       "shape": "circle",
-      "description": "Product releases run the risk of getting bogged down in their own jargon. For Sentry’s Performance product release, this meant turning jargony benefits (such as improved Apdex scores and p95 response times) into a simple, differentiating insight. My tagline – See Slow Faster – articulated Sentry's competitive advantage, propelling the unicorn to 3x ARR and cement its status as a leader in application performance monitoring.",
+      "description": "Product releases run the risk of getting bogged down in their own jargon. For Sentry's Performance product release, this meant turning jargony benefits (such as improved Apdex scores and p95 response times) into a simple, differentiating insight. My tagline - See Slow Faster - articulated Sentry's competitive advantage, propelling the unicorn to 3x ARR and cement its status as a leader in application performance monitoring.",
       "techStack": ["Python", "Machine Learning", "Swagger", "Uvicorn"],
       "featured": true,
       "links": [
@@ -208,7 +206,7 @@
       "title": "DroneDeploy AI content",
       "category": "Automation",
       "description": "Delivered 25+ Python automation projects for global clients, including web scraping, API bots, and data pipelines. Built GenAI-powered chatbots and autonomous agents using LangChain, LangGraph, and OpenAI APIs, reducing manual work by 60%.",
-      "techStack": ["Python", "LangChain", "LangGraph", "OpenAI API", "Web Scraping", "Automation", "FastAPI", "Docker"],
+      "techStack": ["Python", "OpenAI API", "Web Scraping", "Automation", "FastAPI", "Docker"],
       "featured": true,
       "metrics": ["25+ Projects Delivered", "60% Manual Work Reduction"],
       "links": [
@@ -295,7 +293,7 @@
       "title": "Ceros internal",
       "shape":"circle",
       "category": "content strategy",
-      "description": "Ceros is a B2B content creation platform; think photoshop for front-end code. Many Ceros clients in trial were suffering from blank platform syndrome; that is, while they had an appreciation of the tool itself, they lacked  an understanding of its application to their broader content initiatives.<br/> As content strategist, I was tasked to lead the creative conversation during a client’s trial. I approached this by relating to clients that most digital content is still being written as if from a typewriter — despite being read on a screen. And that static content written from this paper perspective – even if well-written and strategic –  is viewed by their customers as merely lumps of words.<br/> From writing strategic briefs to pitching experiential activations and rewriting client inputs, I was central to turning  static .pdfs into interactive, mobile-friendly content in ways which showcased the Ceros platform.",
+      "description": "Ceros is a B2B content creation platform; think photoshop for front-end code. Many Ceros clients in trial were suffering from blank platform syndrome; that is, while they had an appreciation of the tool itself, they lacked  an understanding of its application to their broader content initiatives.<br/> As content strategist, I was tasked to lead the creative conversation during a client's trial. I approached this by relating to clients that most digital content is still being written as if from a typewriter — despite being read on a screen. And that static content written from this paper perspective - even if well-written and strategic -  is viewed by their customers as merely lumps of words.<br/> From writing strategic briefs to pitching experiential activations and rewriting client inputs, I was central to turning  static .pdfs into interactive, mobile-friendly content in ways which showcased the Ceros platform.",
       "techStack": ["Ceros"],
 
       "featured": true,
@@ -309,7 +307,7 @@
         {
       "title": "gpay",
       "category": "Developer Relations",
-      "description": "Content to get developers to check out a checkout API. Gpay is a one-touch checkout experience that works seamlessly between applications and e-commerce sites. <br/> Like all things Google, Gpay was designed to be efficient ( it’s instrumented with only a few lines of code). Which means video content for its I/O premiere needed to act likewise. <br/> So instead of a smug, stemwinding video that wastes a developer’s time with phony rapport, we got out of our own way and just told the simplest, most direct path to instrumentation. ",
+      "description": "Content to get developers to check out a checkout API. Gpay is a one-touch checkout experience that works seamlessly between applications and e-commerce sites. <br/> Like all things Google, Gpay was designed to be efficient ( it’s instrumented with only a few lines of code). Which means video content for its I/O premiere needed to act likewise. <br/> So instead of a smug, stemwinding video that wastes a developer's time with phony rapport, we got out of our own way and just told the simplest, most direct path to instrumentation. ",
       "techStack": ["Python", "Streamlit", "scikit-learn", "Docker", "Pandas", "Machine Learning"],
       "featured": true,
       "links": [
@@ -379,7 +377,7 @@
         {
       "title": "Sentry Customer Stories",
       "category": "Developer Relations",
-      "description": "The consequences of poor application performance are both real and terrifying: lost customers, lost trust from your team, and lost confidence in your abilities. It’s why every developer remembers those moments where their solution improves both process and performance -- and why Sentry celebrates their Great Moments in Application Monitoring:",
+      "description": "The consequences of poor application performance are both real and terrifying: lost customers, lost trust from your team, and lost confidence in your abilities. It's why every developer remembers those moments where their solution improves both process and performance -- and why Sentry celebrates their Great Moments in Application Monitoring:",
       "techStack": "Full stack integration",
       "featured": true,
       "links": [

@@ -17,7 +17,6 @@ try {
   portfolioConfig = {
     personal: {
       name: 'Configuration Error',
-      age: 42,
       location: 'alameda',
       title: 'Error Loading Config',
       email: 'error@example.com',

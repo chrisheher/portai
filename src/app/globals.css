@@ -168,8 +168,8 @@ font-family: 'kcgangster';
 }
 
 .project-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border: 0px solid #991515;
+  border-radius: 1px;
   padding: 1.5rem;
   background: white;
   transition: transform 0.2s;
@@ -185,6 +185,13 @@ font-family: 'kcgangster';
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 1rem;
+}
+
+*,
+::before,
+::after {
+  box-sizing: border-box; /* 1 */
+  border-width: 0;
 }
 
 .tech-badge {

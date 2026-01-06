@@ -54,13 +54,6 @@ export function PresetReply({ question, reply, tool, onGetAIResponse, onClose }:
       
    
       
-      case 'getResume':
-        return (
-          <div className="w-full rounded-lg mb-4">
-            <Resume />
-          </div>
-        );
-      
      
       
       default:

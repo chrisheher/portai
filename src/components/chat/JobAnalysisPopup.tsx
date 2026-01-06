@@ -21,14 +21,14 @@ export default function JobAnalysisPopup({ isOpen, onClose, children }: JobAnaly
       />
       
       {/* Centered popup */}
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2">
         <div 
-          className="bg-[#0E2136] rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+          className="bg-[#584d3d] rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header with X button */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-white">Job Analysis Results</h2>
+          <div className="flex items-center border-none justify-between p-1 border-b border-gray-200">
+            <h2 className="text-2xl font-bold text-white"></h2>
             <button
               onClick={onClose}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -39,8 +39,8 @@ export default function JobAnalysisPopup({ isOpen, onClose, children }: JobAnaly
           </div>
           
           {/* Content with scroll */}
-          <div className="overflow-y-auto max-h-[calc(90vh-88px)]">
-            <div className="p-6">
+          <div className="overflow-y-auto border-none max-h-[calc(90vh-88px)]">
+            <div className="p-6 border-none">
               {children}
             </div>
           </div>

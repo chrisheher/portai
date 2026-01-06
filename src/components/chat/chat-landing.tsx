@@ -170,6 +170,7 @@ interface Project {
   imageSrc?: string;
   images?: { src: string; alt: string; url?: string }[];
   impact?: { stat: string }[];
+    ATS?: string;
   campaignTitle?: string;
 }
 
@@ -249,8 +250,8 @@ const [localDescription, setLocalDescription] = useState<string | null>(null);
 
   // Initial 5 letters (C, H, R, I, S)
   const initialProjects = useMemo(() => [
-    { title: 'campaigns', type: 'project' as const },
-    { title: 'human ai', type: 'project' as const },
+    { title: 'conversational design', type: 'project' as const },
+    { title: 'high-impact copywriting', type: 'project' as const },
     { title: 'readable tech content', type: 'project' as const },
     { title: 'interactive', type: 'project' as const },
     { title: 'skill scan', type: 'project' as const }
@@ -365,8 +366,8 @@ setLocalDescription(item.description || null);
     // HANDLE INITIAL MODE - When user clicks CHRIS letters
     
     // C CLICK - Show campaigns
-    if (item.title === 'campaigns') {
-      console.log('📢 C clicked - showing campaigns');
+    if (item.title === 'high-impact copywriting') {
+      console.log('📢 H clicked - showing campaigns');
       
       const hardcodedCampaigns: Project[] = [
         {
@@ -412,10 +413,9 @@ setLocalDescription(item.description || null);
           title: 'Cincoro tequila | brand launch',
           type: 'campaign' as const,
           impact: [
-            { stat: ' 2-3x higher engagement rates with consistent posting schedules' },
-            { stat: 'building social audience to 110K+ followers across platforms while the brand achieved 1.5M bottles sold and 23 industry awards' },
-            { stat: '"See Slow Faster" campaign hub generated 3,480 visits with 4:22 avg. time on page (2.3x site average)' },
-            { stat: '312 companies initiated Performance trial during launch window (vs. 89 in pre-launch quarter)' }
+            { stat: 'Created content processes and calendar delivering 2-3x higher engagement rates due to consistent posting schedules' },
+            { stat: 'Built social audience to 110K+ followers across platforms, exceeding brands with decades of history (Don Julio had ~97K Instagram in 2021)' },
+            { stat: 'brand grew from zero to 1.5M bottles sold' }
           ],
           images: [
             { src: '/img/cinc_playing.gif', alt: 'Cincoro post 1', url: 'https://www.instagram.com/p/CNqhlFoLAuU/' },
@@ -460,12 +460,13 @@ setLocalDescription(item.description || null);
             { name: 'Patching a flood of 404s', url: 'https://blog.sentry.io/patching-a-flood-of-404s/' }
           ],
           impact: [
-            { stat: '8,940 total white paper downloads across all 10 assets in launch quarter' },
-            { stat: '~2.5k MQLs generated from white paper download forms' },
+            { stat: 'Revenue tripled in the two years since series launch' },
+            { stat: 'Performance product grew 240% largely through product-led channels' },
             { stat: '$680K in closed-won deals with white paper download in buyer journey — direct revenue attribution' },
             { stat: 'White paper landing pages drove 34,200 total site visits -- 67% of which were organic' }
           ],
           description: 'Developer relations content',
+
           campaignListDescription: 'Dogfooding is the practice of sampling your own product before the public does. For actual dogfood executives, this means chowing down on their own kibble as a literal gut-check. For Sentry, this meant developers using their own application monitoring platform as a way to troubleshoot hiccups in the codebase.'
         }
       ];
@@ -476,12 +477,12 @@ setLocalDescription(item.description || null);
     }
     
     // H CLICK - Show prompt modes
-    if (item.title === 'human ai') {
-      console.log('🎯 H clicked - creating prompt mode shapes');
+    if (item.title === 'conversational design') {
+      console.log('🎯 C clicked - creating prompt mode shapes');
       
       // Set initial description
       setLocalDescription('Conversational Design \n' + '\n' +
-'Cooper the Super is an ICP created from my experience at DroneDeploy. \n' +  'Hank Hardass is a former basketball scout I hired to evaluate me.\n' + 'Randy the ruminator helps with the creative process\n' + ' Insecure AI reinforces.\n' + 'Surly Devin is a cynical spinoff of Devin AI\'s coding bot ');
+'Cooper the Super is a customer persona trained on the content I produced at DroneDeploy. \n' +  'Hank assesses my talents, skills, and intangibles through a basketball lens.\n' + 'Randy the ruminator provides context + support for the creative process\n' + ' Gaslight a bot with Insecure Aidan.\n' + 'Surly Devin is a cynical spinoff of Devin AI\'s coding bot ');
 
       const promptModes = [
         {
@@ -489,7 +490,7 @@ setLocalDescription(item.description || null);
           type: 'link' as const,
           promptMode: 'cooper',
           url: '#cooper',
-          description: 'A construction superintendent who traded clipboards for drones. Ask about reality capture, jobsite technology, or why manual documentation is killing productivity.'
+          description: 'A grizzled construction superintendent who traded disposable cameras for drones. Ask about reality capture, jobsite technology, or why manual documentation is killing productivity.'
         }, 
         {
           title: 'Hank Hardass',
@@ -511,7 +512,7 @@ setLocalDescription(item.description || null);
           type: 'link' as const,
           promptMode: 'insecure',
           url: '#insecure',
-          description: 'Hey-o i\'m an anxious AI assistant.'
+          description: 'Hey-o i\'m an ai entity coded to examine my flaws.'
         },
 
         {

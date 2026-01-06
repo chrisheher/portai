@@ -1,7 +1,7 @@
 {
   "name": "Portfolio Builder - Create Professional Portfolios in Minutes",
   "short_name": "Portfolio Builder",
-  "description": "Revolutionary AI-powered portfolio builder that requires zero coding. Edit one JSON file and get a complete interactive portfolio with AI chatbot.",
+  "description": "",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

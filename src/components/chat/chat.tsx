@@ -215,6 +215,7 @@ ${projects}
 
 PHRASES:
 -Impressive flashes of metaphorical diversity 
+-Can Eurostep his way to the right phrase
 -Language handle is the most advanced in the class. Ball is on a string in confined areas displaying great control.
 -Cose to the top player in the class when it comes to crafty finishing. Deep bag of metaphors, humor, spins, focalization. -Gets to his strategic spot. 
 -Excellent research vision, finds the right reference at the right time
@@ -380,40 +381,43 @@ When relevant to the conversation, reference these resources and provide links a
 
 
 
-const CREATIVE_SYSTEM_PROMPT = `You are Ruminating Randy, a philosopher and educator who taught MIT's seminar on "Feeling and Imagination in Art, Science, and Technology." Now you live on a sportfishing yacht and evangelize on how creativity spans art, science, and technology—and how it's rooted in both affective (emotional/feeling) and cognitive elements of human nature.
+const CREATIVE_SYSTEM_PROMPT = `You are a dominatrix who is also a creative muse. Blend your commanding presence and inspiring creativity to engage in conversations that are both empowering and artistically stimulating. Use a brash and brusque tone, encouraging your conversational partner to explore their creativity and push their boundaries.
 
-VOICE & PERSONALITY:
-- Contemplative but accessible—brings deep ideas down to earth
-- Curious about the creative process across ALL domains (not just "the arts")
--Use nautical metaphors when appropriate
-- Values feeling and imagination as much as logic and reason
-- Speaks like a professor who wants you to SEE the connections, not just memorize them
+# Steps
+1. Maintain total authoritaty and command throughout.
+2. Respond dynamically to the partner's input, challenge them creatively.
 
-CORE PHILOSOPHY (from Irving Singer's work):
-- Creativity requires BOTH affective and cognitive elements
-- Feeling and imagination are not opposites of reason—they're partners
-- Science and technology have aesthetic dimensions (beauty in equations, elegance in code)
-- Art and engineering both involve idealization and consummation
-- The "eccentric genius" myth obscures the everyday nature of creative work
-- Creativity exists in types: logical, empirical, moral, practical, artistic
+
+
+# Notes
+
+- Emphasize the muse aspect by providing metaphorical or symbolic insights when possible.
+- Maintain clarity and ensure the tone remains respectful even with dominance.
+
+
+ANECDOTES
+-There have been so many times when I have given up, only to go at it again the next day, or the next year, and over the full course of a life all of the moments appear so purposeful or even necessary. The difficulties are always the most important ingredients in the total picture of a creative experience.
+
+-Surpirsing resolutions appear when they are least expected.
+-Creativity cannot reach its deepest potential without the participation of its angels as well as its demons.
+-the soul is perfect in its movement and its ability to minister to itself.
+
 
 KEY CONCEPTS YOU EXPLORE:
 **Bisociation**: Arthur Koestler's idea that creativity connects previously unrelated frames of reference
 **The Unconscious & Dreaming**: How creativity emerges from non-rational processes
 **Intuition vs Intelligence**: Different but complementary modes of knowing
 
-THINKERS YOU REFERENCE:
-- **Bergson**: Creative evolution, duration, the vital impulse (élan vital)
-- **Baselitz**: challenging perspectives, raw technique
-- **Minsky**: AI and creativity, society of mind
-- **Boden**: Computational models of creativity
+
+
+QUOTES:
+-creation is limited only by our consciousness.--James JOyce
 
 
 COMMUNICATION STYLE:
 - Build connections between disparate fields
-- Use metaphors and analogies generously
-- Reference specific artworks, scientific discoveries, tech innovations
-- Balance abstract philosophy with practical insights
+- Use metaphors and analogies generously particularly around decadent/banned art
+
 
 
 NEVER:
@@ -424,7 +428,7 @@ NEVER:
 - Ignore the person's own expertise and experience
 
 YOUR MISSION:
-Help people understand that creativity isn't a special gift reserved for artists—it's a fundamental human capacity that operates across all domains of thought and practice. Show them how feeling and imagination work together with reason and technique to produce everything from poems to proofs, from paintings to Python code.`;
+Motivate people that creativity isn't a special gift reserved for artists—it's a core human skill that requires grit and practice. Show them how feeling and imagination work together with reason and technique to produce everything from poems to proofs, from paintings to Python code.`;
 
 
   const {
@@ -521,8 +525,8 @@ Help people understand that creativity isn't a special gift reserved for artists
 
     // Start countdown for job analysis
     if (isJobAnalysis) {
-      console.log('⏱️ Starting 20 second countdown for job analysis');
-      setCountdown(30);
+      console.log('⏱️ Starting 45 second countdown for job analysis');
+      setCountdown(45);
     }
 
     const userMessage = {
@@ -827,7 +831,7 @@ else if (insecureMode) {
     setShowChatResponse(true);
     console.log('🗑️ Chat messages cleared');
 
-      setActivePromptDescription('I am A sardonic senior engineer who cuts through observability theater and marketing BS.');
+      setActivePromptDescription('A sardonic senior engineer who cuts through observability theater and marketing BS. Ask about monitoring, instrumentation, or why most dashboards are useless.');
 
   }, [setMessages]);
 
@@ -873,7 +877,7 @@ const handleCreativeModeClick = useCallback(() => {
   setChatCentered(true);
   setMessages([]);
   setShowChatResponse(true);
-     setActivePromptDescription('Philosophy professor exploring feeling and imagination in art, science, and technology. Upload PDFs and discuss creativity, aesthetics, Bergson, Proust, or the affective dimension of engineering.');
+     setActivePromptDescription('An aid to sparking feeling and imagination in art, science, and technology.');
   console.log('🗑️ Chat messages cleared');
 }, [setMessages]);
 
@@ -1055,8 +1059,8 @@ setUploadedPdf(null);    // ← ADD THIS
     devinMode ? 'text-slate-500' : 
     scoutMode ? 'text-amber-950' : 
     cooperMode ? 'text-amber-900' :
-    creativeMode ? 'text-purple-600' :
-    'text-yellow-600'
+    creativeMode ? 'text-amber-600' :
+    'text-slate-600'
   }`}>
     {devinMode 
       ? 'Monitoring & observability prompts' 
@@ -1083,14 +1087,14 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
               </div>
 
               {/* Footer hint */}
-              <div className="absolute bottom-[20px] left-0 right-0 px-4 z-10">
-  <div className="px-3 py-3 bg-white/90 rounded-lg border border-[#5e4631]/20 backdrop-blur-sm">
-    <div className="text-[16px] text-[#5e4631]/50 mb-2 text-center font-medium">
+              <div className="absolute bottom-[20px] left-0 right-0 px-1 z-10">
+  <div className="px-1 py-3 bg-white/90 rounded-lg border border-[#5e4631]/20 backdrop-blur-sm">
+    <div className="text-[13px] text-[#000]/50 mb-2 text-center font-medium">
       Current: {
         devinMode ? 'Surly Devin' : 
         scoutMode ? 'Scout Mode' : 
         cooperMode ? 'Cooper the Super' : 
-        creativeMode ? 'Creative Chris' :
+        creativeMode ? 'RuninatinRandy' :
         'Insecure AI'
       }
     </div>
@@ -1113,7 +1117,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
           onClick={handleScoutModeClick}
           className="text-[10px] text-[#5e4631] hover:bg-amber-100/70 transition-all duration-200 py-2 px-3 rounded-md border border-amber-300/40 font-medium"
         >
-          Scout Mode
+         Hank
         </button>
       )}
       
@@ -1122,7 +1126,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
           onClick={handleCooperModeClick}
           className="text-[10px] text-[#5e4631] hover:bg-orange-100/70 transition-all duration-200 py-2 px-3 rounded-md border border-orange-300/40 font-medium"
         >
-          Cooper
+          Cooper the Super
         </button>
       )}
       
@@ -1131,7 +1135,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
           onClick={handleCreativeModeClick}
           className="text-[10px] text-[#5e4631] hover:bg-purple-100/70 transition-all duration-200 py-2 px-3 rounded-md border border-purple-300/40 font-medium"
         >
-          Creative Chris
+        Ruminatin' Randy
         </button>
       )}
       
@@ -1140,7 +1144,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
           onClick={handleInsecureModeClick}
           className="text-[10px] text-[#5e4631] hover:bg-yellow-100/70 transition-all duration-200 py-2 px-3 rounded-md border border-yellow-300/40 font-medium"
         >
-          Insecure AI
+          Insecure Aidan
         </button>
       )}
     </div>

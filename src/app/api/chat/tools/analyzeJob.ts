@@ -2,7 +2,7 @@
 import { tool } from "ai";
 import { z } from "zod";
 import Anthropic from '@anthropic-ai/sdk';
-import portfolioConfig from '../../../../../portfolio-config.json';
+import portfolioConfig from './portfolio-config-slim.json';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -20,20 +20,9 @@ interface JobAnalysisResult {
     requirement: string;
     severity: 'critical' | 'moderate' | 'minor';
     suggestion: string;
-    transferable?: string;  // Added optional field
   }>;
   standoutQualities: string[];
-  culturalFit?: {  // Added optional field
-    signals: string[];
-    alignment: string[];
-    concerns: string[];
-  };
-  implicitRequirements?: Array<{  // Added optional field
-    signal: string;
-    interpretation: string;
-    candidateAlignment: string;
-  }>;
-  atsKeywords?: {  // Added optional field
+  atsKeywords?: {
     critical: string[];
     recommended: string[];
     phrasingsToUse: string[];
@@ -42,12 +31,21 @@ interface JobAnalysisResult {
     coverLetterFocus: string[];
     skillsToHighlight: string[];
     projectsToFeature: string[];
-    narrativeStrategy?: string;  // Added optional field
-    applicationPriority?: 'high' | 'medium' | 'low';  // Added optional field
+    narrativeStrategy?: string;
+    applicationPriority?: 'high' | 'medium' | 'low';
   };
-  redFlags?: string[];  // Added optional field
   summary: string;
-  fetchedContent?: string;
+}
+
+interface KeywordMatches {
+  critical: string[];
+  recommended: string[];
+  categories: {
+    core: string[];
+    technical: string[];
+    tools: string[];
+    soft: string[];
+  };
 }
 
 function isURL(text: string): boolean {
@@ -59,91 +57,140 @@ function isURL(text: string): boolean {
   }
 }
 
+/**
+ * Pre-analyze keywords by matching portfolio ATS keywords against job description
+ * This provides fast, guaranteed accurate keyword detection
+ */
+function extractMatchingKeywords(
+  jobText: string, 
+  portfolioKeywords: typeof portfolioConfig.ATSKeywords
+): KeywordMatches {
+  const jobLower = jobText.toLowerCase();
+  
+  const matches: KeywordMatches = {
+    critical: [],
+    recommended: [],
+    categories: {
+      core: [],
+      technical: [],
+      tools: [],
+      soft: []
+    }
+  };
+
+  // Check each category for matches
+  Object.entries(portfolioKeywords).forEach(([category, keywords]) => {
+    keywords.forEach((keyword: string) => {
+      const keywordLower = keyword.toLowerCase();
+      
+      // Check for exact match or word boundary match
+      const regex = new RegExp(`\\b${keywordLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+      
+      if (regex.test(jobLower)) {
+        const categoryKey = category as keyof typeof matches.categories;
+        matches.categories[categoryKey].push(keyword);
+        
+        // Prioritize based on category
+        if (category === 'core' || category === 'technical') {
+          if (!matches.critical.includes(keyword)) {
+            matches.critical.push(keyword);
+          }
+        } else {
+          if (!matches.recommended.includes(keyword)) {
+            matches.recommended.push(keyword);
+          }
+        }
+      }
+    });
+  });
+
+  console.log('🔍 Keyword extraction results:', {
+    critical: matches.critical.length,
+    recommended: matches.recommended.length,
+    byCategory: {
+      core: matches.categories.core.length,
+      technical: matches.categories.technical.length,
+      tools: matches.categories.tools.length,
+      soft: matches.categories.soft.length
+    }
+  });
+
+  return matches;
+}
+
 async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisResult> {
   try {
+    console.log('⏱️ Starting job analysis...');
+    const startTime = Date.now();
+    
+    // Step 1: Pre-extract keyword matches (fast, accurate)
+    const extractStart = Date.now();
+    const keywordMatches = extractMatchingKeywords(jobContent, portfolioConfig.ATSKeywords);
+    console.log(`⏱️ Keyword extraction took ${Date.now() - extractStart}ms`);
+    
+    // Step 2: Send to Claude for intelligent analysis
+    console.log('📤 Calling Claude API...');
+    const apiStart = Date.now();
+    
     const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 4000,
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 2500,
+      temperature: 1,
       messages: [
         {
           role: 'user',
-          content: `You are an expert career strategist analyzing a job opportunity for Chris Heher.
+          content: `Analyze this job for Chris Heher. Output ONLY valid JSON.
+          
 
-CANDIDATE PORTFOLIO:
+PRE-IDENTIFIED KEYWORD MATCHES (from portfolio):
+Critical matches (core/technical skills): ${keywordMatches.critical.join(', ')}
+Recommended matches (tools/soft skills): ${keywordMatches.recommended.join(', ')}
+
+Breakdown by category:
+- Core skills matched: ${keywordMatches.categories.core.join(', ') || 'none'}
+- Technical skills matched: ${keywordMatches.categories.technical.join(', ') || 'none'}
+- Tools matched: ${keywordMatches.categories.tools.join(', ') || 'none'}
+- Soft skills matched: ${keywordMatches.categories.soft.join(', ') || 'none'}
+
+CHRIS'S FULL PORTFOLIO:
 ${JSON.stringify(portfolioConfig, null, 2)}
 
 JOB DESCRIPTION:
 ${jobContent}
 
-ANALYSIS FRAMEWORK:
-1. REQUIREMENTS MAPPING: Extract explicit requirements, implicit needs, must-haves vs nice-to-haves, and transferable skills
-2. CULTURAL FIT: Identify company values, work style indicators, and potential concerns from the posting
-3. COMPETITIVE POSITIONING: Find unique differentiators and strategic narrative
-4. ATS OPTIMIZATION: Extract critical keywords and exact terminology to mirror
+ANALYSIS INSTRUCTIONS:
+1. Use the pre-identified matches as your foundation - these are CONFIRMED keyword matches
+2. In "atsKeywords.critical": Include the pre-identified critical matches + any additional exact matches you find
+3. In "atsKeywords.recommended": Include the pre-identified recommended matches + any IMPLIED skills that match Chris's experience
+4. In "atsKeywords.phrasingsToUse": Extract exact phrasings/terminology from the job description that Chris should mirror in his application
+5. Build strengths based on these keyword matches and Chris's actual experience
+6. Identify gaps where job requirements don't match Chris's portfolio keywords
 
-CRITICAL OUTPUT REQUIREMENTS:
-- Output ONLY valid JSON, no other text
-- No markdown code blocks or backticks
-- No conversational text
-- Start immediately with { and end with }
-- All string fields must use double quotes
-- Arrays cannot be empty - use ["No specific items identified"] if needed
-
-JSON STRUCTURE (copy this exact structure):
+Format:
 {
   "matchScore": 75,
-  "strengths": [
-    {
-      "category": "technical",
-      "match": "specific requirement from job",
-      "evidence": "specific example from portfolio",
-      "confidence": "high"
-    }
-  ],
-  "gaps": [
-    {
-      "requirement": "missing skill",
-      "severity": "moderate",
-      "suggestion": "actionable advice",
-      "transferable": "related skills that could bridge gap"
-    }
-  ],
-  "standoutQualities": [
-    "unique strength that exceeds requirements"
-  ],
-  "culturalFit": {
-    "signals": ["indicators from posting"],
-    "alignment": ["how Chris aligns"],
-    "concerns": ["potential mismatches"]
-  },
-  "implicitRequirements": [
-    {
-      "signal": "vague phrase from posting",
-      "interpretation": "what they really mean",
-      "candidateAlignment": "how Chris fits"
-    }
-  ],
+  "strengths": [{"category": "type", "match": "requirement", "evidence": "example", "confidence": "high"}],
+  "gaps": [{"requirement": "skill", "severity": "moderate", "suggestion": "advice"}],
+  "standoutQualities": ["strength"],
   "atsKeywords": {
-    "critical": ["must-include keywords"],
-    "recommended": ["helpful keywords"],
-    "phrasingsToUse": ["exact phrases to mirror"]
+    "critical": ["keywords that MUST appear in application"],
+    "recommended": ["keywords that should appear for strong match"],
+    "phrasingsToUse": ["exact phrases from job description to mirror"]
   },
-  "recommendations": {
-    "coverLetterFocus": ["key points to emphasize"],
-    "skillsToHighlight": ["top skills to mention"],
-    "projectsToFeature": ["relevant portfolio pieces"],
-    "narrativeStrategy": "overarching story to tell",
-    "applicationPriority": "high"
-  },
-  "redFlags": ["concerning signals if any"],
-  "summary": "3-4 sentence assessment"
-}
+  "recommendations": {"coverLetterFocus": ["point"], "skillsToHighlight": ["skill"], "projectsToFeature": ["project"], "narrativeStrategy": "story", "applicationPriority": "high"},
+  "summary": "Write 2-3 sentences covering: biggest strength, competitive advantage in the client's industry. Keep response under 50 words. Do not mention the percentage match."
 
-Be specific and actionable. Match portfolio items to job requirements with concrete examples.`
+
+}`
         }
       ]
     });
 
+    const apiTime = Date.now() - apiStart;
+    console.log(`⏱️ API call completed in ${apiTime}ms`);
+    console.log(`📊 Tokens: ${response.usage?.input_tokens || 'unknown'} in, ${response.usage?.output_tokens || 'unknown'} out`);
+
+    // Step 3: Parse Claude's response
     const textContent = response.content.find(c => c.type === 'text');
     if (!textContent || textContent.type !== 'text') {
       throw new Error('No text content in Claude response');
@@ -153,10 +200,16 @@ Be specific and actionable. Match portfolio items to job requirements with concr
     
     console.log('📝 Raw Claude response (first 300 chars):', responseText.substring(0, 300));
     
-    // Strip markdown code blocks
-    responseText = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const parseStart = Date.now();
     
-    // Extract JSON if wrapped in text
+    // Strip markdown code blocks aggressively
+    responseText = responseText
+      .replace(/^```json\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/```\s*$/i, '')
+      .trim();
+    
+    // Extract JSON if still wrapped in text
     if (!responseText.startsWith('{')) {
       console.warn('⚠️ Response does not start with JSON, attempting extraction...');
       const jsonMatch = responseText.match(/\{[\s\S]*\}/);
@@ -178,6 +231,36 @@ Be specific and actionable. Match portfolio items to job requirements with concr
       throw new Error(`Failed to parse JSON: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`);
     }
 
+    const parseTime = Date.now() - parseStart;
+    console.log(`⏱️ JSON parsing took ${parseTime}ms`);
+
+    // Step 4: Merge pre-matched keywords with Claude's analysis
+    console.log('🔗 Merging keyword matches...');
+    if (!parsed.atsKeywords) {
+      // If Claude didn't return keywords, use our pre-matched ones
+      parsed.atsKeywords = {
+        critical: keywordMatches.critical,
+        recommended: keywordMatches.recommended,
+        phrasingsToUse: []
+      };
+    } else {
+      // Combine and deduplicate - ensure pre-matched keywords are included
+      parsed.atsKeywords.critical = [...new Set([
+        ...keywordMatches.critical,
+        ...(parsed.atsKeywords.critical || [])
+      ])];
+      
+      parsed.atsKeywords.recommended = [...new Set([
+        ...keywordMatches.recommended,
+        ...(parsed.atsKeywords.recommended || [])
+      ])];
+      
+      // phrasingsToUse comes purely from Claude's analysis
+      if (!parsed.atsKeywords.phrasingsToUse) {
+        parsed.atsKeywords.phrasingsToUse = [];
+      }
+    }
+
     // Validate required fields
     if (typeof parsed.matchScore !== 'number') {
       throw new Error('Missing or invalid matchScore');
@@ -192,12 +275,17 @@ Be specific and actionable. Match portfolio items to job requirements with concr
       throw new Error('Missing summary');
     }
 
-    console.log('✅ Successfully parsed job analysis:', {
+    const totalTime = Date.now() - startTime;
+    console.log('✅ Job analysis complete:', {
+      totalTime: `${totalTime}ms`,
       matchScore: parsed.matchScore,
-      strengthsCount: parsed.strengths.length,
-      gapsCount: parsed.gaps.length,
-      hasCulturalFit: !!parsed.culturalFit,
-      hasAtsKeywords: !!parsed.atsKeywords
+      strengths: parsed.strengths.length,
+      gaps: parsed.gaps.length,
+      atsKeywords: {
+        critical: parsed.atsKeywords.critical.length,
+        recommended: parsed.atsKeywords.recommended.length,
+        phrasings: parsed.atsKeywords.phrasingsToUse.length
+      }
     });
 
     return parsed;
@@ -218,6 +306,9 @@ export const analyzeJob = tool({
     jobDescription: z.string().describe('The job description text or URL to analyze'),
   }),
   execute: async ({ jobDescription }) => {
+    const totalStart = Date.now();
+    console.log('🚀 Job analysis started');
+    
     try {
       if (!jobDescription || !jobDescription.trim()) {
         throw new Error('Job description is required');
@@ -241,8 +332,11 @@ export const analyzeJob = tool({
         };
       }
 
-      // Analyze the job description
+      // Analyze the job description using hybrid approach
       const analysis = await analyzeJobDescription(jobContent);
+
+      const totalTime = Date.now() - totalStart;
+      console.log(`✅ Total execution time: ${totalTime}ms (${(totalTime/1000).toFixed(1)}s)`);
 
       return analysis;
 

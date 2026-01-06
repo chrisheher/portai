@@ -1,7 +1,7 @@
 export interface PortfolioConfig {
   personal: PersonalInfo;
   education: Education;
-  experience: Experience[];
+  experience: Project[];
   skills: Skills;
   projects: Project[];
   social: Social;
@@ -72,6 +72,9 @@ export interface Project {
   title: string;
   category: string;
   description: string;
+  position: string;
+  company: string;
+   duration: string;
   date?: string;
   status?: string;
   images?: Array<{
