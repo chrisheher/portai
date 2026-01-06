@@ -1,4 +1,4 @@
-// src/app/api/chat/tools/analyzeJob.ts
+// src/app/api/chat/tools/analyzeJob.ts - PRODUCTION VERSION
 import { tool } from "ai";
 import { z } from "zod";
 import Anthropic from '@anthropic-ai/sdk';
@@ -57,9 +57,6 @@ function isURL(text: string): boolean {
   }
 }
 
-/**
- * Pre-analyze keywords - OPTIMIZED with simple includes check first
- */
 function extractMatchingKeywords(
   jobText: string, 
   portfolioKeywords: typeof portfolioConfig.ATSKeywords
@@ -80,11 +77,8 @@ function extractMatchingKeywords(
   Object.entries(portfolioKeywords).forEach(([category, keywords]) => {
     keywords.forEach((keyword: string) => {
       const keywordLower = keyword.toLowerCase();
-      
-      // Fast path: simple includes check first
       if (!jobLower.includes(keywordLower)) return;
       
-      // Only do regex if simple check passes
       const regex = new RegExp(`\\b${keywordLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
       
       if (regex.test(jobText)) {
@@ -103,6 +97,39 @@ function extractMatchingKeywords(
   return matches;
 }
 
+/**
+ * Attempts to fix common JSON issues before parsing
+ */
+function fixMalformedJSON(jsonText: string): string {
+  let fixed = jsonText;
+  
+  // Remove markdown code blocks
+  fixed = fixed.replace(/```json\n?/gi, '').replace(/```\n?/g, '');
+  
+  // Trim whitespace
+  fixed = fixed.trim();
+  
+  // Extract JSON if wrapped in text
+  if (!fixed.startsWith('{')) {
+    const jsonMatch = fixed.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      fixed = jsonMatch[0];
+    }
+  }
+  
+  // Try to fix truncated JSON by adding closing brackets
+  if (fixed.endsWith(',')) {
+    fixed = fixed.slice(0, -1) + ']}';
+  }
+  if (!fixed.endsWith('}')) {
+    const openBraces = (fixed.match(/\{/g) || []).length;
+    const closeBraces = (fixed.match(/\}/g) || []).length;
+    fixed += '}'.repeat(Math.max(0, openBraces - closeBraces));
+  }
+  
+  return fixed;
+}
+
 async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisResult> {
   try {
     console.error('\n🔥 === JOB ANALYSIS START ===');
@@ -114,78 +141,48 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     console.error(`⏱️  Keyword extraction: ${Date.now() - extractStart}ms`);
     console.error(`   Found: ${keywordMatches.critical.length} critical, ${keywordMatches.recommended.length} recommended`);
     
-    // Step 2: Truncate job description if too long
-    const maxJobLength = 4000;
+    // Step 2: Truncate job description
+    const maxJobLength = 3000; // Shorter to reduce output
     const truncatedJob = jobContent.length > maxJobLength
-      ? jobContent.slice(0, maxJobLength) + '\n\n[Job description truncated for analysis]'
+      ? jobContent.slice(0, maxJobLength) + '\n\n[truncated]'
       : jobContent;
     
-    console.error(`📄 Job length: ${jobContent.length} chars (${truncatedJob.length} sent to API)`);
+    console.error(`📄 Job length: ${jobContent.length} chars (${truncatedJob.length} sent)`);
     
-    // Step 3: Call Claude API with PROMPT CACHING
+    // Step 3: Call API with aggressive conciseness
     const apiStart = Date.now();
-    console.error('📤 Calling Claude API with prompt caching...');
+    console.error('📤 Calling Claude API...');
     
     const response = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001', // FASTER than Haiku for structured output
-      max_tokens: 2000, // Reduced from 2500
-      temperature: 0, // Changed from 1 for consistency
+      model: 'claude-haiku-4-5-20251001', // FASTEST model
+      max_tokens: 800, // Shorter response = faster + less truncation
+      temperature: 0,
       system: [
         {
           type: "text",
-          text: "You analyze job descriptions against a candidate's portfolio. Always respond with ONLY valid JSON, no markdown blocks. BE CONCISE - use short phrases in evidence/suggestions fields (max 10-15 words each).",
-          cache_control: { type: "ephemeral" } // Cache this
-        },
-        {
-          type: "text",
-          text: `CANDIDATE PORTFOLIO:
+          text: `Analyze jobs against this portfolio. Return ONLY valid JSON. Be concise - use 3-7 word phrases.
+
+Portfolio:
 ${JSON.stringify(portfolioConfig, null, 2)}`,
-          cache_control: { type: "ephemeral" } // Cache the portfolio!
+          cache_control: { type: "ephemeral" }
         }
       ],
       messages: [{
         role: 'user',
-        content: `Analyze this job description for the candidate.
+        content: `Matched keywords: ${keywordMatches.critical.join(', ') || 'none'}
 
-PRE-MATCHED KEYWORDS (confirmed matches from portfolio):
-Critical: ${keywordMatches.critical.join(', ')}
-Recommended: ${keywordMatches.recommended.join(', ')}
-
-JOB DESCRIPTION:
+Job:
 ${truncatedJob}
 
-Return this EXACT JSON structure with NO markdown:
+Return valid JSON (3-7 words per field, max 4 strengths, max 3 gaps):
 {
   "matchScore": 75,
-  "strengths": [
-    {
-      "category": "Technical Skills",
-      "match": "React Development",
-      "evidence": "3 years building React applications",
-      "confidence": "high"
-    }
-  ],
-  "gaps": [
-    {
-      "requirement": "Python",
-      "severity": "moderate",
-      "suggestion": "Consider highlighting transferable backend experience"
-    }
-  ],
-  "standoutQualities": ["Full-stack expertise", "DevRel background"],
-  "atsKeywords": {
-    "critical": ["react", "typescript", "next.js"],
-    "recommended": ["agile", "scrum"],
-    "phrasingsToUse": ["user-centric design", "cross-functional collaboration"]
-  },
-  "recommendations": {
-    "coverLetterFocus": ["Highlight React projects"],
-    "skillsToHighlight": ["TypeScript", "Component architecture"],
-    "projectsToFeature": ["DroneDeploy dashboard", "Airbnb clone"],
-    "narrativeStrategy": "Position as technical leader with startup experience",
-    "applicationPriority": "high"
-  },
-  "summary": "Strong match with 80% keyword coverage. Technical skills align perfectly with role requirements."
+  "strengths": [{"category":"Tech","match":"React","evidence":"5yr React dev","confidence":"high"}],
+  "gaps": [{"requirement":"Python","severity":"moderate","suggestion":"Emphasize JS skills"}],
+  "standoutQualities": ["Full-stack"],
+  "atsKeywords": {"critical":${JSON.stringify(keywordMatches.critical)},"recommended":[],"phrasingsToUse":[]},
+  "recommendations": {"coverLetterFocus":["React"],"skillsToHighlight":["TypeScript"],"projectsToFeature":["Top project"]},
+  "summary": "Strong technical match."
 }`
       }]
     });
@@ -194,46 +191,64 @@ Return this EXACT JSON structure with NO markdown:
     console.error(`⏱️  API call: ${apiTime}ms`);
     console.error(`📊 Tokens: ${response.usage.input_tokens} in, ${response.usage.output_tokens} out`);
     
-    // Check if we got cache hits
-    if (response.usage && 'cache_creation_input_tokens' in response.usage) {
-      console.error(`💾 Cache: ${(response.usage as any).cache_creation_input_tokens || 0} created, ${(response.usage as any).cache_read_input_tokens || 0} read`);
+    if (response.usage && 'cache_read_input_tokens' in response.usage) {
+      const cacheCreated = (response.usage as any).cache_creation_input_tokens || 0;
+      const cacheRead = (response.usage as any).cache_read_input_tokens || 0;
+      console.error(`💾 Cache: ${cacheCreated} created, ${cacheRead} read`);
     }
 
-    // Step 4: Parse response
+    // Step 4: Parse response with error recovery
     const parseStart = Date.now();
     const textContent = response.content.find(c => c.type === 'text');
     if (!textContent || textContent.type !== 'text') {
-      throw new Error('No text content in Claude response');
+      throw new Error('No text content in response');
     }
 
-    let responseText = textContent.text.trim()
-      .replace(/^```json\s*/i, '')
-      .replace(/^```\s*/i, '')
-      .replace(/```\s*$/i, '')
-      .trim();
+    let responseText = textContent.text;
     
-    // Extract JSON if wrapped
-    if (!responseText.startsWith('{')) {
-      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        responseText = jsonMatch[0];
-      } else {
-        throw new Error('Claude did not return valid JSON');
-      }
-    }
+    // Try to fix malformed JSON
+    responseText = fixMalformedJSON(responseText);
     
     let parsed: JobAnalysisResult;
     try {
       parsed = JSON.parse(responseText);
     } catch (parseError) {
       console.error('❌ JSON Parse Error:', parseError);
-      console.error('📄 Failed JSON preview:', responseText.substring(0, 300));
-      throw new Error(`Failed to parse JSON: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`);
+      console.error('📄 Response preview:', responseText.substring(0, 500));
+      
+      // Fallback: return basic analysis from keywords
+      console.error('⚠️  Using fallback basic analysis');
+      return {
+        matchScore: Math.round((keywordMatches.critical.length / 10) * 100),
+        strengths: keywordMatches.critical.slice(0, 3).map(kw => ({
+          category: 'Technical',
+          match: kw,
+          evidence: `Has ${kw} experience`,
+          confidence: 'high' as const
+        })),
+        gaps: [{
+          requirement: 'Unable to complete full analysis',
+          severity: 'moderate' as const,
+          suggestion: 'Try again with shorter job description'
+        }],
+        standoutQualities: keywordMatches.critical.slice(0, 2),
+        atsKeywords: {
+          critical: keywordMatches.critical,
+          recommended: keywordMatches.recommended,
+          phrasingsToUse: []
+        },
+        recommendations: {
+          coverLetterFocus: [`Highlight ${keywordMatches.critical[0] || 'skills'}`],
+          skillsToHighlight: keywordMatches.critical.slice(0, 3),
+          projectsToFeature: ['Top relevant project']
+        },
+        summary: `Keyword match: ${keywordMatches.critical.length} critical skills matched.`
+      };
     }
 
     console.error(`⏱️  JSON parsing: ${Date.now() - parseStart}ms`);
 
-    // Step 5: Merge pre-matched keywords
+    // Step 5: Merge keywords
     if (!parsed.atsKeywords) {
       parsed.atsKeywords = {
         critical: keywordMatches.critical,
@@ -250,49 +265,43 @@ Return this EXACT JSON structure with NO markdown:
         ...keywordMatches.recommended,
         ...(parsed.atsKeywords.recommended || [])
       ])];
-      
-      parsed.atsKeywords.phrasingsToUse = parsed.atsKeywords.phrasingsToUse || [];
     }
 
-    // Validate required fields
-    if (typeof parsed.matchScore !== 'number') throw new Error('Missing matchScore');
-    if (!Array.isArray(parsed.strengths)) throw new Error('Missing strengths');
-    if (!Array.isArray(parsed.gaps)) throw new Error('Missing gaps');
-    if (!parsed.summary) throw new Error('Missing summary');
+    // Validate
+    if (typeof parsed.matchScore !== 'number') parsed.matchScore = 50;
+    if (!Array.isArray(parsed.strengths)) parsed.strengths = [];
+    if (!Array.isArray(parsed.gaps)) parsed.gaps = [];
+    if (!parsed.summary) parsed.summary = 'Analysis complete';
 
     const totalTime = Date.now() - totalStart;
-    console.error(`✅ ANALYSIS COMPLETE: ${totalTime}ms`);
+    console.error(`✅ COMPLETE: ${totalTime}ms`);
     console.error(`   Match: ${parsed.matchScore}%, Strengths: ${parsed.strengths.length}, Gaps: ${parsed.gaps.length}`);
-    console.error('🔥 === JOB ANALYSIS END ===\n');
+    console.error('🔥 === END ===\n');
 
     return parsed;
 
   } catch (error) {
-    console.error('❌ analyzeJobDescription error:', {
-      error,
-      message: error instanceof Error ? error.message : 'Unknown error',
-    });
+    console.error('❌ Error:', error instanceof Error ? error.message : 'Unknown');
     throw error;
   }
 }
 
 export const analyzeJob = tool({
-  description: 'Analyze a job description against the candidate\'s portfolio to provide match score, strengths, gaps, and recommendations',
+  description: 'Analyze a job description against the candidate\'s portfolio',
   inputSchema: z.object({
-    jobDescription: z.string().describe('The job description text or URL to analyze'),
+    jobDescription: z.string().describe('The job description text or URL'),
   }),
   execute: async ({ jobDescription }) => {
-    console.error('\n🚀 === ANALYZE JOB TOOL CALLED ===');
+    console.error('\n🚀 === ANALYZE JOB TOOL ===');
     const toolStart = Date.now();
     
     try {
-      if (!jobDescription || !jobDescription.trim()) {
-        throw new Error('Job description is required');
+      if (!jobDescription?.trim()) {
+        throw new Error('Job description required');
       }
 
-      let jobContent = jobDescription.trim();
+      const jobContent = jobDescription.trim();
       
-      // If it's a URL, return helpful message
       if (isURL(jobContent)) {
         return {
           matchScore: 0,
@@ -304,29 +313,27 @@ export const analyzeJob = tool({
             skillsToHighlight: [],
             projectsToFeature: []
           },
-          summary: `I can see you've shared a job posting URL (${jobContent}), but I can't directly access external websites. Please copy the job description text from that page and paste it here, and I'll analyze how well you match the role!`
+          summary: `Can't access URLs. Please paste the job description text.`
         };
       }
 
       const analysis = await analyzeJobDescription(jobContent);
 
-      console.error(`✅ TOOL EXECUTION COMPLETE: ${Date.now() - toolStart}ms\n`);
+      console.error(`✅ TOOL COMPLETE: ${Date.now() - toolStart}ms\n`);
 
       return analysis;
 
     } catch (error) {
-      console.error('❌ analyzeJob tool error:', {
-        error,
-        message: error instanceof Error ? error.message : 'Unknown error'
-      });
+      console.error('❌ Tool error:', error instanceof Error ? error.message : 'Unknown');
       
+      // Return graceful error
       return {
         matchScore: 0,
         strengths: [],
         gaps: [{
-          requirement: 'Analysis Error',
+          requirement: 'Analysis Failed',
           severity: 'critical' as const,
-          suggestion: `Failed to analyze job description: ${error instanceof Error ? error.message : 'Unknown error'}. Please try rephrasing or simplifying the job description.`
+          suggestion: 'Please try again with a shorter job description'
         }],
         standoutQualities: [],
         recommendations: {
@@ -334,7 +341,7 @@ export const analyzeJob = tool({
           skillsToHighlight: [],
           projectsToFeature: []
         },
-        summary: 'Unable to complete analysis due to an error. Please try again or contact support if the issue persists.'
+        summary: 'Analysis failed. Try rephrasing or shortening the job description.'
       };
     }
   }

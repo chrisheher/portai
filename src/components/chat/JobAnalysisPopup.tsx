@@ -16,7 +16,7 @@ export default function JobAnalysisPopup({ isOpen, onClose, children }: JobAnaly
     <>
       {/* Backdrop overlay */}
       <div 
-        className="fixed inset-0 bg-black/50 z-[9998]"
+        className="fixed inset-0 bg-white/10 z-[9998]"
         onClick={onClose}
       />
       

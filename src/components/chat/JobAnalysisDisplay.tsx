@@ -132,9 +132,9 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
             alignItems: 'center',
             gap: '0.5rem',
             margin: '0 0 1rem 0',
-            fontSize: '1.25rem',
-            fontWeight: '700',
-            color: '#dbdbdbff'
+            fontSize: '1.5rem',
+            fontWeight: '900',
+            color: 'rgba(255, 255, 255, 1)'
           }}>
         
             Strongest fits 
@@ -207,7 +207,7 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
                   paddingLeft: '0rem',
                   lineHeight: '1.5'
                 }}>
-                  I have {strength.evidence.charAt(0).toLowerCase() + strength.evidence.slice(1)}
+          {strength.evidence}
                 </div>
               </div>
             ))}
@@ -223,18 +223,18 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
               alignItems: 'center',
               gap: '0.5rem',
               margin: '0 0 1rem 0',
-              fontSize: '1.25rem',
+              fontSize: '1.5rem',
               fontWeight: '700',
-              color: '#f59e0b'
+              color: 'white'
             }}>
-              <AlertCircle size={20} />
+            
               Fuzzy on
             </h4>
             
             <div style={{ display: 'grid', gap: '0.875rem' }}>
               {data.gaps.map((gap, idx) => (
                 <div key={idx} style={{
-                  background: 'rgba(245, 158, 11, 0.05)',
+                  background: 'rgb(117 101 74 / 86%)',
                   border: '1px solid rgba(245, 158, 11, 0.2)',
                   borderRadius: '12px',
                   padding: '1.25rem'
@@ -418,7 +418,7 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
             <div style={{ display: 'grid', gap: '1rem' }}>
               {data.atsKeywords.critical.length > 0 && (
                 <div style={{
-                  background: 'rgba(239, 68, 68, 0.01)',
+                  background: 'rgb(63 2 2 / 18%)',
                   border: '.1px solid rgba(239, 68, 68, 0.2)',
                   borderRadius: '10px',
                   padding: '1rem 1.25rem'
@@ -439,7 +439,7 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
                     {data.atsKeywords.critical.map((keyword, idx) => (
                       <span key={idx} style={{
                         padding: '0.375rem 0.75rem',
-                        background: 'rgba(211, 189, 189, 0.15)',
+                        background: 'rgb(93 57 57 / 79%)',
                         border: '1px solid rgba(223, 192, 192, 0.3)',
                         borderRadius: '6px',
                         fontSize: '0.85rem',
@@ -455,8 +455,8 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
 
               {data.atsKeywords.recommended.length > 0 && (
                 <div style={{
-                  background: 'rgba(228, 228, 237, 0.05)',
-                  border: '.5px solid rgba(99, 102, 241, 0.2)',
+                  background: 'rgba(10, 14, 204, 0.23)',
+                  border: '.1px solid rgba(99, 101, 241, 0.68)',
                   borderRadius: '10px',
                   padding: '1rem 1.25rem'
                 }}>
@@ -476,7 +476,7 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
                     {data.atsKeywords.recommended.map((keyword, idx) => (
                       <span key={idx} style={{
                         padding: '0.375rem 0.75rem',
-                        background: 'rgba(195, 196, 236, 0.15)',
+                        background: 'rgb(0 0 0 / 43%)',
                         border: '1px solid rgba(214, 215, 234, 0.3)',
                         borderRadius: '6px',
                         fontSize: '0.85rem',
@@ -497,8 +497,8 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
 
         {/* Recommendations */}
         <div style={{
-          background: 'rgba(99, 102, 241, 0.05)',
-          border: '1px solid rgba(99, 102, 241, 0.2)',
+          background: 'rgba(27, 72, 40, 0.2)',
+          border: '1px solid rgba(27, 72, 40, 0.2)',
           borderRadius: '12px',
           padding: '1.5rem'
         }}>
@@ -524,7 +524,7 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
             <div>
               <div style={{ 
                 fontWeight: '600', 
-                color: '#f1f5f9',
+                color: '#ffffffff',
                 marginBottom: '0.625rem',
                 fontSize: '0.95rem'
               }}>
@@ -533,8 +533,8 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
               <ul style={{ 
                 margin: 0, 
                 paddingLeft: '1.5rem',
-                color: '#cbd5e1',
-                fontSize: '0.9rem',
+                color: '#f8f8f8ff',
+                fontSize: '1.3rem',
                 lineHeight: '1.6'
               }}>
                 {data.recommendations.projectsToFeature.map((project, idx) => (
