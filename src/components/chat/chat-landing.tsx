@@ -743,7 +743,7 @@ setLocalDescription(item.description || null);
           zIndex: 700,
           padding: '20px'
         }}>
-          Chris creates content for brands and businesses who see ai as the fire, not the chef.
+          Chris creates content for brands who see ai as the fire, not the chef.
           <br/><br/>
           vibe coded in typescript + tailwind + matter.js
         </div>

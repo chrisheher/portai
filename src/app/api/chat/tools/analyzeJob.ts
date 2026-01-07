@@ -155,8 +155,8 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001', // FASTEST model
-      max_tokens: 800, // Shorter response = faster + less truncation
-      temperature: 0,
+      max_tokens: 1800, // Shorter response = faster + less truncation
+      temperature: 0.6,
       system: [
         {
           type: "text",
@@ -287,7 +287,7 @@ Return valid JSON (3-7 words per field, max 4 strengths, max 3 gaps):
 }
 
 export const analyzeJob = tool({
-  description: 'Analyze a job description against the candidate\'s portfolio',
+  description: 'Analyze a job description to help the employer evaluate a candidate',
   inputSchema: z.object({
     jobDescription: z.string().describe('The job description text or URL'),
   }),
