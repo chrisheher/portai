@@ -246,26 +246,7 @@
     },   
     
        
-    
   
-     
-        {
-      "title": "Cybersecurity",
-      "category": "Machine Learning",
-      "description": "ML-powered laptop price prediction system built with Streamlit. Features clean interface, fast predictions, and easy deployment via Docker. Uses key attributes like brand, CPU, RAM, storage, GPU, and screen size for accurate real-time price estimates.",
-      "techStack": ["Python", "Streamlit", "scikit-learn", "Docker", "Pandas", "Machine Learning"],
-      "date": "2025",
-      "status": "Completed",
-      "featured": true,
-      "links": [
-    
-      ],
-      "images": [
-        {
-    
-        }
-      ]
-    },  
      
         {
       "title": "GE",

@@ -35,6 +35,7 @@ interface JobAnalysisResult {
     applicationPriority?: 'high' | 'medium' | 'low';
   };
   summary: string;
+  shareableLink?: string;
 }
 
 interface KeywordMatches {
@@ -130,6 +131,28 @@ function fixMalformedJSON(jsonText: string): string {
   return fixed;
 }
 
+/**
+ * Generate a shareable link for the analysis results
+ */
+function generateShareableLink(analysis: JobAnalysisResult): string {
+  try {
+    // Create a clean copy without the shareableLink itself to avoid recursion
+    const { shareableLink, ...cleanAnalysis } = analysis;
+    
+    // Encode to base64url (URL-safe base64)
+    const analysisId = Buffer.from(
+      JSON.stringify(cleanAnalysis)
+    ).toString('base64url');
+    
+    // Use environment variable or fallback to relative path
+    const baseUrl = process.env.NEXT_PUBLIC_URL || '';
+    return `${baseUrl}/results/${analysisId}`;
+  } catch (error) {
+    console.error('Error generating shareable link:', error);
+    return '';
+  }
+}
+
 async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisResult> {
   try {
     console.error('\n🔥 === JOB ANALYSIS START ===');
@@ -155,12 +178,12 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001', // FASTEST model
-      max_tokens: 1800, // Shorter response = faster + less truncation
-      temperature: 0.6,
+      max_tokens: 2000, // Shorter response = faster + less truncation
+      temperature: 1,
       system: [
         {
           type: "text",
-          text: `Analyze jobs against this portfolio. Return ONLY valid JSON. Be concise - use 3-7 word phrases.
+          text: `Analyze jobs against this portfolio. Return ONLY valid JSON. 
 
 Portfolio:
 ${JSON.stringify(portfolioConfig, null, 2)}`,
@@ -174,7 +197,7 @@ ${JSON.stringify(portfolioConfig, null, 2)}`,
 Job:
 ${truncatedJob}
 
-Return valid JSON (3-7 words per field, max 4 strengths, max 3 gaps):
+Return valid JSON (7-10 words per field, max 5 strengths, max 3 gaps):
 {
   "matchScore": 75,
   "strengths": [{"category":"Tech","match":"React","evidence":"5yr React dev","confidence":"high"}],
@@ -218,7 +241,7 @@ Return valid JSON (3-7 words per field, max 4 strengths, max 3 gaps):
       
       // Fallback: return basic analysis from keywords
       console.error('⚠️  Using fallback basic analysis');
-      return {
+      const fallbackAnalysis: JobAnalysisResult = {
         matchScore: Math.round((keywordMatches.critical.length / 10) * 100),
         strengths: keywordMatches.critical.slice(0, 3).map(kw => ({
           category: 'Technical',
@@ -244,6 +267,18 @@ Return valid JSON (3-7 words per field, max 4 strengths, max 3 gaps):
         },
         summary: `Keyword match: ${keywordMatches.critical.length} critical skills matched.`
       };
+      
+      // Add shareable link
+      fallbackAnalysis.shareableLink = generateShareableLink(fallbackAnalysis);
+      
+      // Log the shareable link prominently
+      console.error('\n🔗 ═══════════════════════════════════════════════════════════');
+      console.error('🔗 SHAREABLE LINK (FALLBACK):');
+      console.error('🔗 ═══════════════════════════════════════════════════════════');
+      console.error(fallbackAnalysis.shareableLink);
+      console.error('🔗 ═══════════════════════════════════════════════════════════\n');
+      
+      return fallbackAnalysis;
     }
 
     console.error(`⏱️  JSON parsing: ${Date.now() - parseStart}ms`);
@@ -273,9 +308,19 @@ Return valid JSON (3-7 words per field, max 4 strengths, max 3 gaps):
     if (!Array.isArray(parsed.gaps)) parsed.gaps = [];
     if (!parsed.summary) parsed.summary = 'Analysis complete';
 
+    // Step 6: Generate shareable link
+    parsed.shareableLink = generateShareableLink(parsed);
+
     const totalTime = Date.now() - totalStart;
     console.error(`✅ COMPLETE: ${totalTime}ms`);
     console.error(`   Match: ${parsed.matchScore}%, Strengths: ${parsed.strengths.length}, Gaps: ${parsed.gaps.length}`);
+    
+    // Enhanced shareable link logging
+    console.error('\n🔗 ═══════════════════════════════════════════════════════════');
+    console.error('🔗 SHAREABLE LINK (COPY THIS):');
+    console.error('🔗 ═══════════════════════════════════════════════════════════');
+    console.error(parsed.shareableLink);
+    console.error('🔗 ═══════════════════════════════════════════════════════════\n');
     console.error('🔥 === END ===\n');
 
     return parsed;
@@ -319,7 +364,14 @@ export const analyzeJob = tool({
 
       const analysis = await analyzeJobDescription(jobContent);
 
-      console.error(`✅ TOOL COMPLETE: ${Date.now() - toolStart}ms\n`);
+      console.error(`✅ TOOL COMPLETE: ${Date.now() - toolStart}ms`);
+      
+      // Log the link one more time at the tool level for visibility
+      if (analysis.shareableLink) {
+        console.error('\n📎 Final shareable link:');
+        console.error(analysis.shareableLink);
+      }
+      console.error('');
 
       return analysis;
 
