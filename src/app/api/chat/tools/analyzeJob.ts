@@ -99,6 +99,145 @@ function extractMatchingKeywords(
 }
 
 /**
+ * Calculate match score based on content/marketing role fit
+ */
+function calculateMatchScore(
+  keywordMatches: KeywordMatches,
+  jobContent: string
+): number {
+  const weights = {
+    coreSkills: 0.35,          // Content strategy, technical writing, etc.
+    marketingSkills: 0.25,     // Pipeline gen, demand gen, etc.
+    industryFit: 0.15,         // SaaS, DevTools, B2B
+    technicalFluency: 0.15,    // Understanding of tech concepts
+    softSkills: 0.10           // Communication, leadership
+  };
+
+  const jobLower = jobContent.toLowerCase();
+  
+  // 1. Core Skills Score (0-100)
+  const coreSkillsNeeded = [
+    'content strategy', 'technical writing', 'copywriting', 
+    'content marketing', 'product marketing', 'developer relations',
+    'gtm', 'go-to-market', 'messaging', 'positioning'
+  ];
+  const coreMatches = coreSkillsNeeded.filter(skill => 
+    jobLower.includes(skill)
+  ).length;
+  const coreScore = Math.min((coreMatches / 5) * 100, 100);
+
+  // 2. Marketing Skills Score (0-100)
+  const marketingSkills = [
+    'pipeline', 'demand generation', 'sales enablement', 
+    'campaign', 'launch', 'brand', 'social media', 'seo',
+    'lead generation', 'conversion'
+  ];
+  const marketingMatches = marketingSkills.filter(skill =>
+    jobLower.includes(skill)
+  ).length;
+  const marketingScore = Math.min((marketingMatches / 4) * 100, 100);
+
+  // 3. Industry Fit (0-100)
+  let industryScore = 50; // baseline
+  if (jobLower.includes('saas') || jobLower.includes('b2b')) industryScore += 20;
+  if (jobLower.includes('developer') || jobLower.includes('devtools')) industryScore += 20;
+  if (jobLower.includes('enterprise')) industryScore += 10;
+  industryScore = Math.min(industryScore, 100);
+
+  // 4. Technical Fluency (0-100)
+  const techTerms = [
+    'api', 'sdk', 'developer', 'technical', 'ai', 'ml', 
+    'cloud', 'devops', 'engineering', 'code', 'software'
+  ];
+  const techMatches = techTerms.filter(term =>
+    jobLower.includes(term)
+  ).length;
+  const techScore = Math.min((techMatches / 4) * 100, 100);
+
+  // 5. Soft Skills Score (0-100)
+  const softSkills = [
+    'communication', 'leadership', 'collaboration', 
+    'stakeholder', 'cross-functional', 'strategic'
+  ];
+  const softMatches = softSkills.filter(skill =>
+    jobLower.includes(skill)
+  ).length;
+  const softScore = Math.min((softMatches / 3) * 100, 100);
+
+  // Calculate weighted score
+  const baseScore = Math.round(
+    coreScore * weights.coreSkills +
+    marketingScore * weights.marketingSkills +
+    industryScore * weights.industryFit +
+    techScore * weights.technicalFluency +
+    softScore * weights.softSkills
+  );
+
+  // Experience level adjustment
+  let experienceModifier = 0;
+  if (jobLower.includes('senior') || jobLower.includes('lead')) {
+    experienceModifier = 10; // Good fit for senior roles
+  } else if (jobLower.includes('director') || jobLower.includes('vp')) {
+    experienceModifier = -5; // Might be a stretch
+  } else if (jobLower.includes('junior') || jobLower.includes('entry')) {
+    experienceModifier = -10; // Overqualified
+  }
+
+  const finalScore = baseScore + experienceModifier;
+  
+  console.error(`📊 Score breakdown:
+    Core Skills: ${Math.round(coreScore * weights.coreSkills)} (${coreMatches}/${coreSkillsNeeded.length} matches)
+    Marketing: ${Math.round(marketingScore * weights.marketingSkills)} (${marketingMatches}/${marketingSkills.length} matches)
+    Industry: ${Math.round(industryScore * weights.industryFit)}
+    Technical: ${Math.round(techScore * weights.technicalFluency)} (${techMatches}/${techTerms.length} matches)
+    Soft Skills: ${Math.round(softScore * weights.softSkills)} (${softMatches}/${softSkills.length} matches)
+    Experience mod: ${experienceModifier}
+    TOTAL: ${finalScore}`);
+
+  return Math.max(25, Math.min(95, finalScore));
+}
+
+/**
+ * Apply score modifiers based on gaps and special factors
+ */
+function applyScoreModifiers(
+  baseScore: number,
+  jobContent: string,
+  gaps: JobAnalysisResult['gaps']
+): number {
+  let score = baseScore;
+  
+  // Penalties for gaps
+  const criticalGaps = gaps.filter(g => g.severity === 'critical').length;
+  score -= criticalGaps * 12;
+  
+  const moderateGaps = gaps.filter(g => g.severity === 'moderate').length;
+  score -= moderateGaps * 6;
+  
+  // Bonuses for desirable attributes
+  const jobLower = jobContent.toLowerCase();
+  if (jobLower.includes('remote')) score += 5;
+  if (jobLower.includes('flexible')) score += 3;
+  if (jobLower.includes('startup') && jobLower.includes('series')) score += 5;
+  
+  // Years of experience alignment (portfolio shows 8 years)
+  const yearsMatch = jobContent.match(/(\d+)\+?\s*years?/i);
+  if (yearsMatch) {
+    const requiredYears = parseInt(yearsMatch[1]);
+    if (requiredYears >= 5 && requiredYears <= 10) score += 5; // Sweet spot
+    if (requiredYears > 12) score -= 8;  // Overqualified
+    if (requiredYears < 3) score -= 8;   // Underutilized
+  }
+  
+  console.error(`🎯 Score modifiers:
+    Critical gaps penalty: -${criticalGaps * 12}
+    Moderate gaps penalty: -${moderateGaps * 6}
+    Final adjusted score: ${Math.max(20, Math.min(95, score))}`);
+  
+  return Math.max(20, Math.min(95, score));
+}
+
+/**
  * Attempts to fix common JSON issues before parsing
  */
 function fixMalformedJSON(jsonText: string): string {
@@ -164,7 +303,12 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     console.error(`⏱️  Keyword extraction: ${Date.now() - extractStart}ms`);
     console.error(`   Found: ${keywordMatches.critical.length} critical, ${keywordMatches.recommended.length} recommended`);
     
-    // Step 2: Truncate job description
+    // Step 2: Calculate base match score
+    const scoreStart = Date.now();
+    const baseScore = calculateMatchScore(keywordMatches, jobContent);
+    console.error(`⏱️  Score calculation: ${Date.now() - scoreStart}ms`);
+    
+    // Step 3: Truncate job description
     const maxJobLength = 3000; // Shorter to reduce output
     const truncatedJob = jobContent.length > maxJobLength
       ? jobContent.slice(0, maxJobLength) + '\n\n[truncated]'
@@ -172,7 +316,7 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     
     console.error(`📄 Job length: ${jobContent.length} chars (${truncatedJob.length} sent)`);
     
-    // Step 3: Call API with aggressive conciseness
+    // Step 4: Call API with calculated score
     const apiStart = Date.now();
     console.error('📤 Calling Claude API...');
     
@@ -193,13 +337,27 @@ ${JSON.stringify(portfolioConfig, null, 2)}`,
       messages: [{
         role: 'user',
         content: `Matched keywords: ${keywordMatches.critical.join(', ') || 'none'}
+Base calculated score: ${baseScore}
 
 Job:
 ${truncatedJob}
 
-Return valid JSON (7-10 words per field, max 5 strengths, max 3 gaps):
+IMPORTANT: Start with the base score of ${baseScore} and adjust it (±10 points) based on:
+- Qualitative fit beyond keywords
+- Culture/soft skills alignment
+- Career trajectory match
+- Missing critical vs nice-to-have skills
+
+Scoring guidelines:
+- 85-95: Exceptional match (dream role, strong keyword + qualitative fit)
+- 70-84: Strong match (highly qualified, most requirements met)
+- 55-69: Good match (solid fit, some gaps acceptable)
+- 40-54: Moderate match (missing several key requirements)
+- 25-39: Weak match (significant gaps or misalignment)
+
+Return valid JSON (5-8 words per field, max 5 strengths, max 3 gaps):
 {
-  "matchScore": 75,
+  "matchScore": ${baseScore}, // ADJUST THIS ±10 based on qualitative analysis
   "strengths": [{"category":"Tech","match":"React","evidence":"5yr React dev","confidence":"high"}],
   "gaps": [{"requirement":"Python","severity":"moderate","suggestion":"Emphasize JS skills"}],
   "standoutQualities": ["Full-stack"],
@@ -220,7 +378,7 @@ Return valid JSON (7-10 words per field, max 5 strengths, max 3 gaps):
       console.error(`💾 Cache: ${cacheCreated} created, ${cacheRead} read`);
     }
 
-    // Step 4: Parse response with error recovery
+    // Step 5: Parse response with error recovery
     const parseStart = Date.now();
     const textContent = response.content.find(c => c.type === 'text');
     if (!textContent || textContent.type !== 'text') {
@@ -239,10 +397,10 @@ Return valid JSON (7-10 words per field, max 5 strengths, max 3 gaps):
       console.error('❌ JSON Parse Error:', parseError);
       console.error('📄 Response preview:', responseText.substring(0, 500));
       
-      // Fallback: return basic analysis from keywords
+      // Fallback: return basic analysis from keywords and calculated score
       console.error('⚠️  Using fallback basic analysis');
       const fallbackAnalysis: JobAnalysisResult = {
-        matchScore: Math.round((keywordMatches.critical.length / 10) * 100),
+        matchScore: baseScore,
         strengths: keywordMatches.critical.slice(0, 3).map(kw => ({
           category: 'Technical',
           match: kw,
@@ -265,7 +423,7 @@ Return valid JSON (7-10 words per field, max 5 strengths, max 3 gaps):
           skillsToHighlight: keywordMatches.critical.slice(0, 3),
           projectsToFeature: ['Top relevant project']
         },
-        summary: `Keyword match: ${keywordMatches.critical.length} critical skills matched.`
+        summary: `Keyword match: ${keywordMatches.critical.length} critical skills matched. Base score: ${baseScore}%.`
       };
       
       // Add shareable link
@@ -283,7 +441,7 @@ Return valid JSON (7-10 words per field, max 5 strengths, max 3 gaps):
 
     console.error(`⏱️  JSON parsing: ${Date.now() - parseStart}ms`);
 
-    // Step 5: Merge keywords
+    // Step 6: Merge keywords
     if (!parsed.atsKeywords) {
       parsed.atsKeywords = {
         critical: keywordMatches.critical,
@@ -302,13 +460,22 @@ Return valid JSON (7-10 words per field, max 5 strengths, max 3 gaps):
       ])];
     }
 
+    // Step 7: Apply score modifiers based on gaps
+    if (parsed.gaps && Array.isArray(parsed.gaps)) {
+      parsed.matchScore = applyScoreModifiers(
+        parsed.matchScore,
+        jobContent,
+        parsed.gaps
+      );
+    }
+
     // Validate
-    if (typeof parsed.matchScore !== 'number') parsed.matchScore = 50;
+    if (typeof parsed.matchScore !== 'number') parsed.matchScore = baseScore;
     if (!Array.isArray(parsed.strengths)) parsed.strengths = [];
     if (!Array.isArray(parsed.gaps)) parsed.gaps = [];
     if (!parsed.summary) parsed.summary = 'Analysis complete';
 
-    // Step 6: Generate shareable link
+    // Step 8: Generate shareable link
     parsed.shareableLink = generateShareableLink(parsed);
 
     const totalTime = Date.now() - totalStart;
