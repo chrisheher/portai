@@ -482,7 +482,7 @@ setLocalDescription(item.description || null);
       
       // Set initial description
       setLocalDescription('Conversational Design \n' + '\n' +
-'Cooper the Super is a customer persona trained on the content I produced at DroneDeploy. \n' +  'Hank assesses my talents, skills, and intangibles through a basketball lens.\n' + 'Ruminatrix provides support for the creative process\n' + ' Gaslight a bot with Insecure Aidan.\n' + 'Surly Devin is a cynical spinoff of Devin AI\'s coding bot ');
+'Cooper the Super is a customer persona trained on the content I produced at DroneDeploy. \n' +  'Hank Hardass evaluates my talents, skills, and intangibles through a basketball lens.\n' + 'Ruminatrix provides support for the creative process -- offers no safe words. \n' + ' Gaslight a bot with Insecure Aidan.\n' + 'Surly Devin is a cynical spinoff of Devin AI\'s coding bot ');
 
       const promptModes = [
         {
@@ -490,18 +490,18 @@ setLocalDescription(item.description || null);
           type: 'link' as const,
           promptMode: 'cooper',
           url: '#cooper',
-          description: 'A grizzled construction superintendent who traded disposable cameras for drones. Ask about reality capture, jobsite technology, or why manual documentation is killing productivity.'
+          description: 'A grizzled construction superintendent who, despite keeping manual levels and string lines, traded disposable cameras for drones. Ask about reality capture, jobsite technology, or why manual documentation is killing productivity.'
         }, 
         {
           title: 'Hank Hardass',
           type: 'link' as const,
           promptMode: 'scout',
           url: '#scout',
-          description: 'Your professional scout analyzing Christopher Heher\'s portfolio basketball. Get honest assessments, competitive comparisons, and strategic career guidance.'
+          description: 'A professional scout providing honest assessments, player comps'
         },
        
         {
-          title: 'randy the rumninator',
+          title: 'ruminatrix',
           type: 'link' as const,
           promptMode: 'creative',
           url: '#creative',

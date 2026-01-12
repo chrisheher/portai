@@ -20,7 +20,7 @@ const DEVOPS_PROMPTS = [
 
 const SCOUT_PROMPTS = [
   "what is chris's best position",
-  "what products and competitors of chris's clients would be a matchup nightmare",
+  "how is Chris a matchup nightmare against B2B brands without his skillset",
   "list five of Chris's clients and compare those challenges to a legendary nba defense",
   "Generate a scouting report"
 ];

@@ -56,25 +56,66 @@
       "company": "Ceros",
       "position": "Content Strategist",
       "duration": "2017-2019",
-      "industry": "Content Creation Platform",
+      "industry": ["Content Creation", "fintech"],
       "highlights": [
         "Led strategic briefing process for enterprise clients in trial",
         "Transformed static PDFs into interactive, mobile-first experiences",
-        "Clients: GE Aviation, Airbnb, HP"
+        "Clients: Goldman Sachs, Lendingclub, GE"
       ],
-      "skills": ["Content Strategy", "Client Management", "Experiential Content"]
+      "ATSKeywords": ["fintech", "Content Strategy", "Client Management", "Experiential Content"]
     },
+     
+        {
+      "company": "Symphony Studio",
+      "category": "Employer branding",
+      "description": " While working at talent agency Symphony Studio, I was assigned to writing Airbnb's career website. That first meant establishing their Employer Brand Proposition: that is, the values and benefits which differentiates Airbnb from not only their competitors, but the workforce at large. Working with Airbnb executives and HR stakeholders, we articulated AirBnb's core values, their Live and Work Anywhere policy, and growth opportunities with responsive, mobile-friendly content that speaks simply, directly, and strategically to candidates.",
+   
+  
+      "links": [
+        {
+          "name": "Home Page",
+          "url": "https://careers.airbnb.com/"
+        },
+           {
+          "name": "Apprenticeship Page",
+          "url": "https://careers.airbnb.com/connect-engineering-apprenticeship/"
+        },
+        {
+          "name": "Life at airbnb",
+          "url": "https://careers.airbnb.com/life-at-airbnb/"
+        }
+      ]
+    
+    },  
     {
       "company": "Momentum Worldwide",
       "position": "Copywriter",
       "duration": "2017",
-      "industry": "Experiential Advertising",
+      "industry": " Advertising",
       "highlights": [
         "Won Facebook's FBIQ account with pitch deck",
         "Led Espolon tequila social media",
         "Shaped messaging for Verizon's go90 streaming platform launch"
       ],
       "skills": ["Copywriting", "Pitch Development", "Experiential Marketing"]
+    },
+      {
+      "company": "razorfish",
+      "position": "Copywriter",
+      "industry": " Advertising",
+      "highlights": [
+        "Copywriter on Mercedes-Benz digital account"
+      ],
+      "skills": ["Digital Copywriting", "Pitch Development", "Experiential Marketing"]
+    },
+     {
+      "company": "360i",
+      "position": "Copywriter",
+      "industry": " Advertising",
+      "highlights": [
+        "Copywriter on Toyota + Canon"
+      ],
+      "skills": ["Digital Copywriting", "Pitch Development", "Brand strategy"]
     }
   ],
   
@@ -133,14 +174,12 @@
     {
       "title": "Airbnb Careers Site",
       "impact": "Established Employer Brand Proposition and created responsive, mobile-friendly content articulating culture and benefits.",
-      "deliverables": ["Career site content", "Employer brand messaging", "Apprenticeship program content"]
+      "deliverables": ["Career site content", "Employer brand messaging", "Apprenticeship program content"],
+     "skills": ["figma", "contentful", "milanote"]
     }
   ],
   
-  "education": {
-    "degree": "B.A. Creative Writing",
-    "institution": "Loyola Marymount University"
-  },
+
   
   "unique_strengths": [
     "Transforms technical jargon into compelling narratives (See Slow Faster, Your AI In the Sky)",

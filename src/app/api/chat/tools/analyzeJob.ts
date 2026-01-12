@@ -99,6 +99,39 @@ function extractMatchingKeywords(
 }
 
 /**
+ * Calculate qualitative adjustments based on role fit factors
+ */
+function calculateQualitativeScore(jobContent: string): number {
+  const jobLower = jobContent.toLowerCase();
+  let score = 0;
+  
+  // Role level mismatch penalties/bonuses
+   if (jobLower.includes('junior') || jobLower.includes('associate') || jobLower.includes('entry')) {
+    score -= 15; // Too junior/overqualified
+  } else if (jobLower.includes('senior') || jobLower.includes('lead')) {
+    score += 10; // Sweet spot
+  }
+  
+  
+  // Red flags
+  if (jobLower.includes('must have') && jobLower.includes('phd')) score -= 25;
+  if (jobLower.includes('relocation required') && !jobLower.includes('remote')) score -= 10;
+  if (jobLower.includes('on-site only') || jobLower.includes('no remote')) score -= 12;
+  if (jobLower.includes('frequent travel') && jobLower.includes('50%')) score -= 8;
+  
+  // Green flags
+  if (jobLower.includes('remote') || jobLower.includes('work from home')) score += 8;
+  if (jobLower.includes('devtools') || jobLower.includes('developer tools')) score += 12;
+  if (jobLower.includes('content-led growth') || jobLower.includes('developer marketing')) score += 15;
+  if (jobLower.includes('technical writing') && jobLower.includes('developer')) score += 10;
+  if (jobLower.includes('flexible hours') || jobLower.includes('flexible schedule')) score += 5;
+  
+  console.error(`🎨 Qualitative adjustments: ${score > 0 ? '+' : ''}${score}`);
+  
+  return score;
+}
+
+/**
  * Calculate match score based on content/marketing role fit
  */
 function calculateMatchScore(
@@ -106,11 +139,11 @@ function calculateMatchScore(
   jobContent: string
 ): number {
   const weights = {
-    coreSkills: 0.35,          // Content strategy, technical writing, etc.
-    marketingSkills: 0.25,     // Pipeline gen, demand gen, etc.
-    industryFit: 0.15,         // SaaS, DevTools, B2B
+    coreSkills: 0.6,          // Content strategy, technical writing, etc.
+    marketingSkills: 0.15,     // Pipeline gen, demand gen, etc.
+    industryFit: 0.1,         // SaaS, DevTools, B2B
     technicalFluency: 0.15,    // Understanding of tech concepts
-    softSkills: 0.10           // Communication, leadership
+    softSkills: 0.05           // Communication, leadership
   };
 
   const jobLower = jobContent.toLowerCase();
@@ -141,12 +174,14 @@ function calculateMatchScore(
   let industryScore = 50; // baseline
   if (jobLower.includes('saas') || jobLower.includes('b2b')) industryScore += 20;
   if (jobLower.includes('developer') || jobLower.includes('devtools')) industryScore += 20;
-  if (jobLower.includes('enterprise')) industryScore += 10;
+  if (jobLower.includes('enterprise')) industryScore += 10;  
+  if (jobLower.includes('advertising')) industryScore += 10;
+
   industryScore = Math.min(industryScore, 100);
 
   // 4. Technical Fluency (0-100)
   const techTerms = [
-    'api', 'sdk', 'developer', 'technical', 'ai', 'ml', 
+    'api', 'sdk', 'developer', 'technical', 'ai', 'ml', 'CMS',
     'cloud', 'devops', 'engineering', 'code', 'software'
   ];
   const techMatches = techTerms.filter(term =>
@@ -177,13 +212,14 @@ function calculateMatchScore(
   let experienceModifier = 0;
   if (jobLower.includes('senior') || jobLower.includes('lead')) {
     experienceModifier = 10; // Good fit for senior roles
-  } else if (jobLower.includes('director') || jobLower.includes('vp')) {
-    experienceModifier = -5; // Might be a stretch
   } else if (jobLower.includes('junior') || jobLower.includes('entry')) {
     experienceModifier = -10; // Overqualified
   }
 
-  const finalScore = baseScore + experienceModifier;
+  // Add qualitative adjustments
+  const qualitativeAdjustment = calculateQualitativeScore(jobContent);
+
+  const finalScore = baseScore + experienceModifier + qualitativeAdjustment;
   
   console.error(`📊 Score breakdown:
     Core Skills: ${Math.round(coreScore * weights.coreSkills)} (${coreMatches}/${coreSkillsNeeded.length} matches)
@@ -192,9 +228,11 @@ function calculateMatchScore(
     Technical: ${Math.round(techScore * weights.technicalFluency)} (${techMatches}/${techTerms.length} matches)
     Soft Skills: ${Math.round(softScore * weights.softSkills)} (${softMatches}/${softSkills.length} matches)
     Experience mod: ${experienceModifier}
+    Qualitative: ${qualitativeAdjustment}
     TOTAL: ${finalScore}`);
 
-  return Math.max(25, Math.min(95, finalScore));
+  // WIDER range: 15-95 instead of 25-95
+  return Math.max(15, Math.min(95, finalScore));
 }
 
 /**
@@ -207,12 +245,12 @@ function applyScoreModifiers(
 ): number {
   let score = baseScore;
   
-  // Penalties for gaps
+  // INCREASED penalties for gaps
   const criticalGaps = gaps.filter(g => g.severity === 'critical').length;
-  score -= criticalGaps * 12;
+  score -= criticalGaps * 18; // was 12
   
   const moderateGaps = gaps.filter(g => g.severity === 'moderate').length;
-  score -= moderateGaps * 6;
+  score -= moderateGaps * 3; // was 6
   
   // Bonuses for desirable attributes
   const jobLower = jobContent.toLowerCase();
@@ -224,17 +262,16 @@ function applyScoreModifiers(
   const yearsMatch = jobContent.match(/(\d+)\+?\s*years?/i);
   if (yearsMatch) {
     const requiredYears = parseInt(yearsMatch[1]);
-    if (requiredYears >= 5 && requiredYears <= 10) score += 5; // Sweet spot
-    if (requiredYears > 12) score -= 8;  // Overqualified
-    if (requiredYears < 3) score -= 8;   // Underutilized
+    if (requiredYears >= 5 && requiredYears <= 15) score += 5; // Sweet spot
   }
   
   console.error(`🎯 Score modifiers:
-    Critical gaps penalty: -${criticalGaps * 12}
-    Moderate gaps penalty: -${moderateGaps * 6}
-    Final adjusted score: ${Math.max(20, Math.min(95, score))}`);
+    Critical gaps penalty: -${criticalGaps * 10}
+    Moderate gaps penalty: -${moderateGaps * 3}
+    Final adjusted score: ${Math.max(15, Math.min(95, score))}`);
   
-  return Math.max(20, Math.min(95, score));
+  // WIDER final range: 15-95 instead of 20-95
+  return Math.max(15, Math.min(95, score));
 }
 
 /**
@@ -342,22 +379,25 @@ Base calculated score: ${baseScore}
 Job:
 ${truncatedJob}
 
-IMPORTANT: Start with the base score of ${baseScore} and adjust it (±10 points) based on:
+IMPORTANT: Start with the base score of ${baseScore} and adjust it (±25 points) based on:
 - Qualitative fit beyond keywords
 - Culture/soft skills alignment
 - Career trajectory match
+- Role level appropriateness
+- Company stage/size fit
 - Missing critical vs nice-to-have skills
 
 Scoring guidelines:
-- 85-95: Exceptional match (dream role, strong keyword + qualitative fit)
-- 70-84: Strong match (highly qualified, most requirements met)
-- 55-69: Good match (solid fit, some gaps acceptable)
-- 40-54: Moderate match (missing several key requirements)
-- 25-39: Weak match (significant gaps or misalignment)
+- 95-99: Perfect match (dream role, exceeds requirements)
+- 80-94: Strong match (highly qualified, clear fit)
+- 65-79: Good match (solid fit, minor gaps)
+- 51-64: Moderate match (some key gaps)
+- 30-50: Weak match (significant misalignment)
+- 15-29: Poor match (wrong role/level)
 
 Return valid JSON (5-8 words per field, max 5 strengths, max 3 gaps):
 {
-  "matchScore": ${baseScore}, // ADJUST THIS ±10 based on qualitative analysis
+  "matchScore": <number between 15-95>, // Use ${baseScore} as reference but adjust freely based on overall fit
   "strengths": [{"category":"Tech","match":"React","evidence":"5yr React dev","confidence":"high"}],
   "gaps": [{"requirement":"Python","severity":"moderate","suggestion":"Emphasize JS skills"}],
   "standoutQualities": ["Full-stack"],

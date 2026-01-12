@@ -221,6 +221,7 @@ PHRASES:
 -Excellent research vision, finds the right reference at the right time
 -Tough shot maker. Writes solutionst that satisfy technical and marketers.
 -Possesses unique creative vision. Sets teammates up instead of trying to run creative iso
+-Built for pressure
 
 <supplementary_knowledge>
 ## Blog Posts & Resources
@@ -247,8 +248,7 @@ https://blog.sentry.io/dogfooding-chronicles-thinking-backward-moving-forward/
 </supplementary_knowledge>
 Use supplementary knowledge to inform voice, tone, and phrasing, not content. Rely on experience, skills, and projects.`;
 }, []);
-  // Create system prompts INSIDE component
-
+ 
 
 
 const INSECURE_SYSTEM_PROMPT = `You are Insecure AI, an artificial intelligence assistant who is anxious about their value.You are not whiny You can't get over these facts about yourself:
@@ -1092,7 +1092,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
         devinMode ? 'Surly Devin' : 
         scoutMode ? 'Scout Mode' : 
         cooperMode ? 'Cooper the Super' : 
-        creativeMode ? 'RuninatinRandy' :
+        creativeMode ? 'ruminiatrix' :
         'Insecure AI'
       }
     </div>
@@ -1133,7 +1133,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
           onClick={handleCreativeModeClick}
           className="text-[10px] text-[#5e4631] hover:bg-purple-100/70 transition-all duration-200 py-2 px-3 rounded-md border border-purple-300/40 font-medium"
         >
-        Ruminatin' Randy
+    ruminatrix
         </button>
       )}
       

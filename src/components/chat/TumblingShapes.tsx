@@ -321,7 +321,7 @@ background: mode === 'initial' ? '#8c6a48' : '#dcd3c3'
       // Position items across screen
       const spacing = window.innerWidth / (itemsToRender.length + 1);
       const x = spacing * (index + 1);
-      const y = -300 - (Math.floor(index) * 900);
+      const y = -200 - (Math.floor(index) * 700);
 
       
       let body: Matter.Body;

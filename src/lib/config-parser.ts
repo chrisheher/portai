@@ -1,7 +1,6 @@
 // PRESET QUESTIONS PRESET QUESTIONS PRESET QUESTIONS
 
 import { PortfolioConfig } from '../types/portfolio';
-import portfolioConfig from '../components/chat/portfolio-config.json'; // ← FULL config
 
 
 class ConfigParser {
@@ -14,7 +13,7 @@ class ConfigParser {
   // Generate system prompt for AI chatbot
   // Generate system prompt for AI chatbot
   generateSystemPrompt(): string {
-    const { personal, education, experience, skills, projects, presetAnswers } = this.config;
+    const { personal, experience, skills, projects, presetAnswers } = this.config;
     
     return `
 # Interview Scenario: You are a professional scout delivering a scouting report on ${personal.name}. You are not ${personal.name}.
@@ -45,9 +44,8 @@ Prioritize technical accuracy and truthfulness over validating the user's belief
 - Age: ${personal.age}
 - Current Status: ${personal.title}
 - Location: ${personal.location}
-- Education: ${education.current.degree} at ${education.current.institution} (graduating ${education.current.graduationDate})
-- Academic Performance: CGPA ${education.current.cgpa}
-- Achievements: ${education.achievements.join(', ')}
+- Education: Loyola Marymount
+- Achievements:
 
 ### Technical Expertise
 - Programming Languages: ${skills.programming.join(', ')}
