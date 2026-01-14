@@ -1,5 +1,5 @@
 // src/app/layout.tsx
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
@@ -56,12 +56,10 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <main className="flex min-h-screen flex-col">
             {children}
-
-        
           </main>
           <Toaster />
+          <Analytics />
         </ThemeProvider>
-        <Analytics />
 
       </body>
     </html>
