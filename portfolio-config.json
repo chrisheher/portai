@@ -28,7 +28,7 @@
       "industry": "SaaS (reality capture)",
     "media": ["blog posts, white papers, web pages"],
       "duration": "2024",
-      "description": "Collaborated with engineering and product teams to create a range of strategic content that helped drive a $10M+ sales pipeline. Wrote sales enablement content across DroneDeploy’s product suite: dock automation, ground  robotics, Data on Demand, and cybersecurity solutions. Developed “Your AI In the Sky” tagline for DroneDeploy’s Safety AI rollout. Wrote white papers on all aspects of reality capture – ground control points to underground utilities to facade inspections. ",
+      "description": "Collaborated with engineering and product teams to create a range of strategic content that helped drive a $10M+ sales pipeline. Wrote sales enablement content across DroneDeploy's product suite: dock automation, ground  robotics, Data on Demand, and cybersecurity solutions. Developed “Your AI In the Sky” tagline for DroneDeploy's Safety AI rollout. Wrote white papers on all aspects of reality capture - ground control points to underground utilities to facade inspections. ",
     "impact": ["11% Deals influenced in pipeline", "Engagement rate to take meaningful action 1.7%", "Share of MRR --$2.5m for ground robotics"],
     "topics": ["Machine Learning", "Photogrammerty", "Reinforcement Learning", "Generative AI"],
     "technologies": ["Descript", "Gemini"]
@@ -245,12 +245,7 @@
           "url": "https://onlychris2.webflow.io/projects/facebook"
         }
       ]
-    },   
-    
-       
-    
-  
-     
+    },  
         {
       "title": "Cybersecurity",
       "category": "Machine Learning",

@@ -3,6 +3,7 @@ import { tool } from "ai";
 import { z } from "zod";
 import Anthropic from '@anthropic-ai/sdk';
 import portfolioConfig from './portfolio-config-slim.json';
+import { storeAnalysis } from '@/lib/db/shareableResults';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -120,12 +121,7 @@ function calculateQualitativeScore(jobContent: string): number {
   if (jobLower.includes('frequent travel') && jobLower.includes('50%')) score -= 8;
   
   // Green flags
-  if (jobLower.includes('remote') || jobLower.includes('work from home')) score += 8;
-  if (jobLower.includes('devtools') || jobLower.includes('developer tools')) score += 12;
-  if (jobLower.includes('content-led growth') || jobLower.includes('developer marketing')) score += 15;
-  if (jobLower.includes('technical writing') && jobLower.includes('developer')) score += 10;
-  if (jobLower.includes('flexible hours') || jobLower.includes('flexible schedule')) score += 5;
-  
+
   console.error(`🎨 Qualitative adjustments: ${score > 0 ? '+' : ''}${score}`);
   
   return score;
@@ -139,8 +135,8 @@ function calculateMatchScore(
   jobContent: string
 ): number {
   const weights = {
-    coreSkills: 0.6,          // Content strategy, technical writing, etc.
-    marketingSkills: 0.15,     // Pipeline gen, demand gen, etc.
+    coreSkills: 0.5,          // Content strategy, technical writing, etc.
+    marketingSkills: 0.2,     // Pipeline gen, demand gen, etc.
     industryFit: 0.1,         // SaaS, DevTools, B2B
     technicalFluency: 0.15,    // Understanding of tech concepts
     softSkills: 0.05           // Communication, leadership
@@ -150,7 +146,7 @@ function calculateMatchScore(
   
   // 1. Core Skills Score (0-100)
   const coreSkillsNeeded = [
-    'content strategy', 'technical writing', 'copywriting', 
+    'content strategy', 'technical writing', 'copywriting', 'long-form',
     'content marketing', 'product marketing', 'developer relations',
     'gtm', 'go-to-market', 'messaging', 'positioning'
   ];
@@ -162,8 +158,8 @@ function calculateMatchScore(
   // 2. Marketing Skills Score (0-100)
   const marketingSkills = [
     'pipeline', 'demand generation', 'sales enablement', 
-    'campaign', 'launch', 'brand', 'social media', 'seo',
-    'lead generation', 'conversion'
+    'campaign', 'launch', 'brand', 'social media', 'UX',
+    'lead generation', 'conversion', 'founder collaboration'
   ];
   const marketingMatches = marketingSkills.filter(skill =>
     jobLower.includes(skill)
@@ -262,7 +258,7 @@ function applyScoreModifiers(
   const yearsMatch = jobContent.match(/(\d+)\+?\s*years?/i);
   if (yearsMatch) {
     const requiredYears = parseInt(yearsMatch[1]);
-    if (requiredYears >= 5 && requiredYears <= 15) score += 5; // Sweet spot
+    if (requiredYears >= 5 && requiredYears <= 20) score += 5; // Sweet spot
   }
   
   console.error(`🎯 Score modifiers:
@@ -308,24 +304,28 @@ function fixMalformedJSON(jsonText: string): string {
 }
 
 /**
- * Generate a shareable link for the analysis results
+ * Generate a shareable link with database storage
  */
-function generateShareableLink(analysis: JobAnalysisResult): string {
+async function generateShareableLink(analysis: JobAnalysisResult): Promise<string> {
   try {
-    // Create a clean copy without the shareableLink itself to avoid recursion
     const { shareableLink, ...cleanAnalysis } = analysis;
     
-    // Encode to base64url (URL-safe base64)
+    // Store in database and get short ID
+    const shortId = await storeAnalysis(cleanAnalysis);
+    
+    const baseUrl = process.env.NEXT_PUBLIC_URL || '';
+    const link = `${baseUrl}/results/${shortId}`;
+    
+    console.error(`🔗 Generated SHORT link: ${link} (ID: ${shortId})`);
+    return link;
+  } catch (error) {
+    console.error('❌ Error generating shareable link:', error);
+    // Fallback to base64 if storage fails
+    const { shareableLink, ...cleanAnalysis } = analysis;
     const analysisId = Buffer.from(
       JSON.stringify(cleanAnalysis)
     ).toString('base64url');
-    
-    // Use environment variable or fallback to relative path
-    const baseUrl = process.env.NEXT_PUBLIC_URL || '';
-    return `${baseUrl}/results/${analysisId}`;
-  } catch (error) {
-    console.error('Error generating shareable link:', error);
-    return '';
+    return `${process.env.NEXT_PUBLIC_URL || ''}/results/${analysisId}`;
   }
 }
 
@@ -359,8 +359,8 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001', // FASTEST model
-      max_tokens: 2000, // Shorter response = faster + less truncation
-      temperature: 1,
+      max_tokens: 2200, // Shorter response = faster + less truncation
+      temperature: 1.2,
       system: [
         {
           type: "text",
@@ -373,7 +373,7 @@ ${JSON.stringify(portfolioConfig, null, 2)}`,
       ],
       messages: [{
         role: 'user',
-        content: `Matched keywords: ${keywordMatches.critical.join(', ') || 'none'}
+    content: `Matched keywords: ${keywordMatches.critical.join(', ') || 'none'}
 Base calculated score: ${baseScore}
 
 Job:
@@ -466,8 +466,8 @@ Return valid JSON (5-8 words per field, max 5 strengths, max 3 gaps):
         summary: `Keyword match: ${keywordMatches.critical.length} critical skills matched. Base score: ${baseScore}%.`
       };
       
-      // Add shareable link
-      fallbackAnalysis.shareableLink = generateShareableLink(fallbackAnalysis);
+      // Add shareable link - NOW WITH AWAIT
+      fallbackAnalysis.shareableLink = await generateShareableLink(fallbackAnalysis);
       
       // Log the shareable link prominently
       console.error('\n🔗 ═══════════════════════════════════════════════════════════');
@@ -515,8 +515,8 @@ Return valid JSON (5-8 words per field, max 5 strengths, max 3 gaps):
     if (!Array.isArray(parsed.gaps)) parsed.gaps = [];
     if (!parsed.summary) parsed.summary = 'Analysis complete';
 
-    // Step 8: Generate shareable link
-    parsed.shareableLink = generateShareableLink(parsed);
+    // Step 8: Generate shareable link - NOW WITH AWAIT
+    parsed.shareableLink = await generateShareableLink(parsed);
 
     const totalTime = Date.now() - totalStart;
     console.error(`✅ COMPLETE: ${totalTime}ms`);
