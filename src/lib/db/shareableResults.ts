@@ -1,40 +1,35 @@
 // src/lib/db/shareableResults.ts
 import { nanoid } from 'nanoid';
-import { Redis } from '@upstash/redis';
+import { put, list } from '@vercel/blob';
 
-const redis = new Redis({
-  url: process.env.reslink_REDIS_URL!,
-  token: process.env.reslink_REDIS_TOKEN!,
-});
-
-/**
- * Store analysis result and return short ID
- */
 export async function storeAnalysis(data: any): Promise<string> {
   const id = nanoid(10);
   
-  await redis.set(`analysis:${id}`, JSON.stringify(data), {
-    ex: 30 * 24 * 60 * 60, // 30 days
+  await put(`analysis/${id}.json`, JSON.stringify(data), {
+    access: 'public',
+    contentType: 'application/json',
   });
   
   console.log(`💾 Stored analysis with ID: ${id}`);
   return id;
 }
 
-/**
- * Retrieve analysis result by ID
- */
 export async function getAnalysis(id: string): Promise<any | null> {
   try {
-    const data = await redis.get(`analysis:${id}`);
+    // List blobs to find the URL
+    const { blobs } = await list({ prefix: `analysis/${id}` });
     
-    if (!data) {
+    if (blobs.length === 0) {
       console.log(`❌ Analysis not found: ${id}`);
       return null;
     }
     
+    // Fetch the blob content
+    const response = await fetch(blobs[0].url);
+    const data = await response.json();
+    
     console.log(`✅ Retrieved analysis: ${id}`);
-    return typeof data === 'string' ? JSON.parse(data) : data;
+    return data;
   } catch (error) {
     console.error('❌ Error retrieving analysis:', error);
     return null;
