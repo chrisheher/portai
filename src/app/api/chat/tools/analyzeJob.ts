@@ -360,7 +360,7 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001', // FASTEST model
       max_tokens: 2200, // Shorter response = faster + less truncation
-      temperature: 1.2,
+      temperature: 1,
       system: [
         {
           type: "text",
