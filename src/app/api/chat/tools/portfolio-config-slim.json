@@ -153,17 +153,17 @@
   "standout_projects": [
     {
       "title": "Sentry Performance Launch - 'See Slow Faster'",
-      "impact": "Tagline helped propel company to 3x ARR. Simplified complex APM concepts (Apdex scores, p95 response times) into clear competitive differentiation.",
+      "impact": ["Tagline helped propel company to 3x ARR. Simplified complex APM concepts (Apdex scores, p95 response times) into clear competitive differentiation.","1.8M in Performance Product Pipeline (QTD) — demonstrating strong developer interest in APM tooling", "12,400 total landing page visits across Performance launch assets — strong initial awareness","See Slow Faster campaign hub generated 3,480 visits with 4:22 avg. time on page (2.3x site average)","'312 companies initiated Performance trial during launch window (vs. 89 in pre-launch quarter)" ],
       "deliverables": ["Product launch content", "Blog posts", "Documentation", "Sales enablement"]
     },
     {
-      "title": "DroneDeploy Safety AI Campaign",
-      "impact": "$10M+ pipeline influence. Created 'Your AI In the Sky' positioning and comprehensive content suite for AI-powered construction safety platform.",
+      "title": "DroneDeploy Safety AI launch",
+      "impact": [" Created 'Your AI In the Sky' positioning and comprehensive content suite for AI-powered construction safety platform."," $10M+ pipeline influence.","71 Total Opportunities created in the quarter-to-date (QTD)", "'$6,525 Closed Won — confirmed value captured from Safety AI-related pipeline.","70 companies engaged in trial walks, indicating healthy conversion from awareness to hands-on experience.","8,459 LinkedIn impressions and 641 engagements on Post 1 — indicating high visibility and meaningful interaction on social"],
       "deliverables": ["Product pages", "White papers", "Blog posts", "Sales collateral"]
     },
     {
       "title": "Cincoro Tequila Brand Launch",
-      "impact": "0 to 91K followers, 1.5M bottles sold, 23 awards. Built brand voice for Michael Jordan's premium tequila in crowded celebrity spirits market.",
+      "impact": ["0 to 91K followers, 1.5M bottles sold, 23 awards. Built brand voice for Michael Jordan's premium tequila in crowded celebrity spirits market.", "Built social audience to 110K+ followers across platforms, exceeding brands with decades of history (Don Julio had ~97K Instagram in 2021)"],
       "deliverables": ["Brand manifesto", "Taglines", "Social strategy", "Content calendar"]
     },
     {
@@ -176,7 +176,66 @@
       "impact": "Established Employer Brand Proposition and created responsive, mobile-friendly content articulating culture and benefits.",
       "deliverables": ["Career site content", "Employer brand messaging", "Apprenticeship program content"],
      "skills": ["figma", "contentful", "milanote"]
-    }
+    },
+        {
+      "title": "HP | Presence launch",
+      "impact": "GTM",
+      "description": "Making hybrid work, work for employees and employers. Position their Presence videoconferencing product suite to be the connective tissue for distributed workforces. How businesses can build out their hybrid work infrastructure to seamlessly incorporate devices, solutions, and services across distributed teams. ",
+      "deliverables": ["white papers"],
+      "links": [
+        {
+          "name": "The new era of work",
+          "url": "https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf"
+        },
+          {
+          "name": "A New Blueprint for an Uncertain World.",
+          "url": "https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf"
+        },
+        {
+          "name": "The New Office For the Way People Want to Work",
+          "url": "https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf"
+        }
+      ]
+    },{
+      "title": "Sentry Dogfooding Chronicles",
+       "impact": [
+   "Revenue tripled in the two years since series launch",
+           "Performance product grew 240% largely through product-led channels",
+            "$680K in closed-won deals with white paper download in buyer journey — direct revenue attribution","White paper landing pages drove 34,200 total site visits -- 67% of which were organic" 
+          ],
+          "links": [
+           {
+             "name" : "Go-Getting Lazy loading", 
+             "url": "https://blog.sentry.io/go-getting-lazy-loading/"
+            },
+            {
+             "name": "Using Sentry Performance to get Sentry Performant",
+             "url": "https://blog.sentry.io/using-sentry-performance-to-get-sentry-performant"
+            }
+          ]
+    },
+     {
+      "title": "DroneDeploy machine learning",
+      "category": "enterprise SaaS reality capture",
+      "description": "Working in partnership with Boston Dynamics, DroneDeploy's industrial inspection platform captures frequent and consistent data on assets that need regular monitoring in ways which scale up site visibility while dialing down man hours.",
+      "techStack": ["Python", "Subdomain Enumeration", "SSL Analysis", "SecurityTrails API"],
+      "deliverables": ["product pages"],
+      "metrics": ["Deals influenced in pipeline --> 8.5%"],
+      "links": [  {
+          "name": "Ground robotics",
+          "url": "https://www.dronedeploy.com/product/robotics"
+        },
+            {
+          "name": "Industrial inspection",
+          "url": "https://www.dronedeploy.com/product/robotic-industrial-inspection"
+        },
+            {
+          "name": "Dock automation",
+          "url": "https://www.dronedeploy.com/product/dock-automation"
+        }
+    
+      ]
+    }  
   ],
   
 

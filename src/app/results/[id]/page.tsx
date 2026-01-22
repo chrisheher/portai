@@ -1,6 +1,8 @@
 // src/app/results/[id]/page.tsx
 import { notFound } from 'next/navigation';
 import { getAnalysis } from '@/lib/db/shareableResults';
+import portfolioConfig from '@/app/api/chat/tools/portfolio-config-slim.json';
+
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -194,89 +196,49 @@ export default async function ResultsPage({ params }: PageProps) {
         )}
 
         {/* Recommendations */}
-        {analysis.recommendations && (
-          <div>
-            <h2 className="text-xl font-semibold mb-3">Recommendations</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              {analysis.recommendations.skillsToHighlight?.length > 0 && (
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="font-medium text-gray-700 mb-2">Skills to Highlight</h3>
-                  <ul className="space-y-1">
-                    {analysis.recommendations.skillsToHighlight.map((skill: string, i: number) => (
-                      <li key={i} className="text-sm text-gray-600 flex items-start">
-                        <span className="text-blue-500 mr-2">•</span>
-                        {skill}
-                      </li>
+{analysis.recommendations.projectsToFeature?.length > 0 && (
+  <div className="bg-gray-50 p-4 rounded-lg">
+    <h3 className="font-medium text-gray-700 mb-2">Projects to Feature</h3>
+    <ul className="space-y-2">
+      {analysis.recommendations.projectsToFeature.map((project: any, i: number) => {
+        // Handle both old string format and new object format
+        const projectName = typeof project === 'string' ? project : project.name;
+        const projectLinks = typeof project === 'object' ? project.links : null;
+        
+        return (
+          <li key={i} className="text-sm text-gray-600">
+            <div className="flex items-start">
+              <span className="text-blue-500 mr-2">•</span>
+              <div>
+                <span>{projectName}</span>
+                {projectLinks && projectLinks.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {projectLinks.map((link: any, j: number) => (
+                      <a
+                        key={j}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors"
+                      >
+                        {link.name} ↗
+                      </a>
                     ))}
-                  </ul>
-                </div>
-              )}
-              
-              {analysis.recommendations.coverLetterFocus?.length > 0 && (
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="font-medium text-gray-700 mb-2">Cover Letter Focus</h3>
-                  <ul className="space-y-1">
-                    {analysis.recommendations.coverLetterFocus.map((focus: string, i: number) => (
-                      <li key={i} className="text-sm text-gray-600 flex items-start">
-                        <span className="text-blue-500 mr-2">•</span>
-                        {focus}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {analysis.recommendations.projectsToFeature?.length > 0 && (
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="font-medium text-gray-700 mb-2">Projects to Feature</h3>
-                  <ul className="space-y-1">
-                    {analysis.recommendations.projectsToFeature.map((project: string, i: number) => (
-                      <li key={i} className="text-sm text-gray-600 flex items-start">
-                        <span className="text-blue-500 mr-2">•</span>
-                        {project}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {analysis.recommendations.narrativeStrategy && (
-                <div className="bg-gray-50 p-4 rounded-lg md:col-span-2">
-                  <h3 className="font-medium text-gray-700 mb-2">Narrative Strategy</h3>
-                  <p className="text-sm text-gray-600">{analysis.recommendations.narrativeStrategy}</p>
-                </div>
-              )}
-            </div>
-
-            {analysis.recommendations.applicationPriority && (
-              <div className={`mt-4 p-4 rounded-lg border-2 ${
-                analysis.recommendations.applicationPriority === 'high'
-                  ? 'bg-green-50 border-green-300'
-                  : analysis.recommendations.applicationPriority === 'medium'
-                  ? 'bg-yellow-50 border-yellow-300'
-                  : 'bg-gray-50 border-gray-300'
-              }`}>
-                <div className="flex items-center">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    analysis.recommendations.applicationPriority === 'high'
-                      ? 'bg-green-200 text-green-800'
-                      : analysis.recommendations.applicationPriority === 'medium'
-                      ? 'bg-yellow-200 text-yellow-800'
-                      : 'bg-gray-200 text-gray-800'
-                  }`}>
-                    {analysis.recommendations.applicationPriority.toUpperCase()} PRIORITY
-                  </span>
-                </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Footer */}
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+)}
+    {/* Footer */}
       <div className="mt-6 text-center text-sm text-gray-500">
         <p>This analysis was generated by an AI job matching system</p>
       </div>
     </div>
+  </div>
   );
 }

@@ -312,41 +312,7 @@
       "images": [
       ]
     },  
-        {
-      "title": "HP | Presence launch",
-      "category": "GTM",
-      "description": "Making hybrid work, work for employees and employers.The context.The pandemic altered the fabric of society. Nowhere was this more evident than the corporate office. As a content strategist on Transmission's HP account, I helped  position their Presence videoconferencing product suite to be the connective tissue for distributed workforces. How businesses can build out their hybrid work infrastructure to seamlessly incorporate devices, solutions, and services across distributed teams.The world of work continues to evolve. And the tools employees use for that work need to evolve with it. And that starts with HP Presence building out intelligent meeting experiences that fully incorporate remote workers such that their points can be heard with the same volume and clarity as those physically in the room.How IT professionals can calibrate their offices to the new normal ",
-      "featured": true,
-      "links": [
-        {
-          "name": "The new era of work",
-          "url": "https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf"
-        },
-          {
-          "name": "A New Blueprint for an Uncertain World.",
-          "url": "https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf"
-        },
-        {
-          "name": "The New Office For the Way People Want to Work",
-          "url": "https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf"
-        }
-      ],
-       "images": [
-        {
-          "src": "img/hp_era.png",
-          "alt": "Intell"
-        },
-          {
-          "src": "img/hpthree.png",
-          "alt": " App Demo"
-        },
-         {
-          "src": "img/hpcover.png",
-          "alt": " Demo"
-        }
-      ]
-      
-    },  
+    
         {
       "title": "Airbnb",
       "shape":"circle",
@@ -474,29 +440,7 @@
       ],
       "images": []
     },  
-    {
-      "title": "DroneDeploy web pages",
-      "category": "enterprise SaaS reality capture",
-      "description": "Working in partnership with Boston Dynamics, DroneDeploy's industrial inspection platform captures frequent and consistent data on assets that need regular monitoring in ways which scale up site visibility while dialing down man hours.",
-      "techStack": ["Python", "Subdomain Enumeration", "SSL Analysis", "SecurityTrails API"],
-      "featured": true,
-      "metrics": ["Deals influenced in pipeline --> 8.5%"],
-      "links": [  {
-          "name": "Ground robotics",
-          "url": "https://www.dronedeploy.com/product/robotics"
-        },
-            {
-          "name": "Industrial inspection",
-          "url": "https://www.dronedeploy.com/product/robotic-industrial-inspection"
-        },
-            {
-          "name": "Dock automation",
-          "url": "https://www.dronedeploy.com/product/dock-automation"
-        }
     
-      ],
-      "images": []
-    },  
         {
       "title": "DroneDeploy customer stories",
       "category": "reality capture",

@@ -31,8 +31,9 @@ interface JobAnalysisResult {
   recommendations: {
     coverLetterFocus: string[];
     skillsToHighlight: string[];
-    projectsToFeature: string[];
+    projectsToFeature: Array<string | { name: string; links?: Array<{ name: string; url: string }> }>;  // Updated
     narrativeStrategy?: string;
+    links?: Array<{ name: string; url: string }>;
     applicationPriority?: 'high' | 'medium' | 'low';
   };
   summary: string;
@@ -75,7 +76,7 @@ function extractMatchingKeywords(
       soft: []
     }
   };
-
+// job-to-portfolio keyword matcher 
   Object.entries(portfolioKeywords).forEach(([category, keywords]) => {
     keywords.forEach((keyword: string) => {
       const keywordLower = keyword.toLowerCase();
@@ -97,6 +98,22 @@ function extractMatchingKeywords(
   });
 
   return matches;
+}
+function enrichProjectsWithLinks(
+  projectNames: string[]
+): Array<{ name: string; links?: Array<{ name: string; url: string }> }> {
+  return projectNames.map(projectName => {
+    const matchedProject = portfolioConfig.standout_projects.find(
+      (p) => 
+        p.title.toLowerCase().includes(projectName.toLowerCase()) ||
+        projectName.toLowerCase().includes(p.title.toLowerCase())
+    );
+    
+    return {
+      name: projectName,
+      links: matchedProject?.links || undefined
+    };
+  });
 }
 
 /**
@@ -148,7 +165,9 @@ function calculateMatchScore(
   const coreSkillsNeeded = [
     'content strategy', 'technical writing', 'copywriting', 'long-form',
     'content marketing', 'product marketing', 'developer relations',
-    'gtm', 'go-to-market', 'messaging', 'positioning'
+    'gtm', 'go-to-market', 'messaging', 'positioning', 'brand storytelling', 'editorial strategy', 'demand generation','sales enablement', 'thought leadership', 'audience development',
+'integrated marketing', 'competitive analysis', 'brand voice',
+'content operations'
   ];
   const coreMatches = coreSkillsNeeded.filter(skill => 
     jobLower.includes(skill)
@@ -168,10 +187,11 @@ function calculateMatchScore(
 
   // 3. Industry Fit (0-100)
   let industryScore = 50; // baseline
-  if (jobLower.includes('saas') || jobLower.includes('b2b')) industryScore += 20;
-  if (jobLower.includes('developer') || jobLower.includes('devtools')) industryScore += 20;
-  if (jobLower.includes('enterprise')) industryScore += 10;  
-  if (jobLower.includes('advertising')) industryScore += 10;
+  if (jobLower.includes('saas')) industryScore += 10;
+  if (jobLower.includes('developer')) industryScore += 10;
+  if (jobLower.includes('enterprise')) industryScore += 8;  
+  if (jobLower.includes('advertising')) industryScore += 8;
+    if (jobLower.includes('b2b')) industryScore += 10;
 
   industryScore = Math.min(industryScore, 100);
 
@@ -389,9 +409,9 @@ IMPORTANT: Start with the base score of ${baseScore} and adjust it (±25 points)
 
 Scoring guidelines:
 - 95-99: Perfect match (dream role, exceeds requirements)
-- 80-94: Strong match (highly qualified, clear fit)
-- 65-79: Good match (solid fit, minor gaps)
-- 51-64: Moderate match (some key gaps)
+- 88-94: Strong match (highly qualified, clear fit)
+- 75-87: Good match (solid fit, minor gaps)
+- 51-74: Moderate match (some key gaps)
 - 30-50: Weak match (significant misalignment)
 - 15-29: Poor match (wrong role/level)
 
@@ -514,7 +534,10 @@ Return valid JSON (5-8 words per field, max 5 strengths, max 3 gaps):
     if (!Array.isArray(parsed.strengths)) parsed.strengths = [];
     if (!Array.isArray(parsed.gaps)) parsed.gaps = [];
     if (!parsed.summary) parsed.summary = 'Analysis complete';
-
+if (parsed.recommendations?.projectsToFeature) {
+  const projectNames = parsed.recommendations.projectsToFeature as unknown as string[];
+  parsed.recommendations.projectsToFeature = enrichProjectsWithLinks(projectNames);
+}
     // Step 8: Generate shareable link - NOW WITH AWAIT
     parsed.shareableLink = await generateShareableLink(parsed);
 

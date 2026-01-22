@@ -34,13 +34,13 @@ interface JobAnalysisProps {
       recommended: string[];
       phrasingsToUse: string[];
     };
-    recommendations: {
-      coverLetterFocus: string[];
-      skillsToHighlight: string[];
-      projectsToFeature: string[];
-      narrativeStrategy?: string;
-      applicationPriority?: 'high' | 'medium' | 'low';
-    };
+   recommendations: {
+  coverLetterFocus: string[];
+  skillsToHighlight: string[];
+  projectsToFeature: Array<string | { name: string; links?: Array<{ name: string; url: string }> }>;
+  narrativeStrategy?: string;
+  applicationPriority?: 'high' | 'medium' | 'low';
+};
     redFlags?: string[];
     summary: string;
     fetchedContent?: string;
@@ -530,17 +530,60 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
               }}>
             
               </div>
-              <ul style={{ 
-                margin: 0, 
-                paddingLeft: '1.5rem',
-                color: '#f8f8f8ff',
-                fontSize: '1.3rem',
-                lineHeight: '1.6'
-              }}>
-                {data.recommendations.projectsToFeature.map((project, idx) => (
-                  <li key={idx} style={{ marginBottom: '0.375rem' }}>{project}</li>
-                ))}
-              </ul>
+             <ul style={{ 
+  margin: 0, 
+  paddingLeft: '1.5rem',
+  color: '#f8f8f8ff',
+  fontSize: '1.3rem',
+  lineHeight: '1.6'
+}}>
+  {data.recommendations.projectsToFeature.map((project, idx) => {
+    // Handle both string format (legacy) and object format (new)
+    const projectName = typeof project === 'string' ? project : project.name;
+    const projectLinks = typeof project === 'object' && project !== null ? project.links : null;
+    
+    return (
+      <li key={idx} style={{ marginBottom: '0.75rem' }}>
+        <div>{projectName}</div>
+        {projectLinks && projectLinks.length > 0 && (
+          <div style={{ 
+            display: 'flex', 
+            flexWrap: 'wrap', 
+            gap: '0.5rem', 
+            marginTop: '0.5rem' 
+          }}>
+            {projectLinks.map((link, linkIdx) => (
+              
+            <a    key={linkIdx}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  padding: '0.25rem 0.75rem',
+                  background: 'rgba(59, 130, 246, 0.2)',
+                  border: '1px solid rgba(59, 130, 246, 0.4)',
+                  borderRadius: '6px',
+                  fontSize: '0.85rem',
+                  color: '#93c5fd',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.background = 'rgba(59, 130, 246, 0.4)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.background = 'rgba(59, 130, 246, 0.2)';
+                }}
+              >
+                {link.name} ↗
+              </a>
+            ))}
+          </div>
+        )}
+      </li>
+    );
+  })}
+</ul>
             </div>
           </div>
         </div>
