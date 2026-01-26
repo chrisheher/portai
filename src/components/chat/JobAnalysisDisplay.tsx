@@ -446,8 +446,8 @@ const getLinksForCategory = (category: string) => {
                               boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
                         borderRadius: '16px',
                         fontSize: '0.85rem',
-                        color: '#d0cdcdff',
-                        fontFamily: 'monospace'
+                        color: '#d0cdcdff'
+                     
                       }}>
                         {keyword}
                       </span>

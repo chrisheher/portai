@@ -17,8 +17,10 @@
     "Technical Writing": {
       "keywords": ["technical writing", "documentation", "technical content", "developer docs", "api"],
       "links": [
-        {"name": "Dogfooding Chronicles", "url": "/?show=dogfooding"},
-        {"name": "Tech Content", "url": "/?show=tech-content"}
+        {"name": "Sentry developer content", "url": "/?show=sentry-dev"},
+                {"name": "GE Aviation turbopro", "url": "/?show=ge"},
+
+         {"name": "DroneDeploy tech content", "url": "/?show=dronedep"}
       ]
     },
     "Developer Content": {
@@ -42,7 +44,8 @@
     },
     "Fintech": {
       "keywords": ["fintech", "financial", "banking", "trading", "finance", "payments"],
-      "links": []
+        "links": [{"name": "google Gpay", "url": "/?show=gpay"},
+    {"name" : "fintech infographics", "url": "/?show=fintech"}]
     },
     "Employer Brand": {
       "keywords": ["employer brand", "careers", "recruiting", "talent", "EVP", "culture"],
@@ -68,7 +71,7 @@
       "keywords": ["content strategy", "editorial", "content calendar", "content ops"],
       "links": [
         {"name": "See Slow Faster", "url": "/?show=sentry-performance"},
-        {"name": "Dogfooding Chronicles", "url": "/?show=dogfooding"}
+        {"name": "Dogfooding Chronicles", "url": "/?show=sentry-dogfooding"}
       ]
     }
   },

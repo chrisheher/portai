@@ -18,7 +18,7 @@
       "keywords": ["technical writing", "documentation", "technical content", "developer docs", "api"],
       "links": [
            {"name": "GE aviation", "url": "/?show=ge"},
-          {"name": "DroneDeploy Ground Robotics", "url": "/?show=robotics"},
+          {"name": "DroneDeploy Ground Robotics", "url": "/?show=dronedep"},
         {"name": "HP Presence white papers", "url": "/?show=hp"}
        
       ]
@@ -67,7 +67,7 @@
       "keywords": ["ai", "artificial intelligence", "machine learning", "ml", "automation"],
       "links": [
         {"name": "DroneDeploy Safety AI", "url": "/?show=safety-ai"},
-        {"name": "DroneDeploy technical content", "url": "/?show=dronedep"}
+        {"name": "DroneDeploy technical content", "url": "/?show=drone-dep"}
       ]
     },
     "Content Strategy": {
