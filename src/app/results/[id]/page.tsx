@@ -91,7 +91,8 @@ export default async function ResultsPage({ params }: PageProps) {
       borderRadius: '10px',
       marginTop: '.1rem',
       height: '100%',
-      width: '80%'
+      fontFamily: 'kc gangster, sans-serif', 
+padding: '100px 100px 100px 100px'
     }}>
       {/* Match Score Header */}
       <div style={{
@@ -120,7 +121,7 @@ export default async function ResultsPage({ params }: PageProps) {
             </div>
           </div>
           <div style={{ flex: 1, minWidth: '250px' }}>
-            <p style={{ margin: '25px 0px 25px 0px', color: '#rgb(94, 70, 49)', fontSize: '1rem', lineHeight: '1.6' }}>
+            <p style={{ margin: '25px 50px 25px 0px', color: '#rgb(94, 70, 49)', fontSize: '1rem', lineHeight: '1.6' }}>
               {analysis.summary}
             </p>
           </div>
