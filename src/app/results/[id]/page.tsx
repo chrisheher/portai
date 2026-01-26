@@ -91,7 +91,7 @@ export default async function ResultsPage({ params }: PageProps) {
       borderRadius: '10px',
       marginTop: '.1rem',
       height: '100%',
-      fontFamily: 'kc gangster, sans-serif', 
+      fontFamily: 'kcgangster', 
 padding: '100px 100px 100px 100px'
     }}>
       {/* Match Score Header */}
