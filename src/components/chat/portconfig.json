@@ -27,7 +27,7 @@
       "keywords": ["developer", "devrel", "developer relations", "engineering blog", "dev tools"],
       "links": [
         {"name": "Sentry technical", "url": "/?show=sentry-dev"},
-        {"name": "Sentry Dogfooding Chronicles", "url": "/?show=dogfooding"},
+        {"name": "Sentry Dogfooding Chronicles", "url": "/?show=sentry-dogfooding"},
          {"name": "Google gpay instrumentation", "url": "/?show=gpay"}
       ]
     },
@@ -64,7 +64,6 @@
       "keywords": ["saas", "b2b", "enterprise", "software"],
       "links": [
         {"name": "Safety AI", "url": "/?show=safety-ai"},
-             {"name": "Sentry product pages", "url": "/?show=sentry-pages"},
         {"name": "Sentry Performance GTM campaign", "url": "/?show=sentry-performance"},
              {"name": "Sentry Discover", "url": "https://blog.sentry.io/asking-the-right-query-with-discover/"}
       ]

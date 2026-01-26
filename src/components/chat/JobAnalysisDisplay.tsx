@@ -120,7 +120,7 @@ const getLinksForCategory = (category: string) => {
             <div style={{ fontSize: '2rem', fontWeight: '700', color: scoreColors.text }}>
               {data.matchScore}%
             </div>
-            <div style={{ fontSize: '0.7rem', color: '#rgb(94, 70, 49)', textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '0.7rem', color: '#rgba(3, 3, 3, 1)', textTransform: 'uppercase' }}>
               Match
             </div>
           </div>
@@ -144,7 +144,7 @@ const getLinksForCategory = (category: string) => {
             fontWeight: '900',
             color: 'rgb(94, 70, 49)',
           }}>
-  
+  Strengths
           </h4>
           
           <div style={{ display: 'grid', gap: '0.75rem' }}>
@@ -237,7 +237,17 @@ const getLinksForCategory = (category: string) => {
         {/* Gaps Section */}
         {data.gaps.length > 0 && (
           <div style={{ marginTop: '6rem', marginBottom: '6rem' }}>
-    
+      <h4 style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            margin: '0 0 1rem 0',
+            fontSize: '1.5rem',
+            fontWeight: '900',
+            color: 'rgb(94, 70, 49)',
+          }}>
+  Gaps
+          </h4>
             
             <div style={{ display: 'grid', gap: '2.875rem' }}>
               {data.gaps.map((gap, idx) => (
