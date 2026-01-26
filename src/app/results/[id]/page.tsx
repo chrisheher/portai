@@ -138,6 +138,7 @@ padding: '100px 100px 100px 100px'
             margin: '0 0 1rem 0',
             fontSize: '1.5rem',
             fontWeight: '900',
+             fontFamily: 'monospace', 
             color: 'rgb(94, 70, 49)',
           }}>
             Strengths
