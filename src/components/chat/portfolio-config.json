@@ -47,10 +47,19 @@
         "links": [{"name": "google Gpay", "url": "/?show=gpay"},
     {"name" : "fintech infographics", "url": "/?show=fintech"}]
     },
+
     "Employer Brand": {
       "keywords": ["employer brand", "careers", "recruiting", "talent", "EVP", "culture"],
       "links": [
         {"name": "Airbnb Careers", "url": "/?show=airbnb"}
+      ]
+    },
+
+      "Social Media": {
+      "keywords": ["social media", "social channels", "social content", "social strategy", "content calendar"],
+      "links": [
+        {"name": "Cincoro", "url": "/?show=cincoro"},
+          {"name": "Cincoro", "url": "/public/social.pdf"}
       ]
     },
     "SaaS / B2B": {
@@ -70,7 +79,7 @@
     "Content Strategy": {
       "keywords": ["content strategy", "editorial", "content calendar", "content ops"],
       "links": [
-        {"name": "See Slow Faster", "url": "/?show=sentry-performance"},
+        {"name": "DroneDeploy Product pages", "url": "/?show=dd-pages"},
         {"name": "Dogfooding Chronicles", "url": "/?show=sentry-dogfooding"}
       ]
     }
