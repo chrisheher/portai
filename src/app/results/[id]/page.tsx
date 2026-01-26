@@ -90,7 +90,8 @@ export default async function ResultsPage({ params }: PageProps) {
       background: 'rgb(220, 211, 195)',
       borderRadius: '10px',
       marginTop: '.1rem',
-      height: '100%'
+      height: '100%',
+      width: '80%'
     }}>
       {/* Match Score Header */}
       <div style={{
