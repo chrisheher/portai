@@ -1,8 +1,8 @@
 // src/app/results/[id]/page.tsx
 import { notFound } from 'next/navigation';
 import { getAnalysis } from '@/lib/db/shareableResults';
-import portfolioConfig from '@/app/api/chat/tools/portfolio-config-slim.json';
-
+import { MessageSquare } from 'lucide-react';
+import portfolioConfig from '@/components/chat/portconfig.json';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -11,7 +11,7 @@ interface PageProps {
 export default async function ResultsPage({ params }: PageProps) {
   const { id } = await params;
   
-  let analysis;
+  let analysis: any;
   
   // Try short ID first (10 characters = database lookup)
   if (id.length === 10) {
@@ -43,148 +43,437 @@ export default async function ResultsPage({ params }: PageProps) {
     console.error('❌ No analysis found');
     notFound();
   }
-  
+
+  // Helper functions
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return { bg: 'rgb(220, 211, 195)', border: 'rgba(34, 197, 94, 0.3)', text: '#22c55e' };
+    if (score >= 60) return { bg: 'rgb(220, 211, 195)', border: 'rgba(234, 179, 8, 0)', text: '#ffffffff' };
+    return { bg: 'rgb(220, 211, 195)', border: 'rgba(239, 68, 68, 0.3)', text: '#ef4444' };
+  };
+
+  const getLinksForCategory = (category: string) => {
+    if (!category) return null;
+    
+    const mappings = (portfolioConfig as any).categoryMappings;
+    if (!mappings) return null;
+    
+    // Direct match
+    if (mappings[category]) {
+      const links = mappings[category].links?.filter((l: any) => l.url && l.url.length > 0);
+      return links?.length > 0 ? links : null;
+    }
+    
+    // Fuzzy match
+    const categoryLower = category.toLowerCase();
+    const matchedKey = Object.keys(mappings).find(key => 
+      key.toLowerCase() === categoryLower ||
+      key.toLowerCase().includes(categoryLower) ||
+      categoryLower.includes(key.toLowerCase())
+    );
+    
+    if (matchedKey) {
+      const links = mappings[matchedKey].links?.filter((l: any) => l.url && l.url.length > 0);
+      return links?.length > 0 ? links : null;
+    }
+    
+    return null;
+  };
+
+  const scoreColors = getScoreColor(analysis.matchScore);
+  const keywordCoverage = analysis.atsKeywords 
+    ? ((analysis.atsKeywords.critical.length + analysis.atsKeywords.recommended.length) / 
+       ((portfolioConfig as any).ATSKeywords?.core?.length || 1 + (portfolioConfig as any).ATSKeywords?.technical?.length || 1)) * 100
+    : 0;
+
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold">Job Analysis Results</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          {id.length === 10 ? '📊 Database Result' : '🔗 Shared Link'}
-        </p>
-      </div>
-      
-      <div className="bg-white shadow-lg rounded-lg p-6 space-y-6">
-        {/* Match Score */}
-        <div className="border-b pb-4">
-          <div className="text-6xl font-bold text-blue-600 mb-2">
-            {analysis.matchScore}%
+    <div style={{
+      background: 'rgb(220, 211, 195)',
+      borderRadius: '10px',
+      marginTop: '.1rem',
+      height: '100%'
+    }}>
+      {/* Match Score Header */}
+      <div style={{
+        background: 'rgb(220, 211, 195)',
+        padding: '2rem',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap', boxShadow: 'inset rgba(130, 130, 130, 0.5) 2px 2px 16px 3px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px' }}>
+          <div style={{
+            width: '85px',
+            marginLeft: '20px',
+            height: '85px',
+            boxShadow: 'rgba(130, 130, 130, 0.5) 20px 13px 5px 0px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
+            borderRadius: '50%',
+            background: 'rgb(220, 211, 195)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column'
+          }}>
+            <div style={{ fontSize: '2rem', fontWeight: '700', color: scoreColors.text }}>
+              {analysis.matchScore}%
+            </div>
+            <div style={{ fontSize: '0.7rem', color: '#rgba(3, 3, 3, 1)', textTransform: 'uppercase' }}>
+              Match
+            </div>
           </div>
-          <p className="text-gray-600 text-lg">Match Score</p>
+          <div style={{ flex: 1, minWidth: '250px' }}>
+            <p style={{ margin: '25px 0px 25px 0px', color: '#rgb(94, 70, 49)', fontSize: '1rem', lineHeight: '1.6' }}>
+              {analysis.summary}
+            </p>
+          </div>
         </div>
-        
-        {/* Summary */}
-        <div>
-          <h2 className="text-xl font-semibold mb-3">Summary</h2>
-          <p className="text-gray-700">{analysis.summary}</p>
+      </div>
+
+      <div style={{ padding: '2rem', background: 'rgb(220, 211, 195)' }}>
+        {/* Strengths Section */}
+        <div style={{ marginBottom: '2rem' }}>
+          <h4 style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            margin: '0 0 1rem 0',
+            fontSize: '1.5rem',
+            fontWeight: '900',
+            color: 'rgb(94, 70, 49)',
+          }}>
+            Strengths
+          </h4>
+          
+          <div style={{ display: 'grid', gap: '0.75rem' }}>
+            {analysis.strengths?.map((strength: any, idx: number) => {
+              const categoryLinks = getLinksForCategory(strength.category);
+              
+              return (
+                <div key={idx} style={{
+                  background: 'rgb(220, 211, 195)',
+                  borderRadius: '10px',
+                  marginTop: '1.4rem',
+                  padding: '1rem',
+                  boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    marginBottom: '.75rem',
+                    flexWrap: 'wrap'
+                  }}>
+                    <div style={{ 
+                      fontWeight: '900', 
+                      color: '#010101ff',
+                      fontSize: '1.2em',
+                      flex: 1
+                    }}>
+                      {strength.match}      
+                    </div>
+                  </div>
+                  
+                  <div style={{ 
+                    fontSize: '1rem', 
+                    color: '#382311ff',
+                    paddingLeft: '.8rem',
+                    borderLeft: '7px solid rgba(17, 128, 30, 0.79)',
+                    lineHeight: '1.5'          
+                  }}>
+                    {strength.evidence}
+                  </div>
+                  <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                    {/* Category badge */}
+                    <span style={{
+                      fontSize: '1.1rem',
+                      fontWeight: '800',
+                      color: '#271d0eff',
+                      letterSpacing: '0.1px',
+                      paddingTop: '20px',
+                      paddingRight: '10px'
+                    }}>
+                      {strength.category} links:
+                    </span>
+                    
+                    {/* Portfolio links */}
+                    {categoryLinks && categoryLinks.map((link: { name: string; url: string }, linkIdx: number) => (
+                      <a 
+                        key={linkIdx}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          padding: '0.4rem 0.4rem',
+                          fontSize: '1rem',
+                          fontWeight: '800',
+                          boxShadow: '5px 3px 5px rgba(10, 10, 10, .8)',
+                          background: 'rgb(220, 211, 195)',
+                          color: '#0f100fff',
+                          textDecoration: 'none',
+                          transition: 'all 0.2s ease',
+                          marginTop: '15px',
+                          marginRight: '15px'
+                        }}
+                      >
+                        [ {link.name} ]
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
-        
-        {/* Standout Qualities */}
-        {analysis.standoutQualities?.length > 0 && (
-          <div>
-            <h2 className="text-xl font-semibold mb-3">Standout Qualities</h2>
-            <div className="flex flex-wrap gap-2">
-              {analysis.standoutQualities.map((quality: string, i: number) => (
-                <span 
-                  key={i} 
-                  className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
-                >
-                  {quality}
-                </span>
+
+        {/* Gaps Section */}
+        {analysis.gaps?.length > 0 && (
+          <div style={{ marginTop: '6rem', marginBottom: '6rem' }}>
+            <h4 style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              margin: '0 0 1rem 0',
+              fontSize: '1.5rem',
+              fontWeight: '900',
+              color: 'rgb(94, 70, 49)',
+            }}>
+              Gaps
+            </h4>
+            
+            <div style={{ display: 'grid', gap: '2.875rem' }}>
+              {analysis.gaps.map((gap: any, idx: number) => (
+                <div key={idx} style={{
+                  background: 'rgb(220, 211, 195)',
+                  boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
+                  borderRadius: '12px',
+                  padding: '1.25rem'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    marginBottom: '0.75rem',
+                    gap: '1rem',
+                    flexWrap: 'wrap'
+                  }}>
+                    <div style={{ 
+                      fontWeight: '600', 
+                      color: 'rgba(19, 17, 17, 1)',
+                      fontSize: '1rem',
+                      flex: 1
+                    }}>
+                      {gap.requirement}
+                    </div>
+                    <span style={{
+                      padding: '0.25rem .75rem',
+                      borderRadius: '20px',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      background: 'rgb(220, 211, 195)',
+                      color: gap.severity === 'critical' 
+                        ? '#ef4444' 
+                        : gap.severity === 'moderate'
+                        ? '#000000ff'
+                        : '#94a3b8',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px'
+                    }}>
+                      {gap.severity}
+                    </span>
+                  </div>
+                  <div style={{ 
+                    fontSize: '0.9rem', 
+                    color: 'rgba(21, 18, 18, 1)',
+                    paddingLeft: '1rem',
+                    borderLeft: '3px solid rgba(24, 23, 22, 0.3)',
+                    lineHeight: '1.5',
+                    marginBottom: gap.transferable ? '0.75rem' : 0
+                  }}>
+                    {gap.suggestion}
+                  </div>
+                  {gap.transferable && (
+                    <div style={{
+                      fontSize: '0.85rem',
+                      color: '#94a3b8',
+                      paddingLeft: '1rem',
+                      borderLeft: '3px solid rgba(34, 197, 94, 0.3)',
+                      lineHeight: '1.5',
+                      fontStyle: 'italic'
+                    }}>
+                      💡 Transferable: {gap.transferable}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </div>
         )}
-        
-        {/* Strengths */}
-        {analysis.strengths?.length > 0 && (
-          <div>
-            <h2 className="text-xl font-semibold mb-3">Strengths</h2>
-            <ul className="space-y-3">
-              {analysis.strengths.map((strength: any, i: number) => (
-                <li key={i} className="border-l-4 border-green-500 pl-4 py-2">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="font-semibold text-green-700">{strength.match}</div>
-                      <div className="text-gray-600 text-sm mt-1">{strength.evidence}</div>
-                    </div>
-                    <span className={`ml-4 px-2 py-1 text-xs rounded-full ${
-                      strength.confidence === 'high' 
-                        ? 'bg-green-100 text-green-800' 
-                        : strength.confidence === 'medium'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {strength.confidence}
-                    </span>
+
+        {/* Cultural Fit Analysis */}
+        {analysis.culturalFit && (
+          <div style={{ marginBottom: '2rem' }}>
+            <h4 style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              margin: '0 0 1rem 0',
+              fontSize: '1.25rem',
+              fontWeight: '700',
+              color: '#dbdbdbff'
+            }}>
+              <MessageSquare size={20} />
+              Cultural fit signals
+            </h4>
+            
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '1rem' 
+            }}>
+              {analysis.culturalFit.signals?.length > 0 && (
+                <div style={{
+                  background: 'rgb(220, 211, 195)',
+                  borderRadius: '10px',
+                  padding: '1rem 1.25rem'
+                }}>
+                  <div style={{ 
+                    fontWeight: '600', 
+                    color: '#c7d2fe',
+                    marginBottom: '0.625rem',
+                    fontSize: '0.875rem'
+                  }}>
+                    You want
                   </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        
-        {/* Gaps */}
-        {analysis.gaps?.length > 0 && (
-          <div>
-            <h2 className="text-xl font-semibold mb-3">Areas to Address</h2>
-            <ul className="space-y-3">
-              {analysis.gaps.map((gap: any, i: number) => (
-                <li key={i} className={`border-l-4 pl-4 py-2 ${
-                  gap.severity === 'critical' 
-                    ? 'border-red-500' 
-                    : gap.severity === 'moderate'
-                    ? 'border-yellow-500'
-                    : 'border-blue-500'
-                }`}>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className={`font-semibold ${
-                        gap.severity === 'critical' 
-                          ? 'text-red-700' 
-                          : gap.severity === 'moderate'
-                          ? 'text-yellow-700'
-                          : 'text-blue-700'
-                      }`}>
-                        {gap.requirement}
-                      </div>
-                      <div className="text-gray-600 text-sm mt-1">{gap.suggestion}</div>
-                    </div>
-                    <span className={`ml-4 px-2 py-1 text-xs rounded-full ${
-                      gap.severity === 'critical' 
-                        ? 'bg-red-100 text-red-800' 
-                        : gap.severity === 'moderate'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-blue-100 text-blue-800'
-                    }`}>
-                      {gap.severity}
-                    </span>
+                  <ul style={{ 
+                    margin: 0, 
+                    paddingLeft: '1.5rem',
+                    color: '#362719ff',
+                    fontSize: '0.9rem',
+                    lineHeight: '1.6'
+                  }}>
+                    {analysis.culturalFit.signals.map((signal: string, idx: number) => (
+                      <li key={idx} style={{ marginBottom: '0.25rem' }}>{signal}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {analysis.culturalFit.alignment?.length > 0 && (
+                <div style={{
+                  background: 'rgb(220, 211, 195)',
+                  border: '1px solid rgba(34, 197, 94, 0.2)',
+                  borderRadius: '10px',
+                  padding: '1rem 1.25rem'
+                }}>
+                  <div style={{ 
+                    fontWeight: '600', 
+                    color: '#86efac',
+                    marginBottom: '0.625rem',
+                    fontSize: '0.875rem'
+                  }}>
+                    I've got
                   </div>
-                </li>
-              ))}
-            </ul>
+                  <ul style={{ 
+                    margin: 0, 
+                    paddingLeft: '1.5rem',
+                    color: '#cbd5e1',
+                    fontSize: '0.9rem',
+                    lineHeight: '1.6'
+                  }}>
+                    {analysis.culturalFit.alignment.map((align: string, idx: number) => (
+                      <li key={idx} style={{ marginBottom: '0.25rem' }}>{align}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
         {/* ATS Keywords */}
-        {analysis.atsKeywords && (
-          <div>
-            <h2 className="text-xl font-semibold mb-3">ATS Keywords</h2>
-            <div className="space-y-3">
+        {analysis.atsKeywords && (analysis.atsKeywords.critical?.length > 0 || analysis.atsKeywords.recommended?.length > 0) && (
+          <div style={{ marginBottom: '2rem' }}>
+            <h4 style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              margin: '0 0 1rem 0',
+              fontSize: '1.25rem',
+              fontWeight: '700',
+              color: '#100e0eff'
+            }}>
+              <div style={{ marginTop: '1rem', paddingLeft: '20px', fontSize: '1.475rem', color: '#070606ff' }}>
+                ATS Keyword Coverage: {Math.round(keywordCoverage)}% 
+                ({analysis.atsKeywords?.critical?.length || 0} critical + {analysis.atsKeywords?.recommended?.length || 0} recommended)
+              </div>
+            </h4>
+            
+            <div style={{ display: 'grid', gap: '1rem' }}>
               {analysis.atsKeywords.critical?.length > 0 && (
-                <div>
-                  <h3 className="font-medium text-gray-700 mb-2">Critical Keywords</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {analysis.atsKeywords.critical.map((keyword: string, i: number) => (
-                      <span 
-                        key={i} 
-                        className="px-3 py-1 bg-red-100 text-red-700 rounded-md text-sm"
-                      >
+                <div style={{
+                  background: 'rgb(220, 211, 195)',
+                  border: '.1px solid rgba(239, 68, 68, 0.2)',
+                  borderRadius: '10px',
+                  boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
+                  padding: '1rem 1.25rem'
+                }}>
+                  <div style={{ 
+                    fontWeight: '600', 
+                    color: '#191717ff',
+                    marginBottom: '0.625rem',
+                    fontSize: '1.475rem'
+                  }}>
+                    Hard skills
+                  </div>
+                  <div style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '0.5rem'
+                  }}>
+                    {analysis.atsKeywords.critical.map((keyword: string, idx: number) => (
+                      <span key={idx} style={{
+                        padding: '0.375rem 0.75rem',
+                        background: 'rgba(54, 52, 49, 1)',
+                        boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
+                        borderRadius: '16px',
+                        fontSize: '0.85rem',
+                        color: '#d0cdcdff',
+                        fontFamily: 'monospace'
+                      }}>
                         {keyword}
                       </span>
                     ))}
                   </div>
                 </div>
               )}
-              
+
               {analysis.atsKeywords.recommended?.length > 0 && (
-                <div>
-                  <h3 className="font-medium text-gray-700 mb-2">Recommended Keywords</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {analysis.atsKeywords.recommended.map((keyword: string, i: number) => (
-                      <span 
-                        key={i} 
-                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm"
-                      >
+                <div style={{
+                  background: 'rgb(220, 211, 195)',
+                  boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
+                  borderRadius: '10px',
+                  padding: '1rem 1.25rem'
+                }}>
+                  <div style={{ 
+                    fontWeight: '600', 
+                    color: '#272424ff',
+                    marginBottom: '0.625rem',
+                    fontSize: '1.475rem'
+                  }}>
+                    Soft skills
+                  </div>
+                  <div style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '0.5rem'
+                  }}>
+                    {analysis.atsKeywords.recommended.map((keyword: string, idx: number) => (
+                      <span key={idx} style={{
+                        padding: '0.375rem 0.75rem',
+                        background: 'rgba(123, 120, 114, 1)',
+                        borderRadius: '6px',
+                        boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
+                        fontSize: '0.85rem',
+                        color: '#d9dceaff',
+                        fontFamily: 'monospace'
+                      }}>
                         {keyword}
                       </span>
                     ))}
@@ -194,51 +483,7 @@ export default async function ResultsPage({ params }: PageProps) {
             </div>
           </div>
         )}
-
-        {/* Recommendations */}
-{analysis.recommendations.projectsToFeature?.length > 0 && (
-  <div className="bg-gray-50 p-4 rounded-lg">
-    <h3 className="font-medium text-gray-700 mb-2">Projects to Feature</h3>
-    <ul className="space-y-2">
-      {analysis.recommendations.projectsToFeature.map((project: any, i: number) => {
-        // Handle both old string format and new object format
-        const projectName = typeof project === 'string' ? project : project.name;
-        const projectLinks = typeof project === 'object' ? project.links : null;
-        
-        return (
-          <li key={i} className="text-sm text-gray-600">
-            <div className="flex items-start">
-              <span className="text-blue-500 mr-2">•</span>
-              <div>
-                <span>{projectName}</span>
-                {projectLinks && projectLinks.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-1">
-                    {projectLinks.map((link: any, j: number) => (
-                      <a
-                        key={j}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors"
-                      >
-                        {link.name} ↗
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </li>
-        );
-      })}
-    </ul>
-  </div>
-)}
-    {/* Footer */}
-      <div className="mt-6 text-center text-sm text-gray-500">
-        <p>This analysis was generated by an AI job matching system</p>
       </div>
     </div>
-  </div>
   );
 }

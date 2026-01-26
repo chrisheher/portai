@@ -31,12 +31,6 @@
          {"name": "Google gpay instrumentation", "url": "/?show=gpay"}
       ]
     },
-        "Employer Branding": {
-      "keywords": ["employer branding", "talent", "recruitment", "careers"],
-      "links": [
-        {"name": "Airbnb careers", "url": "https://careers.airbnb.com"}
-      ]
-    },
     "Brand Voice": {
       "keywords": ["brand voice", "tone", "brand identity", "messaging", "brand guidelines"],
       "links": [
@@ -55,9 +49,10 @@
     {"name" : "fintech infographics", "url": "/?show=fintech"}]
     },
     "Employer Brand": {
-      "keywords": ["employer brand", "careers", "recruiting", "talent", "EVP", "culture"],
+      "keywords": ["employer brand", "careers", "recruiting", "talent", "EVP", "figma"],
       "links": [
-        {"name": "Airbnb Careers", "url": "/?show=airbnb"},  {"name": "ADT Careers", "url": "/?show=adt"}
+        {"name": "Airbnb Careers", "url": "/?show=airbnb"}, 
+         {"name": "ADT Careers", "url": "/?show=adt"}
       ]
     },
     "SaaS / B2B": {
@@ -78,8 +73,9 @@
     "Content Strategy": {
       "keywords": ["content strategy", "editorial", "content calendar", "content ops"],
       "links": [
-        {"name": "See Slow Faster", "url": "/?show=sentry-performance"},
-        {"name": "Dogfooding Chronicles", "url": "/?show=dogfooding"}
+        {"name": "Sentry Perfomance launch", "url": "/?show=sentry-performance"},
+        {"name": "Dogfooding Chronicles", "url": "/?show=dogfooding"},
+         {"name": "HP Presence", "url": "/?show=hp-presence"}
       ]
     }
   },
