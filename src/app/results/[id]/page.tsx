@@ -138,7 +138,6 @@ padding: '100px 100px 100px 100px'
             margin: '0 0 1rem 0',
             fontSize: '1.5rem',
             fontWeight: '900',
-             fontFamily: 'monospace', 
             color: 'rgb(94, 70, 49)',
           }}>
             Strengths
@@ -176,7 +175,7 @@ padding: '100px 100px 100px 100px'
                   <div style={{ 
                     fontSize: '1rem', 
                     color: '#382311ff',
-                    paddingLeft: '.8rem',
+                    paddingLeft: '1rem',
                     borderLeft: '7px solid rgba(17, 128, 30, 0.79)',
                     lineHeight: '1.5'          
                   }}>
@@ -437,8 +436,8 @@ padding: '100px 100px 100px 100px'
                         boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
                         borderRadius: '16px',
                         fontSize: '0.85rem',
-                        color: '#d0cdcdff',
-                        fontFamily: 'monospace'
+                        color: '#d0cdcdff'
+                     
                       }}>
                         {keyword}
                       </span>
@@ -474,8 +473,8 @@ padding: '100px 100px 100px 100px'
                         borderRadius: '6px',
                         boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
                         fontSize: '0.85rem',
-                        color: '#d9dceaff',
-                        fontFamily: 'monospace'
+                        color: '#d9dceaff'
+                  
                       }}>
                         {keyword}
                       </span>
