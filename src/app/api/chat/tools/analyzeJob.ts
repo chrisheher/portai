@@ -102,20 +102,51 @@ function extractMatchingKeywords(
 function enrichProjectsWithLinks(
   projectNames: string[]
 ): Array<{ name: string; links?: Array<{ name: string; url: string }> }> {
+  // Guard against undefined/null input
+  if (!projectNames || !Array.isArray(projectNames)) {
+    console.error('⚠️ enrichProjectsWithLinks received invalid input:', projectNames);
+    return [];
+  }
+
+  // Flatten all projects from experience entries (new structure)
+  // OR use standout_projects (old structure)
+  const allProjects = (portfolioConfig as any).experience?.flatMap((exp: any) => 
+    (exp.projects || []).map((proj: any) => ({
+      ...proj,
+      company: exp.company
+    }))
+  ) || (portfolioConfig as any).standout_projects || [];
+
+  if (!allProjects || allProjects.length === 0) {
+    console.error('⚠️ No projects found in portfolio config');
+    return projectNames.map(name => ({ name }));
+  }
+
   return projectNames.map(projectName => {
-    const matchedProject = portfolioConfig.standout_projects.find(
-      (p) => 
-        p.title.toLowerCase().includes(projectName.toLowerCase()) ||
-        projectName.toLowerCase().includes(p.title.toLowerCase())
-    );
+    if (!projectName || typeof projectName !== 'string') {
+      return { name: String(projectName || 'Unknown') };
+    }
     
+    const projectLower = projectName.toLowerCase();
+    
+    const matchedProject = allProjects.find((p: any) => {
+      if (!p.title) return false;
+      const title = p.title.toLowerCase();
+      const company = (p.company || '').toLowerCase();
+      
+      return title.includes(projectLower) || 
+             projectLower.includes(title) ||
+             (company && projectLower.includes(company));
+    });
+
+    console.error(`🔍 "${projectName}" → matched:`, matchedProject?.title || 'NONE');
+
     return {
       name: projectName,
       links: matchedProject?.links || undefined
     };
   });
-}
-
+};
 /**
  * Calculate qualitative adjustments based on role fit factors
  */
@@ -393,32 +424,32 @@ ${JSON.stringify(portfolioConfig, null, 2)}`,
       ],
       messages: [{
         role: 'user',
-    content: `Matched keywords: ${keywordMatches.critical.join(', ') || 'none'}
+ content: `Matched keywords: ${keywordMatches.critical.join(', ') || 'none'}
 Base calculated score: ${baseScore}
 
 Job:
 ${truncatedJob}
 
-IMPORTANT: Start with the base score of ${baseScore} and adjust it (±25 points) based on:
-- Qualitative fit beyond keywords
-- Culture/soft skills alignment
-- Career trajectory match
-- Role level appropriateness
-- Company stage/size fit
-- Missing critical vs nice-to-have skills
+AVAILABLE CATEGORIES (use ONLY these for "category" field - pick the one that best matches the job requirement):
+- GTM Launch
+- Technical Writing
+- Developer Content
+- Brand Voice
+- Thought Leadership
+- Fintech
+- Employer Brand
+- SaaS / B2B
+- AI / ML
+- Content Strategy
 
-Scoring guidelines:
-- 95-99: Perfect match (dream role, exceeds requirements)
-- 88-94: Strong match (highly qualified, clear fit)
-- 75-87: Good match (solid fit, minor gaps)
-- 51-74: Moderate match (some key gaps)
-- 30-50: Weak match (significant misalignment)
-- 15-29: Poor match (wrong role/level)
+CRITICAL: 
+- For "category", use ONLY one of the 10 categories listed above
+- For "match", extract a DIRECT QUOTE (7 words or fewer) from the job description
 
-Return valid JSON (5-8 words per field, max 5 strengths, max 3 gaps):
+Return valid JSON (max 5 strengths, max 3 gaps):
 {
-  "matchScore": <number between 15-95>, // Use ${baseScore} as reference but adjust freely based on overall fit
-  "strengths": [{"category":"Tech","match":"React","evidence":"5yr React dev","confidence":"high"}],
+  "matchScore": <number between 15-95>,
+  "strengths": [{"category":"GTM Launch","match":"\"lead product launch content\"","evidence":"Led Sentry Performance launch with See Slow Faster campaign","confidence":"high"}],
   "gaps": [{"requirement":"Python","severity":"moderate","suggestion":"Emphasize JS skills"}],
   "standoutQualities": ["Full-stack"],
   "atsKeywords": {"critical":${JSON.stringify(keywordMatches.critical)},"recommended":[],"phrasingsToUse":[]},
@@ -534,9 +565,11 @@ Return valid JSON (5-8 words per field, max 5 strengths, max 3 gaps):
     if (!Array.isArray(parsed.strengths)) parsed.strengths = [];
     if (!Array.isArray(parsed.gaps)) parsed.gaps = [];
     if (!parsed.summary) parsed.summary = 'Analysis complete';
-if (parsed.recommendations?.projectsToFeature) {
+if (parsed.recommendations?.projectsToFeature && Array.isArray(parsed.recommendations.projectsToFeature)) {
   const projectNames = parsed.recommendations.projectsToFeature as unknown as string[];
-  parsed.recommendations.projectsToFeature = enrichProjectsWithLinks(projectNames);
+  if (projectNames.length > 0) {
+    parsed.recommendations.projectsToFeature = enrichProjectsWithLinks(projectNames);
+  }
 }
     // Step 8: Generate shareable link - NOW WITH AWAIT
     parsed.shareableLink = await generateShareableLink(parsed);

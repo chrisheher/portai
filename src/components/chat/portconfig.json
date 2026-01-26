@@ -3,79 +3,92 @@
     "name": "Christopher Heher",
     "title": "Writer | Marketer | Conversational Design",
     "location": "Jersey City, NJ",
-    "bio": "15+ years crafting strategic content for developer tools and enterprise SaaS. Specialize in turning complex technical concepts into compelling narratives that drive pipeline and revenue."
+    "bio": "Crafting strategic content that turns complex technical concepts into compelling narratives that drive pipeline and revenue."
   },
-  
-  "experience": [
-    {
-      "company": "DroneDeploy",
-      "position": "Lead Writer",
-      "duration": "2024",
-      "industry": "SaaS (Reality Capture)",
-      "highlights": [
-        "Drove $10M+ sales pipeline through strategic content",
-        "Created 'Your AI In the Sky' tagline for Safety AI rollout",
-        "8.5% deals influenced in pipeline",
-        "Wrote white papers on ground control points, underground utilities, facade inspections"
-      ],
-      "ATSKeywords": ["Content Strategy", "Technical Writing", "GTM Content", "AI/ML Marketing"]
+
+  "categoryMappings": {
+    "GTM Launch": {
+      "keywords": ["gtm", "go-to-market", "product launch", "launch strategy", "product release"],
+      "links": [
+        {"name": "Sentry Performance", "url": "/?show=sentry-performance"},
+        {"name": "DroneDeploy Safety AI", "url": "/?show=safety-ai"}
+      ]
     },
-    {
-      "company": "Sentry",
-      "position": "Technical Content Strategist",
-      "duration": "2020-2022",
-      "industry": "Developer Tools (Application Monitoring)",
-      "highlights": [
-        "Created 'See Slow Faster' tagline that helped propel company to 3x ARR",
-        "11% deals influenced in pipeline",
-        "1.7% engagement rate for meaningful actions",
-        "Owned content strategy for Performance product launch"
-      ],
-      "ATSKeywords": ["Developer Relations", "Content Strategy", "Technical Documentation", "Product Marketing"]
+    "Technical Writing": {
+      "keywords": ["technical writing", "documentation", "technical content", "developer docs", "api"],
+      "links": [
+           {"name": "GE aviation", "url": "/?show=ge"},
+          {"name": "DroneDeploy Ground Robotics", "url": "/?show=robotics"},
+        {"name": "HP Presence white papers", "url": "/?show=hp"}
+       
+      ]
     },
-    {
-      "company": "Cincoro Tequila",
-      "position": "Creative Director",
-      "duration": "2020-2022",
-      "industry": "Consumer Brand",
-      "highlights": [
-        "Grew brand from 0 to 91K Instagram followers",
-        "1.5M bottles sold with 23 industry awards",
-        "Created brand manifesto and social media strategy",
-        "Taglines: 'All sunshine. No burn.', 'Good times deserve great tequila.'"
-      ],
-      "ATSKeywords": ["Brand Strategy", "Social Media", "Creative Direction", "Copywriting"]
+    "Developer Content": {
+      "keywords": ["developer", "devrel", "developer relations", "engineering blog", "dev tools"],
+      "links": [
+        {"name": "Sentry technical", "url": "/?show=sentry-dev"},
+        {"name": "Sentry Dogfooding Chronicles", "url": "/?show=dogfooding"},
+         {"name": "Google gpay instrumentation", "url": "/?show=gpay"}
+      ]
     },
-    {
-      "company": "Ceros",
-      "position": "Content Strategist",
-      "duration": "2017-2019",
-      "industry": "Content Creation Platform",
-      "highlights": [
-        "Led strategic briefing process for enterprise clients in trial",
-        "Transformed static PDFs into interactive, mobile-first experiences",
-        "Clients: GE Aviation, Airbnb, HP"
-      ],
-      "skills": ["Content Strategy", "Client Management", "Experiential Content"]
+        "Employer Branding": {
+      "keywords": ["employer branding", "talent", "recruitment", "careers"],
+      "links": [
+        {"name": "Airbnb careers", "url": "https://careers.airbnb.com"}
+      ]
     },
-    {
-      "company": "Momentum Worldwide",
-      "position": "Copywriter",
-      "duration": "2017",
-      "industry": "Experiential Advertising",
-      "highlights": [
-        "Won Facebook's FBIQ account with pitch deck",
-        "Led Espolon tequila social media",
-        "Shaped messaging for Verizon's go90 streaming platform launch"
-      ],
-      "skills": ["Copywriting", "Pitch Development", "Experiential Marketing"]
+    "Brand Voice": {
+      "keywords": ["brand voice", "tone", "brand identity", "messaging", "brand guidelines"],
+      "links": [
+        {"name": "Cincoro", "url": "/?show=cincoro"}
+      ]
+    },
+    "Thought Leadership": {
+      "keywords": ["thought leadership", "white paper", "whitepaper", "industry insights", "byline"],
+      "links": [
+        {"name": "HP Presence", "url": "/?show=hp-presence"}
+      ]
+    },
+    "Fintech": {
+      "keywords": ["fintech", "financial", "banking", "trading", "finance", "payments"],
+      "links": [{"name": "google Gpay", "url": "/?show=gpay"},
+    {"name" : "fintech infographics", "url": "/?show=fintech"}]
+    },
+    "Employer Brand": {
+      "keywords": ["employer brand", "careers", "recruiting", "talent", "EVP", "culture"],
+      "links": [
+        {"name": "Airbnb Careers", "url": "/?show=airbnb"},  {"name": "ADT Careers", "url": "/?show=adt"}
+      ]
+    },
+    "SaaS / B2B": {
+      "keywords": ["saas", "b2b", "enterprise", "software"],
+      "links": [
+        {"name": "Safety AI", "url": "/?show=safety-ai"},
+             {"name": "Sentry product pages", "url": "/?show=sentry-pages"},
+        {"name": "Sentry Performance GTM campaign", "url": "/?show=sentry-performance"},
+             {"name": "Sentry Discover", "url": "https://blog.sentry.io/asking-the-right-query-with-discover/"}
+      ]
+    },
+    "AI / ML": {
+      "keywords": ["ai", "artificial intelligence", "machine learning", "ml", "automation"],
+      "links": [
+        {"name": "DroneDeploy Safety AI", "url": "/?show=safety-ai"},
+        {"name": "DroneDeploy technical content", "url": "/?show=dd-tech"}
+      ]
+    },
+    "Content Strategy": {
+      "keywords": ["content strategy", "editorial", "content calendar", "content ops"],
+      "links": [
+        {"name": "See Slow Faster", "url": "/?show=sentry-performance"},
+        {"name": "Dogfooding Chronicles", "url": "/?show=dogfooding"}
+      ]
     }
-  ],
-  
+  },
+
   "ATSKeywords": {
     "core": [
       "Content Strategy",
-      "Technical Writing", 
+      "Technical Writing",
       "Developer Relations",
       "GTM Content",
       "Brand Messaging",
@@ -87,7 +100,7 @@
       "API Documentation",
       "Product Marketing"
     ],
-    "tools": [
+    "languages": [
       "Python",
       "JavaScript",
       "Next.js",
@@ -102,39 +115,10 @@
       "Strategic Thinking"
     ]
   },
-  
-  "standout_projects": [
-    {
-      "title": "Sentry Performance Launch - 'See Slow Faster'",
-      "impact": "Tagline helped propel company to 3x ARR. Simplified complex APM concepts (Apdex scores, p95 response times) into clear competitive differentiation.",
-      "deliverables": ["Product launch content", "Blog posts", "Documentation", "Sales enablement"]
-    },
-    {
-      "title": "DroneDeploy Safety AI Campaign",
-      "impact": "$10M+ pipeline influence. Created 'Your AI In the Sky' positioning and comprehensive content suite for AI-powered construction safety platform.",
-      "ATSKeywords": ["Product pages", "White papers", "Blog posts", "Sales collateral"]
-    },
-    {
-      "title": "Cincoro Tequila Brand Launch",
-      "impact": "0 to 91K followers, 1.5M bottles sold, 23 awards. Built brand voice for Michael Jordan's premium tequila in crowded celebrity spirits market.",
-      "deliverables": ["Brand manifesto", "Taglines", "Social strategy", "Content calendar"]
-    },
-    {
-      "title": "Facebook IQ Event Launch",
-      "impact": "Won account with pitch that connected Facebook culture to advertiser benefits. 200+ media leaders at premiere events.",
-      "deliverables": ["Pitch deck", "Event activations", "Follow-up communications"]
-    },
-    {
-      "title": "Airbnb Careers Site",
-      "impact": "Established Employer Brand Proposition and created responsive, mobile-friendly content articulating culture and benefits.",
-      "deliverables": ["Career site content", "Employer brand messaging", "Apprenticeship program content"]
-    }
-  ],
 
-  
   "unique_strengths": [
     "Transforms technical jargon into compelling narratives (See Slow Faster, Your AI In the Sky)",
-    "15+ years experience in developer tools and enterprise SaaS",
+    "8+ years experience in developer tools and enterprise SaaS",
     "Proven track record of pipeline influence (8-11% across roles)",
     "Bridges gap between technical teams and business stakeholders",
     "Strong understanding of AI/ML, cybersecurity, and DevOps concepts"

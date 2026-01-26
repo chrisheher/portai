@@ -23,7 +23,7 @@ export default function JobAnalysisPopup({ isOpen, onClose, children }: JobAnaly
       {/* Centered popup */}
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2">
         <div 
-          className="bg-[#00000] rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+          className="bg-[#00000] rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header with X button */}

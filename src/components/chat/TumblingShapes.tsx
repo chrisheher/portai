@@ -63,7 +63,7 @@ const bodiesRef = useRef<{ body: Matter.Body; project: Project; shapeType?: stri
         width: window.innerWidth,
         height: window.innerHeight,
         wireframes: false,
-background: mode === 'initial' ? '#8c6a48' : '#dcd3c3'
+background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
       }
     });
     renderRef.current = render;
@@ -272,33 +272,35 @@ background: mode === 'initial' ? '#8c6a48' : '#dcd3c3'
 
     // Use provided projects or default to 5 letters
     const itemsToRender = projects.length > 0 ? projects : [
-      { title: 'conversational design', type: 'project' as const },
-      { title: 'high-impact copywriting', type: 'project' as const },
-      { title: 'reputable tech content', type: 'project' as const },
-      { title: 'interactive', type: 'project' as const },
-      { title: 'skill scan', type: 'project' as const }
-    ];
+      { title: 'copywriting', type: 'project' as const },
+      { title: 'humanized ai', type: 'project' as const },
+      { title: 'resume scan tool', type: 'project' as const },
+      { title: 'interactive/ux', type: 'project' as const },
+      { title: 'simplified technical content', type: 'project' as const }
+   ].filter(Boolean);
 
     itemsToRender.forEach((project, index) => {
+         if (!project) return; // Extra safety check
+
       let shapeType: string;
             const isImageType = project.type === 'image' && project.imageSrc;
 
       // In initial mode, assign specific letters to specific titles
       if (mode === 'initial') {
         switch (project.title) {
-          case 'conversational design':
+          case 'copywriting':
             shapeType = 'letterC';
             break;
-          case 'high-impact copywriting':
+          case 'humanized ai':
             shapeType = 'letterH';
             break;
-          case 'reputable tech content':
+          case 'resume scan tool':
             shapeType = 'letterR';
             break;
-          case 'interactive':
+          case 'interactive/ux':
             shapeType = 'letterI';
             break;
-          case 'skill scan':
+          case 'simplified technical content':
             shapeType = 'letterS';
             break;
           default:
@@ -489,9 +491,9 @@ background: mode === 'initial' ? '#8c6a48' : '#dcd3c3'
           // Color scheme: Initial mode = brown text on beige shapes
           //               Links mode = beige text on brown shapes
           if (mode === 'initial') {
-            context.fillStyle = isHovered ? '#dcd3c3' : '#5e4631';  // Brown text (beige when hovered)
+            context.fillStyle = isHovered ? '#dcd3c3' : '#1d140cff';  // Brown text (beige when hovered)
           } else {
-            context.fillStyle = isHovered ? '#5e4631' : '#dcd3c3';  // Beige text (brown when hovered)
+            context.fillStyle = isHovered ? '#2e2217ff' : '#dcd3c3';  // Beige text (brown when hovered)
           }
           
           context.save();
@@ -664,7 +666,7 @@ const currentHover: Matter.Body = foundHover;  // ← Explicit type annotation
     // Hover color depends on mode:
     // Initial mode: brown hover (dark on light)
     // Links mode: beige hover (light on dark)
-    const hoverColor = mode === 'initial' ? '#5e4631' : '#dcd3c3';
+    const hoverColor = mode === 'initial' ? '#1b1209ff' : '#dcd3c3';
     
     currentHover.render.fillStyle = hoverColor;
     currentHover.render.strokeStyle = hoverColor;

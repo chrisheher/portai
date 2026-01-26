@@ -1319,7 +1319,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
 
 function ChatWithSuspense() {
   return (
-    <Suspense fallback={<div style={{ width: '100%', height: '100vh', background: '#8c6a48' }} />}>
+    <Suspense fallback={<div style={{ width: '100%', height: '100vh', background: '#2c2116ff' }} />}>
       <Chat />
     </Suspense>
   );
