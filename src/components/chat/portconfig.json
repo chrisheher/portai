@@ -67,14 +67,14 @@
       "keywords": ["ai", "artificial intelligence", "machine learning", "ml", "automation"],
       "links": [
         {"name": "DroneDeploy Safety AI", "url": "/?show=safety-ai"},
-        {"name": "DroneDeploy technical content", "url": "/?show=dd-tech"}
+        {"name": "DroneDeploy technical content", "url": "/?show=dronedep"}
       ]
     },
     "Content Strategy": {
       "keywords": ["content strategy", "editorial", "content calendar", "content ops"],
       "links": [
         {"name": "Sentry Perfomance launch", "url": "/?show=sentry-performance"},
-        {"name": "Dogfooding Chronicles", "url": "/?show=dogfooding"},
+        {"name": "Dogfooding Chronicles", "url": "/?show=sentry-dogfooding"},
          {"name": "HP Presence", "url": "/?show=hp-presence"}
       ]
     }

@@ -522,7 +522,7 @@ function ChatLanding({
         { stat: '~480 SQL conversions (9.5% attributed to ARR)' },
         { stat: '~150k page visits in total' }
       ]
-    },'dd-tech': {
+    },'dronedep': {
       title: 'DroneDeploy technical content',
       type: 'campaign' as const,
       links: [
