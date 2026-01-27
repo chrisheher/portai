@@ -66,6 +66,8 @@
       "keywords": ["saas", "b2b", "enterprise", "software"],
       "links": [
         {"name": "Safety AI", "url": "/?show=safety-ai"},
+                {"name": "DroneDeploy Product pages", "url": "/?show=dd-pages"},
+                        {"name": "Sentry Product pages", "url": "/?show=sentry-pages"},
         {"name": "Sentry", "url": "/?show=sentry-performance"}
       ]
     },

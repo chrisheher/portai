@@ -31,7 +31,8 @@
     "Brand Voice": {
       "keywords": ["brand voice", "tone", "brand identity", "messaging", "brand guidelines"],
       "links": [
-        {"name": "Cincoro", "url": "/?show=cincoro"}
+        {"name": "Cincoro", "url": "/?show=cincoro"},
+        {"name": "Sentry Product Pages", "url": "/?show=sentry-pages"}
       ]
     },
     "Thought Leadership": {

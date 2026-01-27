@@ -210,9 +210,9 @@ const getLinksForCategory = (category: string) => {
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                padding: '0.4rem 0.4rem',
+                padding: '5px 10px 5px 10px',
                
-                fontSize: '1rem',
+                fontSize: '1.2rem',
                 fontWeight: '800',
                 boxShadow: '5px 3px 5px rgba(10, 10, 10, .8)',
                 background: 'rgb(220, 211, 195)',
@@ -220,11 +220,11 @@ const getLinksForCategory = (category: string) => {
                 textDecoration: 'none',
                 transition: 'all 0.2s ease',
                 marginTop: '15px',
-                marginRight: '15px'
+                marginRight: '10px'
                                         
               }}
             >
-             [ {link.name} ]
+             {link.name}
             </a>
           ))}
    </div>
