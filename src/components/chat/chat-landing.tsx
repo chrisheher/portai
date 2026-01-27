@@ -582,91 +582,131 @@ function ChatLanding({
   }), []);
 
   // ========== DEEP LINK URL PARAMETER HANDLING ==========
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const showParam = params.get('show');
+// ========== DEEP LINK URL PARAMETER HANDLING ==========
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const showParam = params.get('show');
+  
+  if (showParam) {
+    console.log('🔗 Deep link detected:', showParam);
     
-    if (showParam) {
-      console.log('🔗 Deep link detected:', showParam);
+    // Check if it's a campaign route
+    if (campaignData[showParam as keyof typeof campaignData]) {
+      const campaign = campaignData[showParam as keyof typeof campaignData];
+      console.log('📢 Loading campaign:', campaign.title);
       
-      // Check if it's a campaign route
-      if (campaignData[showParam as keyof typeof campaignData]) {
-        const campaign = campaignData[showParam as keyof typeof campaignData];
-        console.log('📢 Loading campaign:', campaign.title);
-        
-        // Handle Cincoro specially (has images, shows carousel)
       // Handle Cincoro specially (has images, shows carousel)
-if (showParam === 'cincoro' && 'images' in campaign && campaign.images.length > 0) {
-  setCarouselData({
-    images: campaign.images,
-    title: campaign.title,
-            campaignListDescription: campaign.campaignListDescription,
-            impact: campaign.impact
-          });
-          setDisplayedItems([campaign]);
-          setMode('links');
-          return;
-        }
-        
-        // For campaigns with links, show them as tumbling shapes
-        if ('links' in campaign && campaign.links.length > 0) {
-          const linkShapes = campaign.links.map((link: Link) => ({
-            title: link.name,
-            url: link.url,
-            type: 'link' as const,
-            description: campaign.description,
-            campaignListDescription: campaign.campaignListDescription,
-            impact: campaign.impact,
-            campaignTitle: campaign.title
-          }));
-          setDisplayedItems(linkShapes);
-          setMode('links');
-          return;
-        }
+      if (showParam === 'cincoro' && 'images' in campaign && campaign.images.length > 0) {
+        setCarouselData({
+          images: campaign.images,
+          title: campaign.title,
+          campaignListDescription: campaign.campaignListDescription,
+          impact: campaign.impact
+        });
+        setDisplayedItems([campaign]);
+        setMode('links');
+        return;
       }
       
-      // Handle section routes
-      const sectionRoutes: Record<string, () => void> = {
-        'humanized-ai': () => {
-          setLocalDescription('Humanized AI \n\nCooper the Super is a customer persona trained on the content I produced at DroneDeploy. \nHank Hardass evaluates my talents, skills, and intangibles through a basketball lens.\nRuminatrix provides support for the creative process -- offers no safe words. \nGaslight a bot with Insecure Aidan.\nSurly Devin is a cynical spinoff of Devin AI\'s coding bot ');
-          setDisplayedItems([
-            { title: 'Cooper the Super', type: 'link' as const, promptMode: 'cooper', url: '#cooper', description: 'A grizzled construction superintendent...' },
-            { title: 'Hank Hardass', type: 'link' as const, promptMode: 'scout', url: '#scout', description: 'A professional scout...' },
-            { title: 'ruminatrix', type: 'link' as const, promptMode: 'creative', url: '#creative', description: 'The affective dimension of creativity.' },
-            { title: 'Insecure AI', type: 'link' as const, promptMode: 'insecure', url: '#insecure', description: 'Hey-o i\'m an ai entity...' },
-            { title: 'Surly Devin', type: 'link' as const, promptMode: 'devin', url: '#devin', description: 'A sardonic senior engineer...' }
-          ]);
-          setMode('links');
-          setPromptModeActive(true);
-        },
-        'tech-content': () => {
-          const allTechnical = Object.values(technicalData);
-          setDisplayedItems(allTechnical);
-          setMode('links');
-          setActiveSection('S');  // NEW: Set active section for deep link
-        },
-        'interactive': () => {
-          const allInteractive = Object.values(interactiveData);
-          setDisplayedItems(allInteractive);
-          setMode('links');
-          setActiveSection('I');  // NEW: Set active section for deep link
-        },
-        'campaigns': () => {
-          const allCampaigns = Object.values(campaignData).filter(Boolean);
-          setDisplayedItems(allCampaigns);
-          setMode('links');
-          setActiveSection('C');  // NEW: Set active section for deep link
-        }
-      };
-      
-      if (sectionRoutes[showParam]) {
-        sectionRoutes[showParam]();
+      // For campaigns with links, show them as tumbling shapes
+      if ('links' in campaign && campaign.links.length > 0) {
+        const linkShapes = campaign.links.map((link: Link) => ({
+          title: link.name,
+          url: link.url,
+          type: 'link' as const,
+          description: campaign.description,
+          campaignListDescription: campaign.campaignListDescription,
+          impact: campaign.impact,
+          campaignTitle: campaign.title
+        }));
+        setDisplayedItems(linkShapes);
+        setMode('links');
+        return;
       }
-      
-      // Clear the URL param after processing (optional - keeps URL clean)
-      // window.history.replaceState({}, '', window.location.pathname);
     }
-  }, [campaignData, interactiveData, technicalData, sLinks, iLinks]);
+    
+    // Check technicalData
+    else if (technicalData[showParam as keyof typeof technicalData]) {
+      const item = technicalData[showParam as keyof typeof technicalData];
+      console.log('📄 Loading technical content:', item.title);
+      
+      if ('links' in item && item.links.length > 0) {
+        const linkShapes = item.links.map((link: Link) => ({
+          title: link.name,
+          url: link.url,
+          type: 'link' as const,
+          description: ('description' in item ? item.description : undefined) as string | undefined,
+          campaignListDescription: item.campaignListDescription,
+          impact: item.impact,
+          campaignTitle: item.title
+        }));
+        setDisplayedItems(linkShapes);
+        setMode('links');
+        return;
+      }
+    }
+    
+    // Check interactiveData
+    else if (interactiveData[showParam as keyof typeof interactiveData]) {
+      const item = interactiveData[showParam as keyof typeof interactiveData];
+      console.log('🎮 Loading interactive content:', item.title);
+      
+      if ('links' in item && item.links.length > 0) {
+        const linkShapes = item.links.map((link: Link) => ({
+          title: link.name,
+          url: link.url,
+          type: 'link' as const,
+          description: ('description' in item ? item.description : undefined) as string | undefined,
+          campaignListDescription: item.campaignListDescription,
+          impact: item.impact,
+          campaignTitle: item.title
+        }));
+        setDisplayedItems(linkShapes);
+        setMode('links');
+        return;
+      }
+    }
+    
+    // Handle section routes
+    const sectionRoutes: Record<string, () => void> = {
+      'humanized-ai': () => {
+        setLocalDescription('Humanized AI \n\nCooper the Super is a customer persona trained on the content I produced at DroneDeploy. \nHank Hardass evaluates my talents, skills, and intangibles through a basketball lens.\nRuminatrix provides support for the creative process -- offers no safe words. \nGaslight a bot with Insecure Aidan.\nSurly Devin is a cynical spinoff of Devin AI\'s coding bot ');
+        setDisplayedItems([
+          { title: 'Cooper the Super', type: 'link' as const, promptMode: 'cooper', url: '#cooper', description: 'A grizzled construction superintendent...' },
+          { title: 'Hank Hardass', type: 'link' as const, promptMode: 'scout', url: '#scout', description: 'A professional scout...' },
+          { title: 'ruminatrix', type: 'link' as const, promptMode: 'creative', url: '#creative', description: 'The affective dimension of creativity.' },
+          { title: 'Insecure AI', type: 'link' as const, promptMode: 'insecure', url: '#insecure', description: 'Hey-o i\'m an ai entity...' },
+          { title: 'Surly Devin', type: 'link' as const, promptMode: 'devin', url: '#devin', description: 'A sardonic senior engineer...' }
+        ]);
+        setMode('links');
+        setPromptModeActive(true);
+      },
+      'tech-content': () => {
+        const allTechnical = Object.values(technicalData);
+        setDisplayedItems(allTechnical);
+        setMode('links');
+        setActiveSection('S');
+      },
+      'interactive': () => {
+        const allInteractive = Object.values(interactiveData);
+        setDisplayedItems(allInteractive);
+        setMode('links');
+        setActiveSection('I');
+      },
+      'campaigns': () => {
+        const allCampaigns = Object.values(campaignData).filter(Boolean);
+        setDisplayedItems(allCampaigns);
+        setMode('links');
+        setActiveSection('C');
+      }
+    };
+    
+    if (sectionRoutes[showParam]) {
+      sectionRoutes[showParam]();
+    }
+  }
+}, [campaignData, interactiveData, technicalData, sLinks, iLinks]);
+// ========== END DEEP LINK HANDLING ==========
   // ========== END DEEP LINK HANDLING ==========
 
   const handleShapeClick = useCallback((item: Project) => {
