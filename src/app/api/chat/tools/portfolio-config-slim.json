@@ -18,7 +18,8 @@
       "keywords": ["technical writing", "documentation", "technical content", "developer docs", "api"],
       "links": [
         {"name": "Dogfooding Chronicles", "url": "/?show=dogfooding"},
-        {"name": "Tech Content", "url": "/?show=tech-content"}
+        {"name": "Tech Content", "url": "/?show=tech-content"},
+        {"name": "Sentry developer content", "url": "/?show=sentry-dev"}
       ]
     },
     "Developer Content": {
@@ -46,7 +47,7 @@
       "links": []
     },
     "Employer Brand": {
-      "keywords": ["employer brand", "careers", "recruiting", "talent", "EVP", "culture"],
+      "keywords": ["employer brand", "careers", "hr technology", "recruiting", "talent", "EVP", "culture"],
       "links": [
         {"name": "Airbnb Careers", "url": "/?show=airbnb"}
       ]

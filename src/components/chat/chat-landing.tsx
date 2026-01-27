@@ -492,7 +492,7 @@ function ChatLanding({
   // ========== SIMPLIFIED TECHNICAL CONTENT DUMMY DATA ==========
   const technicalData = useMemo(() => ({
     'gpay': {
-      title: 'Google | gpay instrumantation',
+      title: 'Google | gpay instrumentation',
       type: 'campaign' as const,
       links: [
         { name: 'API demo (web)', url: 'https://www.youtube.com/watch?v=pZyGYUMZAeg' },

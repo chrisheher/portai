@@ -26,7 +26,7 @@
     "Developer Content": {
       "keywords": ["developer", "devrel", "developer relations", "engineering blog", "dev tools"],
       "links": [
-        {"name": "Sentry technical", "url": "/?show=sentry-dev"},
+        {"name": "Sentry developer content", "url": "/?show=sentry-dev"},
         {"name": "Sentry Dogfooding Chronicles", "url": "/?show=sentry-dogfooding"},
          {"name": "Google gpay instrumentation", "url": "/?show=gpay"}
       ]
@@ -35,7 +35,8 @@
       "keywords": ["brand voice", "tone", "brand identity", "messaging", "brand guidelines"],
       "links": [
         {"name": "Cincoro", "url": "/?show=cincoro"},
-        {"name": "Sentry Product Pages", "url": "/?show=sentry-pages"}
+        {"name": "Sentry Product Pages", "url": "/?show=sentry-pages"},
+         {"name": "DroneDeploy Product pages", "url": "/?show=dd-pages"}
       ]
     },
     "Thought Leadership": {
@@ -50,7 +51,7 @@
     {"name" : "fintech infographics", "url": "/?show=fintech"}]
     },
     "Employer Brand": {
-      "keywords": ["employer brand", "careers", "recruiting", "talent", "EVP", "figma"],
+      "keywords": ["employer brand", "hr technology", "careers", "recruiting", "talent", "EVP", "figma"],
       "links": [
         {"name": "Airbnb Careers", "url": "/?show=airbnb"}, 
          {"name": "ADT Careers", "url": "/?show=adt"}
