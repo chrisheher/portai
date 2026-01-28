@@ -959,28 +959,35 @@ setUploadedPdf(null);    // ← ADD THIS
       />
 
       {/* Job Analysis ChatBottombar - Show when S is clicked */}
-      {jobAnalysisMode && chatCentered && (
-        <div className="fixed inset-0 z-[500] flex flex-col items-center justify-center">
-          {/* Countdown text - not clickable, just displays */}
-          <p className="text-[#5e4631] text-lg font-medium mb-40">
-            {countdown !== null && countdown > 0 
-              ? `Please wait ${countdown} seconds...`
-              : 'Why scan back and forth between resumes + job descriptions when AI can do it for us.'
-            }
-          </p>
+{/* Job Analysis ChatBottombar - Show when S is clicked */}
+{jobAnalysisMode && chatCentered && (
+  <div className="fixed inset-0 z-[500] flex items-center justify-center bg-white/90 backdrop-blur-sm p-4">
+    <div className="flex flex-col items-center max-w-xl px-4">
+      <div className="w-full text-left mb-16">
+        <h1 className="text-2xl text-[#5e4631] mb-4">Resume scan tool</h1>
+        <p className="text-[#5e4631] text-lg w-2/3 font-medium">
+          {countdown !== null && countdown > 0 
+            ? `Please wait ${countdown} seconds...`
+            : 'Why scan back and forth between resumes + job descriptions when AI can do it for us.'
+          }
+        </p>
+      </div>
 
-          <ChatBottombar
-            input={input}
-            setInput={setInput}
-            handleInputChange={handleInputChange}
-            handleSubmit={onSubmit}
-            isLoading={isLoading}
-            stop={handleStop}
-            isToolInProgress={isToolInProgress}
-            countdown={null}
-          />
-        </div>
-      )}
+      <div className="w-full">
+        <ChatBottombar
+          input={input}
+          setInput={setInput}
+          handleInputChange={handleInputChange}
+          handleSubmit={onSubmit}
+          isLoading={isLoading}
+          stop={handleStop}
+          isToolInProgress={isToolInProgress}
+          countdown={null}
+        />
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Right Gutter - Devin or Scout Mode */}
       <AnimatePresence>

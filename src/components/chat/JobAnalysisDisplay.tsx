@@ -92,7 +92,7 @@ const getLinksForCategory = (category: string) => {
 
   return (
     <div style={{
-      background: 'rgb(220, 211, 195)',
+           background: '#6C6C6C00)',
       borderRadius: '10px',
       marginTop: '.1rem',
       height: '100%'
@@ -110,7 +110,7 @@ const getLinksForCategory = (category: string) => {
             height: '85px',
               boxShadow: 'rgba(130, 130, 130, 0.5) 20px 13px 5px 0px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
             borderRadius: '50%',
-            background: 'rgb(220, 211, 195)',
+          background: '#6C6C6C00',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -153,7 +153,7 @@ const getLinksForCategory = (category: string) => {
   
   return (
     <div key={idx} style={{
-      background: 'rgb(220, 211, 195)',
+      background: 'rgb(220 211 195 / 16%)',
       borderRadius: '10px',
       marginTop: '1.4rem',
       padding: '1rem',
@@ -210,7 +210,7 @@ const getLinksForCategory = (category: string) => {
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                padding: '5px 10px 5px 10px',
+                padding: '2px 10px 2px 10px',
                
                 fontSize: '1.2rem',
                 fontWeight: '800',
@@ -252,7 +252,7 @@ const getLinksForCategory = (category: string) => {
             <div style={{ display: 'grid', gap: '2.875rem' }}>
               {data.gaps.map((gap, idx) => (
                 <div key={idx} style={{
-                  background: 'rgb(220, 211, 195)',
+                       background: 'rgb(220 211 195 / 16%)',
       boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',                  borderRadius: '12px',
                   padding: '1.25rem'
                 }}>
@@ -277,7 +277,7 @@ const getLinksForCategory = (category: string) => {
                       borderRadius: '20px',
                       fontSize: '0.75rem',
                       fontWeight: '600',
-                      background: 'rgb(220, 211, 195)',
+                           background: 'rgb(220 211 195 / 16%)',
                       color: gap.severity === 'critical' 
                         ? '#ef4444' 
                         : gap.severity === 'moderate'
@@ -340,7 +340,7 @@ const getLinksForCategory = (category: string) => {
             }}>
               {data.culturalFit.signals.length > 0 && (
                 <div style={{
-                  background: 'rgb(220, 211, 195)',
+                       background: 'rgb(220 211 195 / 16%)',
                   borderRadius: '10px',
                   padding: '1rem 1.25rem'
                 }}>
@@ -368,7 +368,7 @@ const getLinksForCategory = (category: string) => {
 
               {data.culturalFit.alignment.length > 0 && (
                 <div style={{
-                  background: 'rgb(220, 211, 195)',
+                       background: 'rgb(220 211 195 / 16%)',
                   border: '1px solid rgba(34, 197, 94, 0.2)',
                   borderRadius: '10px',
                   padding: '1rem 1.25rem'

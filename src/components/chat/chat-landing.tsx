@@ -924,7 +924,7 @@ useEffect(() => {
       position: 'relative', 
       width: '100%', 
       height: '100vh',
-      backgroundColor: mode === 'initial' ? '#8c6a48' : '#dcd3c3'
+      backgroundColor: mode === 'initial' ? '#35281cff' : '#dcd3c3'
     }}>
       {/* Background overlay */}
       {(mode === 'links' || chatCentered) && (
@@ -934,7 +934,7 @@ useEffect(() => {
           left: 0,
           width: '100%',
           height: '100%',
-          backgroundColor: '#dcd3c3',
+          backgroundColor: '#201a10ff',
           zIndex: 100
         }} />
       )}
@@ -1102,7 +1102,7 @@ useEffect(() => {
           lineHeight: '1.3',
           textAlign: 'left',
           zIndex: 700,
-          padding: '20px'
+          padding: '100px'
         }}>
           Chris creates content for brands who see ai as the fire, not the chef.
           <br/><br/>

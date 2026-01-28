@@ -23,7 +23,7 @@
       ]
     },
     "Developer Content": {
-      "keywords": ["developer", "devrel", "developer relations", "engineering blog", "dev tools"],
+      "keywords": ["developer", "open source", "sdk","devrel", "developer relations", "engineering blog", "dev tools"],
       "links": [
         {"name": "Sentry Performance", "url": "/?show=sentry-performance"},
         {"name": "Dogfooding", "url": "/?show=dogfooding"}
@@ -88,6 +88,7 @@
       "AI/ML Marketing",
       "SaaS Content",
       "API Documentation",
+      "Open source",
       "Product Marketing"
     ],
     "languages": [

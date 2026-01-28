@@ -76,7 +76,7 @@ function extractMatchingKeywords(
       soft: []
     }
   };
-// job-to-portfolio keyword matcher 
+
   Object.entries(portfolioKeywords).forEach(([category, keywords]) => {
     keywords.forEach((keyword: string) => {
       const keywordLower = keyword.toLowerCase();
@@ -86,7 +86,11 @@ function extractMatchingKeywords(
       
       if (regex.test(jobText)) {
         const categoryKey = category as keyof typeof matches.categories;
-        matches.categories[categoryKey].push(keyword);
+        
+        // ✅ Only push if the category array exists
+        if (matches.categories[categoryKey]) {
+          matches.categories[categoryKey].push(keyword);
+        }
         
         if (category === 'core' || category === 'technical') {
           matches.critical.push(keyword);
