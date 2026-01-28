@@ -75,37 +75,76 @@
     }
   },
 
-  "ATSKeywords": {
-    "core": [
-      "Content Strategy",
-      "Technical Writing",
-      "Developer Relations",
-      "GTM Content",
-      "Brand Messaging",
-      "Conversational Design"
-    ],
-    "technical": [
-      "AI/ML Marketing",
-      "SaaS Content",
-      "API Documentation",
-      "Open source",
-      "Product Marketing"
-    ],
-    "languages": [
-      "Python",
-      "JavaScript",
-      "Next.js",
-      "React",
-      "TypeScript",
-      "Tailwind CSS"
-    ],
-    "soft": [
-      "Team Leadership",
-      "Stakeholder Management",
-      "Communication",
-      "Strategic Thinking"
-    ]
-  },
+"ATSKeywords": {
+  "core": [
+    "Content Strategy",
+    "Technical Writing",
+    "Developer Relations",
+    "GTM Content",
+    "Brand Messaging",
+    "Conversational Design",
+    "Copywriting",
+    "Long-form",
+    "Content Marketing",
+    "Product Marketing",
+    "GTM",
+    "Go-to-market",
+    "Messaging",
+    "Positioning",
+    "Brand Storytelling",
+    "Editorial Strategy",
+    "Thought Leadership",
+    "Audience Development",
+    "Integrated Marketing",
+    "Competitive Analysis",
+    "Brand Voice",
+    "Content Operations",
+    "B2B SaaS Content",
+    "Blog Writing"
+  ],
+  "marketing": [
+    "Pipeline",
+    "Demand Generation",
+    "Sales Enablement",
+    "Campaign",
+    "Launch",
+    "Brand",
+    "Social Media",
+    "UX",
+    "Lead Generation",
+    "Conversion",
+    "Founder Collaboration"
+  ],
+  "technical": [
+    "AI/ML Marketing",
+    "SaaS Content",
+    "API Documentation",
+    "Open Source",
+    "Product Marketing",
+    "API",
+    "SDK",
+    "Developer",
+    "AI",
+    "ML",
+    "CMS",
+    "Cloud",
+    "DevOps",
+    "Engineering",
+    "Code",
+    "Software"
+  ],
+  "soft": [
+    "Team Leadership",
+    "Stakeholder Management",
+    "Communication",
+    "Strategic Thinking",
+    "Leadership",
+    "Collaboration",
+    "Stakeholder",
+    "Cross-functional",
+    "Strategic"
+  ]
+},
 
   "unique_strengths": [
     "Transforms technical jargon into compelling narratives (See Slow Faster, Your AI In the Sky)",

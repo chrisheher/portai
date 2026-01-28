@@ -861,7 +861,7 @@ setCreativeMode(false);
   setShowChatResponse(true);
   console.log('🗑️ Chat messages cleared');
 
-    setActivePromptDescription('A construction superintendent who traded clipboards for drones. Ask about reality capture, jobsite technology, or why manual documentation is killing productivity.');
+    setActivePromptDescription('A construction superintendent who traded clipboards for drones..');
 }, [setMessages]);
 
 
