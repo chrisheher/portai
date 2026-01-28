@@ -961,8 +961,8 @@ setUploadedPdf(null);    // ← ADD THIS
       {/* Job Analysis ChatBottombar - Show when S is clicked */}
 {/* Job Analysis ChatBottombar - Show when S is clicked */}
 {jobAnalysisMode && chatCentered && (
-  <div className="fixed inset-0 z-[500] flex items-center justify-center bg-white/90 backdrop-blur-sm p-4">
-    <div className="flex flex-col items-center max-w-xl px-4">
+  <div className="fixed inset-0 w-4xl z-[500] -ml-[120px] flex items-center justify-center bg-white/90 backdrop-blur-sm p-4">
+    <div className="flex flex-col items-center max-w-4xl px-4">
       <div className="w-full text-left mb-16">
         <h1 className="text-2xl text-[#5e4631] mb-4">Resume scan tool</h1>
         <p className="text-[#5e4631] text-lg w-2/3 font-medium">

@@ -8,7 +8,7 @@
 
   "categoryMappings": {
     "GTM Launch": {
-      "keywords": ["gtm", "go-to-market", "product launch", "launch strategy", "product release"],
+      "keywords": ["gtm", "go-to-market", "B2B SaaS content", "product launch", "launch strategy", "product release"],
       "links": [
         {"name": "See Slow Faster", "url": "/?show=sentry-performance"},
         {"name": "Safety AI", "url": "/?show=safety-ai"}

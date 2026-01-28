@@ -934,7 +934,7 @@ useEffect(() => {
           left: 0,
           width: '100%',
           height: '100%',
-          backgroundColor: '#201a10ff',
+          backgroundColor: 'rgb(255 244 224 / 69%)',
           zIndex: 100
         }} />
       )}
@@ -968,15 +968,15 @@ useEffect(() => {
           style={{
             position: 'absolute',
             top: '100px',
-
+maxWidth: '100%',
             zIndex: '601',
             maxHeight: '85vh',
-            padding: '10px 0px 0px 120px',
-            background: '#dcd3c3f2',
-            color: '#5e4631',
+            padding: '10px 0px 0px 220px',
+           
+            color: '#3e2e20ff',
             borderRadius: '10px',
             fontSize: '20px',
-            lineHeight: '1.4',
+            lineHeight: '1.6',
             textAlign: 'left',
             overflowY: 'auto',
             scrollbarWidth: 'none',

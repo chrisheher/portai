@@ -198,7 +198,7 @@ function calculateMatchScore(
   
   // 1. Core Skills Score (0-100)
   const coreSkillsNeeded = [
-    'content strategy', 'technical writing', 'copywriting', 'long-form',
+    'content strategy', 'technical writing', 'copywriting', 'long-form', 'B2B SaaS content', 'Blog Writing',
     'content marketing', 'product marketing', 'developer relations',
     'gtm', 'go-to-market', 'messaging', 'positioning', 'brand storytelling', 'editorial strategy', 'demand generation','sales enablement', 'thought leadership', 'audience development',
 'integrated marketing', 'competitive analysis', 'brand voice',
@@ -298,7 +298,7 @@ function applyScoreModifiers(
   
   // INCREASED penalties for gaps
   const criticalGaps = gaps.filter(g => g.severity === 'critical').length;
-  score -= criticalGaps * 18; // was 12
+  score -= criticalGaps * 12; // was 12
   
   const moderateGaps = gaps.filter(g => g.severity === 'moderate').length;
   score -= moderateGaps * 3; // was 6
