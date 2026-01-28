@@ -100,12 +100,12 @@
     "Brand Voice",
     "Content Operations",
     "B2B SaaS Content",
-    "Blog Writing"
+    "Blog Writing",
+    "Demand Generation",
+    "Sales Enablement"
   ],
   "marketing": [
     "Pipeline",
-    "Demand Generation",
-    "Sales Enablement",
     "Campaign",
     "Launch",
     "Brand",
@@ -113,7 +113,8 @@
     "UX",
     "Lead Generation",
     "Conversion",
-    "Founder Collaboration"
+    "Leads",
+    "Inbound"
   ],
   "technical": [
     "AI/ML Marketing",
@@ -131,7 +132,9 @@
     "DevOps",
     "Engineering",
     "Code",
-    "Software"
+    "Software",
+    "Technical",
+    "SaaS"
   ],
   "soft": [
     "Team Leadership",
@@ -142,7 +145,8 @@
     "Collaboration",
     "Stakeholder",
     "Cross-functional",
-    "Strategic"
+    "Strategic",
+    "Storytelling"
   ]
 },
 

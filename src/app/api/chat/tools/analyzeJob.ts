@@ -187,67 +187,44 @@ function calculateMatchScore(
   jobContent: string
 ): number {
   const weights = {
-    coreSkills: 0.55,          // Content strategy, technical writing, etc.
-    marketingSkills: 0.2,     // Pipeline gen, demand gen, etc.
-    industryFit: 0.1,         // SaaS, DevTools, B2B
-    technicalFluency: 0.1,    // Understanding of tech concepts
-    softSkills: 0.05           // Communication, leadership
+    coreSkills: 0.55,
+    marketingSkills: 0.2,
+    industryFit: 0.1,
+    technicalFluency: 0.1,
+    softSkills: 0.05
   };
 
   const jobLower = jobContent.toLowerCase();
   
+  // Pull from config instead of hardcoding
+  const coreSkillsNeeded = (portfolioConfig.ATSKeywords.core || []).map((k: string) => k.toLowerCase());
+  const marketingSkills = ((portfolioConfig.ATSKeywords as any).marketing || []).map((k: string) => k.toLowerCase());
+  const techTerms = (portfolioConfig.ATSKeywords.technical || []).map((k: string) => k.toLowerCase());
+  const softSkills = (portfolioConfig.ATSKeywords.soft || []).map((k: string) => k.toLowerCase());
+  
   // 1. Core Skills Score (0-100)
-  const coreSkillsNeeded = [
-    'content strategy', 'technical writing', 'copywriting', 'long-form', 'B2B SaaS content', 'Blog Writing',
-    'content marketing', 'product marketing', 'developer relations',
-    'gtm', 'go-to-market', 'messaging', 'positioning', 'brand storytelling', 'editorial strategy', 'demand generation','sales enablement', 'thought leadership', 'audience development',
-'integrated marketing', 'competitive analysis', 'brand voice',
-'content operations'
-  ];
-  const coreMatches = coreSkillsNeeded.filter(skill => 
-    jobLower.includes(skill)
-  ).length;
+  const coreMatches = coreSkillsNeeded.filter((skill: string) => jobLower.includes(skill)).length;
   const coreScore = Math.min((coreMatches / 5) * 100, 100);
 
   // 2. Marketing Skills Score (0-100)
-  const marketingSkills = [
-    'pipeline', 'demand generation', 'sales enablement', 
-    'campaign', 'launch', 'brand', 'social media', 'UX',
-    'lead generation', 'conversion', 'founder collaboration'
-  ];
-  const marketingMatches = marketingSkills.filter(skill =>
-    jobLower.includes(skill)
-  ).length;
+  const marketingMatches = marketingSkills.filter((skill: string) => jobLower.includes(skill)).length;
   const marketingScore = Math.min((marketingMatches / 4) * 100, 100);
 
   // 3. Industry Fit (0-100)
-  let industryScore = 50; // baseline
+  let industryScore = 50;
   if (jobLower.includes('saas')) industryScore += 10;
   if (jobLower.includes('developer')) industryScore += 10;
   if (jobLower.includes('enterprise')) industryScore += 8;  
   if (jobLower.includes('advertising')) industryScore += 8;
-    if (jobLower.includes('b2b')) industryScore += 10;
-
+  if (jobLower.includes('b2b')) industryScore += 10;
   industryScore = Math.min(industryScore, 100);
 
   // 4. Technical Fluency (0-100)
-  const techTerms = [
-    'api', 'sdk', 'developer', 'technical', 'ai', 'ml', 'CMS',
-    'cloud', 'devops', 'engineering', 'code', 'software'
-  ];
-  const techMatches = techTerms.filter(term =>
-    jobLower.includes(term)
-  ).length;
+  const techMatches = techTerms.filter((term: string) => jobLower.includes(term)).length;
   const techScore = Math.min((techMatches / 4) * 100, 100);
 
   // 5. Soft Skills Score (0-100)
-  const softSkills = [
-    'communication', 'leadership', 'collaboration', 
-    'stakeholder', 'cross-functional', 'strategic'
-  ];
-  const softMatches = softSkills.filter(skill =>
-    jobLower.includes(skill)
-  ).length;
+  const softMatches = softSkills.filter((skill: string) => jobLower.includes(skill)).length;
   const softScore = Math.min((softMatches / 3) * 100, 100);
 
   // Calculate weighted score
@@ -262,14 +239,12 @@ function calculateMatchScore(
   // Experience level adjustment
   let experienceModifier = 0;
   if (jobLower.includes('senior') || jobLower.includes('lead')) {
-    experienceModifier = 10; // Good fit for senior roles
+    experienceModifier = 10;
   } else if (jobLower.includes('junior') || jobLower.includes('entry')) {
-    experienceModifier = -10; // Overqualified
+    experienceModifier = -10;
   }
 
-  // Add qualitative adjustments
   const qualitativeAdjustment = calculateQualitativeScore(jobContent);
-
   const finalScore = baseScore + experienceModifier + qualitativeAdjustment;
   
   console.error(`📊 Score breakdown:
@@ -282,10 +257,8 @@ function calculateMatchScore(
     Qualitative: ${qualitativeAdjustment}
     TOTAL: ${finalScore}`);
 
-  // WIDER range: 15-95 instead of 25-95
   return Math.max(15, Math.min(95, finalScore));
 }
-
 /**
  * Apply score modifiers based on gaps and special factors
  */
