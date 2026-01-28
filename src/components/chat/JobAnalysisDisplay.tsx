@@ -49,7 +49,7 @@ interface JobAnalysisProps {
 
 export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return { bg: 'rgb(220, 211, 195)', border: 'rgba(34, 197, 94, 0.3)', text: '#22c55e' };
+    if (score >= 80) return { bg: 'rgba(32, 32, 31, 1)', border: 'rgba(34, 197, 94, 0.3)', text: '#22c55e' };
     if (score >= 60) return { bg: 'rgb(220, 211, 195)', border: 'rgba(234, 179, 8, 0)', text: '#ffffffff' };
     return { bg: 'rgb(220, 211, 195)', border: 'rgba(239, 68, 68, 0.3)', text: '#ef4444' };
   };
@@ -212,7 +212,7 @@ const getLinksForCategory = (category: string) => {
               style={{
                 padding: '2px 10px 2px 10px',
                
-                fontSize: '1.2rem',
+                fontSize: '1.1rem',
                 fontWeight: '800',
                 boxShadow: '5px 3px 5px rgba(10, 10, 10, .8)',
                 background: 'rgb(220, 211, 195)',
