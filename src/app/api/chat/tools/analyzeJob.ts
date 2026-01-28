@@ -392,9 +392,19 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     // Step 1: Extract keywords
     const extractStart = Date.now();
     const keywordMatches = extractMatchingKeywords(jobContent, portfolioConfig.ATSKeywords);
+   
+
     console.error(`⏱️  Keyword extraction: ${Date.now() - extractStart}ms`);
-    console.error(`   Found: ${keywordMatches.critical.length} critical, ${keywordMatches.recommended.length} recommended`);
-    
+console.error(`   Found: ${keywordMatches.critical.length} critical, ${keywordMatches.recommended.length} recommended`);
+
+// Log the actual keywords
+console.error(`   Critical keywords: ${keywordMatches.critical.join(', ') || 'none'}`);
+console.error(`   Recommended keywords: ${keywordMatches.recommended.join(', ') || 'none'}`);
+console.error(`   By category:`);
+console.error(`     - Core: ${keywordMatches.categories.core.join(', ') || 'none'}`);
+console.error(`     - Technical: ${keywordMatches.categories.technical.join(', ') || 'none'}`);
+console.error(`     - Tools: ${keywordMatches.categories.tools.join(', ') || 'none'}`);
+console.error(`     - Soft: ${keywordMatches.categories.soft.join(', ') || 'none'}`);
     // Step 2: Calculate base match score
     const scoreStart = Date.now();
     const baseScore = calculateMatchScore(keywordMatches, jobContent);
