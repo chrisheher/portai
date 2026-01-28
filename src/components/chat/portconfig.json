@@ -69,7 +69,7 @@
       "keywords": ["ai", "artificial intelligence", "machine learning", "ml", "automation"],
       "links": [
         {"name": "DroneDeploy Safety AI", "url": "/?show=safety-ai"},
-        {"name": "DroneDeploy technical content", "url": "/?show=drone-dep"}
+        {"name": "DroneDeploy technical content", "url": "/?show=dronedep"}
       ]
     },
     "Content Strategy": {

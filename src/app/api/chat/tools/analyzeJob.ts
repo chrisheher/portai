@@ -159,7 +159,7 @@ function calculateQualitativeScore(jobContent: string): number {
   let score = 0;
   
   // Role level mismatch penalties/bonuses
-   if (jobLower.includes('junior') || jobLower.includes('associate') || jobLower.includes('entry')) {
+   if (jobLower.includes('junior') || jobLower.includes('entry')) {
     score -= 15; // Too junior/overqualified
   } else if (jobLower.includes('senior') || jobLower.includes('lead')) {
     score += 10; // Sweet spot
