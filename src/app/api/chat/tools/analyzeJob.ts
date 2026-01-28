@@ -187,10 +187,10 @@ function calculateMatchScore(
   jobContent: string
 ): number {
   const weights = {
-    coreSkills: 0.5,          // Content strategy, technical writing, etc.
+    coreSkills: 0.55,          // Content strategy, technical writing, etc.
     marketingSkills: 0.2,     // Pipeline gen, demand gen, etc.
     industryFit: 0.1,         // SaaS, DevTools, B2B
-    technicalFluency: 0.15,    // Understanding of tech concepts
+    technicalFluency: 0.1,    // Understanding of tech concepts
     softSkills: 0.05           // Communication, leadership
   };
 
