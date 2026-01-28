@@ -33,6 +33,7 @@ interface JobAnalysisProps {
       critical: string[];
       recommended: string[];
       phrasingsToUse: string[];
+        jobKeywords?: string[];  // NE
     };
     recommendations: {
       coverLetterFocus: string[];
@@ -232,6 +233,39 @@ const getLinksForCategory = (category: string) => {
   );
 })}
           </div>
+          {/* Job Description Keywords */}
+{data.atsKeywords?.jobKeywords && data.atsKeywords.jobKeywords.length > 0 && (
+  <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+    <h3 className="text-sm font-semibold text-blue-800 mb-2">
+      Keywords Found in Job Description
+    </h3>
+    <div className="flex flex-wrap gap-2">
+      {data.atsKeywords.jobKeywords.map((keyword: string, i: number) => {
+        // Check if this keyword is also in critical (matched)
+        const isMatched = data.atsKeywords?.critical?.some(
+          (c: string) => c.toLowerCase() === keyword.toLowerCase()
+        );
+        
+        return (
+          <span
+            key={i}
+            className={`px-2 py-1 rounded text-xs font-medium ${
+              isMatched 
+                ? 'bg-green-100 text-green-800 border border-green-300' 
+                : 'bg-gray-100 text-gray-700 border border-gray-300'
+            }`}
+          >
+            {keyword}
+            {isMatched && <span className="ml-1">✓</span>}
+          </span>
+        );
+      })}
+    </div>
+    <p className="text-xs text-blue-600 mt-2">
+      ✓ = Matches your portfolio keywords
+    </p>
+  </div>
+)}
         </div>
 
         {/* Gaps Section */}

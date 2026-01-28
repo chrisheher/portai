@@ -1,4 +1,4 @@
-// src/app/api/chat/tools/analyzeJob.ts - PRODUCTION VERSION
+// src/app/api/chat/tools/analyzeJob.ts - PRODUCTION VERSION (FIXED)
 import { tool } from "ai";
 import { z } from "zod";
 import Anthropic from '@anthropic-ai/sdk';
@@ -27,11 +27,12 @@ interface JobAnalysisResult {
     critical: string[];
     recommended: string[];
     phrasingsToUse: string[];
+    jobKeywords?: string[];
   };
   recommendations: {
     coverLetterFocus: string[];
     skillsToHighlight: string[];
-    projectsToFeature: Array<string | { name: string; links?: Array<{ name: string; url: string }> }>;  // Updated
+    projectsToFeature: Array<string | { name: string; links?: Array<{ name: string; url: string }> }>;
     narrativeStrategy?: string;
     links?: Array<{ name: string; url: string }>;
     applicationPriority?: 'high' | 'medium' | 'low';
@@ -46,9 +47,11 @@ interface KeywordMatches {
   categories: {
     core: string[];
     technical: string[];
-    tools: string[];
+    marketing: string[];
     soft: string[];
+    industry: string[];
   };
+  jobKeywords: string[];
 }
 
 function isURL(text: string): boolean {
@@ -72,12 +75,39 @@ function extractMatchingKeywords(
     categories: {
       core: [],
       technical: [],
-      tools: [],
-      soft: []
-    }
+      marketing: [],
+      soft: [],
+      industry: []
+    },
+    jobKeywords: []
   };
+   
+  // Extract raw keywords FROM the job description
+  const jobKeywordPatterns = [
+    // Technical terms
+    /\b(api|sdk|saas|b2b|ai|ml|devops|cloud|react|python|javascript|typescript|cms|automation)\b/gi,
+    // Role terms
+    /\b(content\s+(?:strategy|marketing|writer|engineer)|technical\s+writing|developer\s+relations|product\s+marketing|brand\s+voice|thought\s+leadership)\b/gi,
+    // Soft skills
+    /\b(leadership|collaboration|cross-functional|stakeholder|strategic|communication|storytelling)\b/gi,
+    // Marketing terms
+    /\b(pipeline|campaign|launch|demand\s+generation|lead\s+generation|conversion|inbound)\b/gi,
+  ];
 
+  jobKeywordPatterns.forEach(pattern => {
+    const found = jobText.match(pattern) || [];
+    found.forEach(kw => {
+      const normalized = kw.toLowerCase().trim();
+      if (!matches.jobKeywords.includes(normalized)) {
+        matches.jobKeywords.push(normalized);
+      }
+    });
+  });
+
+  // Match against portfolio keywords
   Object.entries(portfolioKeywords).forEach(([category, keywords]) => {
+    if (!Array.isArray(keywords)) return;
+    
     keywords.forEach((keyword: string) => {
       const keywordLower = keyword.toLowerCase();
       if (!jobLower.includes(keywordLower)) return;
@@ -87,7 +117,7 @@ function extractMatchingKeywords(
       if (regex.test(jobText)) {
         const categoryKey = category as keyof typeof matches.categories;
         
-        // ✅ Only push if the category array exists
+        // Only push if the category array exists
         if (matches.categories[categoryKey]) {
           matches.categories[categoryKey].push(keyword);
         }
@@ -103,6 +133,7 @@ function extractMatchingKeywords(
 
   return matches;
 }
+
 function enrichProjectsWithLinks(
   projectNames: string[]
 ): Array<{ name: string; links?: Array<{ name: string; url: string }> }> {
@@ -150,7 +181,8 @@ function enrichProjectsWithLinks(
       links: matchedProject?.links || undefined
     };
   });
-};
+}
+
 /**
  * Calculate qualitative adjustments based on role fit factors
  */
@@ -159,20 +191,17 @@ function calculateQualitativeScore(jobContent: string): number {
   let score = 0;
   
   // Role level mismatch penalties/bonuses
-   if (jobLower.includes('junior') || jobLower.includes('entry')) {
+  if (jobLower.includes('junior') || jobLower.includes('entry')) {
     score -= 15; // Too junior/overqualified
   } else if (jobLower.includes('senior') || jobLower.includes('lead')) {
     score += 10; // Sweet spot
   }
-  
   
   // Red flags
   if (jobLower.includes('must have') && jobLower.includes('phd')) score -= 25;
   if (jobLower.includes('relocation required') && !jobLower.includes('remote')) score -= 10;
   if (jobLower.includes('on-site only') || jobLower.includes('no remote')) score -= 12;
   if (jobLower.includes('frequent travel') && jobLower.includes('50%')) score -= 8;
-  
-  // Green flags
 
   console.error(`🎨 Qualitative adjustments: ${score > 0 ? '+' : ''}${score}`);
   
@@ -259,6 +288,7 @@ function calculateMatchScore(
 
   return Math.max(15, Math.min(95, finalScore));
 }
+
 /**
  * Apply score modifiers based on gaps and special factors
  */
@@ -269,12 +299,12 @@ function applyScoreModifiers(
 ): number {
   let score = baseScore;
   
-  // INCREASED penalties for gaps
+  // Penalties for gaps
   const criticalGaps = gaps.filter(g => g.severity === 'critical').length;
-  score -= criticalGaps * 12; // was 12
+  score -= criticalGaps * 12;
   
   const moderateGaps = gaps.filter(g => g.severity === 'moderate').length;
-  score -= moderateGaps * 3; // was 6
+  score -= moderateGaps * 3;
   
   // Bonuses for desirable attributes
   const jobLower = jobContent.toLowerCase();
@@ -286,15 +316,14 @@ function applyScoreModifiers(
   const yearsMatch = jobContent.match(/(\d+)\+?\s*years?/i);
   if (yearsMatch) {
     const requiredYears = parseInt(yearsMatch[1]);
-    if (requiredYears >= 5 && requiredYears <= 20) score += 5; // Sweet spot
+    if (requiredYears >= 5 && requiredYears <= 20) score += 5;
   }
   
   console.error(`🎯 Score modifiers:
-    Critical gaps penalty: -${criticalGaps * 10}
+    Critical gaps penalty: -${criticalGaps * 12}
     Moderate gaps penalty: -${moderateGaps * 3}
     Final adjusted score: ${Math.max(15, Math.min(95, score))}`);
   
-  // WIDER final range: 15-95 instead of 20-95
   return Math.max(15, Math.min(95, score));
 }
 
@@ -365,26 +394,28 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     // Step 1: Extract keywords
     const extractStart = Date.now();
     const keywordMatches = extractMatchingKeywords(jobContent, portfolioConfig.ATSKeywords);
-   
 
     console.error(`⏱️  Keyword extraction: ${Date.now() - extractStart}ms`);
-console.error(`   Found: ${keywordMatches.critical.length} critical, ${keywordMatches.recommended.length} recommended`);
+    console.error(`   Found: ${keywordMatches.critical.length} critical, ${keywordMatches.recommended.length} recommended`);
+    console.error(`   Job keywords extracted: ${keywordMatches.jobKeywords.join(', ') || 'none'}`);
 
-// Log the actual keywords
-console.error(`   Critical keywords: ${keywordMatches.critical.join(', ') || 'none'}`);
-console.error(`   Recommended keywords: ${keywordMatches.recommended.join(', ') || 'none'}`);
-console.error(`   By category:`);
-console.error(`     - Core: ${keywordMatches.categories.core.join(', ') || 'none'}`);
-console.error(`     - Technical: ${keywordMatches.categories.technical.join(', ') || 'none'}`);
-console.error(`     - Tools: ${keywordMatches.categories.tools.join(', ') || 'none'}`);
-console.error(`     - Soft: ${keywordMatches.categories.soft.join(', ') || 'none'}`);
+    // Log the actual keywords
+    console.error(`   Critical keywords: ${keywordMatches.critical.join(', ') || 'none'}`);
+    console.error(`   Recommended keywords: ${keywordMatches.recommended.join(', ') || 'none'}`);
+    console.error(`   By category:`);
+    console.error(`     - Core: ${keywordMatches.categories.core.join(', ') || 'none'}`);
+    console.error(`     - Technical: ${keywordMatches.categories.technical.join(', ') || 'none'}`);
+    console.error(`     - Marketing: ${keywordMatches.categories.marketing.join(', ') || 'none'}`);
+    console.error(`     - Soft: ${keywordMatches.categories.soft.join(', ') || 'none'}`);
+    console.error(`     - Industry: ${keywordMatches.categories.industry.join(', ') || 'none'}`);
+
     // Step 2: Calculate base match score
     const scoreStart = Date.now();
     const baseScore = calculateMatchScore(keywordMatches, jobContent);
     console.error(`⏱️  Score calculation: ${Date.now() - scoreStart}ms`);
     
     // Step 3: Truncate job description
-    const maxJobLength = 3000; // Shorter to reduce output
+    const maxJobLength = 3000;
     const truncatedJob = jobContent.length > maxJobLength
       ? jobContent.slice(0, maxJobLength) + '\n\n[truncated]'
       : jobContent;
@@ -396,8 +427,8 @@ console.error(`     - Soft: ${keywordMatches.categories.soft.join(', ') || 'none
     console.error('📤 Calling Claude API...');
     
     const response = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001', // FASTEST model
-      max_tokens: 2200, // Shorter response = faster + less truncation
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 2200,
       temperature: 1,
       system: [
         {
@@ -411,7 +442,7 @@ ${JSON.stringify(portfolioConfig, null, 2)}`,
       ],
       messages: [{
         role: 'user',
- content: `Matched keywords: ${keywordMatches.critical.join(', ') || 'none'}
+        content: `Matched keywords: ${keywordMatches.critical.join(', ') || 'none'}
 Base calculated score: ${baseScore}
 
 Job:
@@ -494,7 +525,8 @@ Return valid JSON (max 5 strengths, max 3 gaps):
         atsKeywords: {
           critical: keywordMatches.critical,
           recommended: keywordMatches.recommended,
-          phrasingsToUse: []
+          phrasingsToUse: [],
+          jobKeywords: keywordMatches.jobKeywords
         },
         recommendations: {
           coverLetterFocus: [`Highlight ${keywordMatches.critical[0] || 'skills'}`],
@@ -504,10 +536,8 @@ Return valid JSON (max 5 strengths, max 3 gaps):
         summary: `Keyword match: ${keywordMatches.critical.length} critical skills matched. Base score: ${baseScore}%.`
       };
       
-      // Add shareable link - NOW WITH AWAIT
       fallbackAnalysis.shareableLink = await generateShareableLink(fallbackAnalysis);
       
-      // Log the shareable link prominently
       console.error('\n🔗 ═══════════════════════════════════════════════════════════');
       console.error('🔗 SHAREABLE LINK (FALLBACK):');
       console.error('🔗 ═══════════════════════════════════════════════════════════');
@@ -519,12 +549,13 @@ Return valid JSON (max 5 strengths, max 3 gaps):
 
     console.error(`⏱️  JSON parsing: ${Date.now() - parseStart}ms`);
 
-    // Step 6: Merge keywords
+    // Step 6: Merge keywords and add jobKeywords
     if (!parsed.atsKeywords) {
       parsed.atsKeywords = {
         critical: keywordMatches.critical,
         recommended: keywordMatches.recommended,
-        phrasingsToUse: []
+        phrasingsToUse: [],
+        jobKeywords: keywordMatches.jobKeywords
       };
     } else {
       parsed.atsKeywords.critical = [...new Set([
@@ -536,6 +567,9 @@ Return valid JSON (max 5 strengths, max 3 gaps):
         ...keywordMatches.recommended,
         ...(parsed.atsKeywords.recommended || [])
       ])];
+      
+      // Add job keywords
+      parsed.atsKeywords.jobKeywords = keywordMatches.jobKeywords;
     }
 
     // Step 7: Apply score modifiers based on gaps
@@ -552,20 +586,22 @@ Return valid JSON (max 5 strengths, max 3 gaps):
     if (!Array.isArray(parsed.strengths)) parsed.strengths = [];
     if (!Array.isArray(parsed.gaps)) parsed.gaps = [];
     if (!parsed.summary) parsed.summary = 'Analysis complete';
-if (parsed.recommendations?.projectsToFeature && Array.isArray(parsed.recommendations.projectsToFeature)) {
-  const projectNames = parsed.recommendations.projectsToFeature as unknown as string[];
-  if (projectNames.length > 0) {
-    parsed.recommendations.projectsToFeature = enrichProjectsWithLinks(projectNames);
-  }
-}
-    // Step 8: Generate shareable link - NOW WITH AWAIT
+    
+    if (parsed.recommendations?.projectsToFeature && Array.isArray(parsed.recommendations.projectsToFeature)) {
+      const projectNames = parsed.recommendations.projectsToFeature as unknown as string[];
+      if (projectNames.length > 0) {
+        parsed.recommendations.projectsToFeature = enrichProjectsWithLinks(projectNames);
+      }
+    }
+
+    // Step 8: Generate shareable link
     parsed.shareableLink = await generateShareableLink(parsed);
 
     const totalTime = Date.now() - totalStart;
     console.error(`✅ COMPLETE: ${totalTime}ms`);
     console.error(`   Match: ${parsed.matchScore}%, Strengths: ${parsed.strengths.length}, Gaps: ${parsed.gaps.length}`);
+    console.error(`   Job Keywords: ${keywordMatches.jobKeywords.length}`);
     
-    // Enhanced shareable link logging
     console.error('\n🔗 ═══════════════════════════════════════════════════════════');
     console.error('🔗 SHAREABLE LINK (COPY THIS):');
     console.error('🔗 ═══════════════════════════════════════════════════════════');
@@ -616,7 +652,6 @@ export const analyzeJob = tool({
 
       console.error(`✅ TOOL COMPLETE: ${Date.now() - toolStart}ms`);
       
-      // Log the link one more time at the tool level for visibility
       if (analysis.shareableLink) {
         console.error('\n📎 Final shareable link:');
         console.error(analysis.shareableLink);
@@ -628,7 +663,6 @@ export const analyzeJob = tool({
     } catch (error) {
       console.error('❌ Tool error:', error instanceof Error ? error.message : 'Unknown');
       
-      // Return graceful error
       return {
         matchScore: 0,
         strengths: [],

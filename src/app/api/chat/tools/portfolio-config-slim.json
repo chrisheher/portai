@@ -8,14 +8,12 @@
 
   "categoryMappings": {
     "GTM Launch": {
-      "keywords": ["gtm", "go-to-market", "product launch", "launch strategy", "product release"],
       "links": [
         {"name": "See Slow Faster", "url": "/?show=sentry-performance"},
         {"name": "Safety AI", "url": "/?show=safety-ai"}
       ]
     },
     "Technical Writing": {
-      "keywords": ["technical writing", "api documentation", "technical content", "open source", "developer documentation", "api"],
       "links": [
         {"name": "Dogfooding Chronicles", "url": "/?show=dogfooding"},
         {"name": "Tech Content", "url": "/?show=tech-content"},
@@ -23,51 +21,43 @@
       ]
     },
     "Developer Content": {
-      "keywords": ["developer", "open source", "sdk","devrel", "developer relations", "engineering blog", "dev tools"],
       "links": [
         {"name": "Sentry Performance", "url": "/?show=sentry-performance"},
         {"name": "Dogfooding", "url": "/?show=dogfooding"}
       ]
     },
     "Brand Voice": {
-      "keywords": ["brand voice", "tone", "brand identity", "messaging", "brand guidelines"],
       "links": [
         {"name": "Cincoro", "url": "/?show=cincoro"},
         {"name": "Sentry Product Pages", "url": "/?show=sentry-pages"}
       ]
     },
     "Thought Leadership": {
-      "keywords": ["thought leadership", "white paper", "whitepaper", "industry insights", "byline"],
       "links": [
         {"name": "HP Presence", "url": "/?show=hp-presence"}
       ]
     },
     "Fintech": {
-      "keywords": ["fintech", "financial", "banking", "trading", "finance", "payments"],
       "links": []
     },
     "Employer Brand": {
-      "keywords": ["employer brand", "careers", "hr technology", "recruiting", "talent", "EVP", "culture"],
       "links": [
         {"name": "Airbnb Careers", "url": "/?show=airbnb"}
       ]
     },
     "SaaS / B2B": {
-      "keywords": ["saas", "b2b", "enterprise", "software"],
       "links": [
         {"name": "Safety AI", "url": "/?show=safety-ai"},
         {"name": "Sentry", "url": "/?show=sentry-performance"}
       ]
     },
     "AI / ML": {
-      "keywords": ["ai", "artificial intelligence", "machine learning", "ml", "automation"],
       "links": [
         {"name": "Safety AI", "url": "/?show=safety-ai"},
         {"name": "Ground Robotics", "url": "/?show=robotics"}
       ]
     },
     "Content Strategy": {
-      "keywords": ["content strategy", "editorial", "content calendar", "content ops", "structured content"],
       "links": [
         {"name": "See Slow Faster", "url": "/?show=sentry-performance"},
         {"name": "Dogfooding Chronicles", "url": "/?show=dogfooding"}
@@ -75,83 +65,37 @@
     }
   },
 
-"ATSKeywords": {
-  "core": [
-    "Content Strategy",
-    "Technical Writing",
-    "Developer Relations",
-    "GTM Content",
-    "Brand Messaging",
-    "Conversational Design",
-    "Copywriting",
-    "Long-form",
-    "Content Marketing",
-    "Product Marketing",
-    "GTM",
-    "Go-to-market",
-    "Messaging",
-    "Positioning",
-    "Brand Storytelling",
-    "Editorial Strategy",
-    "Thought Leadership",
-    "Audience Development",
-    "Integrated Marketing",
-    "Competitive Analysis",
-    "Brand Voice",
-    "Content Operations",
-    "B2B SaaS Content",
-    "Blog Writing",
-    "Demand Generation",
-    "Sales Enablement"
-  ],
-  "marketing": [
-    "Pipeline",
-    "Campaign",
-    "Launch",
-    "Brand",
-    "Social Media",
-    "UX",
-    "Lead Generation",
-    "Conversion",
-    "Leads",
-    "Inbound"
-  ],
-  "technical": [
-    "AI/ML Marketing",
-    "SaaS Content",
-    "API Documentation",
-    "Open Source",
-    "Product Marketing",
-    "API",
-    "SDK",
-    "Developer",
-    "AI",
-    "ML",
-    "CMS",
-    "Cloud",
-    "DevOps",
-    "Engineering",
-    "Code",
-    "Software",
-    "Technical",
-    "SaaS"
-  ],
-  "soft": [
-    "Team Leadership",
-    "Stakeholder Management",
-    "Communication",
-    "Strategic Thinking",
-    "Leadership",
-    "Collaboration",
-    "Stakeholder",
-    "Cross-functional",
-    "Strategic",
-    "Storytelling"
-  ]
-},
+  "ATSKeywords": {
+    "core": [
+      "Content Strategy", "Technical Writing", "Developer Relations",
+      "GTM", "Go-to-market", "Product Launch", "Launch Strategy",
+      "Brand Messaging", "Brand Voice", "Messaging", "Positioning",
+      "Copywriting", "Long-form", "Content Marketing", "Product Marketing",
+      "Editorial Strategy", "Thought Leadership", "Content Operations",
+      "Demand Generation", "Sales Enablement", "Competitive Analysis"
+    ],
+    "marketing": [
+      "Pipeline", "Campaign", "Launch", "Brand", "Social Media",
+      "Lead Generation", "Leads", "Inbound", "Conversion", "UX"
+    ],
+    "technical": [
+      "API", "SDK", "Developer", "Technical", "SaaS", "B2B", "Enterprise",
+      "AI", "ML", "Artificial Intelligence", "Machine Learning",
+      "DevOps", "Cloud", "Engineering", "Software", "Open Source",
+      "API Documentation", "Documentation"
+    ],
+    "soft": [
+      "Leadership", "Communication", "Collaboration", "Strategic",
+      "Cross-functional", "Stakeholder", "Storytelling"
+    ],
+    "industry": [
+      "Fintech", "Financial", "Banking", "Payments",
+      "Healthcare", "HR Technology", "Recruiting"
+    ]
+  },
 
   "unique_strengths": [
-    "Transforms technical jargon into compelling narratives (See Slow Faster, Your AI In the Sky)",
+    "Transforms technical jargon into compelling narratives",
     "8+ years experience in developer tools and enterprise SaaS",
     "Proven track record of pipeline influence (8-11% across roles)",
     "Bridges gap between technical teams and business stakeholders",

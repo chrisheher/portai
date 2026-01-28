@@ -972,7 +972,7 @@ maxWidth: '100%',
             zIndex: '601',
             maxHeight: '85vh',
             padding: '10px 0px 0px 220px',
-           
+      
             color: '#3e2e20ff',
             borderRadius: '10px',
             fontSize: '20px',
