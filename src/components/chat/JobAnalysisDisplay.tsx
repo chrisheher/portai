@@ -95,8 +95,7 @@ const getLinksForCategory = (category: string) => {
     <div style={{
             background: 'white',
       borderRadius: '10px',
-     margin: '75px 0px 0px 80px',
-  width: '85%',
+    
       height: '100%'
     }}>
       {/* Match Score Header */}
