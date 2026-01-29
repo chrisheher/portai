@@ -216,10 +216,10 @@ function calculateMatchScore(
   jobContent: string
 ): number {
   const weights = {
-    coreSkills: 0.55,
+    coreSkills: 0.5,
     marketingSkills: 0.2,
     industryFit: 0.1,
-    technicalFluency: 0.1,
+    technicalFluency: 0.15,
     softSkills: 0.05
   };
 
@@ -233,11 +233,11 @@ function calculateMatchScore(
   
   // 1. Core Skills Score (0-100)
   const coreMatches = coreSkillsNeeded.filter((skill: string) => jobLower.includes(skill)).length;
-  const coreScore = Math.min((coreMatches / 5) * 100, 100);
+  const coreScore = Math.min((coreMatches / 2) * 100, 100);
 
   // 2. Marketing Skills Score (0-100)
   const marketingMatches = marketingSkills.filter((skill: string) => jobLower.includes(skill)).length;
-  const marketingScore = Math.min((marketingMatches / 4) * 100, 100);
+  const marketingScore = Math.min((marketingMatches / 2) * 100, 100);
 
   // 3. Industry Fit (0-100)
   let industryScore = 50;
@@ -250,7 +250,7 @@ function calculateMatchScore(
 
   // 4. Technical Fluency (0-100)
   const techMatches = techTerms.filter((term: string) => jobLower.includes(term)).length;
-  const techScore = Math.min((techMatches / 4) * 100, 100);
+  const techScore = Math.min((techMatches / 2) * 100, 100);
 
   // 5. Soft Skills Score (0-100)
   const softMatches = softSkills.filter((skill: string) => jobLower.includes(skill)).length;
@@ -304,7 +304,7 @@ function applyScoreModifiers(
   score -= criticalGaps * 12;
   
   const moderateGaps = gaps.filter(g => g.severity === 'moderate').length;
-  score -= moderateGaps * 3;
+  score -= moderateGaps * 2;
   
   // Bonuses for desirable attributes
   const jobLower = jobContent.toLowerCase();

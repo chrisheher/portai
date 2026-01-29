@@ -8,7 +8,7 @@
 
   "categoryMappings": {
     "GTM Launch": {
-      "keywords": ["gtm", "go-to-market", "B2B SaaS content", "product launch", "launch strategy", "product release"],
+      "keywords": ["gtm", "go-to-market", "B2B SaaS content", "product launch","pipeline", "launch strategy", "product release"],
       "links": [
         {"name": "See Slow Faster", "url": "/?show=sentry-performance"},
         {"name": "Safety AI", "url": "/?show=safety-ai"}
@@ -79,7 +79,7 @@
       ]
     },
     "Content Strategy": {
-      "keywords": ["content strategy", "editorial", "content calendar", "content ops"],
+      "keywords": ["content strategy", "editorial", "content marketing", "leadership", "collaboration", "content calendar", "content ops"],
       "links": [
         {"name": "DroneDeploy Product pages", "url": "/?show=dd-pages"},
         {"name": "Dogfooding Chronicles", "url": "/?show=sentry-dogfooding"}
@@ -90,25 +90,29 @@
   "ATSKeywords": {
     "core": [
       "Content Strategy",
+      "Copywriting",
       "Technical Writing",
       "Developer Relations",
       "GTM Content",
       "Brand Messaging",
-      "Conversational Design"
+      "Sales enablement"
     ],
     "technical": [
-      "AI/ML Marketing",
-      "SaaS Content",
+      "AI",
+      "Machine learning",
       "API Documentation",
       "Product Marketing"
     ],
-    "languages": [
-      "Python",
-      "JavaScript",
-      "Next.js",
-      "React",
-      "TypeScript",
-      "Tailwind CSS"
+    "marketing": [
+      "pipeline",
+      "strategic",
+      "Brand",
+      "launch",
+      "social media"
+    ],
+     "industry": [
+      "SaaS B2B",
+      "automotive"
     ],
     "soft": [
       "Team Leadership",

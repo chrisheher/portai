@@ -84,32 +84,30 @@
 
   "ATSKeywords": {
     "core": [
-      "Content Strategy",
-      "Technical Writing",
-      "Developer Relations",
-      "GTM Content",
-      "Brand Messaging",
-      "Conversational Design"
+      "Content Strategy", "Technical Writing", "Developer Relations",
+      "GTM", "Go-to-market", "Product Launch", "Launch Strategy",
+      "Brand Messaging", "Brand Voice", "Messaging", "Positioning",
+      "Copywriting", "Long-form", "Content Marketing", "Product Marketing",
+      "Editorial Strategy", "Thought Leadership", "Content Operations",
+      "Demand Generation", "Sales Enablement", "Competitive Analysis"
+    ],
+    "marketing": [
+      "Pipeline", "Campaign", "Launch", "Brand", "Social Media",
+      "Lead Generation", "Leads", "Inbound", "Conversion", "UX"
     ],
     "technical": [
-      "AI/ML Marketing",
-      "SaaS Content",
-      "API Documentation",
-      "Product Marketing"
-    ],
-    "languages": [
-      "Python",
-      "JavaScript",
-      "Next.js",
-      "React",
-      "TypeScript",
-      "Tailwind CSS"
+      "API", "SDK", "Developer", "Technical", "SaaS", "B2B", "Enterprise",
+      "AI", "ML", "Artificial Intelligence", "Machine Learning",
+      "DevOps", "Cloud", "Engineering", "Software", "Open Source",
+      "API Documentation", "Documentation"
     ],
     "soft": [
-      "Team Leadership",
-      "Stakeholder Management",
-      "Communication",
-      "Strategic Thinking"
+      "Leadership", "Communication", "Collaboration", "Strategic",
+      "Cross-functional", "Stakeholder", "Storytelling"
+    ],
+    "industry": [
+      "Fintech", "Financial", "Banking", "Payments",
+      "Healthcare", "HR Technology", "Recruiting"
     ]
   },
 

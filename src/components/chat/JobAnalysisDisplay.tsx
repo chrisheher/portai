@@ -93,25 +93,25 @@ const getLinksForCategory = (category: string) => {
 
   return (
     <div style={{
-           background: '#6C6C6C00)',
+            background: 'white',
       borderRadius: '10px',
       marginTop: '.1rem',
       height: '100%'
     }}>
       {/* Match Score Header */}
       <div style={{
-        background: 'rgb(220, 211, 195)',
-        padding: '2rem',
+  
+        padding: '1rem',
         borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap',    boxShadow:' inset rgba(130, 130, 130, 0.5) 2px 2px 16px 3px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px'}}>
+        <div className='rounded' style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap',  background: 'rgb(220 211 195 / 16%)',  boxShadow:' inset rgba(130, 130, 130, 0.5) 2px 2px 16px 3px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px'}}>
           <div style={{
             width: '85px',
             marginLeft: '20px',
             height: '85px',
               boxShadow: 'rgba(130, 130, 130, 0.5) 20px 13px 5px 0px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
             borderRadius: '50%',
-          background: '#6C6C6C00',
+          background: 'rgba(255, 255, 255, 1)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -121,29 +121,64 @@ const getLinksForCategory = (category: string) => {
             <div style={{ fontSize: '2rem', fontWeight: '700', color: scoreColors.text }}>
               {data.matchScore}%
             </div>
-            <div style={{ fontSize: '0.7rem', color: '#rgba(3, 3, 3, 1)', textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '0.7rem', color: '#rgba(255, 255, 255, 1)', textTransform: 'uppercase' }}>
               Match
             </div>
           </div>
           <div style={{ flex: 1, minWidth: '250px' }}>
-            <p style={{ margin: '25px 0px 25px 0px', color: '#rgb(94, 70, 49)', fontSize: '1rem', lineHeight: '1.6' }}>
+            <p style={{ margin: '25px 0px 25px 0px', padding:'0px 25px 0px 25px',color: '#rgb(94, 70, 49)', fontSize: '1rem', lineHeight: '1.6' }}>
               {data.summary}
             </p>
           </div>
         </div>
       </div>
+   <div style={{ padding: '1rem', }}>
+       <h3 className="text-xl font-semibold  ">
+     ATS Keywords Match
+    </h3>
+         {/* Job Description Keywords */}
+{data.atsKeywords?.jobKeywords && data.atsKeywords.jobKeywords.length > 0 && (
+  <div className="mt-2 p-4 rounded-lg border bg-white/90 " style={{ padding: '2rem', background: 'rgb(220 211 195 / 16%)',boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px'
+ }}>
 
-        <div style={{ padding: '2rem', background: 'rgb(220, 211, 195)' }}>
+   
+    <div className="flex flex-wrap">
+      {data.atsKeywords.jobKeywords.map((keyword: string, i: number) => {
+        // Check if this keyword is also in critical (matched)
+        const isMatched = data.atsKeywords?.critical?.some(
+          (c: string) => c.toLowerCase() === keyword.toLowerCase()
+        );
+        
+        return (
+          <span
+            key={i}
+            className={`px-1 py-1 m-1 rounded text-m font-medium ${
+              isMatched 
+                ? 'bg-green-100 text-green-800 border border-green-300' 
+                : 'bg-gray-100 text-gray-700 border border-gray-300'
+            }`}
+          >
+            {keyword}
+            {isMatched && <span className="ml-3">✓</span>}
+          </span>
+        );
+      })}
+    </div>
+   
+  </div>
+  
+)}
+  </div>      <div style={{ padding: '1rem'}}>
         {/* Strengths Section */}
         <div style={{ marginBottom: '2rem' }}>
           <h4 style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
-            margin: '0 0 1rem 0',
+            margin: '0 0 0rem 0',
             fontSize: '1.5rem',
             fontWeight: '900',
-            color: 'rgb(94, 70, 49)',
+            color: 'rgba(5, 5, 4, 1)',
           }}>
   Strengths
           </h4>
@@ -182,10 +217,10 @@ const getLinksForCategory = (category: string) => {
       </div>
       
       <div style={{ 
-        fontSize: '1rem', 
+        fontSize: '1.1rem', 
         color: '#382311ff',
            paddingLeft: '.8rem',
-                    borderLeft: '7px solid rgba(17, 128, 30, 0.79)',
+                    borderLeft: '5px solid rgba(17, 128, 30, 0.79)',
           lineHeight: '1.5'          
       }}>
         {strength.evidence}
@@ -216,7 +251,7 @@ const getLinksForCategory = (category: string) => {
                 fontSize: '1.1rem',
                 fontWeight: '800',
                 boxShadow: '5px 3px 5px rgba(10, 10, 10, .8)',
-                background: 'rgb(220, 211, 195)',
+                background: 'rgb(64 52 31 / 22%)',
                 color: '#0f100fff',
                 textDecoration: 'none',
                 transition: 'all 0.2s ease',
@@ -233,39 +268,7 @@ const getLinksForCategory = (category: string) => {
   );
 })}
           </div>
-          {/* Job Description Keywords */}
-{data.atsKeywords?.jobKeywords && data.atsKeywords.jobKeywords.length > 0 && (
-  <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-    <h3 className="text-sm font-semibold text-blue-800 mb-2">
-      Keywords Found in Job Description
-    </h3>
-    <div className="flex flex-wrap gap-2">
-      {data.atsKeywords.jobKeywords.map((keyword: string, i: number) => {
-        // Check if this keyword is also in critical (matched)
-        const isMatched = data.atsKeywords?.critical?.some(
-          (c: string) => c.toLowerCase() === keyword.toLowerCase()
-        );
-        
-        return (
-          <span
-            key={i}
-            className={`px-2 py-1 rounded text-xs font-medium ${
-              isMatched 
-                ? 'bg-green-100 text-green-800 border border-green-300' 
-                : 'bg-gray-100 text-gray-700 border border-gray-300'
-            }`}
-          >
-            {keyword}
-            {isMatched && <span className="ml-1">✓</span>}
-          </span>
-        );
-      })}
-    </div>
-    <p className="text-xs text-blue-600 mt-2">
-      ✓ = Matches your portfolio keywords
-    </p>
-  </div>
-)}
+ 
         </div>
 
         {/* Gaps Section */}
@@ -275,10 +278,10 @@ const getLinksForCategory = (category: string) => {
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
-            margin: '0 0 1rem 0',
+            margin: '0 0 .3rem 0',
             fontSize: '1.5rem',
             fontWeight: '900',
-            color: 'rgb(94, 70, 49)',
+            color: 'rgba(6, 5, 5, 1)',
           }}>
   Gaps
           </h4>
@@ -324,7 +327,7 @@ const getLinksForCategory = (category: string) => {
                     </span>
                   </div>
                   <div style={{ 
-                    fontSize: '0.9rem', 
+                    fontSize: '1rem', 
                     color: 'rgba(21, 18, 18, 1)',
                     paddingLeft: '1rem',
                     borderLeft: '3px solid rgba(24, 23, 22, 0.3)',
@@ -432,7 +435,7 @@ const getLinksForCategory = (category: string) => {
           </div>
         )}
 
-        {/* ATS Keywords */}
+        {/* ATS Keywords 
         {data.atsKeywords && (data.atsKeywords.critical.length > 0 || data.atsKeywords.recommended.length > 0) && (
           <div style={{ marginBottom: '2rem'}}>
             <h4 style={{
