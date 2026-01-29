@@ -27,8 +27,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://onlychr.is",
-    title: "Chris Heher - Full-stack Developer Portfolio",
-    description: "Portfolio showcasing conversational design.",
+    title: "Chris Heher",
+    description: "content | brand | strategy",
     siteName: "Chris Heher Portfolio",
   },
 };
