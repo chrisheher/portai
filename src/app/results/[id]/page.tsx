@@ -90,6 +90,8 @@ export default async function ResultsPage({ params }: PageProps) {
       background: 'white',
       borderRadius: '10px',
       marginTop: '.1rem',
+      fontFamily: 'kcgangster',
+      width: '85%',
       height: '100%'
     }}>
       {/* Match Score Header */}
