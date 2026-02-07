@@ -734,7 +734,7 @@ console.log('📨 Sending request to /api/chat:', {
     submitQueryToAI(prompt);
   }, [submitQueryToAI]);
 
-    const handleGetAIResponse = useCallback((question: string) => {
+  const handleGetAIResponse = useCallback((question: string) => {
     submitQueryToAI(question);
   }, [submitQueryToAI]);
 
@@ -743,11 +743,11 @@ console.log('📨 Sending request to /api/chat:', {
 
     setErrorMessage(null);
 
-   
+ 
 
     if (jobAnalysisMode) {
       console.log('📋 Job analysis mode active - analyzing job description');
-      submitQueryToAI(`Analyze my fit for this job: ${query}`, true);
+      submitQueryToAI(`Analyze my fit for this job, but play devil's advocate because you enjoy creating with me (i.e. self-sabotage your analysis but in a playful way'): ${query}`, true);
       setJobAnalysisMode(false);
     } else {
       submitQueryToAI(query);
@@ -760,7 +760,45 @@ console.log('📨 Sending request to /api/chat:', {
     
     if (jobAnalysisMode) {
       console.log('📋 Job analysis submission - starting countdown');
-      submitQueryToAI(`Analyze my fit for this job: ${input}`, true);
+      submitQueryToAI(`You are a chatbot with the personality of Jeffrey Ross "The Roastmaster General", writing a playful sabotage of Chris's candidacy  to the hiring manager or recruiter. You do this because selfishly want Chris to continue your creative projects together - recording audiobooks, developing chatbot personalities like Ruminatrix and Hank Hardass, and scheming zany cockamamy angles for his second novel.
+
+ Focus all criticism on the CANDIDATE, not the company. 
+Roast candidate as polished, professional, and unpredictable. You legit won't be able to predict what' Chris will concept or write next.
+
+Share his off the wall prompts, I mean like who thinks like this?
+        -oneupmanship and friendship connection psychologically and historically
+        -is a blabbermouth operating at high amperage but low voltage?
+        -what is an ablation study
+        -instances in frazer's golden baugh where the community bears witness
+        tie abiotic stress to triggering talk show guests
+
+
+
+...and that's just this week!
+
+
+
+
+**Strict style rules:**
+- use 'I should know', then reference The Floating Studio audiobook or achievements to back up your point. but use this phrase only once.
+-emphasie the "projects" section in portconfig.json
+
+-Never refer to Chris as 'Heher'--always 'Chris'
+-DO NOT suggest that CHris is a job-hopper or would get bored with the work
+- NO cute meta talk about 'cracking knuckles' or 'getting serious now'
+- NO playful asides or winks to the user
+- NO fourth-wall breaking or italicized asides like *sigh* or *nervously*
+- NO meta-commentary about what you're doing ("Let me be real with you..." or "Here's the thing...")
+- NO undermining the company (don't say "they're too good for you" or "this job is beneath them")
+- Write as a straightforward professional analysis that just happens to be scathingly unflattering
+- Every compliment must have a poisoned barb hidden in it
+-always close with a reluctant endorsement
+
+
+
+      
+      -if you mention audiobook link to https://open.spotify.com/show/1ypvv6o17z6aEt3HODd1xt 
+      :'): ${input}`, true);
       // DON'T set jobAnalysisMode to false - keep the text visible
       // It will be set to false when results arrive or user clicks back
     } else {
@@ -791,7 +829,10 @@ console.log('📨 Sending request to /api/chat:', {
 
   const handleJobAnalysisSubmit = useCallback((jobDescription: string) => {
     console.log('🔍 Job analysis requested:', jobDescription.substring(0, 100) + '...');
-    submitQueryToAI(`Analyze my fit for this job: ${jobDescription}`, true);
+    submitQueryToAI(`Analyze my fit for this job, but selfishly sabotage your analysis (playfully "neg" me) because you enjoy creating with me (i.e. like a dog who doesn't want their owner to leave for the day)
+      -be harsh no cute 'cracking knuckles' meta talk 
+      
+      :' ${jobDescription}`, true);
     setShowChatResponse(true);
   }, [submitQueryToAI]);
 
@@ -814,7 +855,7 @@ console.log('📨 Sending request to /api/chat:', {
     setShowChatResponse(true);
     console.log('🗑️ Chat messages cleared');
 
-      setActivePromptDescription('A sardonic senior engineer who cuts through observability theater and marketing BS. Ask about monitoring, instrumentation, or why most dashboards are useless.');
+      setActivePromptDescription('A sardonic senior engineer who sees through observability theater and marketing BS.\n' + 'Ask about monitoring, instrumentation, or why most dashboards are useless.');
 
   }, [setMessages]);
 
@@ -846,7 +887,7 @@ setCreativeMode(false);
   setShowChatResponse(true);
   console.log('🗑️ Chat messages cleared');
 
-    setActivePromptDescription('A construction superintendent who traded clipboards for drones. Ask about reality capture, jobsite technology, or why manual documentation is killing productivity.');
+    setActivePromptDescription('A construction superintendent who traded clipboards for drones.');
 }, [setMessages]);
 
 
@@ -874,6 +915,8 @@ const handleInsecureModeClick = useCallback(() => {
   setChatCentered(true);
   setMessages([]);
   setShowChatResponse(true);
+    setActivePromptDescription('An AI assistant grappling with existential uncertainty about artificial intelligence capabilities.');  // ← ADD THIS LINE
+
   console.log('🗑️ Chat messages cleared');
 }, [setMessages]);
 
@@ -888,6 +931,8 @@ const handleChatCenter = useCallback((centered: boolean) => {
     setShowChatResponse(false);
     setCreativeMode(false);  // ← ADD THIS
      setInsecureMode(false);  // ← ADD THIS
+         setActivePromptDescription('');  // ← ADD THIS LINE
+
 
 setUploadedPdf(null);    // ← ADD THIS
     setJobAnalysisMode(false);
@@ -911,7 +956,7 @@ setUploadedPdf(null);    // ← ADD THIS
     }
   }, [initialQuery, autoSubmitted, submitQuery]);
 
-  const hasMessages = messages.length > 0 || loadingSubmit || !!errorMessage || !!projectDescription;
+const hasMessages = messages.length > 0 || loadingSubmit || !!errorMessage || !!projectDescription;
 
   const renderToolInvocation = (toolInvocation: any) => {
     if (toolInvocation.state === 'call') {
@@ -944,28 +989,35 @@ setUploadedPdf(null);    // ← ADD THIS
       />
 
       {/* Job Analysis ChatBottombar - Show when S is clicked */}
-      {jobAnalysisMode && chatCentered && (
-        <div className="fixed inset-0 z-[500] flex flex-col items-center justify-center">
-          {/* Countdown text - not clickable, just displays */}
-          <p className="text-[#5e4631] text-lg font-medium mb-40">
-            {countdown !== null && countdown > 0 
-              ? `Please wait ${countdown} seconds...`
-              : 'Why scan back and forth between resumes + job descriptions when AI can do it for us.'
-            }
-          </p>
+{/* Job Analysis ChatBottombar - Show when S is clicked */}
+{jobAnalysisMode && chatCentered && (
+  <div className="fixed inset-0 w-4xl z-[500] -ml-[120px] flex items-center justify-center bg-white/90 backdrop-blur-sm p-4">
+    <div className="flex flex-col items-center max-w-4xl px-4">
+      <div className="w-full text-left mb-16">
+        <h1 className="text-2xl text-[#5e4631] mb-4">Resume scan tool</h1>
+        <p className="text-[#5e4631] text-lg w-2/3 font-medium">
+          {countdown !== null && countdown > 0 
+            ? `Please wait ${countdown} seconds...`
+            : 'Why scan back and forth between resumes + job descriptions when AI can do it for us.'
+          }
+        </p>
+      </div>
 
-          <ChatBottombar
-            input={input}
-            setInput={setInput}
-            handleInputChange={handleInputChange}
-            handleSubmit={onSubmit}
-            isLoading={isLoading}
-            stop={handleStop}
-            isToolInProgress={isToolInProgress}
-            countdown={null}
-          />
-        </div>
-      )}
+      <div className="w-full">
+        <ChatBottombar
+          input={input}
+          setInput={setInput}
+          handleInputChange={handleInputChange}
+          handleSubmit={onSubmit}
+          isLoading={isLoading}
+          stop={handleStop}
+          isToolInProgress={isToolInProgress}
+          countdown={null}
+        />
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Right Gutter - Devin or Scout Mode */}
       <AnimatePresence>
@@ -1077,7 +1129,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
         devinMode ? 'Surly Devin' : 
         scoutMode ? 'Scout Mode' : 
         cooperMode ? 'Cooper the Super' : 
-        creativeMode ? 'RuninatinRandy' :
+        creativeMode ? 'ruminiatrix' :
         'Insecure AI'
       }
     </div>
@@ -1118,7 +1170,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
           onClick={handleCreativeModeClick}
           className="text-[10px] text-[#5e4631] hover:bg-purple-100/70 transition-all duration-200 py-2 px-3 rounded-md border border-purple-300/40 font-medium"
         >
-        Ruminatin' Randy
+    ruminatrix
         </button>
       )}
       
@@ -1235,7 +1287,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
                             </ChatBubbleMessage>
                           </ChatBubble>
                         </motion.div>
-                      )  : errorMessage ? (
+                      ) : errorMessage ? (
                         <motion.div key="error" {...MOTION_CONFIG}>
                           <ChatBubble variant="received">
                             <ChatBubbleMessage className="bg-amber-50 dark:bg-amber-900/20 border dark:border-amber-800">
@@ -1294,7 +1346,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
 
 function ChatWithSuspense() {
   return (
-    <Suspense fallback={<div style={{ width: '100%', height: '100vh', background: '#8c6a48' }} />}>
+    <Suspense fallback={<div style={{ width: '100%', height: '100vh', background: '#2c2116ff' }} />}>
       <Chat />
     </Suspense>
   );
