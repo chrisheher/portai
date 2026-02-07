@@ -612,7 +612,6 @@ useEffect(() => {
           title: link.name,
           url: link.url,
           type: 'link' as const,
-          description: campaign.description,
           campaignListDescription: campaign.campaignListDescription,
           impact: campaign.impact,
           campaignTitle: campaign.title
