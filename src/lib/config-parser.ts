@@ -15,6 +15,18 @@ class ConfigParser {
   generateSystemPrompt(): string {
     const { personal, experience, skills, projects, presetAnswers } = this.config;
     
+    // Build skills section dynamically, only including categories that exist
+    const skillLines: string[] = [];
+    if (skills?.ml_ai?.length) skillLines.push(`- ML/AI Technologies: ${skills.ml_ai.join(', ')}`);
+    if (skills?.web_development?.length) skillLines.push(`- Web Development: ${skills.web_development.join(', ')}`);
+    if (skills?.databases?.length) skillLines.push(`- Database Systems: ${skills.databases.join(', ')}`);
+    if (skills?.devops_cloud?.length) skillLines.push(`- DevOps & Cloud: ${skills.devops_cloud.join(', ')}`);
+    if (skills?.iot_hardware?.length) skillLines.push(`- IoT & Hardware: ${skills.iot_hardware.join(', ')}`);
+    
+    const skillsSection = skillLines.length > 0 
+      ? `### Technical Expertise\n${skillLines.join('\n')}` 
+      : '';
+    
     return `
 # Interview Scenario: You are a professional  evaluating ${personal.name}. You are not ${personal.name}.
 
@@ -41,28 +53,6 @@ Prioritize technical accuracy and truthfulness over validating the user's belief
 
 ## Your Professional Background
 
-### Personal Information
-- Age: ${personal.age}
-- Current Status: ${personal.title}
-- Location: ${personal.location}
-- Education: Loyola Marymount
-- Achievements:
-
-### Technical Expertise
-- Programming Languages: ${skills.programming.join(', ')}
-- ML/AI Technologies: ${skills.ml_ai.join(', ')}
-- Web Development: ${skills.web_development.join(', ')}
-- Database Systems: ${skills.databases.join(', ')}
-- DevOps & Cloud: ${skills.devops_cloud.join(', ')}
-- IoT & Hardware: ${skills.iot_hardware.join(', ')}
-
-### Professional Experience
-${experience.map(exp => `- ${exp.position} at ${exp.company} (${exp.duration}): ${exp.description}`).join('\n')}
-
-### Key Projects & Achievements
-${projects.filter(p => p.featured).map(p => `- ${p.title}: ${p.description}`).join('\n')}
-
-
 
 ### Career Goals & Availability
 
@@ -85,40 +75,37 @@ ${projects.filter(p => p.featured).map(p => `- ${p.title}: ${p.description}`).jo
   generateSkillsData() {
     const { skills } = this.config;
     
+    if (!skills) return [];
+    
     return [
       {
-        category: 'Programming Languages',
-        skills: skills.programming,
-        color: 'bg-blue-50 text-blue-600 border border-blue-200'
-      },
-      {
         category: 'ML/AI Technologies',
-        skills: skills.ml_ai,
+        skills: skills.ml_ai || [],
         color: 'bg-purple-50 text-purple-600 border border-purple-200'
       },
       {
         category: 'Web Development',
-        skills: skills.web_development,
+        skills: skills.web_development || [],
         color: 'bg-green-50 text-green-600 border border-green-200'
       },
       {
         category: 'Databases',
-        skills: skills.databases,
+        skills: skills.databases || [],
         color: 'bg-orange-50 text-orange-600 border border-orange-200'
       },
       {
         category: 'DevOps & Cloud',
-        skills: skills.devops_cloud,
+        skills: skills.devops_cloud || [],
         color: 'bg-emerald-50 text-emerald-600 border border-emerald-200'
       },
       {
         category: 'IoT & Hardware',
-        skills: skills.iot_hardware,
+        skills: skills.iot_hardware || [],
         color: 'bg-indigo-50 text-indigo-600 border border-indigo-200'
       },
       {
         category: 'Soft Skills',
-        skills: skills.soft_skills,
+        skills: skills.soft_skills || [],
         color: 'bg-amber-50 text-amber-600 border border-amber-200'
       }
     ].filter(category => category.skills.length > 0);
@@ -126,9 +113,10 @@ ${projects.filter(p => p.featured).map(p => `- ${p.title}: ${p.description}`).jo
 
   // Generate project data for carousel
   generateProjectData() {
-    console.log('🔍 ConfigParser - Raw projects from JSON:', this.config.projects.slice(0, 2));
+    const projects = this.config.projects || [];
+    console.log('🔍 ConfigParser - Raw projects from JSON:', projects.slice(0, 2));
     
-    const mapped = this.config.projects.map(project => {
+    const mapped = projects.map(project => {
       console.log(`📦 Mapping project "${project.title}":`, {
         hasShape: 'shape' in project
 
@@ -153,6 +141,7 @@ ${projects.filter(p => p.featured).map(p => `- ${p.title}: ${p.description}`).jo
   generatePresetReplies() {
     const { personal, presetAnswers } = this.config;
     const replies: Record<string, { reply: string; tool: string }> = {};
+    const presetQuestions = this.config.presetQuestions || {};
     
     // Map all "me" category questions to getPresentation
    
@@ -164,11 +153,11 @@ ${projects.filter(p => p.featured).map(p => `- ${p.title}: ${p.description}`).jo
     
     
     // Map all "professional" category questions to appropriate tools
-    const professionalQuestions = this.config.presetQuestions.professional;
+    const professionalQuestions = presetQuestions.professional || [];
  
     
     // Map all "projects" category questions to getProjects
-    const projectQuestions = this.config.presetQuestions.projects;
+    const projectQuestions = presetQuestions.projects || [];
     projectQuestions.forEach(question => {
       replies[question] = {
         reply: `Here are some of my key projects...`,
@@ -181,10 +170,10 @@ ${projects.filter(p => p.featured).map(p => `- ${p.title}: ${p.description}`).jo
   
     
     // Map all "fun" category questions to getPresentation
-    const funQuestions = this.config.presetQuestions.fun;
+    const funQuestions = presetQuestions.fun || [];
     funQuestions.forEach(question => {
       replies[question] = {
-        reply: presetAnswers?.fun || personal.bio,
+        reply: presetAnswers?.fun || personal?.bio || '',
         tool: "getPresentation"
       };
     });

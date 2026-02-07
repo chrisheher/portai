@@ -10,8 +10,8 @@
     "GTM Launch": {
       "keywords": ["gtm", "go-to-market", "B2B SaaS content", "product launch","pipeline", "launch strategy", "product release"],
       "links": [
-        {"name": "See Slow Faster", "url": "/?show=sentry-performance"},
-        {"name": "Safety AI", "url": "/?show=safety-ai"}
+        {"name": "Sentry See Slow Faster", "url": "/?show=sentry-performance"},
+        {"name": "DroneDeploy Safety AI", "url": "/?show=safety-ai"}
       ]
     },
     "Technical Writing": {
@@ -24,7 +24,7 @@
       ]
     },
     "Developer Content": {
-      "keywords": ["developer", "devrel", "developer relations", "engineering blog", "dev tools"],
+      "keywords": ["developer", "devrel", "open source", "developer relations", "engineering blog", "dev tools"],
       "links": [
         {"name": "Sentry Performance", "url": "/?show=sentry-performance"},
         {"name": "Dogfooding", "url": "/?show=dogfooding"}
@@ -65,7 +65,7 @@
     "SaaS / B2B": {
       "keywords": ["saas", "b2b", "enterprise", "software"],
       "links": [
-        {"name": "Safety AI", "url": "/?show=safety-ai"},
+        {"name": "DroneDeploy Safety AI", "url": "/?show=safety-ai"},
                 {"name": "DroneDeploy Product pages", "url": "/?show=dd-pages"},
                         {"name": "Sentry Product pages", "url": "/?show=sentry-pages"},
         {"name": "Sentry", "url": "/?show=sentry-performance"}
@@ -74,7 +74,7 @@
     "AI / ML": {
       "keywords": ["ai", "artificial intelligence", "machine learning", "ml", "automation"],
       "links": [
-        {"name": "Safety AI", "url": "/?show=safety-ai"},
+        {"name": "DroneDeploy Safety AI", "url": "/?show=safety-ai"},
         {"name": "Ground Robotics", "url": "/?show=robotics"}
       ]
     },

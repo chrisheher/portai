@@ -1,8 +1,6 @@
 // src/components/chat/tool-renderer.tsx
 import AvailabilityCard from '../AvailabilityCard';
 import { Presentation } from '../presentation';
-import Resume from '../resume';
-import Skills from '../skills';
 import { JobAnalysisDisplay } from './JobAnalysisDisplay';
 
 interface ToolRendererProps {
@@ -47,13 +45,7 @@ export default function ToolRenderer({
 
      
 
-          case 'getSkills':
-            return (
-              <div key={toolCallId} className="w-full rounded-lg">
-                <Skills />
-              </div>
-            );
-
+       
    
 
           default:

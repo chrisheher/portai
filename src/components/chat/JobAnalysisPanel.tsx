@@ -12,8 +12,6 @@ import ChatBottombar from '@/components/chat/chat-bottombar';
 import ChatLanding from '@/components/chat/chat-landing';
 import ChatMessageContent from '@/components/chat/chat-message-content';
 import { SimplifiedChatView } from '@/components/chat/simple-chat-view';
-import { PresetReply } from '@/components/chat/preset-reply';
-import { presetReplies } from '@/lib/config-loader';
 import { ChatBubble, ChatBubbleMessage } from '@/components/ui/chat/chat-bubble';
 import HelperBoost from './HelperBoost';
 import { JobAnalysisDisplay } from '@/components/chat/JobAnalysisDisplay';
@@ -45,11 +43,7 @@ const MOTION_CONFIG = {
   transition: { duration: 0.3 },
 };
 
-interface PresetReplyType {
-  question: string;
-  reply: string;
-  tool: string;
-}
+
 
 const Chat: React.FC = () => {
   const searchParams = useSearchParams();
@@ -57,7 +51,6 @@ const Chat: React.FC = () => {
   const [input, setInput] = useState('');
   const [autoSubmitted, setAutoSubmitted] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
-  const [presetReply, setPresetReply] = useState<PresetReplyType | null>(null);
   const [chatCentered, setChatCentered] = useState(false); // ← ADDED
   const [jobAnalysisPanelOpen, setJobAnalysisPanelOpen] = useState(false); // ← ADDED FOR JOB ANALYSIS
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -138,13 +131,9 @@ const isToolInProgress = messages.some(
     setInput(e.target.value);
   };
 
-  const handlePresetReply = (question: string, reply: string, tool: string) => {
-    setPresetReply({ question, reply, tool });
-    setLoadingSubmit(false);
-  };
+
 
   const handleGetAIResponse = (question: string) => {
-    setPresetReply(null);
     submitQueryToAI(question);
   };
 
@@ -153,13 +142,7 @@ const isToolInProgress = messages.some(
 
     setErrorMessage(null);
 
-    if (presetReplies[query]) {
-      const preset = presetReplies[query];
-      setPresetReply({ question: query, reply: preset.reply, tool: preset.tool });
-      setLoadingSubmit(false);
-      return;
-    }
-
+ 
     submitQueryToAI(query);
   };
 
@@ -174,7 +157,6 @@ const isToolInProgress = messages.some(
     if (!query.trim() || isToolInProgress) return;
 
     setLoadingSubmit(true);
-    setPresetReply(null);
 
     fetch('/api/chat', {
       method: 'POST',
@@ -313,7 +295,6 @@ const isToolInProgress = messages.some(
     console.log('  Title:', project.title);
     console.log('  Description:', project.description);
     
-    setPresetReply(null);
     setErrorMessage(null);
     
     setProjectDescription({ title: project.title, description: project.description });
@@ -335,7 +316,7 @@ const isToolInProgress = messages.some(
     }
   }, [initialQuery, autoSubmitted]);
 
-const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!errorMessage || !!projectDescription;
+const hasMessages = messages.length > 0 || loadingSubmit || !!errorMessage || !!projectDescription;
 
   const renderToolInvocation = (toolInvocation: any) => {
     if (toolInvocation.state === 'call') {
@@ -400,16 +381,6 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!e
                           />
                         </ChatBubbleMessage>
                       </ChatBubble>
-                    </motion.div>
-                  ) : presetReply ? (
-                    <motion.div {...MOTION_CONFIG} className="pb-4">
-                      <PresetReply 
-                        question={presetReply.question} 
-                        reply={presetReply.reply} 
-                        tool={presetReply.tool} 
-                        onGetAIResponse={handleGetAIResponse} 
-                        onClose={() => setPresetReply(null)} 
-                      />
                     </motion.div>
                   ) : errorMessage ? (
                     <motion.div key="error" {...MOTION_CONFIG}>

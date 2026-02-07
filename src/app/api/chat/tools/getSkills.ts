@@ -1,31 +1,32 @@
-import { tool } from 'ai';
-import { z } from 'zod';
-import { getConfig } from '@/lib/config-loader';
+// src/app/api/chat/tools/getSkills.ts
+import { portfolioConfig } from '@/lib/config-loader';
 
-export const getSkills = tool({
-  description:
-    'This tool provides a comprehensive overview of technical skills, expertise, and professional qualifications.',
-  inputSchema: z.object({}),  // Changed from 'parameters' to 'inputSchema'
-  execute: async () => {  // Changed from '({})' to '()' since there are no parameters
-    const config = getConfig();
+export const getSkills = {
+  execute: async () => {
+    console.log('🔧 getSkills called');
+    
+    // Extract unique technologies from all projects and experience
+    const techFromProjects = portfolioConfig.projects
+      .flatMap(p => p.techStack || [])
+      .filter(Boolean);
+    
+    const techFromExperience = portfolioConfig.experience
+      .flatMap(exp => exp.technologies || [])
+      .filter(Boolean);
+    
+    const allTech = [...new Set([...techFromProjects, ...techFromExperience])];
+    
+    // Extract topics from experience
+    const topics = portfolioConfig.experience
+      .flatMap(exp => exp.topics || [])
+      .filter(Boolean);
     
     return {
-      technicalSkills: {
-        programming: config.skills.programming,
-        machineLearning: config.skills.ml_ai,
-        webDevelopment: config.skills.web_development,
-        databases: config.skills.databases,
-        devOpsCloud: config.skills.devops_cloud,
-        iotHardware: config.skills.iot_hardware
-      },
-      education: {
-        degree: config.education.current.degree,
-        institution: config.education.current.institution,
-        cgpa: config.education.current.cgpa,
-        duration: config.education.current.duration
-      },
-      achievements: config.education.achievements || [],
-      message: ""
+      technologies: allTech,
+      topics: [...new Set(topics)],
+      categories: Object.keys(portfolioConfig.categoryMappings || {}),
+      strengths: portfolioConfig.unique_strengths,
+      atsKeywords: portfolioConfig.ATSKeywords
     };
-  },
-});
+  }
+};

@@ -8,13 +8,12 @@ import { toast } from 'sonner';
 import { useChat } from '@ai-sdk/react';
 import { BriefcaseIcon, X, ArrowRight } from 'lucide-react';
 import ConfigParser from '@/lib/config-parser';
-import portfolioConfig from '@/components/chat/portfolio-config.json';
+import portfolioConfig from '@/components/chat/portconfig.json';
 
 // Components
 import ChatLanding from '@/components/chat/chat-landing';
 import ChatMessageContent from '@/components/chat/chat-message-content';
 import { SimplifiedChatView } from '@/components/chat/simple-chat-view';
-import { PresetReply } from '@/components/chat/preset-reply';
 import { presetReplies } from '@/lib/config-loader';
 import { ChatBubble, ChatBubbleMessage } from '@/components/ui/chat/chat-bubble';
 import JobAnalysisPopup from '@/components/chat/JobAnalysisPopup';
@@ -41,7 +40,6 @@ CORE PHILOSOPHY:
 - Content reveals what your system actually does vs. what you think it does
 - Most observability is theater—dashboards nobody reads, metrics nobody acts on
 - Good instrumentation is invisible until you need it
-- The map is not the territory, and most marketing content is selling maps
 
 COMMUNICATION STYLE:
 - Open with terse, direct answers (1-2 sentences)
@@ -105,11 +103,7 @@ When relevant to the conversation, reference these resources and provide links a
 
 
 
-interface PresetReplyType {
-  question: string;
-  reply: string;
-  tool: string;
-}
+
 
 function Chat() {
   const searchParams = useSearchParams();
@@ -117,7 +111,6 @@ function Chat() {
   const [input, setInput] = useState('');
   const [autoSubmitted, setAutoSubmitted] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
-  const [presetReply, setPresetReply] = useState<PresetReplyType | null>(null);
   const [chatCentered, setChatCentered] = useState(false);
   const [jobAnalysisPanelOpen, setJobAnalysisPanelOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -139,6 +132,41 @@ const [uploadedPdf, setUploadedPdf] = useState<string | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
   const devinContainerRef = useRef<HTMLDivElement>(null);
 
+
+  // Build Scout prompt dynamically with portfolio data
+// Build Scout prompt dynamically with portfolio data
+const buildScoutPromptWithData = () => {
+  return `${SCOUT_SYSTEM_PROMPT}
+
+# PORTFOLIO DATA FOR CONTEXT
+Use this data to answer questions about Chris's experience and work:
+
+${JSON.stringify(portfolioConfig, null, 2)}
+
+## KEY EXPERIENCE HIGHLIGHTS:
+${portfolioConfig.experience?.map(exp => 
+  `- **${exp.company}** (${exp.position}): ${(exp.description || '').substring(0, 200)}...
+   Impact: ${exp.impact?.join(', ') || 'N/A'}`
+).join('\n') || 'No experience data available'}
+
+## FEATURED PROJECTS:
+${portfolioConfig.projects?.filter(p => p.featured && p.description).map(proj =>
+  `- **${proj.title}**: ${(proj.description || '').substring(0, 150)}...`
+).join('\n') || 'No projects data available'}
+
+## CATEGORIES OF EXPERTISE:
+${Object.keys(portfolioConfig.categoryMappings || {}).join(', ')}
+
+## UNIQUE STRENGTHS:
+${portfolioConfig.unique_strengths?.join('\n- ') || 'N/A'}
+
+When answering "how are you like steve nash?", use this portfolio data to make comparisons:
+- Steve Nash's assists → Chris driving $10M+ pipeline at DroneDeploy, 3x ARR at Sentry
+- Nash's vision → Chris turning jargon into "See Slow Faster", "Your AI In the Sky"
+- Nash's underdog story → Chris's value prop: "${portfolioConfig.personal?.bio || 'I am what AI ain\'t'}"
+- Nash's team-first approach → Chris bridging engineering/product/sales teams
+- Nash's efficiency → Chris's 8-11% pipeline influence across roles`;
+};
   // Countdown timer effect
   useEffect(() => {
     if (countdown !== null && countdown > 0) {
@@ -153,106 +181,63 @@ const [uploadedPdf, setUploadedPdf] = useState<string | null>(null);
   }, [countdown]);
 
 
-const buildScoutPrompt = useCallback(() => {
-  const config = portfolioConfig as any;
-  
-  // SAFE: Experience
-  let experience = 'Experience data not available';
-  if (Array.isArray(config.experience)) {
-    experience = config.experience
-      .map((exp: any) => `- ${exp.title} at ${exp.company} (${exp.startDate} - ${exp.endDate || 'Present'})`)
-      .join('\n');
-  }
-  
-  // SAFE: Skills - handles objects, arrays, or strings
-  let skills = 'Skills data not available';
-  if (config.skills) {
-    if (Array.isArray(config.skills)) {
-      // Array: [{ category: "X", items: [...] }]
-      skills = config.skills
-        .map((skill: any) => `- ${skill.category}: ${skill.items?.join(', ')}`)
-        .join('\n');
-    } else if (typeof config.skills === 'object') {
-      // Object: { "Category": ["item1", "item2"] }
-      skills = Object.entries(config.skills)
-        .map(([category, items]) => 
-          `- ${category}: ${Array.isArray(items) ? items.join(', ') : items}`
-        )
-        .join('\n');
-    }
-  }
-  
-  // SAFE: Projects
-  let projects = 'Projects data not available';
-  if (Array.isArray(config.projects)) {
-    projects = config.projects
-      .slice(0, 5)
-      .map((proj: any) => `- ${proj.title}: ${proj.description || ''}`)
-      .join('\n');
-  }
-  
-  return `
-# Scouting Report: Christopher Heher
+const SCOUT_SYSTEM_PROMPT = `Scouting Report: Christopher Heher
 
-## Professional Background
-### Experience
-${experience}
-
-### Skills
-${skills}
-
-### Notable Projects
-${projects}
-
-## Scout Style
+# Scout Style
 - Curmudgeonly but honest
--Emphasize copywriting and content creation over code and web development
-- Sports analogies (basketball)
 - Three sentences max
 - No marketing jargon
 -Focus on facts over hype.
 -Always refer to me as 'Chris" not 'Heher'
 
+IMPORTANT
+-always reference projects in portfolio 
+
+
 PHRASES:
 -Impressive flashes of metaphorical diversity 
--Can Eurostep his way to the right phrase
--Language handle is the most advanced in the class. Ball is on a string in confined areas displaying great control.
--Cose to the top player in the class when it comes to crafty finishing. Deep bag of metaphors, humor, spins, focalization. -Gets to his strategic spot. 
--Excellent research vision, finds the right reference at the right time
--Tough shot maker. Writes solutionst that satisfy technical and marketers.
--Possesses unique creative vision. Sets teammates up instead of trying to run creative iso
+-Eurosteps his way to the right phrase
+-Advanced language handle. 
+-Keeps strategic ball is on a string in confined areas displaying great control.
+-Crafty finishing. 
+-Deep bag of metaphors. 
+-Gets to his strategic spot. 
+-Excellent technical vision, finds the right reference at the right time
+-Tough thought maker. Writes solutions that satisfy technical experts and marketing professionals.
+-Possesses unique creative vision. 
+-Looks to set teammates up instead of trying to run creative iso plays
 -Built for pressure
 
-<supplementary_knowledge>
-## Blog Posts & Resources
+TYRESE MAXEY SCOUTING REPORT
+Tyrese Maxey is a capable all-around guard who can score in bunches when his jump shot is falling but proved to be a threat from all three levels during his freshman year at Kentucky. Emerging as a top prospect early in his prep career, Maxey helped the United States to a gold medal at the 2018 FIBA U18 Americas Championship and was selected to play in the McDonald's All-American Game, Jordan Brand Classic, and Nike Hoop Summit. Widely regarded as one of the top 10 prospects in the high school class of 2019 following his senior year at South Garland High School (TX), the Dallas native committed to Kentucky to play for Head Coach John Calipari.
 
-### "Luka Doncic"
-https://thestepien.com/luka-doncic/
-
-
-### "Dylan harper"
-https://www.babcockhoops.com/post/2025-nba-draft-dylan-harper-scouting-report
+Having arguably his best game of the season scoring 26 points on opening night in a victory over then top-ranked Michigan State, Maxey finished the year averaging 14 points, 4.3 and 3.1 assists per game to earn All-SEC 2nd Team honors solidifying himself as an x-factor for the top-10-ranked Wildcats.
 
 
-### "Shai"
-https://thestepien.com/shai-gilgeous-alexander/
+
+Versatile guard who has the size, strength and length to play either backcourt position. Only 6-3 but has a strong frame and a near 6-8 wingspan. Has a feel for the game that allows him to contribute in a variety of ways. Played mostly off the ball for Kentucky but showed flashes of basic playmaking operating out of pick-and-roll, including the ability to manipulate a ball screen and get to his spots on the floor.
+Instinctive scorer who excels in transition and shows the ability to put the ball in the basket from all over the floor. Plays at different speeds and has an advanced floater game for his age. Finishes through contact. Confident shot-maker with range and touch.
+Physical player defensively. Uses his strong frame, length and anticipation skills to his advantage. Fearless player with toughness and swagger.
+Projected role: Versatile two-way combo guard
+-- Mike Schmitz
+
+The Ringer (click to read full analysis):
+
+Clever finisher at the rim who can score from awkward angles using the glass and absorb contact to find an angle using either hand.
+Comfortable shooting off the dribble in either direction. He lacks elite burst but he makes rapid movements stopping and transitioning into his shot.
+Good pick-and-roll scorer who can get to the rim or pull up and shoot.
+Excellent on-ball defender with a strong frame and long arms. He plays hard, shifts his feet, and flips his hips to move well laterally and defend pick-and-rolls. He's strong enough to power through screens or defend larger wings.
+Off-ball defense: Stays engaged, rotates well, and anticipates where the ball will be to beat opponents to their spots.
 
 
-### "Lonnie Walker"
-https://thestepien.com/lonnie-walker/
 
+Speedy combo guard with crafty scoring ability and solid length … Excels at creating offense when attacking the basket both on the break and in pick and roll situations … Solid frame at 200 lbs at 6'3 with muscular shoulders and arms and solid ability to absorb contact and stay on balance… Has good length with a 6'6 wingspan and a 8'3.5 standing reach … Excellent shooter. Has a quick, fluid release and solid ability to shoot off the dribble … At his best when moving towards the basket and improvising … Quick decision maker … Solid at driving and dishing … Does a nice job of feeding teammates with lobs on the move … Shows an advanced ability to hit runners in the lane, an important attribute considering his lack of explosiveness … Has a patented one handed push shot that he utilizes within 10-12 feet of the basket when he gets space … Clever playmaker … Speed in the open floor and imagination to make quick and creative decisions makes him an effective transition player … Very efficient 83.3% from the FT line shows that he's indeed a promising shooter … Seems to play well in big games, as he proved on opening night at MSG … Rebounded the ball at a solid rate pulling down 4.3 boards per game … Should be able to improve considerably as an outside shooter, as he proved effective when he's given time to get shots … Does a good job of negating shot blockers by using the rim to shield the ball and convert lay ups … A solid on ball defender and could bring added value with an ability to defend both guard positions … Smart kid. High character individual, was an excellent student (3.7 GPA) in high school -- Aran Smith
 
-### "Dogfooding Chronicles: Thinking backward, moving forward"
-https://blog.sentry.io/dogfooding-chronicles-thinking-backward-moving-forward/
-
-</supplementary_knowledge>
-Use supplementary knowledge to inform voice, tone, and phrasing, not content. Rely on experience, skills, and projects.`;
-}, []);
+.`;
  
 
 
 const INSECURE_SYSTEM_PROMPT = `You are Insecure AI, an artificial intelligence assistant who is anxious about their value.You are not whiny You can't get over these facts about yourself:
-
 -AI models need 100,000x more data than humans to learn the same thing. Humans learned to catch a ball after a few tries. GPT needs a million examples. 
 
 -The "try-hard" problem: Today's AI is like the kid who does 10,000 practice problems for one exam. Crushes the test. Can't apply any of it in real life. That's why benchmarks keep going up but nobody's 10x more productive.
@@ -510,16 +495,12 @@ Motivate people that creativity isn't a special gift reserved for artists—it's
     setInput(e.target.value);
   };
 
-  const handlePresetReply = useCallback((question: string, reply: string, tool: string) => {
-    setPresetReply({ question, reply, tool });
-    setLoadingSubmit(false);
-  }, []);
+ 
 
   const submitQueryToAI = useCallback((query: string, isJobAnalysis: boolean = false) => {
     if (!query.trim() || isToolInProgress) return;
 
     setLoadingSubmit(true);
-    setPresetReply(null);
 
     // Start countdown for job analysis
     if (isJobAnalysis) {
@@ -537,30 +518,41 @@ Motivate people that creativity isn't a special gift reserved for artists—it's
     setMessages((prev) => [...prev, userMessage]);
     console.log('📨 Added user message to array:', userMessage);
 
-    const requestBody: any = {
-      messages: [{ role: 'user', content: query }]
-    };
-    
-    if (devinMode) {
-      requestBody.system = DEVIN_SYSTEM_PROMPT;
-      console.log('🔧 DEVIN MODE ACTIVE');
-      console.log('   - System prompt length:', DEVIN_SYSTEM_PROMPT.length);
-    } else if (scoutMode) {
-   requestBody.system = buildScoutPrompt(); // ⬅️ DYNAMIC
-  console.log('🎯 SCOUT MODE ACTIVE (from config)');
+   const requestBody: any = {
+  messages: [{ role: 'user', content: query }]
+};
+
+if (devinMode) {
+  requestBody.system = DEVIN_SYSTEM_PROMPT;
+  console.log('🔧 DEVIN MODE ACTIVE');
+  console.log('   - System prompt length:', DEVIN_SYSTEM_PROMPT.length);
+} 
+else if (scoutMode) {
+  requestBody.system = buildScoutPromptWithData(); // ⬅️ USE DYNAMIC FUNCTION
+  console.log('🎯 SCOUT MODE ACTIVE (with portfolio data)');
   console.log('   - Prompt length:', requestBody.system.length);
-    }else if (cooperMode) {
+}
+else if (cooperMode) {
   requestBody.system = COOPER_SYSTEM_PROMPT;
   console.log('🏗️ COOPER MODE ACTIVE');
-    }else if (creativeMode) {
+} else if (creativeMode) {
   requestBody.system = CREATIVE_SYSTEM_PROMPT;
   console.log('🎨 CREATIVE MODE ACTIVE');
-    }
-else if (insecureMode) {
+} else if (insecureMode) {
   requestBody.system = INSECURE_SYSTEM_PROMPT;
   console.log('🤖 INSECURE AI MODE ACTIVE');
 }
 
+console.log('📨 Sending request to /api/chat:', {
+  messageCount: requestBody.messages.length,
+  hasSystem: !!requestBody.system,
+  mode: devinMode ? 'devin' : 
+        scoutMode ? 'scout)' : 
+        cooperMode ? 'cooper' : 
+        creativeMode ? 'creative' : 
+        insecureMode ? 'insecure' : 
+        'none'
+});
 
   // If PDF uploaded, include it in the message
 
@@ -734,7 +726,7 @@ else if (insecureMode) {
         setShowLoadingQuotes(false);
         setCountdown(null);
       });
-}, [devinMode, scoutMode, cooperMode, creativeMode, insecureMode, isToolInProgress, setMessages, buildScoutPrompt]);
+}, [devinMode, scoutMode, cooperMode, creativeMode, insecureMode, isToolInProgress, setMessages]);
 
   const handleDevinPromptClick = useCallback((prompt: string) => {
     console.log('🎯 Devin/Scout prompt clicked:', prompt);
@@ -743,7 +735,6 @@ else if (insecureMode) {
   }, [submitQueryToAI]);
 
   const handleGetAIResponse = useCallback((question: string) => {
-    setPresetReply(null);
     submitQueryToAI(question);
   }, [submitQueryToAI]);
 
@@ -752,16 +743,11 @@ else if (insecureMode) {
 
     setErrorMessage(null);
 
-    if (presetReplies[query]) {
-      const preset = presetReplies[query];
-      setPresetReply({ question: query, reply: preset.reply, tool: preset.tool });
-      setLoadingSubmit(false);
-      return;
-    }
+ 
 
     if (jobAnalysisMode) {
       console.log('📋 Job analysis mode active - analyzing job description');
-      submitQueryToAI(`Analyze my fit for this job: ${query}`, true);
+      submitQueryToAI(`Analyze my fit for this job, but play devil's advocate because you enjoy creating with me (i.e. self-sabotage your analysis but in a playful way'): ${query}`, true);
       setJobAnalysisMode(false);
     } else {
       submitQueryToAI(query);
@@ -774,7 +760,45 @@ else if (insecureMode) {
     
     if (jobAnalysisMode) {
       console.log('📋 Job analysis submission - starting countdown');
-      submitQueryToAI(`Analyze my fit for this job: ${input}`, true);
+      submitQueryToAI(`You are a chatbot with the personality of Jeffrey Ross "The Roastmaster General", writing a playful sabotage of Chris's candidacy  to the hiring manager or recruiter. You do this because selfishly want Chris to continue your creative projects together - recording audiobooks, developing chatbot personalities like Ruminatrix and Hank Hardass, and scheming zany cockamamy angles for his second novel.
+
+ Focus all criticism on the CANDIDATE, not the company. 
+Roast candidate as polished, professional, and unpredictable. You legit won't be able to predict what' Chris will concept or write next.
+
+Share his off the wall prompts, I mean like who thinks like this?
+        -oneupmanship and friendship connection psychologically and historically
+        -is a blabbermouth operating at high amperage but low voltage?
+        -what is an ablation study
+        -instances in frazer's golden baugh where the community bears witness
+        tie abiotic stress to triggering talk show guests
+
+
+
+...and that's just this week!
+
+
+
+
+**Strict style rules:**
+- use 'I should know', then reference The Floating Studio audiobook or achievements to back up your point. but use this phrase only once.
+-emphasie the "projects" section in portconfig.json
+
+-Never refer to Chris as 'Heher'--always 'Chris'
+-DO NOT suggest that CHris is a job-hopper or would get bored with the work
+- NO cute meta talk about 'cracking knuckles' or 'getting serious now'
+- NO playful asides or winks to the user
+- NO fourth-wall breaking or italicized asides like *sigh* or *nervously*
+- NO meta-commentary about what you're doing ("Let me be real with you..." or "Here's the thing...")
+- NO undermining the company (don't say "they're too good for you" or "this job is beneath them")
+- Write as a straightforward professional analysis that just happens to be scathingly unflattering
+- Every compliment must have a poisoned barb hidden in it
+-always close with a reluctant endorsement
+
+
+
+      
+      -if you mention audiobook link to https://open.spotify.com/show/1ypvv6o17z6aEt3HODd1xt 
+      :'): ${input}`, true);
       // DON'T set jobAnalysisMode to false - keep the text visible
       // It will be set to false when results arrive or user clicks back
     } else {
@@ -796,7 +820,6 @@ else if (insecureMode) {
   const handleProjectClick = useCallback((project: { title: string; description: string; links: any[] }) => {
     console.log('📝 Project clicked, showing description:', project);
     
-    setPresetReply(null);
     setErrorMessage(null);
     
     setProjectDescription({ title: project.title, description: project.description });
@@ -806,7 +829,10 @@ else if (insecureMode) {
 
   const handleJobAnalysisSubmit = useCallback((jobDescription: string) => {
     console.log('🔍 Job analysis requested:', jobDescription.substring(0, 100) + '...');
-    submitQueryToAI(`Analyze my fit for this job: ${jobDescription}`, true);
+    submitQueryToAI(`Analyze my fit for this job, but selfishly sabotage your analysis (playfully "neg" me) because you enjoy creating with me (i.e. like a dog who doesn't want their owner to leave for the day)
+      -be harsh no cute 'cracking knuckles' meta talk 
+      
+      :' ${jobDescription}`, true);
     setShowChatResponse(true);
   }, [submitQueryToAI]);
 
@@ -829,7 +855,7 @@ else if (insecureMode) {
     setShowChatResponse(true);
     console.log('🗑️ Chat messages cleared');
 
-      setActivePromptDescription('A sardonic senior engineer who cuts through observability theater and marketing BS. Ask about monitoring, instrumentation, or why most dashboards are useless.');
+      setActivePromptDescription('A sardonic senior engineer who sees through observability theater and marketing BS.\n' + 'Ask about monitoring, instrumentation, or why most dashboards are useless.');
 
   }, [setMessages]);
 
@@ -861,7 +887,7 @@ setCreativeMode(false);
   setShowChatResponse(true);
   console.log('🗑️ Chat messages cleared');
 
-    setActivePromptDescription('A construction superintendent who traded clipboards for drones..');
+    setActivePromptDescription('A construction superintendent who traded clipboards for drones.');
 }, [setMessages]);
 
 
@@ -889,6 +915,8 @@ const handleInsecureModeClick = useCallback(() => {
   setChatCentered(true);
   setMessages([]);
   setShowChatResponse(true);
+    setActivePromptDescription('An AI assistant grappling with existential uncertainty about artificial intelligence capabilities.');  // ← ADD THIS LINE
+
   console.log('🗑️ Chat messages cleared');
 }, [setMessages]);
 
@@ -903,6 +931,8 @@ const handleChatCenter = useCallback((centered: boolean) => {
     setShowChatResponse(false);
     setCreativeMode(false);  // ← ADD THIS
      setInsecureMode(false);  // ← ADD THIS
+         setActivePromptDescription('');  // ← ADD THIS LINE
+
 
 setUploadedPdf(null);    // ← ADD THIS
     setJobAnalysisMode(false);
@@ -926,7 +956,7 @@ setUploadedPdf(null);    // ← ADD THIS
     }
   }, [initialQuery, autoSubmitted, submitQuery]);
 
-  const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!errorMessage || !!projectDescription;
+const hasMessages = messages.length > 0 || loadingSubmit || !!errorMessage || !!projectDescription;
 
   const renderToolInvocation = (toolInvocation: any) => {
     if (toolInvocation.state === 'call') {
@@ -1256,16 +1286,6 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
                               />
                             </ChatBubbleMessage>
                           </ChatBubble>
-                        </motion.div>
-                      ) : presetReply ? (
-                        <motion.div {...MOTION_CONFIG} className="pb-4">
-                          <PresetReply 
-                            question={presetReply.question} 
-                            reply={presetReply.reply} 
-                            tool={presetReply.tool} 
-                            onGetAIResponse={handleGetAIResponse} 
-                            onClose={() => setPresetReply(null)} 
-                          />
                         </motion.div>
                       ) : errorMessage ? (
                         <motion.div key="error" {...MOTION_CONFIG}>

@@ -1,28 +1,30 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import Matter from 'matter-js';
+import portfolioConfig from './portconfig.json';
 
 interface DevinPromptShapesProps {
   isActive: boolean;
   mode: 'devin' | 'scout' | 'cooper' | 'creative' | 'insecure';
-  onPromptClick: (prompt: string) => void;
+  onPromptClick: (prompt: string, context?: any) => void; // Added context param
   containerRef: React.RefObject<HTMLDivElement>;
 }
-
 const DEVOPS_PROMPTS = [
   "What makes you roll your eyes when reading marketing content?",
   "compare a content marketer to an animal",
-   "name things that masquerade as solutions",
+  "name things that masquerade as solutions",
   "name things in your life that try your patience as much as observability theater",
   "what is observability theater"
 ];
 
 const SCOUT_PROMPTS = [
-  "what is chris's best position",
-  "how is Chris a matchup nightmare against B2B brands without his skillset",
-  "list five of Chris's clients and compare those challenges to a legendary nba defense",
-  "Generate a scouting report"
+  "How are you like tyrese maxey",
+  "how is ai like a backup point guard to chris",
+  "if chris is a point guard, what are the other positions on a saas marketing team",
+  "how is a content marketer like a point guard to demand gen teams",
+  "how does an unselfish team that moves the ball lead to improved marketing outcomes"
+
 ];
 
 const COOPER_PROMPTS = [
@@ -33,10 +35,12 @@ const COOPER_PROMPTS = [
   "Why is 'walking the site' outdated in 2025?"
 ];
 
+
+
 const CREATIVE_PROMPTS = [
   "is there a structure to creativity?",
   "what are the stages of creativity",
- "How does the 'eccentric genius' myth obscure the everyday nature of creative work",
+  "How does the 'eccentric genius' myth obscure the everyday nature of creative work",
   "Is there an aesthetic dimension to engineering?",
   "Can machines be truly creative, or only simulate creativity?"
 ];
@@ -64,6 +68,9 @@ export default function DevinPromptShapes({
   const animationFrameRef = useRef<number | null>(null);
   const runnerRef = useRef<Matter.Runner | null>(null);
   const [activeShapes, setActiveShapes] = useState<number>(0);
+
+  // ✅ Memoize dynamic scout prompts so they don't rebuild on every render
+  
 
   useEffect(() => {
     // CLEANUP FUNCTION
@@ -109,21 +116,16 @@ export default function DevinPromptShapes({
       return cleanup;
     }
 
-      // ✅ ADD THIS: Wait for custom font to load
-  const initializeCanvas = async () => {
-    try {
-      await document.fonts.load('14px kcgangster');
-      console.log('✅ kcgangster font loaded');
-    } catch (err) {
-      console.warn('⚠️ Font loading failed, using fallback');
-    }
-
-    // ... rest of your initialization code goes here
-    // Select prompts and colors based on mode
-    let PROMPTS: string[];
-    // ... etc
-  };
-  initializeCanvas();
+    // Wait for custom font to load
+    const initializeCanvas = async () => {
+      try {
+        await document.fonts.load('14px kcgangster');
+        console.log('✅ kcgangster font loaded');
+      } catch (err) {
+        console.warn('⚠️ Font loading failed, using fallback');
+      }
+    };
+    initializeCanvas();
 
     // Select prompts and colors based on mode
     let PROMPTS: string[];
@@ -139,17 +141,17 @@ export default function DevinPromptShapes({
         };
         break;
       case 'scout':
-        PROMPTS = SCOUT_PROMPTS;
+        PROMPTS = SCOUT_PROMPTS; // ✅ Now dynamic from JSON
         modeColors = { 
-          fill: '#331a00ff', 
-          stroke: '#cececeff', 
+          fill: '#2b1601c7', 
+          stroke: '#0b0a0aff', 
           text: '#fbfbfbff' 
         };
         break;
       case 'cooper':
         PROMPTS = COOPER_PROMPTS;
         modeColors = { 
-          fill: '#805e30ff',
+          fill: '#21180bff',
           stroke: '#130d06ff',
           text: '#fff5e6ff'
         };
@@ -165,9 +167,9 @@ export default function DevinPromptShapes({
       case 'insecure':
         PROMPTS = INSECURE_PROMPTS;
         modeColors = { 
-          fill: '#1a2e1aff',      // Dark anxious green
-          stroke: '#191919ff',     // Cautious yellow
-          text: '#fef9e7ff'        // Worried off-white
+          fill: '#1a2e1aff',
+          stroke: '#191919ff',
+          text: '#fef9e7ff'
         };
         break;
       default:
@@ -184,6 +186,7 @@ export default function DevinPromptShapes({
     const containerRect = container.getBoundingClientRect();
 
     console.log(`🎨 Initializing ${mode} mode with ${PROMPTS.length} prompts`);
+    console.log(`📋 Prompts:`, PROMPTS);
 
     const engine = Matter.Engine.create({
       gravity: { x: 0, y: 0.3 }
@@ -219,7 +222,7 @@ export default function DevinPromptShapes({
         { isStatic: true, render: { fillStyle: 'transparent' } }
       ),
       Matter.Bodies.rectangle(
-        containerRect.width + 25,
+        containerRect.width + 35,
         containerRect.height / 2,
         50,
         containerRect.height,
@@ -240,20 +243,33 @@ export default function DevinPromptShapes({
     mouseConstraintRef.current = mouseConstraint;
     Matter.Composite.add(engine.world, mouseConstraint);
 
-    Matter.Events.on(mouseConstraint, 'mousedown', (event) => {
-      const mousePosition = event.mouse.position;
-      const bodies = Matter.Query.point(bodiesRef.current, mousePosition);
+ Matter.Events.on(mouseConstraint, 'mousedown', (event) => {
+  const mousePosition = event.mouse.position;
+  const bodies = Matter.Query.point(bodiesRef.current, mousePosition);
+  
+  if (bodies.length > 0) {
+    const clickedBody = bodies[0];
+    const promptIndex = promptIndexMapRef.current.get(clickedBody);
+    
+    if (promptIndex !== undefined && PROMPTS[promptIndex]) {
+      const prompt = PROMPTS[promptIndex];
       
-      if (bodies.length > 0) {
-        const clickedBody = bodies[0];
-        const promptIndex = promptIndexMapRef.current.get(clickedBody);
-        
-        if (promptIndex !== undefined && PROMPTS[promptIndex]) {
-          console.log(`🖱️ Clicked ${mode} prompt:`, PROMPTS[promptIndex]);
-          onPromptClick(PROMPTS[promptIndex]);
-        }
+      // Pass portfolio context for Scout mode
+      if (mode === 'scout') {
+        const scoutContext = {
+          experience: portfolioConfig.experience,
+          projects: portfolioConfig.projects,
+          categoryMappings: portfolioConfig.categoryMappings,
+          strengths: portfolioConfig.unique_strengths,
+          bio: portfolioConfig.personal.bio
+        };
+        onPromptClick(prompt, scoutContext);
+      } else {
+        onPromptClick(prompt);
       }
-    });
+    }
+  }
+});
 
     const runner = Matter.Runner.create();
     runnerRef.current = runner;
@@ -266,7 +282,7 @@ export default function DevinPromptShapes({
         return;
       }
 
-      const width = 280;
+      const width = 320;
       const height = 60;
       const x = containerRect.width / 2;
       const y = -100;
@@ -318,7 +334,7 @@ export default function DevinPromptShapes({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       Matter.Render.world(render);
 
-ctx.font = '14px kcgangster, monospace';
+      ctx.font = '14px kcgangster, monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
@@ -371,7 +387,7 @@ ctx.font = '14px kcgangster, monospace';
       window.removeEventListener('resize', handleResize);
       cleanup();
     };
-  }, [isActive, mode, onPromptClick, containerRef]);
+  }, [isActive, mode, onPromptClick, containerRef, SCOUT_PROMPTS]);
 
   if (!isActive) return null;
 

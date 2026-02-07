@@ -428,8 +428,8 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 2200,
-      temperature: 1,
+      max_tokens: 2400,
+      temperature: 1.1,
       system: [
         {
           type: "text",
@@ -575,7 +575,7 @@ Return valid JSON (max 5 strengths, max 3 gaps):
     // Step 7: Apply score modifiers based on gaps
     if (parsed.gaps && Array.isArray(parsed.gaps)) {
       parsed.matchScore = applyScoreModifiers(
-        parsed.matchScore,
+     baseScore,
         jobContent,
         parsed.gaps
       );

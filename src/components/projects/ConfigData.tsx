@@ -1,4 +1,4 @@
-import Image from 'next/image';
+/* import Image from 'next/image';
 import { Image as Img, ChevronRight, Link as LinkIcon } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { projectData as allProjects, getConfig } from '@/lib/config-loader';
@@ -20,7 +20,7 @@ const ProjectContent = ({ project }: { project: { title: string } }) => {
 
   return (
     <div className="bg-card text-card-foreground max-w-4xl space-y-6 p-0">
-      {/* Header */}
+      {/* Header 
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <div className="bg-primary/10 text-primary rounded-lg p-2">
@@ -37,7 +37,7 @@ const ProjectContent = ({ project }: { project: { title: string } }) => {
         </p>
       </div>
 
-      {/* Status & Achievements */}
+      {/* Status & Achievements 
       {(projectInfo.status || projectInfo.achievements || projectInfo.metrics) && (
         <div className="space-y-3">
           {projectInfo.status && (
@@ -79,7 +79,7 @@ const ProjectContent = ({ project }: { project: { title: string } }) => {
         </div>
       )}
 
-      {/* Tech Stack */}
+      {/* Tech Stack 
       {projectInfo.techStack && projectInfo.techStack.length > 0 && (
         <div className="space-y-3">
           <h4 className="font-medium">Tech Stack</h4>
@@ -96,7 +96,7 @@ const ProjectContent = ({ project }: { project: { title: string } }) => {
         </div>
       )}
 
-      {/* Links */}
+      {/* Links *
       {linksArray.length > 0 && (
         <div className="space-y-3">
           <h4 className="font-medium">Links</h4>
@@ -117,7 +117,7 @@ const ProjectContent = ({ project }: { project: { title: string } }) => {
         </div>
       )}
 
-      {/* Images gallery */}
+      {/* Images gallery *
       {projectInfo.images && projectInfo.images.length > 0 && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 gap-4">
@@ -150,4 +150,4 @@ export const data = allProjects.map((project: any) => ({  category: project.cate
   shape: project.shape, // ✅ Include shape property from JSON
   description: project.description, // ✅ Include description from JSON
   content: <ProjectContent project={{ title: project.title }} />,
-}));
+}));*/

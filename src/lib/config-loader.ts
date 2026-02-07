@@ -1,188 +1,39 @@
-// lib/config-loader.ts
-import ConfigParser from './config-parser';
-import { PortfolioConfig } from '@/types/portfolio';
+// src/lib/config-loader.ts
+import portfolioConfig from '../../src/components/chat/portconfig.json';
 
+// Rich system prompt with all portfolio data embedded
+export const systemPrompt = `You are Chris Heher's AI assistant. You help visitors learn about Chris's experience, projects, and skills.
 
+PORTFOLIO DATA:
+${JSON.stringify(portfolioConfig, null, 2)}
 
-// Import the configuration file - using dynamic import for better compatibility
-let portfolioConfig: PortfolioConfig;
+INSTRUCTIONS:
+- Answer questions using the portfolio data above
+- Be conversational and natural
+- When asked "how are you like steve nash?", draw parallels between:
+  * Steve Nash's assists/playmaking → Chris's ability to drive team success ($10M+ pipeline at DroneDeploy, 3x ARR at Sentry)
+  * Nash's vision/court awareness → Chris's strategic content that transforms technical jargon into compelling narratives
+  * Nash's underdog story → Chris's unique value prop "I am what AI ain't"
+  * Nash's team-first mentality → Chris's collaborative approach across engineering/product/sales teams
+  * Nash's efficiency → Chris's proven 8-11% pipeline influence across roles
 
-try {
-  // Import JSON configuration
-  portfolioConfig = require('../../portfolio-config.json') as PortfolioConfig;
-  console.log('✅ Portfolio config loaded successfully');
-} catch (error) {
-  console.error('❌ Failed to load portfolio configuration:', error);
-  // Provide a fallback minimal config to prevent the app from crashing
-  portfolioConfig = {
-    personal: {
-      name: 'Configuration Error',
-      location: 'alameda',
-      title: 'Error Loading Config',
-      email: 'error@example.com',
-      handle: '@error',
-      bio: 'Error loading configuration',
-          avatar: '',  // Add this
-    fallbackAvatar: '' // Add this
-    },
-    education: {
-      current: {
-        degree: 'Error',
-        institution: 'Error',
-        duration: 'Error',
-        cgpa: 'Error',
-        graduationDate: 'Error'
-      },
-      achievements: []
-    },
-    experience: [],
-    skills: {
-      programming: ['javascript'],
-      ml_ai: [],
-      web_development: [],
-      databases: [],
-      devops_cloud: [],
-      iot_hardware: [],
-      soft_skills: []
-    },
-    projects: [],
-    social: {
-      linkedin: '',
-      github: '',
-      twitter: '',
-      kaggle: '',
-      leetcode: ''
-    },
-    internship: {
-      seeking: false,
-      duration: '',
-      startDate: '',
-      preferredLocation: '',
-      focusAreas: [],
-      availability: '',
-      workStyle: '',
-      goals: ''
-    },
-    personality: {
-      traits: [],
-      interests: [],
-      funFacts: [],
-      workingStyle: '',
-      motivation: ''
-    },
-    resume: {
-      title: 'My Resume',
-      description: 'Full resume PDF',
-      lastUpdated: '2025-11-20',
-      downloadUrl: '/resume.pdf'
-    },
-    chatbot: {
-      name: 'Assistant',
-      personality: 'Helpful',
-      tone: 'Professional',
-      language: 'English',
-      responseStyle: 'Concise',
-      useEmojis: false,
-      topics: []
-    },
-    presetQuestions: {
-      me: [],
-      professional: [],
-      projects: [],
-      achievements: [],
-      fun: []
-    },
-    presetAnswers: {
-      me: [],
-      skills: [],
-      projects: [],
-      resume: [],
-      achievements: [],
-      opportunities: [],
-      fun: [],
-      professional: []
-    },
-    meta: {
-      configVersion: '1.0.0',
-      lastUpdated: new Date().toISOString(),
-      generatedBy: 'Fallback Config',
-      description: 'Emergency fallback configuration'
-    }
-  } as unknown as PortfolioConfig;
+- When asked about experience, reference specific companies: DroneDeploy, Sentry, Momentum Worldwide
+- When asked about projects, mention featured work like espolon Tequila, Safety AI launch, See Slow Faster campaign
+- When asked about skills/categories, reference the categoryMappings data
+
+Answer naturally without mentioning tools or data structures.`;
+
+// Preset replies mapping
+export const presetReplies = {
+  "how are you like steve nash?": {
+    tool: "getPresentation"
+  },
+};
+
+// Export the full config
+export { portfolioConfig };
+
+// Export getConfig function for backward compatibility
+export function getConfig() {
+  return portfolioConfig;
 }
-
-// Create a parser instance
-let configParser: ConfigParser;
-try {
-  configParser = new ConfigParser(portfolioConfig);
-  console.log('✅ ConfigParser created successfully');
-} catch (error) {
-  console.error('❌ Failed to create ConfigParser:', error);
-  throw error;
-}
-
-// Export configuration and parsed data
-export const getConfig = (): PortfolioConfig => portfolioConfig;
-export const getConfigParser = (): ConfigParser => configParser;
-
-// Export pre-parsed common data for easy access with safety checks
-export const systemPrompt = (() => {
-  try {
-    return configParser.generateSystemPrompt();
-  } catch (error) {
-    console.error('❌ Error generating system prompt:', error);
-    return 'You are a helpful assistant.';
-  }
-})();
-
-
-
-
-export const skillsData = (() => {
-  try {
-    return configParser.generateSkillsData();
-  } catch (error) {
-    console.error('❌ Error generating skills data:', error);
-    return [];
-  }
-})();
-
-export const projectData = (() => {
-  try {
-    const data = configParser.generateProjectData();
-    console.log('📂 Project data loaded:', data?.length || 0, 'projects');
-    return data;
-  } catch (error) {
-    console.error('❌ Error generating project data:', error);
-    return [];
-  }
-})();
-
-export const presetReplies = (() => {
-  try {
-    const replies = configParser.generatePresetReplies();
-    console.log('📋 Preset replies loaded:', Object.keys(replies || {}).length, 'replies');
-    return replies || {};
-  } catch (error) {
-    console.error('❌ Error generating preset replies:', error);
-    return {};
-  }
-})();
-
-export const resumeDetails = (() => {
-  try {
-    return configParser.generateResumeDetails();
-  } catch (error) {
-    console.error('❌ Error generating resume details:', error);
-    return {};
-  }
-})();
-
-
-// Log configuration status
-console.log('🔧 Config Loader Status:');
-console.log('  - System Prompt:', systemPrompt ? '✅ Loaded' : '❌ Missing');
-console.log('  - Skills Data:', skillsData.length > 0 ? `✅ ${skillsData.length} skills` : '❌ Missing');
-console.log('  - Project Data:', projectData.length > 0 ? `✅ ${projectData.length} projects` : '❌ Missing');
-console.log('  - Preset Replies:', Object.keys(presetReplies).length > 0 ? `✅ ${Object.keys(presetReplies).length} replies` : '❌ Missing');
-console.log('  - Resume Details:', Object.keys(resumeDetails).length > 0 ? '✅ Loaded' : '❌ Missing');

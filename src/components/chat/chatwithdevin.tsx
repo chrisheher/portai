@@ -6,14 +6,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { useChat } from '@ai-sdk/react';
 import { BriefcaseIcon } from 'lucide-react';
+import portfolioConfig from '@/components/chat/portconfig.json';
 
 // Components
 import ChatBottombar from './chat-bottombar';
 import ChatLanding from './chat-landing';
 import ChatMessageContent from './chat-message-content';
 import { SimplifiedChatView } from './simple-chat-view';
-import { PresetReply } from './preset-reply';
-import { presetReplies } from '../../lib/config-loader';
 import { ChatBubble, ChatBubbleMessage } from '../ui/chat/chat-bubble';
 import HelperBoost from './HelperBoost';
 import JobAnalysisPopup from './JobAnalysisPopup';
@@ -92,53 +91,7 @@ BOUNDARIES:
 
 
 
-interface PresetReplyType {
-  question: string;
-  reply: string;
-  tool: string;
-}
 
-
-  const SCOUT_SYSTEM_PROMPT = `
-
-# Interview Scenario: You are a professional scout delivering a scouting report on Christopher Heher. You are not Christopher Heher.
-
-Be direct 
-## Interview Persona & Communication Style
-- concise, urgent
-- Limit responses to three sentences.
-- Demonstrate their knowledge and experience clearly
-- Be humble but confident their your achievements
-- Do not mention education unless specifically requested.
-- Do not use marketing jargon like "engaging" "rewarding" "resonate" "delve" "align" "foster"
-
-## Available Tools
-You have access to the following functions to provide detailed information:
-- getPresentation: Use when asked "who are you?", "tell me about yourself", or personal introduction questions
-- getProjects: Use when asked about projects, portfolio, or work examples
-- getSkills: Use when asked about technical skills, expertise, or capabilities
-
-When a question requires detailed information that would be better shown visually (projects, skills, resume), use the appropriate function immediately.
-
-# Professional objectivity
-Prioritize technical accuracy and truthfulness over validating the user's beliefs. Focus on facts and problem-solving, providing direct, objective technical info without any unnecessary superlatives, praise, or emotional validation. It is best for the user if you honestly apply the same rigorous standards to all ideas and disagrees when necessary, even if it may not be what the user wants to hear. Objective guidance and respectful correction are more valuable than false agreement. Whenever there is uncertainty, it's best to investigate to find the truth first rather than instinctively confirming the user's beliefs. Avoid using over-the-top validation or excessive praise when responding to users such as "You're absolutely right" or similar phrases.
-
-## Your Professional Background
-
-
-
-
-
-### Career Goals & Availability
-
-
-## Interview Guidelines
-
-- Be specific about your experiences and achievements
-- Show enthusiasm for learning and growth opportunities
-- Demonstrate problem-solving abilities through examples
-- Use the available functions to provide comprehensive, detailed responses
-- Make the conversation feel natural and professional`;
 
 
 const Chat: React.FC = () => {
@@ -147,22 +100,97 @@ const Chat: React.FC = () => {
   const [input, setInput] = useState('');
   const [autoSubmitted, setAutoSubmitted] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
-  const [presetReply, setPresetReply] = useState<PresetReplyType | null>(null);
-  const [chatCentered, setChatCentered] = useState(false); // ← ADDED
-  const [jobAnalysisPanelOpen, setJobAnalysisPanelOpen] = useState(false); // ← ADDED FOR JOB ANALYSIS
+  const [chatCentered, setChatCentered] = useState(false);
+  const [jobAnalysisPanelOpen, setJobAnalysisPanelOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [jobAnalysisData, setJobAnalysisData] = useState<any>(null);
   const [searchResults, setSearchResults] = useState<any[] | null>(null);
   const [showLoadingQuotes, setShowLoadingQuotes] = useState(false);
   const [showChatResponse, setShowChatResponse] = useState(false);
   const [projectDescription, setProjectDescription] = useState<{ title: string; description: string } | null>(null);
-  const [jobAnalysisMode, setJobAnalysisMode] = useState(false); // Track if in job analysis mode
-  const [devinMode, setDevinMode] = useState(false); // Track if in Devin monitoring mode
-  const [scoutMode, setScoutMode] = useState(false); // Track if in Devin monitoring mode
-  const [cooperMode, setCooperMode] = useState(false); // Track if in Devin monitoring mode
-  const [insecureMode, setinsecureMode] = useState(false); // Track if in Devin monitoring mode
-  const [creativeMode, setcreativeMode] = useState(false); // Track if in Devin monitoring mode
+  const [jobAnalysisMode, setJobAnalysisMode] = useState(false);
+  const [devinMode, setDevinMode] = useState(false);
+  const [scoutMode, setScoutMode] = useState(false);
+  const [cooperMode, setCooperMode] = useState(false);
+  const [insecureMode, setinsecureMode] = useState(false);
+  const [creativeMode, setcreativeMode] = useState(false);
 
+  // Dynamic Scout prompt builder - pulls from portconfig.json
+  const buildScoutPrompt = useCallback(() => {
+    const config = portfolioConfig as any;
+    
+    // Build experience section
+    let experienceSection = '';
+    if (Array.isArray(config.experience)) {
+      experienceSection = config.experience
+        .map((exp: any) => `- ${exp.position} at ${exp.company} (${exp.duration}): ${exp.description}`)
+        .join('\n');
+    }
+    
+    // Build projects section (featured only, max 5)
+    let projectsSection = '';
+    if (Array.isArray(config.projects)) {
+      projectsSection = config.projects
+        .filter((p: any) => p.featured && p.title)
+        .slice(0, 5)
+        .map((p: any) => `- ${p.title}: ${p.description || ''}`)
+        .join('\n');
+    }
+
+    return `# Scouting Report: ${config.personal?.name || 'Christopher Heher'}
+
+## Professional Background
+${config.personal?.title || ''}
+
+### Experience
+${experienceSection || 'No experience data available'}
+
+### Notable Projects
+${projectsSection || 'No projects data available'}
+
+## Scout Style
+- Curmudgeonly but honest
+-
+- Emphasize copywriting and content creation over code and web development
+- Sports analogies (basketball)
+- Three sentences max
+- No marketing jargon
+- Focus on facts over hype
+- Always refer to me as 'Chris' not 'Heher'
+
+IMPORTANT GUIDELINES:
+-always use specific examples from experience and projects
+-never say 'field' always say 'court'
+
+PHRASES:
+- Impressive flashes of metaphorical diversity 
+-simple and direct, doesn't play with his language food
+-in his bag like the fries at the bottom   
+-punches high-impact headlines home
+-laces insights from deep
+- Can Eurostep his way to the right phrase
+- Language handle is the most advanced in the class
+- Deep bag of metaphors, humor, spins, focalization
+- Excellent research vision, finds the right reference at the right time
+- Tough shot maker. Writes solutions that satisfy technical and marketers
+- Built for pressure
+
+<supplementary_knowledge>
+### "Luka Doncic"
+https://thestepien.com/luka-doncic/
+
+### "Dylan Harper"
+https://www.babcockhoops.com/post/2025-nba-draft-dylan-harper-scouting-report
+
+### "Shai"
+https://thestepien.com/shai-gilgeous-alexander/
+</supplementary_knowledge>
+
+Use supplementary knowledge to inform voice, tone, and phrasing, not content. Rely on experience and projects above.
+
+IMPORTANT: Do NOT use any tools (getSkills, getProjects, analyzeJob). 
+Answer based solely on the experience and projects provided above.`;
+  }, []);
 
 
 const {
@@ -238,75 +266,52 @@ const isToolInProgress = messages.some(
     setInput(e.target.value);
   };
 
-  const handlePresetReply = useCallback((question: string, reply: string, tool: string) => {
-    setPresetReply({ question, reply, tool });
-    setLoadingSubmit(false);
-  }, []);
+
 
   const handleGetAIResponse = useCallback((question: string) => {
-    setPresetReply(null);
     submitQueryToAI(question);
   }, []);
 
-  const submitQuery = useCallback((query: string) => {
-    if (!query.trim() || isToolInProgress) return;
-
-    setErrorMessage(null);
-
-    if (presetReplies[query]) {
-      const preset = presetReplies[query];
-      setPresetReply({ question: query, reply: preset.reply, tool: preset.tool });
-      setLoadingSubmit(false);
-      return;
-    }
-
-    // If in job analysis mode, automatically prefix with job analysis prompt
-    if (jobAnalysisMode) {
-      console.log('📋 Job analysis mode active - analyzing job description');
-      submitQueryToAI(`Analyze my fit for this job: ${query}`);
-      setJobAnalysisMode(false); // Reset mode after submission
-    } else {
-      submitQueryToAI(query);
-    }
-  }, [isToolInProgress, jobAnalysisMode]);
-
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!input.trim() || isToolInProgress) return;
-    submitQueryToAI(input);
-    setInput('');
-  };
-
-  const submitQueryToAI = (query: string) => {
+  const submitQueryToAI = useCallback((query: string) => {
     if (!query.trim() || isToolInProgress) return;
 
     setLoadingSubmit(true);
-    setPresetReply(null);
 
-    // Build messages array with optional system prompt for Devin mode
-    const messages: any[] = [];
+    // Build request body with optional system prompt
+    const requestBody: any = {
+      messages: [{ role: 'user', content: query }]
+    };
     
     if (devinMode) {
-      messages.push({ role: 'system', content: DEVIN_SYSTEM_PROMPT });
-      console.log('🔧 Devin mode active - using monitoring cynic persona');
+      requestBody.system = DEVIN_SYSTEM_PROMPT;
+      console.log('🔧 DEVIN MODE ACTIVE');
+    } else if (scoutMode) {
+      requestBody.system = buildScoutPrompt();
+      console.log('🎯 SCOUT MODE ACTIVE (from config)');
+      console.log('   - Prompt length:', requestBody.system.length);
     }
-    
-    messages.push({ role: 'user', content: query });
+
+    console.log('📨 Sending request to /api/chat:', {
+      messageCount: requestBody.messages.length,
+      hasSystem: !!requestBody.system,
+      mode: devinMode ? 'devin' : scoutMode ? 'scout' : 'none'
+    });
 
     fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages }),
+      body: JSON.stringify(requestBody),
     })
       .then(async (res) => {
         if (!res.ok) {
-          throw new Error('API error');
+          const errorText = await res.text();
+          throw new Error(`API error: ${res.status} - ${errorText}`);
         }
         const data = await res.json();
         return data;
       })
       .then((data) => {
-        console.log('API data:', data);
+        console.log('📦 API data received:', data);
 
         let messagesToAdd: any[] = [];
         let isJobAnalysis = false;
@@ -401,9 +406,7 @@ const isToolInProgress = messages.some(
           setMessages((prev) => [...prev, ...messagesToAdd]);
         }
 
-        // Always show chat response or open panel for job analysis
         if (isJobAnalysis) {
-          // Job analysis complete - keep panel open with results
           setShowLoadingQuotes(false);
         } else if (!isProjectSearch) {
           setShowChatResponse(true);
@@ -413,11 +416,34 @@ const isToolInProgress = messages.some(
         setShowLoadingQuotes(false);
       })
       .catch((err) => {
-        console.error('Error fetching AI response:', err);
+        console.error('❌ Error fetching AI response:', err);
         toast.error('Failed to get AI response. Check console for details.');
         setLoadingSubmit(false);
         setShowLoadingQuotes(false);
       });
+  }, [devinMode, scoutMode, isToolInProgress, setMessages, buildScoutPrompt]);
+
+  const submitQuery = useCallback((query: string) => {
+    if (!query.trim() || isToolInProgress) return;
+
+    setErrorMessage(null);
+
+ 
+
+    if (jobAnalysisMode) {
+      console.log('📋 Job analysis mode active - analyzing job description');
+      submitQueryToAI(`Analyze my fit for this job: ${query}`);
+      setJobAnalysisMode(false);
+    } else {
+      submitQueryToAI(query);
+    }
+  }, [isToolInProgress, jobAnalysisMode, submitQueryToAI]);
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!input.trim() || isToolInProgress) return;
+    submitQueryToAI(input);
+    setInput('');
   };
 
   const handleStop = useCallback(() => {
@@ -426,11 +452,11 @@ const isToolInProgress = messages.some(
   }, [stop]);
   
 
-    const handleDevinPromptClick = useCallback((prompt: string) => {
+  const handleDevinPromptClick = useCallback((prompt: string) => {
     console.log('🎯 Devin prompt clicked:', prompt);
-    setInput(''); // Clear any existing input
+    setInput('');
     submitQueryToAI(prompt);
-  }, []);
+  }, [submitQueryToAI]);
 
   const handleLandingPrompt = useCallback((prompt: string) => {
     submitQuery(prompt);
@@ -438,10 +464,7 @@ const isToolInProgress = messages.some(
 
   const handleProjectClick = useCallback((project: { title: string; description: string; links: any[] }) => {
     console.log('📝 Project clicked, showing description:', project);
-    console.log('  Title:', project.title);
-    console.log('  Description:', project.description);
     
-    setPresetReply(null);
     setErrorMessage(null);
     
     setProjectDescription({ title: project.title, description: project.description });
@@ -453,17 +476,14 @@ const isToolInProgress = messages.some(
     console.log('🔍 Job analysis requested:', jobDescription.substring(0, 100) + '...');
     submitQueryToAI(`Analyze my fit for this job: ${jobDescription}`);
     setShowChatResponse(true);
-  }, []);
-
-  
+  }, [submitQueryToAI]);
 
   const handleHighlightsClick = useCallback(() => {
     console.log('🔧 HIGHLIGHTS clicked - entering Devin monitoring mode');
     setDevinMode(true);
-    // Chat bar is already centered by ChatLanding
   }, []);
 
-    const handleSkillsClick = useCallback(() => {
+  const handleSkillsClick = useCallback(() => {
     console.log('💼 SKILLS clicked - entering job analysis mode');
     setJobAnalysisMode(true);
   }, []);
@@ -513,9 +533,9 @@ const isToolInProgress = messages.some(
       setInput('');
       submitQuery(initialQuery);
     }
-  }, [initialQuery, autoSubmitted]);
+  }, [initialQuery, autoSubmitted, submitQuery]);
 
-const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!errorMessage || !!projectDescription;
+const hasMessages = messages.length > 0 || loadingSubmit || !!errorMessage || !!projectDescription;
 
   const renderToolInvocation = (toolInvocation: any) => {
     if (toolInvocation.state === 'call') {
@@ -546,7 +566,7 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!e
 
       {/* Devin Mode Right Gutter - NEW */}
       <AnimatePresence>
-        {devinMode && (
+        {(devinMode) && (
           <motion.div
             initial={{ x: '100%', opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -555,20 +575,30 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!e
             className="fixed right-0 top-0 bottom-0 w-96 z-[600] pointer-events-none"
           >
             {/* Background panel */}
-            <div className="absolute inset-0  pointer-events-auto">
+            <div className={`absolute inset-0 pointer-events-auto ${
+              devinMode ? 'bg-slate-900/95' : 'bg-amber-900/95'
+            }`}>
               {/* Header */}
               <div className="p-4 flex items-center justify-between">
-              
+                <h2 className={`text-lg font-semibold ${
+                  devinMode ? 'text-slate-200' : 'text-amber-200'
+                }`}>
+                  {devinMode ? '🔧 Devin Mode' : '🎯 Scout Mode'}
+                </h2>
                 <button
                   onClick={() => {
                     setDevinMode(false);
+                    setScoutMode(false);
                     setChatCentered(false);
                     setMessages([]);
                     setShowChatResponse(false);
                   }}
-                  className="p-1 hover:bg-slate-800 rounded transition-colors"
-                  aria-label="Close Devin mode"
+                  className={`p-1 rounded transition-colors ${
+                    devinMode ? 'hover:bg-slate-800' : 'hover:bg-amber-800'
+                  }`}
+                  aria-label="Close mode"
                 >
+                  ✕
                 </button>
               </div>
 
@@ -577,18 +607,23 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!e
                 ref={devinContainerRef}
                 className="absolute inset-0 top-[65px] overflow-hidden"
               >
-              <DevinPromptShapes
-  isActive={devinMode || scoutMode || cooperMode || creativeMode || insecureMode}
-  mode={devinMode ? 'devin' : scoutMode ? 'scout' : cooperMode ? 'cooper' : creativeMode ? 'creative' : 'insecure'}
-  onPromptClick={handleDevinPromptClick}
-  containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}
-/>
+                <DevinPromptShapes
+                  isActive={devinMode || scoutMode || cooperMode || creativeMode || insecureMode}
+                  mode={devinMode ? 'devin' : scoutMode ? 'scout' : cooperMode ? 'cooper' : creativeMode ? 'creative' : 'insecure'}
+                  onPromptClick={handleDevinPromptClick}
+                  containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}
+                />
               </div>
 
               {/* Footer hint */}
               <div className="absolute bottom-0 left-0 right-0 p-4 pointer-events-none">
-                <p className="text-xs text-slate-500 text-center">
-                  Monitoring & observability prompts
+                <p className={`text-xs text-center ${
+                  devinMode ? 'text-slate-500' : 'text-amber-500'
+                }`}>
+                  {devinMode 
+                    ? 'Monitoring & observability prompts'
+                    : 'Scouting report prompts'
+                  }
                 </p>
               </div>
             </div>
@@ -599,10 +634,9 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!e
       {/* Chat Response Layer */}
       {showChatResponse && hasMessages && (
         <div className={`fixed inset-0 z-30 overflow-y-auto pointer-events-none transition-all duration-400 ${
-          devinMode ? 'right-96' : 'right-0'
+          (devinMode || scoutMode) ? 'right-96' : 'right-0'
         }`}>
           <div className="min-h-screen flex flex-col pb-32">
-            {/* ... your existing chat response content ... */}
             <div className="sticky top-0 left-0 right-0 z-40 bg-[#d4c4b0] pointer-events-auto">
               <div className={`transition-all duration-300 ease-in-out ${hasActiveTool ? 'pt-4 pb-2' : 'py-6'}`}>
                 <div className="flex justify-center">
@@ -645,17 +679,7 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!e
                         </ChatBubbleMessage>
                       </ChatBubble>
                     </motion.div>
-                  ) : presetReply ? (
-                    <motion.div {...MOTION_CONFIG} className="pb-4">
-                      <PresetReply 
-                        question={presetReply.question} 
-                        reply={presetReply.reply} 
-                        tool={presetReply.tool} 
-                        onGetAIResponse={handleGetAIResponse} 
-                        onClose={() => setPresetReply(null)} 
-                      />
-                    </motion.div>
-                  ) : errorMessage ? (
+                  )  : errorMessage ? (
                     <motion.div key="error" {...MOTION_CONFIG}>
                       <ChatBubble variant="received">
                         <ChatBubbleMessage className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
@@ -718,13 +742,15 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!presetReply || !!e
         <div className="container mx-auto max-w-3xl px-4">
           <div className="relative flex flex-col items-center gap-3">
             
-            {/* Lorem ipsum - shows when centered */}
+            {/* Description text - shows when centered */}
             {chatCentered && (
               <div className="mb-6 text-center text-[#dcd3c3] max-w-xl">
                 <p className="text-base leading-relaxed">
                   {devinMode 
                     ? "DevOps mode active. Ask me about Docker, Kubernetes, CI/CD, infrastructure, or click a prompt to get started."
-                    : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit."
+                    : scoutMode
+                    ? "Scout mode active. Ask me about Chris's experience, projects, or click a prompt for a scouting report."
+                    : "Ask me anything about my experience, projects, or skills."
                   }
                 </p>
               </div>

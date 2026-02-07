@@ -17,7 +17,7 @@ const inter = Inter({
 // Metadata for the site
 export const metadata: Metadata = {
   title: {
-    default: "Chris Heher ",
+    default: "Chris Heher's portfolio ",
     template: "%s | Chris Heher Portfolio",
   },
   description:

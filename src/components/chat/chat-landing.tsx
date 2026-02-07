@@ -59,7 +59,7 @@ function CarouselContent({ carouselData }: {
 
           {/* Impact Stats */}
           {carouselData.impact && carouselData.impact.length > 0 && (
-            <div className="space-y-4">
+            <div className="space-y-8">
               <h3 className="text-[#8c6a48] text-2xl font-semibold mb-4">Impact</h3>
               {carouselData.impact.map((item, index) => (
                 <div key={index} className="flex items-start gap-3">
@@ -223,9 +223,9 @@ function ChatLanding({
 
   // NEW: Section descriptions for C, I, S
   const sectionDescriptions = {
-    C: 'High-impact content that drives pipeline',
-    I: 'Written for the user who scans a screen, not reads a page. Designed from the mobile state outward and with the F pattern in mind.',
-    S: 'Written at eye level to pique curiosity, add value, and generate brand traction'
+    C: 'High-impact content that drives pipeline by piquing curiosity.',
+    I: 'Users don\'t read -- they scan. Designed with F pattern principles and from the mobile state outward.',
+    S: 'Written at eye level to pique curiosity, add value, and generate brand traction.'
   };
 
   // Debug logging for displayedItems
@@ -308,7 +308,7 @@ function ChatLanding({
       ]
     },
     'sentry-performance': {
-      title: 'Sentry Performance ',
+      title: 'Sentry | Performance GTM campaign',
       type: 'campaign' as const,
       links: [
         { name: 'Blog post', url: 'https://blog.sentry.io/how-slow-is-slow/' },
@@ -318,7 +318,6 @@ function ChatLanding({
         { name: 'webinar', url: 'https://www.youtube.com/watch?v=J0tAK6dKY3Y/' }
       ],
       images: [],
-        description: 'GTM content campaign',
 
       campaignListDescription: 'Product releases run the risk of getting bogged down in their own technical benefits. For Sentry\'s Performance monitoring release, this meant turning jargony features (such as improved visibility into p95 response times) into a simple, differentiating insight -- See Slow Faster',
       impact: [
@@ -345,7 +344,7 @@ function ChatLanding({
         { stat: 'White paper landing pages drove 34,200 total site visits -- 67% of which were organic' }
       ],
         description: 'syndicated thought leadership series',
-      campaignListDescription: 'Dogfooding is the process in which a company uses its own product as a quality control mechanism. This concept was a perfect fit for code monitoring platform Sentry to showcase how its software engineers used the platform to improve the platform.Creating stories out of mundane hiccups in software development established Sentry as a thought leader in the code monitoring space without sounding preachy or pedantic, while also widening brand exposure for content syndication across key industry blogs.' 
+      campaignListDescription: 'Dogfooding is the process in which a company uses its own product as a quality control mechanism. This concept was a perfect fit for Sentry to showcase how its software engineers were using their own platform to track errors and monitor performance. Creating stories out of mundane hiccups in software development established Sentry as a thought leader in the code monitoring space without sounding preachy or pedantic, while also widening brand exposure for content syndication across key industry blogs.' 
     },
     'hp-presence': {
       title: 'HP Presence',
@@ -383,7 +382,6 @@ function ChatLanding({
         { src: '/img/cinc_coil.png', alt: 'Cincoro post 7', url: 'https://www.instagram.com/cincoro/reel/CObVXBIFp2C/' },
         { src: '/img/cincteam.png', alt: 'Cincoro post 8', url: 'https://www.instagram.com/p/CPG-y9DFjIY/' }
       ],
-         description: 'brand launch across social media channels',
       campaignListDescription: 'George Clooney. The Rock. Kendall Jenner. Bryan Cranston. Celebrity tequila is a crowded space. So when Michael Jordan and four other NBA owners started their own tequila company, I was there to help them find a way to help their brand stand out among the stars. Cincoro translates to "five rings". And so the story of Cincoro Tequila is the passion and competitive spirit its five owners share as they each chase their next championship ring.'
     },
     'robotics': {
@@ -855,7 +853,7 @@ useEffect(() => {
           type: 'link' as const,
           promptMode: 'devin',
           url: '#devin',
-          description: 'A sardonic senior engineer who cuts through observability theater and marketing BS. Ask about monitoring, instrumentation, or why most dashboards are useless.'
+          description: 'A sardonic software engineer who cuts through observability theater and marketing BS.'
         }
       ];
       
@@ -967,7 +965,7 @@ useEffect(() => {
         <div 
           style={{
             position: 'absolute',
-            top: '100px',
+            top: '70px',
 maxWidth: '100%',
             zIndex: '601',
             maxHeight: '85vh',
@@ -975,8 +973,8 @@ maxWidth: '100%',
       
             color: '#3e2e20ff',
             borderRadius: '10px',
-            fontSize: '20px',
-            lineHeight: '1.6',
+            fontSize: '18px',
+            lineHeight: '1.5',
             textAlign: 'left',
             overflowY: 'auto',
             scrollbarWidth: 'none',
@@ -991,10 +989,10 @@ maxWidth: '100%',
           ) : activeSection ? (
             // NEW: Show section-specific description when C, I, or S is active
             <div style={{
-              fontSize: '22px',
+              fontSize: '20px',
               width:'800px',
               fontWeight: '300',
-              lineHeight: '1.4',
+              lineHeight: '1.3',
               maxWidth: '600px',
         
             }}>
@@ -1029,7 +1027,8 @@ maxWidth: '100%',
     <div style={{ 
       flex: 1, 
       paddingLeft: '10px', 
-      marginTop: '-30px'
+      marginTop: '-60px',
+      height: '250px'
 
     }}>
       <div style={{ 
@@ -1101,8 +1100,7 @@ maxWidth: '100%',
           fontSize: '18px',
           lineHeight: '1.3',
           textAlign: 'left',
-          zIndex: 700,
-          padding: '100px'
+          zIndex: '700'
         }}>
           Chris creates content for brands who see ai as the fire, not the chef.
           <br/><br/>

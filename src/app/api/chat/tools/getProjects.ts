@@ -1,110 +1,85 @@
 // src/app/api/chat/tools/getProjects.ts
-import { tool } from "ai";
-import { z } from "zod";
-import { projectData } from "@/lib/config-loader";
+import { portfolioConfig } from '@/lib/config-loader';
 
-export const getProjects = tool({
-  description: `CRITICAL: Always analyze the user's query for filtering keywords before calling this tool.
+interface GetProjectsInput {
+  keyword?: string;
+  techStack?: string;
+  category?: string;
+  featured?: boolean;
+}
 
-This tool retrieves Chris Heher's portfolio projects. YOU MUST extract and pass filter parameters based on the user's question.
-
-FILTER DECISION RULES (FOLLOW THESE EXACTLY):
-1. Technology mentions → USE techStack parameter
-2. Category/industry mentions → USE category parameter
-3. Quality indicators → USE featured parameter
-4. Specific keywords → USE keyword parameter
-5. Generic requests → NO parameters
-
-IMPORTANT: Extract these from natural language. Don't require exact phrasing.`,
-  
-  inputSchema: z.object({  // Changed from 'parameters' to 'inputSchema'
-    category: z.string().optional().describe("EXTRACT from queries mentioning: SaaS, DevOps, Developer Relations, GTM, content strategy, pharmaceuticals, etc."),
-    techStack: z.string().optional().describe("EXTRACT from queries mentioning: React, Python, Ceros, Gemini, Next.js, TypeScript, etc."),
-    featured: z.boolean().optional().describe("SET TO TRUE when user asks for: best, featured, top, favorite, proud projects"),
-    keyword: z.string().optional().describe("EXTRACT company names (DroneDeploy, Sentry, Airbnb) or topics (AI, automation) from the query"),
-  }),
-  
-  execute: async ({ category, techStack, featured, keyword }) => {  // No type annotation needed
-    console.log('🔧 getProjects called with params:', { category, techStack, featured, keyword });
+export const getProjects = {
+  execute: async (input: GetProjectsInput = {}) => {
+    console.log('🔧 getProjects called with:', input);
     
-    let projects = projectData || [];
-    console.log('📊 Total projects before filtering:', projects.length);
-    
-    if (projects.length > 0) {
-      console.log('🔍 Sample raw project data (first project):', JSON.stringify(projects[0], null, 2));
-    }
-    
-    if (category) {
-      console.log('🔍 Filtering by category:', category);
-      projects = projects.filter((p: any) => {
-        const projectCategory = Array.isArray(p.category) 
-          ? p.category.join(' ') 
-          : typeof p.category === 'string' 
-          ? p.category 
-          : String(p.category || '');
+    let filtered = portfolioConfig.projects;
+
+    // Filter by keyword (searches title, description, category)
+    if (input.keyword) {
+      const kw = input.keyword.toLowerCase();
+      filtered = filtered.filter(p => {
+        const titleMatch = p.title?.toLowerCase().includes(kw);
+        const descMatch = p.description?.toLowerCase().includes(kw);
         
-        const matches = projectCategory.toLowerCase().includes(category.toLowerCase());
-        if (matches) console.log('  ✅ Match:', p.title);
-        return matches;
+        // Handle category as both string and array
+        let catMatch = false;
+        if (p.category) {
+          if (Array.isArray(p.category)) {
+            catMatch = p.category.some(cat => cat.toLowerCase().includes(kw));
+          } else if (typeof p.category === 'string') {
+            catMatch = p.category.toLowerCase().includes(kw);
+          }
+        }
+        
+        return titleMatch || descMatch || catMatch;
       });
     }
-    
-    if (techStack) {
-      console.log('🔍 Filtering by techStack:', techStack);
-      projects = projects.filter((p: any) => {
-        const matches = p.techStack?.some((tech: string) =>
-          tech.toLowerCase().includes(techStack.toLowerCase())
-        );
-        if (matches) console.log('  ✅ Match:', p.title);
-        return matches;
+
+    // Filter by techStack
+    if (input.techStack) {
+      const tech = input.techStack.toLowerCase();
+      filtered = filtered.filter(p => {
+        if (Array.isArray(p.techStack)) {
+          return p.techStack.some(t => t.toLowerCase().includes(tech));
+        } else if (typeof p.techStack === 'string') {
+          return p.techStack.toLowerCase().includes(tech);
+        }
+        return false;
       });
-      console.log('📊 After techStack filter:', projects.length);
     }
-    
-    if (featured !== undefined) {
-      console.log('🔍 Filtering by featured:', featured);
-      projects = projects.filter((p: any) => p.featured === featured);
-      console.log('📊 After featured filter:', projects.length);
-    }
-    
-    if (keyword) {
-      console.log('🔍 Filtering by keyword:', keyword);
-      const kw = keyword.toLowerCase();
-      projects = projects.filter((p: any) => {
-        const matches = p.title?.toLowerCase().includes(kw) ||
-                       p.description?.toLowerCase().includes(kw);
-        if (matches) console.log('  ✅ Match:', p.title);
-        return matches;
+
+    // Filter by category
+    if (input.category) {
+      const cat = input.category.toLowerCase();
+      filtered = filtered.filter(p => {
+        if (Array.isArray(p.category)) {
+          return p.category.some(c => c.toLowerCase().includes(cat));
+        } else if (typeof p.category === 'string') {
+          return p.category.toLowerCase().includes(cat);
+        }
+        return false;
       });
-      console.log('📊 After keyword filter:', projects.length);
     }
-    
-    console.log('✅ Final filtered projects:', projects.length);
-    
-    const result = projects.map((project: any) => {
-      console.log(`📦 Mapping project: ${project.title}`);
-      console.log(`   - Has links property: ${!!project.links}`);
-      console.log(`   - Links value:`, project.links);
-      
-      return {
-        title: project.title,
-        category: project.category,
-        date: project.date,
-        description: project.description,
-        techStack: project.techStack || [],
-        featured: project.featured || false,
-        links: project.links || [],
-        highlights: project.metrics || [],
-      };
-    });
-    
-    console.log('🎯 Final result with links:', JSON.stringify(result, null, 2));
+
+    // Filter by featured
+    if (input.featured) {
+      filtered = filtered.filter(p => p.featured === true);
+    }
+
+    console.log(`✅ Returning ${filtered.length} projects`);
     
     return {
-      projects: result,
-      summary: projects.length 
-        ? `Found ${projects.length} project(s) matching your criteria.`
-        : "No projects found matching those filters.",
+      projects: filtered.map(p => ({
+        title: p.title,
+        category: p.category,
+        description: p.description,
+        techStack: p.techStack,
+        featured: p.featured,
+        links: p.links,
+        duration: p.duration
+      })),
+      total: filtered.length,
+      filters: input
     };
-  },
-});
+  }
+};

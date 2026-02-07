@@ -54,7 +54,7 @@ export default function ChatBottombar({
     <motion.div
       initial={{ opacity: 0, y: 0 }}
       animate={{ opacity: 1, x: 400, y: -130 }}
-      className="w-full pb-0 md:pb-12"
+      className="w-full pb-0 md:pb-6"
     >
       <form onSubmit={handleSubmit} className="fixed">
         <div className="flex rounded-full border border-[#E5E5E9] bg-[#dcd3c3]">

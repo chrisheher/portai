@@ -1,4 +1,60 @@
 {
+ 
+  "experience": [
+    {
+      "company": "DroneDeploy",
+      "position": "lead writer",
+      "industry": "SaaS (reality capture)",
+    "media": ["blog posts, white papers, web pages"],
+      "duration": "2024",
+      "description": "Collaborated with engineering and product teams to create a range of strategic content that helped drive a $10M+ sales pipeline. Wrote sales enablement content across DroneDeploy's product suite: dock automation, ground  robotics, Data on Demand, and cybersecurity solutions. Developed “Your AI In the Sky” tagline for DroneDeploy's Safety AI rollout. Wrote white papers on all aspects of reality capture - ground control points to underground utilities to facade inspections. "
+    },
+    {
+      "company": "Sentry",
+      "position": "Senior Content Strategist",
+      "industry": "SaaS (application monitoring)",
+      "media": ["blog posts, white papers, web pages"],
+      "duration": "2020-2024",
+      "description": "Led content strategy for Sentry's performance monitoring product, which contributed to an 8-11% pipeline influence across roles. Collaborated with product marketing, demand gen, and sales teams to create a range of strategic content that helped drive pipeline and revenue. Developed “See Slow Faster” tagline for Sentry Performance launch. Wrote white papers on all aspects of application performance monitoring - from frontend performance to database optimization to mobile app performance."
+    },
+    {
+      "company": "HP",
+      "position": "Technical Content Strategist",
+      "industry": "SaaS (presence management)",
+      "media": ["blog posts, white papers, web pages"],
+      "duration": "2018-2020",
+      "description": "Created technical content to support the launch of HP Presence, a SaaS product that helps businesses manage their online presence. Collaborated with product marketing and sales teams to create a range of strategic content that helped drive pipeline and revenue. Developed “Own Your Presence” tagline for HP Presence launch. Wrote white papers on all aspects of online presence management - from local SEO to review management to social media strategy."
+
+    }, {
+      "company": "The Charles NYC",
+      "position": "Freelance copywriter",
+      "industry": "Advertising agency",
+      "media": ["social media, brand manifesto, website copy"],
+      "description": "While at The Charles, I produced site copy, brand manifestos, and social media for Cincoro, a tequila owned by five NBA owners.."
+
+    },{
+      "company": "tbwa + Integer",
+      "position": "Senior copywriter",
+      "industry": "Advertising agency",
+      "media": ["billboards, infographics, microsites, social media, experiental activations"],
+      "description": " TBWA + Integer is an advertising agency specializing in retail and eCommerce marketing.As lead writer on their Acuvue and Jagermeister accounts, I developed B2C content ranging from billboards, infographics, print, and social activations."
+
+    },{
+      "company": "360i",
+      "position": "Senior copywriter",
+      "industry": "Advertising agency",
+      "media": ["microsites, social, video, banners"],
+      "description": "   Canon microsite -- Technical lens content written for soccer dads and professional videographers alike. Crafted copy for Toyota's digital rebrand, including a 10+ page microsite that showcased the brand's commitment to sustainability. Developed technical lens content for Canon's microsite that resonated with both soccer dads and professional videographers. Contributed to campaigns that increased brand engagement and drove sales for both Toyota and Canon."
+
+    },
+    {
+       "company": "razorfish",
+      "position": "Copywriter",
+      "industry": "Advertising agency",
+      "media": ["microsites, social, video, banners"],
+      "description": "   Digital content for Mercedes-Benz: social, site copy, video, banners. Crafted copy for Mercedes-Benz's digital campaigns, including social media, microsites, video scripts, and banner ads. Collaborated with creative teams to develop compelling narratives that resonated with luxury car buyers. Contributed to campaigns that increased brand engagement and drove sales for Mercedes-Benz."
+    }],     
+
   "personal": {
     "name": "Christopher Heher",
     "title": "Writer | Marketer | Conversational Design",
@@ -9,8 +65,8 @@
   "categoryMappings": {
     "GTM Launch": {
       "links": [
-        {"name": "See Slow Faster", "url": "/?show=sentry-performance"},
-        {"name": "Safety AI", "url": "/?show=safety-ai"}
+        {"name": "Sentry Performance GTM", "url": "/?show=sentry-performance"},
+        {"name": "DroneDeploy Safety AI", "url": "/?show=safety-ai"}
       ]
     },
     "Technical Writing": {
@@ -47,13 +103,13 @@
     },
     "SaaS / B2B": {
       "links": [
-        {"name": "Safety AI", "url": "/?show=safety-ai"},
-        {"name": "Sentry", "url": "/?show=sentry-performance"}
+        {"name": "DroneDeploy Safety AI", "url": "/?show=safety-ai"},
+        {"name": "Sentry Performance", "url": "/?show=sentry-performance"}
       ]
     },
     "AI / ML": {
       "links": [
-        {"name": "Safety AI", "url": "/?show=safety-ai"},
+        {"name": "DroneDeploy Safety AI", "url": "/?show=safety-ai"},
         {"name": "Ground Robotics", "url": "/?show=robotics"}
       ]
     },
@@ -79,7 +135,7 @@
       "Lead Generation", "Leads", "Inbound", "Conversion", "UX"
     ],
     "technical": [
-      "API", "SDK", "Developer", "Technical", "SaaS", "B2B", "Enterprise",
+      "API", "SDK", "Developer", "Technical", "SaaS", "B2B", "Enterprise","open source",
       "AI", "ML", "Artificial Intelligence", "Machine Learning",
       "DevOps", "Cloud", "Engineering", "Software", "Open Source",
       "API Documentation", "Documentation"
@@ -96,7 +152,7 @@
 
   "unique_strengths": [
     "Transforms technical jargon into compelling narratives",
-    "8+ years experience in developer tools and enterprise SaaS",
+    "deep experience in developer tools and enterprise SaaS",
     "Proven track record of pipeline influence (8-11% across roles)",
     "Bridges gap between technical teams and business stakeholders",
     "Strong understanding of AI/ML, cybersecurity, and DevOps concepts"

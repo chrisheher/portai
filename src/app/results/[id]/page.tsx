@@ -90,8 +90,8 @@ export default async function ResultsPage({ params }: PageProps) {
       background: 'white',
       borderRadius: '10px',
       fontFamily: 'kcgangster',
-      width: '85%',
-        margin: '75px 0px 0px 80px',
+      width: '75%',
+        margin: '75px 0px 0px 160px',
 
       height: '100%'
     }}>
