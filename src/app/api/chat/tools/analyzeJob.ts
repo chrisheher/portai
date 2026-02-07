@@ -429,7 +429,7 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 2400,
-      temperature: 1.1,
+      temperature: 1,
       system: [
         {
           type: "text",
