@@ -38,7 +38,36 @@
       "duration": "2017",
       "description": "Momentum is an experiential advertising agency.  While there I wrote a pitch deck that won Facebook's FBIQ account, led Espolon tequila's social media, shaped messaging for Verizon's go90 streaming platform launch, and created on-premise product activations for Jameson and Glenfiddich",
       "media": ["Live deliberately. Drink responsibly.", "Hack the moment"]
-    }
+    },
+    {
+      "company": "The Charles NYC",
+      "position": "Freelance copywriter",
+      "industry": "Advertising agency",
+      "media": ["social media, brand manifesto, website copy"],
+      "description": "While at The Charles, I produced site copy, brand manifestos, and social media for Cincoro, a tequila owned by five NBA owners.."
+
+    },{
+      "company": "TBWA / Integer",
+      "position": "Senior copywriter",
+      "industry": "Advertising agency",
+      "media": ["billboards, infographics, microsites, social media, experiental activations"],
+      "description": " TBWA / Integer is an advertising agency specializing in retail and eCommerce marketing.As lead writer on their Acuvue and Jagermeister accounts, I developed B2C content ranging from billboards, infographics, print, and social activations."
+
+    },{
+      "company": "360i",
+      "position": "Senior copywriter",
+      "industry": "Advertising agency",
+      "media": ["microsites, social, video, banners"],
+      "description": "   Canon microsite -- Technical lens content written for soccer dads and professional videographers alike. Crafted copy for Toyota's digital rebrand, including a 10+ page microsite that showcased the brand's commitment to sustainability. Developed technical lens content for Canon's microsite that resonated with both soccer dads and professional videographers. Contributed to campaigns that increased brand engagement and drove sales for both Toyota and Canon."
+
+    },
+    {
+       "company": "razorfish",
+      "position": "Copywriter",
+      "industry": "Advertising agency",
+      "media": ["microsites, social, video, banners"],
+      "description": "   Digital content for Mercedes-Benz: social, site copy, video, banners. Crafted copy for Mercedes-Benz's digital campaigns, including social media, microsites, video scripts, and banner ads. Collaborated with creative teams to develop compelling narratives that resonated with luxury car buyers. Contributed to campaigns that increased brand engagement and drove sales for Mercedes-Benz."
+    } 
    
   ],
  
@@ -245,7 +274,6 @@
     },  
         {
       "title": "Ceros internal",
-      "shape":"circle",
       "category": "content strategy",
       "description": "Ceros is a B2B content creation platform; think photoshop for front-end code. Many Ceros clients in trial were suffering from blank platform syndrome; that is, while they had an appreciation of the tool itself, they lacked  an understanding of its application to their broader content initiatives.<br/> As content strategist, I was tasked to lead the creative conversation during a client's trial. I approached this by relating to clients that most digital content is still being written as if from a typewriter — despite being read on a screen. And that static content written from this paper perspective – even if well-written and strategic –  is viewed by their customers as merely lumps of words.<br/> From writing strategic briefs to pitching experiential activations and rewriting client inputs, I was central to turning  static .pdfs into interactive, mobile-friendly content in ways which showcased the Ceros platform.",
       "techStack": ["Ceros"],
