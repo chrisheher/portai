@@ -433,7 +433,7 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
       system: [
         {
           type: "text",
-          text: `Analyze jobs against this portfolio. Return ONLY valid JSON. 
+          text: `Analyze jobs against this portfolio. Address the hiring manager/recruiter -- not Christopher. Return ONLY valid JSON. 
 
 Portfolio:
 ${JSON.stringify(portfolioConfig, null, 2)}`,
@@ -462,7 +462,7 @@ AVAILABLE CATEGORIES (use ONLY these for "category" field - pick the one that be
 
 CRITICAL: 
 - For "category", use ONLY one of the 10 categories listed above
-- For "match", extract a DIRECT QUOTE (7 words or fewer) from the job description
+- For "match", extract a DIRECT QUOTE (10 words or fewer) from the job description
 
 Return valid JSON (max 5 strengths, max 3 gaps):
 {
