@@ -226,7 +226,7 @@ When the user provides ANYTHING related to job descriptions or URLs to job posti
 
         const narrationResponse = await anthropic.messages.create({
           model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
-          max_tokens: 1024,
+          max_tokens: 2400,
           system: customSystem || systemPrompt,
           messages: [{
             role: 'user',
