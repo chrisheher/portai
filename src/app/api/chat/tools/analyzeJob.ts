@@ -233,28 +233,28 @@ function calculateMatchScore(
   
   // 1. Core Skills Score (0-100)
   const coreMatches = coreSkillsNeeded.filter((skill: string) => jobLower.includes(skill)).length;
-  const coreScore = Math.min((coreMatches / 4) * 100, 100);
+  const coreScore = Math.min((coreMatches / 3) * 100, 100);
 
   // 2. Marketing Skills Score (0-100)
   const marketingMatches = marketingSkills.filter((skill: string) => jobLower.includes(skill)).length;
-  const marketingScore = Math.min((marketingMatches / 4) * 100, 100);
+  const marketingScore = Math.min((marketingMatches / 3) * 100, 100);
 
   // 3. Industry Fit (0-100)
   let industryScore = 50;
-  if (jobLower.includes('saas')) industryScore += 6;
-  if (jobLower.includes('developer')) industryScore += 6;
-  if (jobLower.includes('enterprise')) industryScore += 6;  
-  if (jobLower.includes('advertising')) industryScore += 6;
-  if (jobLower.includes('b2b')) industryScore += 6;
+  if (jobLower.includes('saas')) industryScore += 7;
+  if (jobLower.includes('developer')) industryScore += 7;
+  if (jobLower.includes('enterprise')) industryScore += 7;  
+  if (jobLower.includes('advertising')) industryScore += 7;
+  if (jobLower.includes('b2b')) industryScore += 7;
   industryScore = Math.min(industryScore, 100);
 
   // 4. Technical Fluency (0-100)
   const techMatches = techTerms.filter((term: string) => jobLower.includes(term)).length;
-  const techScore = Math.min((techMatches / 4) * 100, 100);
+  const techScore = Math.min((techMatches / 3) * 100, 100);
 
   // 5. Soft Skills Score (0-100)
   const softMatches = softSkills.filter((skill: string) => jobLower.includes(skill)).length;
-  const softScore = Math.min((softMatches / 4) * 100, 100);
+  const softScore = Math.min((softMatches / 3) * 100, 100);
 
   // Calculate weighted score
   const baseScore = Math.round(
@@ -313,14 +313,9 @@ function applyScoreModifiers(
   if (jobLower.includes('startup') && jobLower.includes('series')) score += 5;
   
   // Years of experience alignment (portfolio shows 8 years)
-  const yearsMatch = jobContent.match(/(\d+)\+?\s*years?/i);
-  if (yearsMatch) {
-    const requiredYears = parseInt(yearsMatch[1]);
-    if (requiredYears >= 5 && requiredYears <= 20) score += 5;
-  }
-  
+ 
   console.error(`🎯 Score modifiers:
-    Critical gaps penalty: -${criticalGaps * 12}
+    Critical gaps penalty: -${criticalGaps * 10}
     Moderate gaps penalty: -${moderateGaps * 3}
     Final adjusted score: ${Math.max(15, Math.min(95, score))}`);
   
@@ -427,13 +422,30 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     console.error('📤 Calling Claude API...');
     
     const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-opus-4-5-20251101',
       max_tokens: 2400,
       temperature: 1,
       system: [
         {
           type: "text",
-          text: `Analyze jobs against this portfolio. IMPORTANT: Address the hiring manager/recruiter -- not the candidate/Christopher. Return ONLY valid JSON. 
+      text: `Analyze jobs against this portfolio. IMPORTANT: Address the hiring manager/recruiter -- not the candidate/Christopher.
+
+Portfolio:
+${JSON.stringify(portfolioConfig, null, 2)}
+
+EVIDENCE QUALITY RULES:
+✅ GOOD evidence is:
+- Specific: "Led 15% growth in developer engagement through technical blog series"
+- Quantified: "Reduced documentation time 40% via automation"
+- Project-based: "Built See Slow Faster campaign generating 2M+ impressions"
+- Outcome-focused: "Drove 500+ SQLs through content strategy"
+
+❌ BAD evidence is:
+- Generic: "Has content strategy experience"
+- Vague: "Worked on marketing campaigns"
+- Skill-listing: "Knows React and TypeScript"
+- Resume-speak: "Excellent communication skills"
+
 
 Portfolio:
 ${JSON.stringify(portfolioConfig, null, 2)}`,
