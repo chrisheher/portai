@@ -428,7 +428,7 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
       system: [
         {
           type: "text",
-      text: `Analyze jobs against this portfolio. IMPORTANT: Address the hiring manager/recruiter -- not the candidate/Christopher.
+      text: `Analyze jobs against this portfolio. IMPORTANT: Address the hiring manager/recruiter -- not the candidate/Chris.
 
 Portfolio:
 ${JSON.stringify(portfolioConfig, null, 2)}

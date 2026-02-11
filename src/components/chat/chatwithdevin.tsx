@@ -137,7 +137,7 @@ const Chat: React.FC = () => {
         .join('\n');
     }
 
-    return `# Scouting Report: ${config.personal?.name || 'Christopher Heher'}
+    return `# Scouting Report: ${config.personal?.name || 'Chris Heher'}
 
 ## Professional Background
 ${config.personal?.title || ''}
