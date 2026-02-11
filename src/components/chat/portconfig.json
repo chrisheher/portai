@@ -643,19 +643,7 @@
   },
 
   "ATSKeywords": {
-   "critical":[
-     "Content Strategy", "Technical Writing", "Developer Relations",
-      "GTM", "Go-to-market", "Product Launch", "Launch Strategy",
-      "Brand Messaging", "Brand Voice", "Messaging", "Positioning",
-      "Copywriting", "Long-form", "Content Marketing", "Product Marketing",
-      "Editorial Strategy", "Thought Leadership", "Content Operations",
-      "Demand Generation", "Sales Enablement", "Competitive Analysis","Pipeline", "Campaign", "Launch", "Brand", "Social Media",
-      "Lead Generation", "Leads", "Inbound", "Conversion", "UX",  "API", "SDK", "Developer", "Technical", "SaaS", "B2B", "Enterprise",
-      "AI", "ML", "Artificial Intelligence", "Machine Learning",
-      "DevOps", "Cloud", "Engineering", "Software", "Open Source",
-      "API Documentation", "Documentation",  "Leadership", "Communication", "Collaboration", "Strategic",
-      "Cross-functional", "Stakeholder", "Storytelling","Fintech", "Financial", "DevOps", "Payments",
-      "Healthcare", "HR Technology", "Recruiting"   ],
+   
     "core": [
       "Content Strategy", "Technical Writing", "Developer Relations",
       "GTM", "Go-to-market", "Product Launch", "Launch Strategy",

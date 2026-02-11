@@ -223,8 +223,8 @@ function ChatLanding({
 
   // NEW: Section descriptions for C, I, S
   const sectionDescriptions = {
-    C: 'High-impact content that drives pipeline by piquing curiosity.',
-    I: 'Users don\'t read -- they scan. Designed with F pattern principles and from the mobile state outward.',
+    C: 'High-impact content which drove pipeline for Michael Jordan\'s tequila, an application monitoring unicorn, HP\'s line of post-pandemic videoconferencing hardware, and a construction drone platform by piquing curiosity in their customers no one else could.',
+    I: 'Users don\'t read content -- they scan it. These projects were designed with this unfortunate truth, F pattern principles, and mobile responsiveness in mind.',
     S: 'Written at eye level to pique curiosity, add value, and generate brand traction.'
   };
 
@@ -237,7 +237,7 @@ function ChatLanding({
 
   // Force background color on body element based on mode
   useEffect(() => {
-    const backgroundColor = mode === 'initial' ? '#25202029' : '#634c4cff';
+    const backgroundColor = mode === 'initial' ? '#25202029' : 'rgb(234, 234, 234)';
     
     document.body.style.setProperty('background-color', backgroundColor, 'important');
     document.documentElement.style.setProperty('background-color', backgroundColor, 'important');
@@ -990,9 +990,9 @@ maxWidth: '100%',
             <div style={{
               fontSize: '20px',
               width:'800px',
-              fontWeight: '300',
-              lineHeight: '1.3',
-              maxWidth: '600px',
+              fontWeight: '400',
+              lineHeight: '1.4',
+              maxWidth: '700px',
         
             }}>
               {sectionDescriptions[activeSection]}

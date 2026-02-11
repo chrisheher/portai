@@ -233,28 +233,28 @@ function calculateMatchScore(
   
   // 1. Core Skills Score (0-100)
   const coreMatches = coreSkillsNeeded.filter((skill: string) => jobLower.includes(skill)).length;
-  const coreScore = Math.min((coreMatches / 2) * 100, 100);
+  const coreScore = Math.min((coreMatches / 4) * 100, 100);
 
   // 2. Marketing Skills Score (0-100)
   const marketingMatches = marketingSkills.filter((skill: string) => jobLower.includes(skill)).length;
-  const marketingScore = Math.min((marketingMatches / 2) * 100, 100);
+  const marketingScore = Math.min((marketingMatches / 4) * 100, 100);
 
   // 3. Industry Fit (0-100)
   let industryScore = 50;
-  if (jobLower.includes('saas')) industryScore += 10;
-  if (jobLower.includes('developer')) industryScore += 10;
-  if (jobLower.includes('enterprise')) industryScore += 8;  
-  if (jobLower.includes('advertising')) industryScore += 8;
-  if (jobLower.includes('b2b')) industryScore += 10;
+  if (jobLower.includes('saas')) industryScore += 6;
+  if (jobLower.includes('developer')) industryScore += 6;
+  if (jobLower.includes('enterprise')) industryScore += 6;  
+  if (jobLower.includes('advertising')) industryScore += 6;
+  if (jobLower.includes('b2b')) industryScore += 6;
   industryScore = Math.min(industryScore, 100);
 
   // 4. Technical Fluency (0-100)
   const techMatches = techTerms.filter((term: string) => jobLower.includes(term)).length;
-  const techScore = Math.min((techMatches / 2) * 100, 100);
+  const techScore = Math.min((techMatches / 4) * 100, 100);
 
   // 5. Soft Skills Score (0-100)
   const softMatches = softSkills.filter((skill: string) => jobLower.includes(skill)).length;
-  const softScore = Math.min((softMatches / 3) * 100, 100);
+  const softScore = Math.min((softMatches / 4) * 100, 100);
 
   // Calculate weighted score
   const baseScore = Math.round(

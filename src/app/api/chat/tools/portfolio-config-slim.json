@@ -3,7 +3,7 @@
   "experience": [
     {
       "company": "DroneDeploy",
-      "position": "lead writer",
+      "position": "lead content writer",
       "industry": "SaaS (reality capture)",
     "media": ["blog posts, white papers, web pages"],
       "duration": "2024",
@@ -22,7 +22,6 @@
       "position": "Technical Content Strategist",
       "industry": "SaaS (presence management)",
       "media": ["blog posts, white papers, web pages"],
-      "duration": "2018-2020",
       "description": "Created technical content to support the launch of HP Presence, a SaaS product that helps businesses manage their online presence. Collaborated with product marketing and sales teams to create a range of strategic content that helped drive pipeline and revenue. Developed “Own Your Presence” tagline for HP Presence launch. Wrote white papers on all aspects of online presence management - from local SEO to review management to social media strategy."
 
     }, {
@@ -44,7 +43,7 @@
       "position": "Senior copywriter",
       "industry": "Advertising agency",
       "media": ["microsites, social, video, banners"],
-      "description": "   Canon microsite -- Technical lens content written for soccer dads and professional videographers alike. Crafted copy for Toyota's digital rebrand, including a 10+ page microsite that showcased the brand's commitment to sustainability. Developed technical lens content for Canon's microsite that resonated with both soccer dads and professional videographers. Contributed to campaigns that increased brand engagement and drove sales for both Toyota and Canon."
+      "description": "Canon microsite -- Technical lens content written for soccer dads and professional videographers alike. Crafted copy for Toyota's digital rebrand, including a 10+ page microsite that showcased the brand's commitment to sustainability. Developed technical lens content for Canon's microsite that resonated with both soccer dads and professional videographers. Contributed to campaigns that increased brand engagement and drove sales for both Toyota and Canon."
 
     },
     {
@@ -93,8 +92,10 @@
         {"name": "HP Presence", "url": "/?show=hp-presence"}
       ]
     },
-    "Fintech": {
-      "links": []
+   "Fintech": {
+      "keywords": ["fintech", "financial", "banking", "trading", "finance", "payments"],
+        "links": [{"name": "google Gpay", "url": "/?show=gpay"},
+    {"name" : "fintech infographics", "url": "/?show=fintech"}]
     },
     "Employer Brand": {
       "links": [

@@ -22,9 +22,7 @@ const SCOUT_PROMPTS = [
   "How are you like tyrese maxey",
   "how is ai like a backup point guard to chris",
   "if chris is a point guard, what are the other positions on a saas marketing team",
-  "how is a content marketer like a point guard to demand gen teams",
-  "how does an unselfish team that moves the ball lead to improved marketing outcomes"
-
+  "how is a content marketer like a point guard to demand gen teams"
 ];
 
 const COOPER_PROMPTS = [

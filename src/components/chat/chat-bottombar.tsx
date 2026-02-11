@@ -57,7 +57,7 @@ export default function ChatBottombar({
       className="w-full pb-0 md:pb-6"
     >
       <form onSubmit={handleSubmit} className="fixed">
-        <div className="flex rounded-full border border-[#E5E5E9] bg-[#dcd3c3]">
+        <div className="flex rounded-full border border-[#E5E5E9]">
           <input
             ref={inputRef}
             type="text"

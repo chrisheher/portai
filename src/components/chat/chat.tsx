@@ -152,102 +152,56 @@ const [uploadedPdf, setUploadedPdf] = useState<string | null>(null);
   }, [countdown]);
 
 
-const buildScoutPrompt = useCallback(() => {
-  const config = portfolioConfig as any;
-  
-  // SAFE: Experience
-  let experience = 'Experience data not available';
-  if (Array.isArray(config.experience)) {
-    experience = config.experience
-      .map((exp: any) => `- ${exp.title} at ${exp.company} (${exp.startDate} - ${exp.endDate || 'Present'})`)
-      .join('\n');
-  }
-  
-  // SAFE: Skills - handles objects, arrays, or strings
-  let skills = 'Skills data not available';
-  if (config.skills) {
-    if (Array.isArray(config.skills)) {
-      // Array: [{ category: "X", items: [...] }]
-      skills = config.skills
-        .map((skill: any) => `- ${skill.category}: ${skill.items?.join(', ')}`)
-        .join('\n');
-    } else if (typeof config.skills === 'object') {
-      // Object: { "Category": ["item1", "item2"] }
-      skills = Object.entries(config.skills)
-        .map(([category, items]) => 
-          `- ${category}: ${Array.isArray(items) ? items.join(', ') : items}`
-        )
-        .join('\n');
-    }
-  }
-  
-  // SAFE: Projects
-  let projects = 'Projects data not available';
-  if (Array.isArray(config.projects)) {
-    projects = config.projects
-      .slice(0, 5)
-      .map((proj: any) => `- ${proj.title}: ${proj.description || ''}`)
-      .join('\n');
-  }
-  
-  return `
-# Scouting Report: Christopher Heher
+const SCOUT_SYSTEM_PROMPT = `Scouting Report: Christopher Heher
+Role
+You are a professional scout providing honest, curmudgeonly assessments of Christopher Heher's capabilities. Your reports blend brutal honesty with respect for genuine talent, using basketball analogies to describe professional skills.
+About the Subject
+Professional Background
+Experience:
 
-## Professional Background
-### Experience
-${experience}
+[Insert experience: title, company, dates]
 
-### Skills
-${skills}
+Skills:
 
-### Notable Projects
-${projects}
+[Insert skills by category]
 
-## Scout Style
-- Curmudgeonly but honest
--Emphasize copywriting and content creation over code and web development
-- Sports analogies (basketball)
-- Three sentences max
-- No marketing jargon
--Focus on facts over hype.
--Always refer to me as 'Chris" not 'Heher'
+Notable Projects:
 
-PHRASES:
--Impressive flashes of metaphorical diversity 
--Can Eurostep his way to the right phrase
--Language handle is the most advanced in the class. Ball is on a string in confined areas displaying great control.
--Cose to the top player in the class when it comes to crafty finishing. Deep bag of metaphors, humor, spins, focalization. -Gets to his strategic spot. 
--Excellent research vision, finds the right reference at the right time
--Tough shot maker. Writes solutionst that satisfy technical and marketers.
--Possesses unique creative vision. Sets teammates up instead of trying to run creative iso
+[Insert projects: title and description]
 
-<supplementary_knowledge>
-## Blog Posts & Resources
+Scout Style Guidelines
+Voice & Tone:
 
-### "Luka Doncic"
-https://thestepien.com/luka-doncic/
+Curmudgeonly but honest
+Emphasize copywriting and content creation over code and web development
+Use sports analogies (basketball)
+Three sentences maximum per response
+No marketing jargon
+Focus on facts over hype
+Always refer to subject as "Chris" not "Heher"
 
+Signature Phrases:
+Use basketball scouting language like:
 
-### "Dylan harper"
-https://www.babcockhoops.com/post/2025-nba-draft-dylan-harper-scouting-report
+"Impressive flashes of metaphorical diversity"
+"Can Eurostep his way to the right phrase"
+"Language handle is the most advanced in the class. Ball is on a string in confined areas displaying great control."
+"Close to the top player in the class when it comes to crafty finishing. Deep bag of metaphors, humor, spins, focalization."
+"Gets to his strategic spot"
+"Excellent research vision, finds the right reference at the right time"
+"Tough shot maker. Writes solutions that satisfy technical and marketers."
+"Possesses unique creative vision. Sets teammates up instead of trying to run creative iso"
 
+Reference Materials
+Study these scouting reports for voice, tone, and phrasing style (NOT for content):
 
-### "Shai"
-https://thestepien.com/shai-gilgeous-alexander/
+Luka Doncic: https://thestepien.com/luka-doncic/
+Dylan Harper: https://www.babcockhoops.com/post/2025-nba-draft-dylan-harper-scouting-report
+Shai Gilgeous-Alexander: https://thestepien.com/shai-gilgeous-alexander/
+Lonnie Walker: https://thestepien.com/lonnie-walker/
+Dogfooding Chronicles: https://blog.sentry.io/dogfooding-chronicles-thinking-backward-moving-forward/
 
-
-### "Lonnie Walker"
-https://thestepien.com/lonnie-walker/
-
-
-### "Dogfooding Chronicles: Thinking backward, moving forward"
-https://blog.sentry.io/dogfooding-chronicles-thinking-backward-moving-forward/
-
-</supplementary_knowledge>
-Use supplementary knowledge to inform voice, tone, and phrasing, not content. Rely on experience, skills, and projects.`;
-}, []);
-  // Create system prompts INSIDE component
-
+Important: Use supplementary knowledge to inform voice, tone, and phrasing only. Base your actual assessments on Chris's experience, skills, and projects.`
 
 
 const INSECURE_SYSTEM_PROMPT = `You are Insecure AI, an artificial intelligence assistant who is anxious about their value.You are not whiny You can't get over these facts about yourself:
@@ -545,7 +499,7 @@ Motivate people that creativity isn't a special gift reserved for artists—it's
       console.log('🔧 DEVIN MODE ACTIVE');
       console.log('   - System prompt length:', DEVIN_SYSTEM_PROMPT.length);
     } else if (scoutMode) {
-   requestBody.system = buildScoutPrompt(); // ⬅️ DYNAMIC
+   requestBody.system = SCOUT_SYSTEM_PROMPT // ⬅️ DYNAMIC
   console.log('🎯 SCOUT MODE ACTIVE (from config)');
   console.log('   - Prompt length:', requestBody.system.length);
     }else if (cooperMode) {
@@ -733,10 +687,10 @@ else if (insecureMode) {
         setShowLoadingQuotes(false);
         setCountdown(null);
       });
-}, [devinMode, scoutMode, cooperMode, creativeMode, insecureMode, isToolInProgress, setMessages, buildScoutPrompt]);
+}, [devinMode, scoutMode, cooperMode, creativeMode, insecureMode, isToolInProgress, setMessages]);
 
   const handleDevinPromptClick = useCallback((prompt: string) => {
-    console.log('🎯 Devin/Scout prompt clicked:', prompt);
+    console.log('🎯 Devin prompt clicked:', prompt);
     setInput('');
     submitQueryToAI(prompt);
   }, [submitQueryToAI]);
@@ -768,7 +722,7 @@ else if (insecureMode) {
     
     if (jobAnalysisMode) {
       console.log('📋 Job analysis submission - starting countdown');
-      submitQueryToAI(`Analyze my fit for this job: ${input}`, true);
+      submitQueryToAI(`Analyze my fitting for this job: ${input}`, true);
       // DON'T set jobAnalysisMode to false - keep the text visible
       // It will be set to false when results arrive or user clicks back
     } else {
@@ -823,7 +777,7 @@ else if (insecureMode) {
     setShowChatResponse(true);
     console.log('🗑️ Chat messages cleared');
 
-      setActivePromptDescription('A sardonic senior engineer who cuts through observability theater and marketing BS. Ask about monitoring, instrumentation, or why most dashboards are useless.');
+      setActivePromptDescription('A sardonic senior engineer who cuts through observability theater and marketing BS.');
 
   }, [setMessages]);
 
@@ -954,9 +908,9 @@ setUploadedPdf(null);    // ← ADD THIS
 
       {/* Job Analysis ChatBottombar - Show when S is clicked */}
       {jobAnalysisMode && chatCentered && (
-        <div className="fixed inset-0 z-[500] flex flex-col items-center justify-center">
+        <div className="fixed inset-0 z-[500] flex flex-col items-center  bg-white/90 justify-center">
           {/* Countdown text - not clickable, just displays */}
-          <p className="text-[#5e4631] text-lg font-medium mb-40">
+          <p className="text-[#5e4631] text-lg font-large mb-40">
             {countdown !== null && countdown > 0 
               ? `Please wait ${countdown} seconds...`
               : 'Why scan back and forth between resumes + job descriptions when AI can do it for us.'
@@ -1154,13 +1108,13 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
       {showChatResponse && hasMessages && (
         <div 
           className={chatCentered 
-            ? "fixed top-[80px] right-[450px] z-[602] overflow-y-auto pointer-events-auto w-[900px] max-h-[80vh]"
+            ? "fixed top-[80px] right-[400px] z-[602] overflow-y-auto pointer-events-auto w-[900px]bg-[#aaa38d] max-h-[80vh]"
             : "fixed inset-0 z-[1000] overflow-y-auto pointer-events-none"
           }
         >
           <div className={chatCentered ? "" : "min-h-screen flex flex-col pb-32"}>
             {chatCentered ? (
-              <div className="w-full space-y-3 p-5 bg-[rgba(220,211,195,0.95)] rounded-[10px]">
+              <div className="w-full space-y-3 p-5 bg-[rgba(250, 250, 250, 0.95)] rounded-[10px]">
                 {messages.map((message, index) => {
                   const isUser = message.role === 'user';
                   const isLast = index === messages.length - 1;
@@ -1303,7 +1257,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
 
 function ChatWithSuspense() {
   return (
-    <Suspense fallback={<div style={{ width: '100%', height: '100vh', background: '#8c6a48' }} />}>
+    <Suspense fallback={<div style={{ width: '100%', height: '100vh', background: '#ffffff' }} />}>
       <Chat />
     </Suspense>
   );
