@@ -427,13 +427,13 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     console.error('📤 Calling Claude API...');
     
     const response = await anthropic.messages.create({
-      model: 'claude-opus-4-5-20251101',
+      model: 'claude-sonnet-4-20250514',
       max_tokens: 2400,
       temperature: 1,
       system: [
         {
           type: "text",
-          text: `Analyze jobs against this portfolio. Address the hiring manager/recruiter -- not Christopher. Return ONLY valid JSON. 
+          text: `Analyze jobs against this portfolio. IMPORTANT: Address the hiring manager/recruiter -- not the candidate/Christopher. Return ONLY valid JSON. 
 
 Portfolio:
 ${JSON.stringify(portfolioConfig, null, 2)}`,
