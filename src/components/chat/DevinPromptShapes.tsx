@@ -144,9 +144,7 @@ export default function DevinPromptShapes({
         modeColors = { 
           fill: '#01090456', 
           stroke: 'rgba(4, 37, 29, 0.6)', 
-          text: 'rgb(255, 255, 255)' ,
-          shadow: 'inset 0 2px 4px rgba(255, 255, 255, 0.9)' // ✅ Add this
-
+          text: 'rgb(255, 255, 255)' 
         };
         break;
       case 'cooper':

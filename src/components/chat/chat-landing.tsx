@@ -188,7 +188,7 @@ interface ChatLandingProps {
   onJobAnalysisOpen?: () => void;
   onJobAnalysisClose?: () => void;
   hideDescriptionBox?: boolean;
-  activePromptDescription?: string;
+  activePromptDescription?: React.ReactNode; // ← Change from string | undefined
 }
 
 function ChatLanding({ 

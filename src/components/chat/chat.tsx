@@ -131,7 +131,7 @@ function Chat() {
   const [cooperMode, setCooperMode] = useState(false);
   const [creativeMode, setCreativeMode] = useState(false);
   const [insecureMode, setInsecureMode] = useState(false);
-  const [activePromptDescription, setActivePromptDescription] = useState<string>('');
+  const [activePromptDescription, setActivePromptDescription] = useState<React.ReactNode>('');
 
 
 const [uploadedPdf, setUploadedPdf] = useState<string | null>(null);
