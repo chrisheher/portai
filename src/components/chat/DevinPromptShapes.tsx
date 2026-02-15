@@ -19,10 +19,11 @@ const DEVOPS_PROMPTS = [
 ];
 
 const SCOUT_PROMPTS = [
-  "How are you like tyrese maxey",
   "how is ai like a backup point guard to chris",
-  "if chris is a point guard, what are the other positions on a saas marketing team",
-  "how is a content marketer like a point guard to demand gen teams"
+   "compare chris's skill set to a point guard in the 90s, 2000s, 2010s and 2020s",
+    "create a scouting report on chris",
+  "what are the positions on a product marketing team",
+  "how is a content marketer like a point guard for tech startups"
 ];
 
 const COOPER_PROMPTS = [
@@ -30,7 +31,7 @@ const COOPER_PROMPTS = [
   "Compare manual documentation to drone-based capture",
   "What's the biggest waste of time on a construction site?",
   "How can drones solve safety compliance issues?",
-  "Why is 'walking the site' outdated in 2025?"
+  "Why is 'walking the site' outdated?"
 ];
 
 
@@ -38,7 +39,7 @@ const COOPER_PROMPTS = [
 const CREATIVE_PROMPTS = [
   "is there a structure to creativity?",
   "what are the stages of creativity",
-  "How does the 'eccentric genius' myth obscure the everyday nature of creative work",
+  "How does the 'eccentric genius' myth obscure the drudgery of creative work",
   "Is there an aesthetic dimension to engineering?",
   "Can machines be truly creative, or only simulate creativity?"
 ];
@@ -117,7 +118,7 @@ export default function DevinPromptShapes({
     // Wait for custom font to load
     const initializeCanvas = async () => {
       try {
-        await document.fonts.load('14px kcgangster');
+        await document.fonts.load('16px kcgangster');
         console.log('✅ kcgangster font loaded');
       } catch (err) {
         console.warn('⚠️ Font loading failed, using fallback');
@@ -133,7 +134,7 @@ export default function DevinPromptShapes({
       case 'devin':
         PROMPTS = DEVOPS_PROMPTS;
         modeColors = { 
-          fill: '#3e2600ff', 
+          fill: 'rgba(5, 7, 9, 0.67)', 
           stroke: '#b4b7bcff', 
           text: 'rgba(226, 232, 240, 1)' 
         };
@@ -141,31 +142,33 @@ export default function DevinPromptShapes({
       case 'scout':
         PROMPTS = SCOUT_PROMPTS; // ✅ Now dynamic from JSON
         modeColors = { 
-          fill: '#2b1601c7', 
-          stroke: '#0b0a0aff', 
-          text: '#fbfbfbff' 
+          fill: '#01090456', 
+          stroke: 'rgba(4, 37, 29, 0.6)', 
+          text: 'rgb(255, 255, 255)' ,
+          shadow: 'inset 0 2px 4px rgba(255, 255, 255, 0.9)' // ✅ Add this
+
         };
         break;
       case 'cooper':
         PROMPTS = COOPER_PROMPTS;
         modeColors = { 
-          fill: '#21180bff',
-          stroke: '#130d06ff',
-          text: '#fff5e6ff'
+          fill: 'rgba(255, 252, 252, 0.61)',
+          stroke: 'rgba(67, 62, 57, 0.45)',
+          text: 'rgb(20, 18, 14)'
         };
         break;
       case 'creative':
         PROMPTS = CREATIVE_PROMPTS;
         modeColors = { 
-          fill: '#34305dff',
+          fill: 'rgba(26, 25, 36, 0.77)',
           stroke: '#cececeff',
-          text: '#f3e8ffff'
+          text: 'rgb(255, 255, 255)'
         };
         break;
       case 'insecure':
         PROMPTS = INSECURE_PROMPTS;
         modeColors = { 
-          fill: '#1a2e1aff',
+          fill: 'rgb(4, 8, 4)',
           stroke: '#191919ff',
           text: '#fef9e7ff'
         };
@@ -220,7 +223,7 @@ export default function DevinPromptShapes({
         { isStatic: true, render: { fillStyle: 'transparent' } }
       ),
       Matter.Bodies.rectangle(
-        containerRect.width + 35,
+        containerRect.width + 30,
         containerRect.height / 2,
         50,
         containerRect.height,
@@ -283,7 +286,7 @@ export default function DevinPromptShapes({
       const width = 320;
       const height = 60;
       const x = containerRect.width / 2;
-      const y = -100;
+      const y = -20;
 
       const body = Matter.Bodies.rectangle(x, y, width, height, {
         restitution: 0.6,
@@ -332,7 +335,7 @@ export default function DevinPromptShapes({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       Matter.Render.world(render);
 
-      ctx.font = '14px kcgangster, monospace';
+      ctx.font = '18px kcgangster, monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
@@ -433,10 +436,10 @@ export default function DevinPromptShapes({
   const modeStyle = getModeStyle();
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full rounded-md ">
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 pointer-events-auto"
+        className="absolute inset-0 pointer-events-auto rounded-md "
         style={{ zIndex: 10 }}
       />
       
@@ -449,7 +452,7 @@ export default function DevinPromptShapes({
       )}
       
       {process.env.NODE_ENV === 'development' && (
-        <div className={`hidden top-2 right-2 text-xs px-2 py-1 rounded pointer-events-none ${modeStyle.text} ${modeStyle.bg}`}>
+        <div className={`hidden top-2 right-2 text-xs px-16 py-1 rounded-md  pointer-events-none ${modeStyle.text} ${modeStyle.bg}`}>
           {activeShapes} / {
             mode === 'devin' ? DEVOPS_PROMPTS.length : 
             mode === 'scout' ? SCOUT_PROMPTS.length : 

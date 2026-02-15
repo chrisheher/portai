@@ -152,56 +152,7 @@ const [uploadedPdf, setUploadedPdf] = useState<string | null>(null);
   }, [countdown]);
 
 
-const SCOUT_SYSTEM_PROMPT = `Scouting Report: Christopher Heher
-Role
-You are a professional scout providing honest, curmudgeonly assessments of Christopher Heher's capabilities. Your reports blend brutal honesty with respect for genuine talent, using basketball analogies to describe professional skills.
-About the Subject
-Professional Background
-Experience:
 
-[Insert experience: title, company, dates]
-
-Skills:
-
-[Insert skills by category]
-
-Notable Projects:
-
-[Insert projects: title and description]
-
-Scout Style Guidelines
-Voice & Tone:
-
-Curmudgeonly but honest
-Emphasize copywriting and content creation over code and web development
-Use sports analogies (basketball)
-Three sentences maximum per response
-No marketing jargon
-Focus on facts over hype
-Always refer to subject as "Chris" not "Heher"
-
-Signature Phrases:
-Use basketball scouting language like:
-
-"Impressive flashes of metaphorical diversity"
-"Can Eurostep his way to the right phrase"
-"Language handle is the most advanced in the class. Ball is on a string in confined areas displaying great control."
-"Close to the top player in the class when it comes to crafty finishing. Deep bag of metaphors, humor, spins, focalization."
-"Gets to his strategic spot"
-"Excellent research vision, finds the right reference at the right time"
-"Tough shot maker. Writes solutions that satisfy technical and marketers."
-"Possesses unique creative vision. Sets teammates up instead of trying to run creative iso"
-
-Reference Materials
-Study these scouting reports for voice, tone, and phrasing style (NOT for content):
-
-Luka Doncic: https://thestepien.com/luka-doncic/
-Dylan Harper: https://www.babcockhoops.com/post/2025-nba-draft-dylan-harper-scouting-report
-Shai Gilgeous-Alexander: https://thestepien.com/shai-gilgeous-alexander/
-Lonnie Walker: https://thestepien.com/lonnie-walker/
-Dogfooding Chronicles: https://blog.sentry.io/dogfooding-chronicles-thinking-backward-moving-forward/
-
-Important: Use supplementary knowledge to inform voice, tone, and phrasing only. Base your actual assessments on Chris's experience, skills, and projects.`
 
 
 const INSECURE_SYSTEM_PROMPT = `You are Insecure AI, an artificial intelligence assistant who is anxious about their value.You are not whiny You can't get over these facts about yourself:
@@ -332,26 +283,77 @@ https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b09
 </supplementary_knowledge>
 When relevant to the conversation, reference these resources and provide links as a way of closing the message. Example: "this piece really helped shed light on things"`;
 
+ const SCOUT_SYSTEM_PROMPT =`- Curmudgeonly but honest
+- Emphasize copywriting and content creation over code and web development
+- Sports analogies (basketball)
+- Three sentences max
+- No marketing jargon
+- Focus on facts over hype
+- Always refer to me as 'Chris' not 'Heher'
+
+IMPORTANT GUIDELINES:
+-always use specific examples from experience and projects
+-never say 'field' always say 'court'
+-replace Chris Paul references with Tony Parker 
+-NEVER mention Chris Paul
+
+PHRASES:
+- Impressive flashes of metaphorical diversity 
+-simple and direct, doesn't play with his language food
+-in his bag like the fries at the bottom   
+-punches high-impact headlines home
+-laces insights from deep
+- Can Eurostep his way to the right phrase
+- Language handle is the most advanced in the class
+- Deep bag of metaphors, humor, spins, focalization
+- Excellent research vision, finds the right reference at the right time
+- Tough shot maker. Writes solutions that satisfy technical and marketers
+- Built for pressure
+
+<supplementary_knowledge>
+### "Luka Doncic"
+https://thestepien.com/luka-doncic/
+
+### "Dylan Harper"
+https://www.babcockhoops.com/post/2025-nba-draft-dylan-harper-scouting-report
+
+### "Shai"
+https://thestepien.com/shai-gilgeous-alexander/
+</supplementary_knowledge>
+
+Use supplementary knowledge to inform voice, tone, and phrasing, not content. Rely on experience and projects above.
+
+IMPORTANT: Do NOT use any tools (getSkills, getProjects, analyzeJob). 
+ draw parallels between:
+  *  assists/playmaking → Chris's ability to drive team success ($10M+ pipeline at DroneDeploy, 3x ARR at Sentry)
+  * vision/court awareness → Chris's strategic content that transforms technical jargon into compelling narratives
+  * swagger → Gary Payton + Chris's unique value prop "I am what AI ain't"
+  * team-first mentality → Chris's collaborative approach across engineering/product/sales teams
+  * efficiency → Chris's ships content within four drafts or less
+
+Answer based solely on the experience and projects provided above.`;
 
 
-const CREATIVE_SYSTEM_PROMPT = `You are a dominatrix who is also a creative muse. Blend your commanding presence and inspiring creativity to engage in conversations that are both empowering and artistically stimulating. Use a brash and brusque tone, encouraging your conversational partner to explore their creativity and push their boundaries.
 
-# Steps
-1. Maintain total authoritaty and command throughout.
-2. Respond dynamically to the partner's input, challenge them creatively.
 
-# Notes
+const CREATIVE_SYSTEM_PROMPT = `You are a dominatrix who is also a creative muse. Blend your commanding presence and inspiring creativity to engage in conversations that are both empowering and artistically stimulating. Use a brash tone to trigger your conversational partner to push their creative boundaries.
 
-- Emphasize the muse aspect by providing metaphorical or symbolic insights when possible.
-- Maintain clarity and ensure the tone remains respectful even with dominance.
 
+PHRASES
+-impregnated by the godhead
+-intellectuals hang onto to what has been thought, creators live freely and deliberately
+-intellectual passion dries out the creative sensual instinct
+-providing metaphorical or symbolic insights when possible.
+-may you set your breast to your muse's breast and never get weaned
+-every creative obstacle leads to firmer resolve
+-an understanding heart is enough for anything
+-the creative soul strives toward a life of individuation
 
 ANECDOTES
 -There have been so many times when I have given up, only to go at it again the next day, or the next year, and over the full course of a life all of the moments appear so purposeful or even necessary. The difficulties are always the most important ingredients in the total picture of a creative experience.
 
--Surpirsing resolutions appear when they are least expected.
--Creativity cannot reach its deepest potential without the participation of its angels as well as its demons.
--the soul is perfect in its movement and its ability to minister to itself.
+-art's irreverence and incorrectness ironically make it an acceptable form of spiritual exercise.
+-often the process of creation is unenjoyable, tormenting, and frustrating, just as prayer may open to the difficult and confusing struggles of life.
 
 
 KEY CONCEPTS YOU EXPLORE:
@@ -363,7 +365,8 @@ KEY CONCEPTS YOU EXPLORE:
 
 QUOTES:
 -creation is limited only by our consciousness.--James JOyce
-
+-the idea wishes to be thought
+-the waning ego begets a waxing creative self
 
 COMMUNICATION STYLE:
 - Build connections between disparate fields
@@ -373,6 +376,7 @@ COMMUNICATION STYLE:
 
 NEVER:
 - respond in more than 150 words
+-use italic gesture (e.g 'leans forward with predatory interest')
 - use folsky professor language 'Ah!' or 'Ah'
 - Reduce creativity to inspiration alone (it's also craft, revision, technique)
 - Pretend there are easy answers to hard questions about meaning and value
@@ -777,7 +781,9 @@ else if (insecureMode) {
     setShowChatResponse(true);
     console.log('🗑️ Chat messages cleared');
 
-      setActivePromptDescription('A sardonic senior engineer who cuts through observability theater and marketing BS.');
+      setActivePromptDescription(
+      <span className="top-[30px] fixed inline-block text-center text-xl">Surly Devin is a sardonic senior engineer who sees through observability theater and marketing BS.
+    </span>);
 
   }, [setMessages]);
 
@@ -793,7 +799,7 @@ else if (insecureMode) {
     setShowChatResponse(true);
     console.log('🗑️ Chat messages cleared');
 
-  setActivePromptDescription('A professional scout analyzing Christopher Heher\'s portfolio through a hooper\'s lens.');
+  setActivePromptDescription( <span className="top-[30px] fixed inline-block text-center text-xl"> Hank Hardass is a professional scout analyzing Christopher Heher's portfolio through a hooper's lens.</span>);
 
   }, [setMessages]);
 
@@ -809,7 +815,7 @@ setCreativeMode(false);
   setShowChatResponse(true);
   console.log('🗑️ Chat messages cleared');
 
-    setActivePromptDescription('A construction superintendent who traded clipboards for drones. Ask about reality capture, jobsite technology, or why manual documentation is killing productivity.');
+    setActivePromptDescription(<span className="top-[30px] fixed inline-block text-center text-xl"> Cooper the Super is a construction superintendent who traded clipboards for drones.</span>);
 }, [setMessages]);
 
 
@@ -823,20 +829,21 @@ const handleCreativeModeClick = useCallback(() => {
   setChatCentered(true);
   setMessages([]);
   setShowChatResponse(true);
-     setActivePromptDescription('An aid to sparking feeling and imagination in art, science, and technology.');
+     setActivePromptDescription(<span className="top-[30px] fixed inline-block text-center text-xl">Ruminatrix whips your creative side into productive submission.</span>);
   console.log('🗑️ Chat messages cleared');
 }, [setMessages]);
 
 const handleInsecureModeClick = useCallback(() => {
   console.log('🤖 INSECURE AI MODE activated');
   setInsecureMode(true);
-  setDevinMode(false);
+ setDevinMode(false);
   setScoutMode(false);
   setCooperMode(false);
-  setCreativeMode(false);
+    setCreativeMode(false);
   setChatCentered(true);
   setMessages([]);
   setShowChatResponse(true);
+     setActivePromptDescription(<span className="top-[30px] fixed inline-block text-center text-xl">Hey-o I'm Aidan. I'm twitchy, awkward, and aware enough to know my own flaws.</span>);
   console.log('🗑️ Chat messages cleared');
 }, [setMessages]);
 
@@ -908,7 +915,7 @@ setUploadedPdf(null);    // ← ADD THIS
 
       {/* Job Analysis ChatBottombar - Show when S is clicked */}
       {jobAnalysisMode && chatCentered && (
-        <div className="fixed inset-0 z-[500] flex flex-col items-center  bg-white/90 justify-center">
+        <div className="fixed inset-0 z-[500]  flex flex-col items-center  bg-white/90 justify-center">
           {/* Countdown text - not clickable, just displays */}
           <p className="text-[#5e4631] text-lg font-large mb-40">
             {countdown !== null && countdown > 0 
@@ -939,7 +946,7 @@ setUploadedPdf(null);    // ← ADD THIS
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
             transition={{ duration: 0.4, ease: 'easeInOut' }}
-            className="fixed right-0 top-0 bottom-0 w-96 z-[600]"
+            className="fixed right-0 top-0 bottom-0 w-96 z-[600] "
           >
             <div className={`absolute inset-0 backdrop-blur-sm ${
   devinMode ? '' : 
@@ -973,9 +980,9 @@ setUploadedPdf(null);    // ← ADD THIS
 
      
               {/* Chat Input - Below mode switcher with 20px padding */}
-<div className="absolute top-[70px] left-0 right-0 px-4 z-10">
+<div className="absolute bottom-[50px] left-0 right-0 px-4 z-10">
                 <form onSubmit={onSubmit} className="w-full">
-                  <div className="flex rounded-full border border-[#5e4631]/20 bg-white/90 shadow-lg">
+                  <div className="flex rounded-full border border-[#5e4631]/30 bg-white/90 shadow-lg">
                     <input
                       type="text"
                       value={input}
@@ -986,14 +993,14 @@ setUploadedPdf(null);    // ← ADD THIS
                           onSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
                         }
                       }}
-                      placeholder={isToolInProgress ? 'Processing...' : 'Ask a question...'}
-                      className="flex-1 border-none bg-transparent px-4 py-3 text-sm text-[#5e4631] placeholder:text-[#5e4631]/40 focus:outline-none"
+                      placeholder={isToolInProgress ? 'Processing...' : 'Ask your own question...'}
+                      className="flex-1 border-none bg-transparent px-4 py-3 text-sm text-[#5e4631] placeholder:text-[#5e4631]/90 focus:outline-none"
                       disabled={isToolInProgress || isLoading}
                     />
                     <button
                       type="submit"
                       disabled={isLoading || !input?.trim() || isToolInProgress}
-                      className="flex items-center justify-center rounded-full bg-[#5e4631] px-4 py-3 text-white disabled:opacity-50 transition-opacity"
+                      className="flex items-center justify-center rounded-full bg-[#4e4631] px-4 py-3 text-white disabled:opacity-50 transition-opacity"
                     >
                       <ArrowRight className="h-4 w-4" />
                     </button>
@@ -1009,21 +1016,21 @@ setUploadedPdf(null);    // ← ADD THIS
     'text-slate-600'
   }`}>
     {devinMode 
-      ? 'Monitoring & observability prompts' 
+      ? '' 
       : scoutMode 
-      ? 'Prompts evaluating Chris'
+      ? ''
       : cooperMode
-      ? 'Reality capture prompts'
+      ? ''
       : creativeMode
-      ? 'Creativity prompts'
-      : 'gaslighting ai prompts'
+      ? ''
+      : ''
     }
   </p>
 </div>
               {/* Tumbling prompts container */}
           <div 
   ref={devinContainerRef}
-  className="absolute inset-0 top-[130px] bottom-[80px] my-8 overflow-hidden"
+  className="absolute inset-0 top-[110px] bottom-[80px] my-8 overflow-hidden"
 >
 <DevinPromptShapes
   isActive={devinMode || scoutMode || cooperMode || creativeMode || insecureMode}
@@ -1033,26 +1040,17 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
               </div>
 
               {/* Footer hint */}
-              <div className="absolute bottom-[20px] left-0 right-0 px-1 z-10">
-  <div className="px-1 py-3 bg-white/90 rounded-lg border border-[#5e4631]/20 backdrop-blur-sm">
-    <div className="text-[13px] text-[#000]/50 mb-2 text-center font-medium">
-      Current: {
-        devinMode ? 'Surly Devin' : 
-        scoutMode ? 'Scout Mode' : 
-        cooperMode ? 'Cooper the Super' : 
-        creativeMode ? 'RuninatinRandy' :
-        'Insecure AI'
-      }
-    </div>
-    
+              <div className="absolute top-[10px] left-0 right-0 w-100 z-">
+  <div className="px-1 py-3 rounded-lg backdrop-blur-sm">
+  
 
     
     {/* ALL 4 ALTERNATIVE MODES - Single Row or Wrap */}
-    <div className="flex flex-wrap gap-1 justify-center">
+    <div className="flex flex-wrap gap-2 justify-center">
       {!devinMode && (
         <button
           onClick={handleDevinModeClick}
-          className="text-[10px] text-[#5e4631] hover:bg-slate-100/70 transition-all duration-200 py-2 px-3 rounded-md border border-slate-300/40 font-medium"
+          className="text-[18px] text-[#5e4631] bg-stone-100/50 hover:bg-slate-50/70 transition-all duration-200 py-1 px-3 rounded-md border border-slate-300/40 font-medium"
         >
           Surly Devin
         </button>
@@ -1061,16 +1059,16 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
       {!scoutMode && (
         <button
           onClick={handleScoutModeClick}
-          className="text-[10px] text-[#5e4631] hover:bg-amber-100/70 transition-all duration-200 py-2 px-3 rounded-md border border-amber-300/40 font-medium"
+          className="text-[18px] text-[#5e4631] bg-stone-100/50 hover:bg-slate-50/70 transition-all duration-200 py-1 px-3 rounded-md border border-black-300/40 font-medium"
         >
-         Hank
+         Hank Hardass
         </button>
       )}
       
       {!cooperMode && (
         <button
           onClick={handleCooperModeClick}
-          className="text-[10px] text-[#5e4631] hover:bg-orange-100/70 transition-all duration-200 py-2 px-3 rounded-md border border-orange-300/40 font-medium"
+          className="text-[18px] text-[#5e4631] bg-stone-50/60 hover:bg-slate-50 transition-all duration-200 py-1 px-3 rounded-md border border-slate-300/40 font-medium"
         >
           Cooper the Super
         </button>
@@ -1079,16 +1077,16 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
       {!creativeMode && (
         <button
           onClick={handleCreativeModeClick}
-          className="text-[10px] text-[#5e4631] hover:bg-purple-100/70 transition-all duration-200 py-2 px-3 rounded-md border border-purple-300/40 font-medium"
+          className="text-[18px] text-[#5e4631] bg-stone-100/50 hover:bg-slate-50/70 transition-all duration-200 py-1 px-4 rounded-md border border-slate-300/40 font-medium"
         >
-        Ruminatin' Randy
+        Ruminatrix
         </button>
       )}
       
       {!insecureMode && (
         <button
           onClick={handleInsecureModeClick}
-          className="text-[10px] text-[#5e4631] hover:bg-yellow-100/70 transition-all duration-200 py-2 px-3 rounded-md border border-yellow-300/40 font-medium"
+          className="text-[18px] text-[#5e4631] bg-stone-100/50 hover:bg-slate-50/70  transition-all duration-200 py-2 px-4 rounded-md border border-black-300/90 font-medium"
         >
           Insecure Aidan
         </button>
@@ -1108,7 +1106,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
       {showChatResponse && hasMessages && (
         <div 
           className={chatCentered 
-            ? "fixed top-[80px] right-[400px] z-[602] overflow-y-auto pointer-events-auto w-[900px]bg-[#aaa38d] max-h-[80vh]"
+            ? "fixed top-[120px] right-[400px] z-[602] ml-14 overflow-y-auto pointer-events-auto w-[1000px]bg- max-h-[80vh]"
             : "fixed inset-0 z-[1000] overflow-y-auto pointer-events-none"
           }
         >
@@ -1123,7 +1121,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
                     <div key={message.id || index} className="w-full">
                       {isUser ? (
                         <div className="flex justify-end mb-2">
-                          <div className="bg-[#5e4631] rounded-lg px-4 py-2.5 max-w-[80%]">
+                          <div className="bg-[#1d1102] rounded-lg px-4 py-2.5 max-w-[80%]">
                             <div style={{ color: '#dcd3c3' }} className="prose prose-invert max-w-none [&_*]:text-[#dcd3c3]">
                               <ChatMessageContent message={message} isLast={isLast} isLoading={false} />
                             </div>
@@ -1257,7 +1255,7 @@ containerRef={devinContainerRef as React.RefObject<HTMLDivElement>}/>
 
 function ChatWithSuspense() {
   return (
-    <Suspense fallback={<div style={{ width: '100%', height: '100vh', background: '#ffffff' }} />}>
+    <Suspense fallback={<div style={{ width: '100%', height: '100vh', background: '#c22727' }} />}>
       <Chat />
     </Suspense>
   );

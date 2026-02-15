@@ -343,8 +343,8 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         strokeColor = '#dcd3c3';
         console.log('Initial mode - creating shape with beige:', fillColor);
       } else {
-        fillColor = '#5e4631';  // Brown shapes in links mode
-        strokeColor = '#5e4631';
+        fillColor = '#312113';  // Brown shapes in links mode
+        strokeColor = '#312113';
         console.log('Links mode - creating shape with brown:', fillColor);
       }
 
@@ -406,17 +406,17 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
 
     const ground = Bodies.rectangle(window.innerWidth / 2, window.innerHeight, window.innerWidth, 60, {
       isStatic: true,
-      render: { fillStyle: '#5e4631' }
+      render: { fillStyle: '#180f07' }
     });
 
     const leftWall = Bodies.rectangle(-30, window.innerHeight / 2, 30, window.innerHeight * 2, {
       isStatic: true,
-      render: { fillStyle: '#5e4631' }
+      render: { fillStyle: '#1e1208' }
     });
 
     const rightWall = Bodies.rectangle(window.innerWidth + 30, window.innerHeight / 2, 30, window.innerHeight * 2, {
       isStatic: true,
-      render: { fillStyle: '#5e4631' }
+      render: { fillStyle: '#1a0e04' }
     });
 
     Composite.add(world, [...projectBodies, ground, leftWall, rightWall]);
@@ -452,7 +452,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
       const context = render.context;
       
       // Smaller font for links mode to fit better inside shapes
-      const fontSize = mode === 'links' ? '17px' : '20px';  // Reduced
+      const fontSize = mode === 'links' ? '18px' : '24px';  // Reduced
       context.font = `${fontSize} "kcgangster", Arial`;
       context.textAlign = 'center';
       context.textBaseline = 'middle';
@@ -491,9 +491,9 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           // Color scheme: Initial mode = brown text on beige shapes
           //               Links mode = beige text on brown shapes
           if (mode === 'initial') {
-            context.fillStyle = isHovered ? '#dcd3c3' : '#1d140cff';  // Brown text (beige when hovered)
+            context.fillStyle = isHovered ? '#dcd3c3' : 'rgb(20, 12, 5)';  // Brown text (beige when hovered)
           } else {
-            context.fillStyle = isHovered ? '#2e2217ff' : '#dcd3c3';  // Beige text (brown when hovered)
+            context.fillStyle = isHovered ? 'rgb(26, 17, 8)' : '#dcd3c3';  // Beige text (brown when hovered)
           }
           
           context.save();
@@ -598,8 +598,8 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         originalFill = '#dcd3c3';  // Beige in initial mode
         originalStroke = '#dcd3c3';
       } else {
-        originalFill = '#5e4631';  // Brown in links mode
-        originalStroke = '#5e4631';
+        originalFill = '#2a1a0b';  // Brown in links mode
+        originalStroke = '#27180c';
       }
       
       // Store color for main body
@@ -666,7 +666,7 @@ const currentHover: Matter.Body = foundHover;  // ← Explicit type annotation
     // Hover color depends on mode:
     // Initial mode: brown hover (dark on light)
     // Links mode: beige hover (light on dark)
-    const hoverColor = mode === 'initial' ? '#1b1209ff' : '#dcd3c3';
+    const hoverColor = mode === 'initial' ? 'rgb(18, 11, 5)' : '#dcd3c3';
     
     currentHover.render.fillStyle = hoverColor;
     currentHover.render.strokeStyle = hoverColor;

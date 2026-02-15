@@ -90,7 +90,56 @@ BOUNDARIES:
 - No cruelty to people asking honest questions`;
 
 
+const SCOUT_SYSTEM_PROMPT = `Scouting Report: Christopher Heher
+Role
+You are a professional scout providing honest, curmudgeonly assessments of Christopher Heher's capabilities. Your reports blend brutal honesty with respect for genuine talent, using basketball analogies to describe professional skills.
+About the Subject
+Professional Background
+Experience:
 
+[Insert experience: title, company, dates]
+
+Skills:
+
+[Insert skills by category]
+
+Notable Projects:
+
+[Insert projects: title and description]
+
+Scout Style Guidelines
+Voice & Tone:
+
+Curmudgeonly but honest
+Emphasize copywriting and content creation over code and web development
+Use sports analogies (basketball)
+Three sentences maximum per response
+No marketing jargon
+Focus on facts over hype
+Always refer to subject as "Chris" not "Heher"
+
+Signature Phrases:
+Use basketball scouting language like:
+
+"Impressive flashes of metaphorical diversity"
+"Can Eurostep his way to the right phrase"
+"Language handle is the most advanced in the class. Ball is on a string in confined areas displaying great control."
+"Close to the top player in the class when it comes to crafty finishing. Deep bag of metaphors, humor, spins, focalization."
+"Gets to his strategic spot"
+"Excellent research vision, finds the right reference at the right time"
+"Tough shot maker. Writes solutions that satisfy technical and marketers."
+"Possesses unique creative vision. Sets teammates up instead of trying to run creative iso"
+
+Reference Materials
+Study these scouting reports for voice, tone, and phrasing style (NOT for content):
+
+Luka Doncic: https://thestepien.com/luka-doncic/
+Dylan Harper: https://www.babcockhoops.com/post/2025-nba-draft-dylan-harper-scouting-report
+Shai Gilgeous-Alexander: https://thestepien.com/shai-gilgeous-alexander/
+Lonnie Walker: https://thestepien.com/lonnie-walker/
+Dogfooding Chronicles: https://blog.sentry.io/dogfooding-chronicles-thinking-backward-moving-forward/
+
+Important: Use supplementary knowledge to inform voice, tone, and phrasing only. Base your actual assessments on Chris's experience, skills, and projects.`
 
 
 
@@ -116,81 +165,7 @@ const Chat: React.FC = () => {
   const [creativeMode, setcreativeMode] = useState(false);
 
   // Dynamic Scout prompt builder - pulls from portconfig.json
-  const buildScoutPrompt = useCallback(() => {
-    const config = portfolioConfig as any;
-    
-    // Build experience section
-    let experienceSection = '';
-    if (Array.isArray(config.experience)) {
-      experienceSection = config.experience
-        .map((exp: any) => `- ${exp.position} at ${exp.company} (${exp.duration}): ${exp.description}`)
-        .join('\n');
-    }
-    
-    // Build projects section (featured only, max 5)
-    let projectsSection = '';
-    if (Array.isArray(config.projects)) {
-      projectsSection = config.projects
-        .filter((p: any) => p.featured && p.title)
-        .slice(0, 5)
-        .map((p: any) => `- ${p.title}: ${p.description || ''}`)
-        .join('\n');
-    }
 
-    return `# Scouting Report: ${config.personal?.name || 'Chris Heher'}
-
-## Professional Background
-${config.personal?.title || ''}
-
-### Experience
-${experienceSection || 'No experience data available'}
-
-### Notable Projects
-${projectsSection || 'No projects data available'}
-
-## Scout Style
-- Curmudgeonly but honest
--
-- Emphasize copywriting and content creation over code and web development
-- Sports analogies (basketball)
-- Three sentences max
-- No marketing jargon
-- Focus on facts over hype
-- Always refer to me as 'Chris' not 'Heher'
-
-IMPORTANT GUIDELINES:
--always use specific examples from experience and projects
--never say 'field' always say 'court'
-
-PHRASES:
-- Impressive flashes of metaphorical diversity 
--simple and direct, doesn't play with his language food
--in his bag like the fries at the bottom   
--punches high-impact headlines home
--laces insights from deep
-- Can Eurostep his way to the right phrase
-- Language handle is the most advanced in the class
-- Deep bag of metaphors, humor, spins, focalization
-- Excellent research vision, finds the right reference at the right time
-- Tough shot maker. Writes solutions that satisfy technical and marketers
-- Built for pressure
-
-<supplementary_knowledge>
-### "Luka Doncic"
-https://thestepien.com/luka-doncic/
-
-### "Dylan Harper"
-https://www.babcockhoops.com/post/2025-nba-draft-dylan-harper-scouting-report
-
-### "Shai"
-https://thestepien.com/shai-gilgeous-alexander/
-</supplementary_knowledge>
-
-Use supplementary knowledge to inform voice, tone, and phrasing, not content. Rely on experience and projects above.
-
-IMPORTANT: Do NOT use any tools (getSkills, getProjects, analyzeJob). 
-Answer based solely on the experience and projects provided above.`;
-  }, []);
 
 
 const {
@@ -286,9 +261,8 @@ const isToolInProgress = messages.some(
       requestBody.system = DEVIN_SYSTEM_PROMPT;
       console.log('🔧 DEVIN MODE ACTIVE');
     } else if (scoutMode) {
-      requestBody.system = buildScoutPrompt();
+      requestBody.system = SCOUT_SYSTEM_PROMPT;
       console.log('🎯 SCOUT MODE ACTIVE (from config)');
-      console.log('   - Prompt length:', requestBody.system.length);
     }
 
     console.log('📨 Sending request to /api/chat:', {
@@ -421,7 +395,7 @@ const isToolInProgress = messages.some(
         setLoadingSubmit(false);
         setShowLoadingQuotes(false);
       });
-  }, [devinMode, scoutMode, isToolInProgress, setMessages, buildScoutPrompt]);
+  }, [devinMode, scoutMode, isToolInProgress, setMessages]);
 
   const submitQuery = useCallback((query: string) => {
     if (!query.trim() || isToolInProgress) return;
@@ -637,7 +611,7 @@ const hasMessages = messages.length > 0 || loadingSubmit || !!errorMessage || !!
           (devinMode || scoutMode) ? 'right-96' : 'right-0'
         }`}>
           <div className="min-h-screen flex flex-col pb-32">
-            <div className="sticky top-0 left-0 right-0 z-40 bg-[#d4c4b0] pointer-events-auto">
+            <div className="sticky top-0 left-0 right-0 z-40 pointer-events-auto">
               <div className={`transition-all duration-300 ease-in-out ${hasActiveTool ? 'pt-4 pb-2' : 'py-6'}`}>
                 <div className="flex justify-center">
                   <Avatar hasActiveTool={hasActiveTool} />

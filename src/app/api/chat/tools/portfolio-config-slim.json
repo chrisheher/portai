@@ -7,38 +7,69 @@
       "industry": "SaaS (reality capture)",
     "media": ["blog posts, white papers, web pages"],
       "duration": "2024",
-      "description": "Collaborated with engineering and product teams to create a range of strategic content that helped drive a $10M+ sales pipeline. Wrote sales enablement content across DroneDeploy's product suite: dock automation, ground  robotics, Data on Demand, and cybersecurity solutions. Developed “Your AI In the Sky” tagline for DroneDeploy's Safety AI rollout. Wrote white papers on all aspects of reality capture - ground control points to underground utilities to facade inspections. "
+      "description": "Collaborated with engineering and product teams to create a range of strategic content that helped drive a $10M+ sales pipeline. Wrote sales enablement content across DroneDeploy's product suite: dock automation, ground  robotics, Data on Demand, and cybersecurity solutions. Developed “Your AI In the Sky” tagline for DroneDeploy's Safety AI rollout. Wrote white papers on all aspects of reality capture - ground control points to underground utilities to facade inspections. ",
+          "impact": ["Share of MRR --$2.5m for ground robotics","Engagement rate to take meaningful action 1.7%", "28% increase in handraisers", "Product pages drove ~450 handraisers among construction professionals", "2x handraisers compared to last year's content", "35% increase in demo requests"
+      ]
+
     },
     {
       "company": "Sentry",
       "position": "Senior Content Strategist",
       "industry": "SaaS (application monitoring)",
       "media": ["blog posts, white papers, web pages"],
-      "duration": "2020-2024",
-      "description": "Led content strategy for Sentry's performance monitoring product, which contributed to an 8-11% pipeline influence across roles. Collaborated with product marketing, demand gen, and sales teams to create a range of strategic content that helped drive pipeline and revenue. Developed “See Slow Faster” tagline for Sentry Performance launch. Wrote white papers on all aspects of application performance monitoring - from frontend performance to database optimization to mobile app performance."
+      "description": "Led content strategy for Sentry's performance monitoring product, which contributed to an 8-11% pipeline influence across roles. Collaborated with product marketing, demand gen, and sales teams to create a range of strategic content that helped drive pipeline and revenue. Developed “See Slow Faster” tagline for Sentry Performance launch. Wrote white papers on all aspects of application performance monitoring - from frontend performance to database optimization to mobile app performance.",
+       "impact": [ "ARR: $45M → $90M during my tenure  (Series B→C growth)",
+      "~480 SQL conversions (9.5% attributed to ARR)","Performance product grew 240% largely through product-led channels", "$680K in closed-won deals with white paper download in buyer journey — direct revenue attribution","White paper landing pages drove 34,200 total site visits -- 67% of which were organic"]
+
     },
     {
       "company": "HP",
       "position": "Technical Content Strategist",
       "industry": "SaaS (presence management)",
       "media": ["blog posts, white papers, web pages"],
-      "description": "Created technical content to support the launch of HP Presence, a SaaS product that helps businesses manage their online presence. Collaborated with product marketing and sales teams to create a range of strategic content that helped drive pipeline and revenue. Developed “Own Your Presence” tagline for HP Presence launch. Wrote white papers on all aspects of online presence management - from local SEO to review management to social media strategy."
+      "description": "Created technical content to support the launch of HP Presence, a SaaS product that helps businesses manage their online presence. Collaborated with product marketing and sales teams to create a range of strategic content that helped drive pipeline and revenue.",
+       "impact": ["8,940 total white paper downloads across all 10 assets in launch quarter", "2.5k MQLs generated from white paper download forms","680K in closed-won deals with white paper download in buyer journey — direct revenue attribution"]
 
     }, {
       "company": "The Charles NYC",
       "position": "Freelance copywriter",
       "industry": "Advertising agency",
       "media": ["social media, brand manifesto, website copy"],
-      "description": "While at The Charles, I produced site copy, brand manifestos, and social media for Cincoro, a tequila owned by five NBA owners.."
+      "description": "While at The Charles, I produced site copy, brand manifestos, and social media for Cincoro, a tequila owned by five NBA owners.",
+       "impact": ["Created content processes and calendar delivering 2-3x higher engagement rates due to consistent posting schedules", "Built social audience to 110K+ followers across platforms, exceeding brands with decades of history (Don Julio had ~97K Instagram in 2021",
+  "brand grew from zero to 1.5M bottles sold"
+      ]
 
     },{
       "company": "tbwa + Integer",
       "position": "Senior copywriter",
-      "industry": "Advertising agency",
+      "industry": "Retail/ecommerce Advertising agency",
       "media": ["billboards, infographics, microsites, social media, experiental activations"],
-      "description": " TBWA + Integer is an advertising agency specializing in retail and eCommerce marketing.As lead writer on their Acuvue and Jagermeister accounts, I developed B2C content ranging from billboards, infographics, print, and social activations."
+      "description": " lead writer on  Acuvue and Jagermeister accounts.developed B2C content ranging from billboards, infographics, print, and social activations."
 
-    },{
+    },
+ {
+      "company": "airbnb",
+      "position": "UX copywriter",
+      "industry": "Employer marketing",
+      "media": "microsite",
+      "description": "As lead writer for Airbnb's career website, I developed their strategic employer value propositions coming out of their Live and Work Anywhere policy, then executed on that strategy with compelling content. Example: 'Discover your place at Airbnb",
+      "impact" : [ "72% increase in applications first quarter post launch", "170% increase in applications from underrepresented groups",
+ "4,200 organic social shares of career site pages (3.4x increase vs. previous site"
+      ]
+
+    },   
+     {
+      "company": "Google gpay",
+      "position": "Senior copywriter",
+      "industry": "ecommerce",
+      "media": ["video"],
+      "description": "Google's GPay API was designed to be simple. Which meant the content for its tutorial video needed to act likewise. So instead of a smug, stemwinding video that wastes a developer's time with phony rapport, I articulated the simplest path to instrumentation.",
+      "impact": [" 35k views during i/o launch event", "1.5m ARR impact", "~500 new integrations from live merchants"
+      ]
+
+    },
+    {
       "company": "360i",
       "position": "Senior copywriter",
       "industry": "Advertising agency",
@@ -75,10 +106,11 @@
         {"name": "Sentry developer content", "url": "/?show=sentry-dev"}
       ]
     },
-    "Developer Content": {
+    "Developer Relations": {
       "links": [
         {"name": "Sentry Performance", "url": "/?show=sentry-performance"},
-        {"name": "Dogfooding", "url": "/?show=dogfooding"}
+        {"name": "Dogfooding", "url": "/?show=dogfooding"},
+         {"name": "Future of Frontend", "url": "https://sentry.io/resources/the-future-of-frontend/"}
       ]
     },
     "Brand Voice": {

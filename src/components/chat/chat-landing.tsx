@@ -39,32 +39,32 @@ function CarouselContent({ carouselData }: {
       <div className="w-1/2 h-full overflow-y-auto p-12 flex flex-col justify-center">
         <div className="max-w-xl mx-auto">
           {/* Title */}
-          <h2 className="text-[#8c6a48] text-3xl font-bold mb-6">
+          <h2 className="text-[#331b03] text-3xl font-bold mb-6">
             Cincoro Tequila | brand launch
           </h2>
 
           {/* Campaign List Description */}
           {carouselData.campaignListDescription && (
-            <p className="text-[#8c6a48] text-lg leading-relaxed mb-8">
+            <p className="text-[#331b03] text-lg leading-relaxed mb-8">
               {carouselData.campaignListDescription}
             </p>
           )}
 
           {/* Description */}
           {carouselData.description && (
-            <p className="text-[#8c6a48] text-base leading-relaxed mb-8">
+            <p className="text-[#331b03] text-base leading-relaxed mb-8">
               {carouselData.description}
             </p>
           )}
 
           {/* Impact Stats */}
           {carouselData.impact && carouselData.impact.length > 0 && (
-            <div className="space-y-8">
-              <h3 className="text-[#8c6a48] text-2xl font-semibold mb-4">Impact</h3>
+            <div className="space-y-6">
+              <h3 className="text-[#331b03] text-2xl font-semibold mb-1">Impact</h3>
               {carouselData.impact.map((item, index) => (
-                <div key={index} className="flex items-start gap-3">
-                  <div className="w-2 h-2 rounded-full bg-[#8c6a48] mt-2 flex-shrink-0" />
-                  <p className="text-[#8c6a48] text-base leading-relaxed">
+                <div key={index} className="">
+                
+                  <p className="text-[#331b03] text-base top-[-10px] leading-relaxed">
                     {item.stat}
                   </p>
                 </div>
@@ -97,7 +97,7 @@ function CarouselContent({ carouselData }: {
               <>
                 <button
                   onClick={goToPrevious}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-[rgba(94,70,49,0.8)] text-[#dcd3c3] w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold hover:bg-[rgba(94,70,49,0.95)] transition-all z-10"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-[rgba(94,70,49,0.8)] text-[#dcd3c3] w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold hover:bg-[rgba(24, 14, 6, 0.95)] transition-all z-10"
                 >
                   ‹
                 </button>
@@ -223,9 +223,9 @@ function ChatLanding({
 
   // NEW: Section descriptions for C, I, S
   const sectionDescriptions = {
-    C: 'High-impact content which drove pipeline for Michael Jordan\'s tequila, an application monitoring unicorn, HP\'s line of post-pandemic videoconferencing hardware, and a construction drone platform by piquing curiosity in their customers no one else could.',
+    C: 'High-impact copy  that tipped off Michael Jordan\'s tequila brand, launched an application monitoring dashboard, and laid sales pipeline for a construction drone platform.',
     I: 'Users don\'t read content -- they scan it. These projects were designed with this unfortunate truth, F pattern principles, and mobile responsiveness in mind.',
-    S: 'Written at eye level to pique curiosity, add value, and generate brand traction.'
+    S: 'Written at eye level to pique curiosity in the user while leading thought in an industry.'
   };
 
   // Debug logging for displayedItems
@@ -311,8 +311,8 @@ function ChatLanding({
       title: 'Sentry | Performance GTM campaign',
       type: 'campaign' as const,
       links: [
-        { name: 'Blog post', url: 'https://blog.sentry.io/how-slow-is-slow/' },
-        { name: 'Product release', url: 'https://blog.sentry.io/see-slow-faster-with-performance-monitoring/' },
+        { name: 'awareness content', url: 'https://blog.sentry.io/how-slow-is-slow/' },
+        { name: 'release blog', url: 'https://blog.sentry.io/see-slow-faster-with-performance-monitoring/' },
         { name: 'product page', url: 'https://sentry.io/solutions/application-performance-monitoring/' },
         { name: 'customer story', url: 'https://sentry.io/customers/atlassian-jira/' },
         { name: 'webinar', url: 'https://www.youtube.com/watch?v=J0tAK6dKY3Y/' }
@@ -321,10 +321,9 @@ function ChatLanding({
 
       campaignListDescription: 'Product releases run the risk of getting bogged down in their own technical benefits. For Sentry\'s Performance monitoring release, this meant turning jargony features (such as improved visibility into p95 response times) into a simple, differentiating insight -- See Slow Faster',
       impact: [
-        { stat: '$1.8M in Performance Product Pipeline' },
-        { stat: '12,400 total landing page visits during awareness stage' },
-        { stat: 'Campaign hub generated 3,480 visits (2.3x site average)' },
-        { stat: '312 companies initiated trial during launch window (vs. 89 in pre-launch quarter)' }
+        { stat: '$1.8M in attributed sales pipeline' },
+        { stat: 'Campaign content generated 3,480 visits (2.3x site average)' },
+        { stat: '~300 companies initiated trial during launch window (vs. 90 in pre-launch quarter)' }
       ]
     },
     'sentry-dogfooding': {
@@ -340,20 +339,19 @@ function ChatLanding({
       impact: [
         { stat: 'Revenue tripled in the two years since series launch' },
         { stat: 'Performance product grew 240% largely through product-led channels' },
-        { stat: '$680K in closed-won deals with white paper download in buyer journey — direct revenue attribution' },
-        { stat: 'White paper landing pages drove 34,200 total site visits -- 67% of which were organic' }
+        { stat: '25+ blog posts generated a total of ~45k site visits -- 40% of which were organic' }
       ],
-        description: 'syndicated thought leadership series',
-      campaignListDescription: 'Dogfooding is the process in which a company uses its own product as a quality control mechanism. This concept was a perfect fit for Sentry to showcase how its software engineers were using their own platform to track errors and monitor performance. Creating stories out of mundane hiccups in software development established Sentry as a thought leader in the code monitoring space without sounding preachy or pedantic, while also widening brand exposure for content syndication across key industry blogs.' 
+      campaignListDescription: 'Dogfooding is the process in which a company uses its own product as a quality control mechanism. This concept was a perfect fit for Sentry to showcase how its software engineers were using Sentry\'s own platform to track errors in the codebase. Creating stories out of these mundane coding hiccups established Sentry as a thought leader across key industry blogs without sounding preachy or pedantic.'
     },
     'hp-presence': {
       title: 'HP Presence',
       type: 'campaign' as const,
       links: [
-        { name: 'The New era of work', url: 'https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf' },
-        { name: 'A New Blueprint for an Uncertain World', url: 'https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf' },
-        { name: 'Get ready today to do tomorrow\'s work', url: 'https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf' },
-        { name: 'The New Office For the Way People Want to Work', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf' }
+         { name: 'The new office for the way people want to work', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf' },
+        { name: 'The new era of work', url: 'https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf' },
+        { name: 'A new blueprint for an uncertain world', url: 'https://getstarted.hbs.net/hubfs/2025%20Partner%20Campaigns/HP_Services_Hybrid_A-New-Blueprint-for-an-Uncertain-World_Consideration_ebook_2022.pdf.pdf?hsLang=en' },
+        { name: 'Get ready today to do tomorrow\'s work', url: 'https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf' }
+       
       ],
       description: 'hybrid work white paper series',
       campaignListDescription: 'The pandemic altered the fabric of society. And nowhere was this more evident than in the office. As HP\'s content strategist, I helped position their Presence videoconferencing suite to be the connective tissue for distributed workforces.',
@@ -413,8 +411,8 @@ function ChatLanding({
       ],
       campaignListDescription: 'Collaborating with product and sales teams, I piqued curiosity, ensured technical accuracy, and optimized each page by adding cross-links to related solutions and guides for mid- and bottom-funnel engagement.',
       impact: [
-        { stat: 'Share of MRR --$2.5m for ground robotics' },
-        { stat: 'Engagement rate to take meaningful action 1.7%' },
+        { stat: '$2.5m content share for ground robotics' },
+        { stat: '1.7% engagement rate to take meaningful action' },
         { stat: '28% increase in handraisers' }
       ]
     },
@@ -427,11 +425,11 @@ function ChatLanding({
         { name: 'Apprentice page', url: 'https://careers.airbnb.com/connect-engineering-apprenticeship/' },
         { name: 'internship page', url: 'https://careers.airbnb.com/internship-programs/' }
       ],
-      campaignListDescription: 'As lead writer for Airbnb\’s career website, I developed strategic employer value propositions of their Live and Work Anywhere policy, then executed on that strategy with compelling, user-optimized content.',
+      campaignListDescription: 'As lead writer for Airbnb\'s career website, I developed their employer value proposition coming out of their Live and Work Anywhere policy, then executed on that strategy with compelling content.',
       impact: [
-        { stat: '72% increase in applications first quarter post launch' },
+        { stat: '72% increase in applications first post-launch quarter' },
         { stat: '170% increase in applications from underrepresented groups' },
-        { stat: '4,200 organic social shares of career site pages (3.4x increase vs. previous site)'}
+        { stat: '3.4x increase in page views vs. previous site)'}
       ]
     },
     'sentry-pages': {
@@ -544,16 +542,20 @@ function ChatLanding({
           url: "https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf"
       },
           {
-          name: "A New Blueprint for an Uncertain World.",
-          url: "https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf"
+          name: "A new blueprint for an uncertain world.",
+          url: "https://getstarted.hbs.net/hubfs/2025%20Partner%20Campaigns/HP_Services_Hybrid_A-New-Blueprint-for-an-Uncertain-World_Consideration_ebook_2022.pdf.pdf?hsLang=en"
         },
         {
-          name: "The New Office For the Way People Want to Work",
+          name: "The new office for the way people want to work",
           url: "https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf"
-        }
+        },
+{
+        name: 'Get ready today to do tomorrow\'s work', 
+        url: 'https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf'
+    }
       ],
 
-      campaignListDescription: 'The pandemic altered the fabric of society. Nowhere was this more evident than the corporate office. Transmission is the world\'s largest independent B2B marketing agency. As content strategy lead on their HP account, my role involved auditing HP\'s content repository, pitching full-funnel activations based on content gaps, and structuring insights for thought leadership content. Specifically, this meant building out HP\'s content strategy so their suite of videoconferencing solutions could lead the hybrid work conversation coming out of the pandemic.',
+      campaignListDescription: 'The pandemic altered the fabric of society. And nowhere was this more evident than in the office. As HP\'s content strategist, I helped position their Presence videoconferencing suite to be the connective tissue for distributed workforces',
       impact: [
         { stat: '8,970 total white paper downloads across all 10 assets during launch quarter' },
         { stat: '2,340 MQLs (Marketing Qualified Leads) generated from white paper download forms ' },
@@ -667,13 +669,13 @@ useEffect(() => {
     // Handle section routes
     const sectionRoutes: Record<string, () => void> = {
       'humanized-ai': () => {
-        setLocalDescription('Humanized AI \n\nCooper the Super is a customer persona trained on the content I produced at DroneDeploy. \nHank Hardass evaluates my talents, skills, and intangibles through a basketball lens.\nRuminatrix provides support for the creative process -- offers no safe words. \nGaslight a bot with Insecure Aidan.\nSurly Devin is a cynical spinoff of Devin AI\'s coding bot ');
+        setLocalDescription('Cooper the Super is a customer persona trained on the content I produced at DroneDeploy. \nHank Hardass evaluates my talents, skills, and intangibles through a basketball lens.\nRuminatrix provides support for the creative process --  no safe words. \nGaslight a bot with Insecure Aidan.\nSurly Devin is a cynical spinoff of Devin AI\'s coding bot ');
         setDisplayedItems([
           { title: 'Cooper the Super', type: 'link' as const, promptMode: 'cooper', url: '#cooper', description: 'A grizzled construction superintendent...' },
           { title: 'Hank Hardass', type: 'link' as const, promptMode: 'scout', url: '#scout', description: 'A professional scout...' },
           { title: 'ruminatrix', type: 'link' as const, promptMode: 'creative', url: '#creative', description: 'The affective dimension of creativity.' },
           { title: 'Insecure AI', type: 'link' as const, promptMode: 'insecure', url: '#insecure', description: 'Hey-o i\'m an ai entity...' },
-          { title: 'Surly Devin', type: 'link' as const, promptMode: 'devin', url: '#devin', description: 'A sardonic senior engineer...' }
+          { title: 'Surly Devin', type: 'link' as const, promptMode: 'devin', url: '#devin', description: 'Surly Devin is a sardonic senior engineer...' }
         ]);
         setMode('links');
         setPromptModeActive(true);
@@ -811,7 +813,7 @@ useEffect(() => {
     if (item.title === 'humanized ai') {
       console.log('🎯 H clicked - creating prompt mode shapes');
       
-      setLocalDescription('Humanized AI \n' + '\n' +
+      setLocalDescription(
         'Cooper the Super is a customer persona trained on the content I produced at DroneDeploy. \n' + 
         'Hank Hardass evaluates my talents, skills, and intangibles through a basketball lens.\n' + 
         'Ruminatrix provides support for the creative process -- offers no safe words. \n' + 
@@ -838,21 +840,21 @@ useEffect(() => {
           type: 'link' as const,
           promptMode: 'creative',
           url: '#creative',
-          description: 'The affective dimension of creativity.'
+          description: 'Bow down before ruminatrix and feel your creative ideas soar.'
         },
         {
-          title: 'Insecure AI',
+          title: 'Insecure Aidan',
           type: 'link' as const,
           promptMode: 'insecure',
           url: '#insecure',
-          description: 'Hey-o i\'m an ai entity coded to examine my flaws.'
+          description: 'Hey-o I\'m Aidan a twitchy awkward ai entity aware enough to know my own flaws.'
         },
         {
           title: 'Surly Devin',
           type: 'link' as const,
           promptMode: 'devin',
           url: '#devin',
-          description: 'A sardonic software engineer who cuts through observability theater and marketing BS.'
+          description: 'Surly Devin is a sardonic software engineer who cuts through observability theater and marketing BS.'
         }
       ];
       
@@ -931,7 +933,7 @@ useEffect(() => {
           left: 0,
           width: '100%',
           height: '100%',
-          backgroundColor: 'rgb(255 244 224 / 69%)',
+          backgroundColor: '#5e53532f',
           zIndex: 100
         }} />
       )}
@@ -964,15 +966,15 @@ useEffect(() => {
         <div 
           style={{
             position: 'absolute',
-            top: '70px',
+            top: '80px',
 maxWidth: '100%',
             zIndex: '601',
             maxHeight: '85vh',
-            padding: '10px 0px 0px 220px',
+            padding: '10px 0px 0px 140px',
       
             color: '#3e2e20ff',
             borderRadius: '10px',
-            fontSize: '18px',
+            fontSize: '20px',
             lineHeight: '1.5',
             textAlign: 'left',
             overflowY: 'auto',
@@ -989,10 +991,10 @@ maxWidth: '100%',
             // NEW: Show section-specific description when C, I, or S is active
             <div style={{
               fontSize: '20px',
-              width:'800px',
-              fontWeight: '400',
-              lineHeight: '1.4',
-              maxWidth: '700px',
+              width:'600px',
+              fontWeight: '600',
+              lineHeight: '1.5',
+              maxWidth: '600px',
         
             }}>
               {sectionDescriptions[activeSection]}
@@ -1074,7 +1076,7 @@ maxWidth: '100%',
             left: '20px',
             zIndex: 10000,
             padding: '10px 20px',
-            background: '#5e4631',
+            background: '#1c1208',
             color: '#dcd3c3',
             border: 'none',
             borderRadius: '5px',
@@ -1092,17 +1094,17 @@ maxWidth: '100%',
         <div style={{
           position: 'absolute',
           top: '20%',
-          left: '60%',
+          left: '35%',
           transform: 'translate(-50%, -50%)',
           maxWidth: '700px',
           color: '#f5ebd9ff',
-          fontSize: '18px',
-          lineHeight: '1.3',
+          fontSize: '20px',
+          lineHeight: '1.8',
           textAlign: 'left',
           zIndex: '700'
         }}>
           Chris creates content for brands who see ai as the fire, not the chef.
-          <br/><br/>
+          <br/>
           vibe coded in typescript + tailwind + matter.js
         </div>
       )}

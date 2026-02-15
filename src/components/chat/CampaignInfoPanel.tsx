@@ -36,7 +36,7 @@ const CampaignInfoPanel: React.FC<CampaignInfoPanelProps> = ({
         width: '90%',
         maxWidth: '800px',
         maxHeight: '80vh',
-        backgroundColor: '#dcd3c3',
+        backgroundColor: '#ffffff',
         borderRadius: '12px',
         padding: '40px',
         zIndex: 2000,
@@ -71,7 +71,7 @@ const CampaignInfoPanel: React.FC<CampaignInfoPanelProps> = ({
       {/* Campaign Title */}
       <h2
         style={{
-          color: '#5e4631',
+          color: '#160e07',
           fontFamily: 'Arial, sans-serif',
           fontSize: '28px',
           fontWeight: 'bold',
@@ -222,17 +222,17 @@ const CampaignInfoPanel: React.FC<CampaignInfoPanelProps> = ({
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
-                    color: '#5e4631',
+                    color: '#150c03',
                     fontFamily: 'Arial, sans-serif',
                     fontSize: '16px',
                     textDecoration: 'underline',
                     cursor: 'pointer'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.color = '#8c6a48';
+                    e.currentTarget.style.color = '#180e05';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.color = '#5e4631';
+                    e.currentTarget.style.color = '#1c1005';
                   }}
                 >
                   {link.name} →

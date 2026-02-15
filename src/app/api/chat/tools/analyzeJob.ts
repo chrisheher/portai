@@ -315,8 +315,8 @@ function applyScoreModifiers(
   // Years of experience alignment (portfolio shows 8 years)
  
   console.error(`🎯 Score modifiers:
-    Critical gaps penalty: -${criticalGaps * 10}
-    Moderate gaps penalty: -${moderateGaps * 3}
+    Critical gaps penalty: -${criticalGaps * 12}
+    Moderate gaps penalty: -${moderateGaps * 5}
     Final adjusted score: ${Math.max(15, Math.min(95, score))}`);
   
   return Math.max(15, Math.min(95, score));
@@ -423,12 +423,12 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     
     const response = await anthropic.messages.create({
       model: 'claude-opus-4-5-20251101',
-      max_tokens: 2400,
-      temperature: .5,
+      max_tokens: 2600,
+      temperature: .9,
       system: [
         {
           type: "text",
-      text: `Analyze jobs against this portfolio. IMPORTANT: Address the hiring manager/recruiter -- not the candidate/Chris.
+      text: `Analyze jobs against this portfolio. IMPORTANT: Address the hiring manager/recruiter -- not the candidate/Chris -- frame blurbs by answering this question: what business problem did I solve and what measurable outcome came from it?
 
 Portfolio:
 ${JSON.stringify(portfolioConfig, null, 2)}
@@ -473,7 +473,6 @@ AVAILABLE CATEGORIES (use ONLY these for "category" field - pick the one that be
 - Content Strategy
 
 CRITICAL: 
-- For "category", use ONLY one of the 10 categories listed above
 - For "match", extract a DIRECT QUOTE (10 words or fewer) from the job description
 
 Return valid JSON (max 5 strengths, max 3 gaps):

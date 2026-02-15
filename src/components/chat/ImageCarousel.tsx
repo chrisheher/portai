@@ -78,7 +78,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               <h3 className="text-[#dcd3c3] text-2xl font-semibold mb-4">Impact</h3>
               {impact.map((item, index) => (
                 <div key={index} className="flex items-start gap-3">
-                  <div className="w-2 h-2 rounded-full bg-[#dcd3c3] mt-2 flex-shrink-0" />
+                  <div className="" />
                   <p className="text-[#dcd3c3] text-base leading-relaxed">
                     {item.stat}
                   </p>
