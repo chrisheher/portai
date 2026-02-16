@@ -480,8 +480,8 @@ Motivate people that creativity isn't a special gift reserved for artists—it's
 
     // Start countdown for job analysis
     if (isJobAnalysis) {
-      console.log('⏱️ Starting 15 second countdown for job analysis');
-      setCountdown(15);
+      console.log('⏱️ Starting 20 second countdown for job analysis');
+      setCountdown(20);
     }
 
     const userMessage = {

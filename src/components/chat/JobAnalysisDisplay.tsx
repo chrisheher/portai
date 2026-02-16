@@ -180,7 +180,7 @@ const getLinksForCategory = (category: string) => {
             fontWeight: '900',
             color: 'rgba(5, 5, 4, 1)',
           }}>
-  Strengths
+What you want <span className="ml-3 green">→</span> What I've done
           </h4>
           
           <div style={{ display: 'grid', gap: '0.75rem' }}>

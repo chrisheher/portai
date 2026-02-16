@@ -223,7 +223,7 @@ function ChatLanding({
 
   // NEW: Section descriptions for C, I, S
   const sectionDescriptions = {
-    C: 'High-impact copy  that tipped off Michael Jordan\'s tequila brand, launched an application monitoring dashboard, and laid sales pipeline for a construction drone platform.',
+    C: 'High-impact copy that tipped off Michael Jordan\'s tequila brand, built a content engine that drove an application monitoring dashboard, brought visibility to videoconferencing hardware coming out of the pandemic, and laid sales pipeline for a construction drone platform.',
     I: 'Users don\'t read content -- they scan it. These projects were designed with this unfortunate truth, F pattern principles, and mobile responsiveness in mind.',
     S: 'Written at eye level to pique curiosity in the user while leading thought in an industry.'
   };
@@ -302,8 +302,8 @@ function ChatLanding({
       description: 'GTM content campaign',
       campaignListDescription: 'Worksite injuries cost the construction industry $5 billion annually. DroneDeploy\'s Safety AI uses computer vision to identify safety violations in real-time, turning reactive incident reports into proactive prevention.',
       impact: [
-        { stat: '$10M+ pipeline influence from Safety AI content' },
-        { stat: '70 companies engaged in trial walks, indicating healthy conversion from awareness to hands-on experience.' },
+        { stat: '~10% pipeline influence from Safety AI content' },
+        { stat: '100+ companies engaged in trial walks due to campaign.' },
         { stat: '~3k total landing page visits across top-of-funnel content.' }
       ]
     },
@@ -344,7 +344,7 @@ function ChatLanding({
       campaignListDescription: 'Dogfooding is the process in which a company uses its own product as a quality control mechanism. This concept was a perfect fit for Sentry to showcase how its software engineers were using Sentry\'s own platform to track errors in the codebase. Creating stories out of these mundane coding hiccups established Sentry as a thought leader across key industry blogs without sounding preachy or pedantic.'
     },
     'hp-presence': {
-      title: 'HP Presence',
+      title: 'HP Presence | thought leadership',
       type: 'campaign' as const,
       links: [
          { name: 'The new office for the way people want to work', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf' },
@@ -353,7 +353,6 @@ function ChatLanding({
         { name: 'Get ready today to do tomorrow\'s work', url: 'https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf' }
        
       ],
-      description: 'hybrid work white paper series',
       campaignListDescription: 'The pandemic altered the fabric of society. And nowhere was this more evident than in the office. As HP\'s content strategist, I helped position their Presence videoconferencing suite to be the connective tissue for distributed workforces.',
       impact: [
         { stat: '8,940 total white paper downloads across all 10 assets in launch quarter' },
@@ -948,7 +947,7 @@ useEffect(() => {
             left: '20px',
             zIndex: 1000,
             padding: '5px 10px',
-            background: '#5e4631',
+            background: '#1e130a',
             color: '#dcd3c3',
             border: 'none',
             borderRadius: '5px',
@@ -975,7 +974,8 @@ maxWidth: '100%',
             color: '#3e2e20ff',
             borderRadius: '10px',
             fontSize: '20px',
-            lineHeight: '1.5',
+            fontWeight: '600',
+            lineHeight: '1.6',
             textAlign: 'left',
             overflowY: 'auto',
             scrollbarWidth: 'none',
@@ -991,10 +991,10 @@ maxWidth: '100%',
             // NEW: Show section-specific description when C, I, or S is active
             <div style={{
               fontSize: '20px',
-              width:'600px',
+              width:'700px',
               fontWeight: '600',
               lineHeight: '1.5',
-              maxWidth: '600px',
+              maxWidth: '700px'
         
             }}>
               {sectionDescriptions[activeSection]}

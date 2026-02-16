@@ -13,7 +13,7 @@ interface DevinPromptShapesProps {
 const DEVOPS_PROMPTS = [
   "What makes you roll your eyes when reading marketing content?",
   "compare a content marketer to an animal",
-  "name things that masquerade as solutions",
+  "why is the concept of slow problematic for software engineers?",
   "name things in your life that try your patience as much as observability theater",
   "what is observability theater"
 ];
@@ -27,7 +27,7 @@ const SCOUT_PROMPTS = [
 ];
 
 const COOPER_PROMPTS = [
-  "what aspect of site visibility do people underestimate?",
+  "how does AI factor into construction",
   "Compare manual documentation to drone-based capture",
   "What's the biggest waste of time on a construction site?",
   "How can drones solve safety compliance issues?",
@@ -40,7 +40,7 @@ const CREATIVE_PROMPTS = [
   "is there a structure to creativity?",
   "what are the stages of creativity",
   "How does the 'eccentric genius' myth obscure the drudgery of creative work",
-  "Is there an aesthetic dimension to engineering?",
+  "Why does everything I think of feel derivative?",
   "Can machines be truly creative, or only simulate creativity?"
 ];
 
@@ -158,7 +158,7 @@ export default function DevinPromptShapes({
       case 'creative':
         PROMPTS = CREATIVE_PROMPTS;
         modeColors = { 
-          fill: 'rgba(26, 25, 36, 0.77)',
+          fill: 'rgba(14, 14, 21, 0.79)',
           stroke: '#cececeff',
           text: 'rgb(255, 255, 255)'
         };

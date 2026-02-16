@@ -28,6 +28,8 @@ interface JobAnalysisResult {
     recommended: string[];
     phrasingsToUse: string[];
     jobKeywords?: string[];
+    missingKeywords?: string[];
+    atsOptimizationTips?: string[];
   };
   recommendations: {
     coverLetterFocus: string[];
@@ -50,8 +52,10 @@ interface KeywordMatches {
     marketing: string[];
     soft: string[];
     industry: string[];
+    tools: string[];
   };
   jobKeywords: string[];
+  synonymMatches: Array<{ jobTerm: string; portfolioTerm: string }>;
 }
 
 function isURL(text: string): boolean {
@@ -77,9 +81,11 @@ function extractMatchingKeywords(
       technical: [],
       marketing: [],
       soft: [],
-      industry: []
+      industry: [],
+      tools: []
     },
-    jobKeywords: []
+    jobKeywords: [],
+    synonymMatches: []
   };
    
   // Extract raw keywords FROM the job description
@@ -104,30 +110,68 @@ function extractMatchingKeywords(
     });
   });
 
+  // Synonym mapping for better ATS matching
+  const synonymMap: Record<string, string[]> = {
+    'content strategy': ['content planning', 'content development', 'editorial strategy'],
+    'technical writing': ['technical documentation', 'technical communication', 'tech writing'],
+    'developer relations': ['devrel', 'developer advocacy', 'developer marketing'],
+    'go-to-market': ['gtm', 'go to market', 'product launch'],
+    'saas': ['software as a service', 'cloud software'],
+    'b2b': ['business to business', 'enterprise'],
+    'api': ['apis', 'rest api', 'api documentation'],
+    'social media': ['social', 'social content', 'social marketing']
+  };
+
   // Match against portfolio keywords
   Object.entries(portfolioKeywords).forEach(([category, keywords]) => {
     if (!Array.isArray(keywords)) return;
-    
+
     keywords.forEach((keyword: string) => {
       const keywordLower = keyword.toLowerCase();
-      if (!jobLower.includes(keywordLower)) return;
-      
-      const regex = new RegExp(`\\b${keywordLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-      
+
+      // Create regex pattern that handles word boundaries and special chars
+      const escapedKeyword = keywordLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`\\b${escapedKeyword}\\b`, 'i');
+
+      // Direct match
       if (regex.test(jobText)) {
         const categoryKey = category as keyof typeof matches.categories;
-        
+
         // Only push if the category array exists
         if (matches.categories[categoryKey]) {
-          matches.categories[categoryKey].push(keyword);
+          if (!matches.categories[categoryKey].includes(keyword)) {
+            matches.categories[categoryKey].push(keyword);
+          }
         }
-        
-        if (category === 'core' || category === 'technical') {
-          matches.critical.push(keyword);
+
+        // Determine criticality based on category and tools
+        if (category === 'core' || category === 'technical' || category === 'tools') {
+          if (!matches.critical.includes(keyword)) {
+            matches.critical.push(keyword);
+          }
         } else {
-          matches.recommended.push(keyword);
+          if (!matches.recommended.includes(keyword)) {
+            matches.recommended.push(keyword);
+          }
         }
       }
+
+      // Check for synonym matches
+      const synonyms = synonymMap[keywordLower] || [];
+      synonyms.forEach(synonym => {
+        const synonymRegex = new RegExp(`\\b${synonym.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+        if (synonymRegex.test(jobText)) {
+          matches.synonymMatches.push({
+            jobTerm: synonym,
+            portfolioTerm: keyword
+          });
+
+          // Add to recommended if synonym matched
+          if (!matches.recommended.includes(keyword)) {
+            matches.recommended.push(keyword);
+          }
+        }
+      });
     });
   });
 
@@ -143,14 +187,8 @@ function enrichProjectsWithLinks(
     return [];
   }
 
-  // Flatten all projects from experience entries (new structure)
-  // OR use standout_projects (old structure)
-  const allProjects = (portfolioConfig as any).experience?.flatMap((exp: any) => 
-    (exp.projects || []).map((proj: any) => ({
-      ...proj,
-      company: exp.company
-    }))
-  ) || (portfolioConfig as any).standout_projects || [];
+  // Use the new projects array from portfolio config
+  const allProjects = (portfolioConfig as any).projects || [];
 
   if (!allProjects || allProjects.length === 0) {
     console.error('⚠️ No projects found in portfolio config');
@@ -161,17 +199,22 @@ function enrichProjectsWithLinks(
     if (!projectName || typeof projectName !== 'string') {
       return { name: String(projectName || 'Unknown') };
     }
-    
+
     const projectLower = projectName.toLowerCase();
-    
+
     const matchedProject = allProjects.find((p: any) => {
       if (!p.title) return false;
       const title = p.title.toLowerCase();
       const company = (p.company || '').toLowerCase();
-      
-      return title.includes(projectLower) || 
+      const category = (p.category || '').toLowerCase();
+      const tagline = (p.tagline || '').toLowerCase();
+
+      // Match by title, company, category, or tagline
+      return title.includes(projectLower) ||
              projectLower.includes(title) ||
-             (company && projectLower.includes(company));
+             (company && projectLower.includes(company)) ||
+             (category && projectLower.includes(category)) ||
+             (tagline && projectLower.includes(tagline));
     });
 
     console.error(`🔍 "${projectName}" → matched:`, matchedProject?.title || 'NONE');
@@ -192,16 +235,16 @@ function calculateQualitativeScore(jobContent: string): number {
   
   // Role level mismatch penalties/bonuses
   if (jobLower.includes('junior') || jobLower.includes('entry')) {
-    score -= 15; // Too junior/overqualified
+    score -= 0; // Too junior/overqualified
   } else if (jobLower.includes('senior') || jobLower.includes('lead')) {
-    score += 10; // Sweet spot
+    score += 0; // Sweet spot
   }
   
   // Red flags
-  if (jobLower.includes('must have') && jobLower.includes('phd')) score -= 25;
-  if (jobLower.includes('relocation required') && !jobLower.includes('remote')) score -= 10;
-  if (jobLower.includes('on-site only') || jobLower.includes('no remote')) score -= 12;
-  if (jobLower.includes('frequent travel') && jobLower.includes('50%')) score -= 8;
+  if (jobLower.includes('must have') && jobLower.includes('phd')) score -= 0;
+  if (jobLower.includes('relocation required') && !jobLower.includes('remote')) score -=0;
+  if (jobLower.includes('on-site only') || jobLower.includes('no remote')) score -= 0;
+  if (jobLower.includes('frequent travel') && jobLower.includes('50%')) score -= 0;
 
   console.error(`🎨 Qualitative adjustments: ${score > 0 ? '+' : ''}${score}`);
   
@@ -393,6 +436,7 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     console.error(`⏱️  Keyword extraction: ${Date.now() - extractStart}ms`);
     console.error(`   Found: ${keywordMatches.critical.length} critical, ${keywordMatches.recommended.length} recommended`);
     console.error(`   Job keywords extracted: ${keywordMatches.jobKeywords.join(', ') || 'none'}`);
+    console.error(`   Synonym matches: ${keywordMatches.synonymMatches.length}`);
 
     // Log the actual keywords
     console.error(`   Critical keywords: ${keywordMatches.critical.join(', ') || 'none'}`);
@@ -403,6 +447,14 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
     console.error(`     - Marketing: ${keywordMatches.categories.marketing.join(', ') || 'none'}`);
     console.error(`     - Soft: ${keywordMatches.categories.soft.join(', ') || 'none'}`);
     console.error(`     - Industry: ${keywordMatches.categories.industry.join(', ') || 'none'}`);
+    console.error(`     - Tools: ${keywordMatches.categories.tools.join(', ') || 'none'}`);
+
+    if (keywordMatches.synonymMatches.length > 0) {
+      console.error(`   Synonym mappings:`);
+      keywordMatches.synonymMatches.forEach(({ jobTerm, portfolioTerm }) => {
+        console.error(`     "${jobTerm}" → "${portfolioTerm}"`);
+      });
+    }
 
     // Step 2: Calculate base match score
     const scoreStart = Date.now();
@@ -433,6 +485,20 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
 Portfolio:
 ${JSON.stringify(portfolioConfig, null, 2)}
 
+PROJECT-FOCUSED ANALYSIS:
+The portfolio contains ${(portfolioConfig as any).projects?.length || 0} projects spanning GTM launches, developer content, employer branding, and technical writing. When making recommendations:
+
+1. ALWAYS reference specific projects by name (e.g., "Sentry Performance GTM campaign", "DroneDeploy Safety AI", "Airbnb Career website")
+2. For "projectsToFeature", select 2-4 projects that most closely align with the job requirements
+3. Match projects based on:
+   - Category alignment (GTM Launch, Developer Relations, Brand Voice, etc.)
+   - Company type (SaaS, B2B, fintech, employer brand)
+   - Technical domain (AI/ML, DevOps, cloud, etc.)
+   - Impact metrics similar to job KPIs
+
+Available projects:
+${(portfolioConfig as any).projects?.map((p: any) => `- ${p.title} (${p.company}) - ${p.category}`).join('\n') || 'None'}
+
 EVIDENCE QUALITY RULES:
 ✅ GOOD evidence is:
 - Specific: "Led 15% growth in developer engagement through technical blog series"
@@ -444,11 +510,7 @@ EVIDENCE QUALITY RULES:
 - Generic: "Has content strategy experience"
 - Vague: "Worked on marketing campaigns"
 - Skill-listing: "Knows React and TypeScript"
-- Resume-speak: "Excellent communication skills"
-
-
-Portfolio:
-${JSON.stringify(portfolioConfig, null, 2)}`,
+- Resume-speak: "Excellent communication skills"`,
           cache_control: { type: "ephemeral" }
         }
       ],
@@ -472,17 +534,36 @@ AVAILABLE CATEGORIES (use ONLY these for "category" field - pick the one that be
 - AI / ML
 - Content Strategy
 
-CRITICAL: 
-- For "match", extract a DIRECT QUOTE (10 words or fewer) from the job description
+CRITICAL INSTRUCTIONS:
+- For "match", extract a DIRECT QUOTE (10 words or fewer) directly from the job description
+- For "projectsToFeature", use ACTUAL project titles from the portfolio (e.g., "Sentry Performance GTM campaign", "DroneDeploy Safety AI", "Airbnb Career website")
+- Select 2-4 projects that best match the job requirements based on category, industry, and required skills
+- Reference specific projects in "evidence" fields when explaining strengths
+
+ATS OPTIMIZATION INSTRUCTIONS:
+- Identify keywords from job description that are NOT in the portfolio - add to "missingKeywords"
+- Provide 3-5 specific "atsOptimizationTips" for maximizing ATS score:
+  * Suggest exact phrases from job description to mirror in resume/cover letter
+  * Identify required vs. preferred qualifications
+  * Recommend keyword density improvements
+  * Suggest how to reframe existing experience using job's terminology
+  * Highlight tools/platforms mentioned in job description
+- For "phrasingsToUse", extract 3-5 key phrases directly from the job posting (exact quotes)
 
 Return valid JSON (max 5 strengths, max 3 gaps):
 {
   "matchScore": <number between 15-95>,
-  "strengths": [{"category":"GTM Launch","match":"\"lead product launch content\"","evidence":"Led Sentry Performance launch with See Slow Faster campaign","confidence":"high"}],
+  "strengths": [{"category":"GTM Launch","match":"\"lead product launch content\"","evidence":"Led Sentry Performance launch with See Slow Faster campaign generating $1.8M pipeline","confidence":"high"}],
   "gaps": [{"requirement":"Python","severity":"moderate","suggestion":"Emphasize JS skills"}],
   "standoutQualities": ["Full-stack"],
-  "atsKeywords": {"critical":${JSON.stringify(keywordMatches.critical)},"recommended":[],"phrasingsToUse":[]},
-  "recommendations": {"coverLetterFocus":["React"],"skillsToHighlight":["TypeScript"],"projectsToFeature":["Top project"]},
+  "atsKeywords": {
+    "critical":${JSON.stringify(keywordMatches.critical)},
+    "recommended":[],
+    "phrasingsToUse":["drive go-to-market strategy","collaborate with cross-functional teams"],
+    "missingKeywords":["Specific skills from job not in portfolio"],
+    "atsOptimizationTips":["Mirror exact job title in resume header","Use phrase 'developer-focused content' from job description","Quantify impact using metrics format from job posting"]
+  },
+  "recommendations": {"coverLetterFocus":["React"],"skillsToHighlight":["TypeScript"],"projectsToFeature":["Sentry Performance GTM campaign", "DroneDeploy Safety AI"]},
   "summary": "Strong technical match."
 }`
       }]
@@ -612,6 +693,12 @@ Return valid JSON (max 5 strengths, max 3 gaps):
     console.error(`✅ COMPLETE: ${totalTime}ms`);
     console.error(`   Match: ${parsed.matchScore}%, Strengths: ${parsed.strengths.length}, Gaps: ${parsed.gaps.length}`);
     console.error(`   Job Keywords: ${keywordMatches.jobKeywords.length}`);
+    if (parsed.atsKeywords?.atsOptimizationTips) {
+      console.error(`   ATS Optimization Tips: ${parsed.atsKeywords.atsOptimizationTips.length}`);
+    }
+    if (parsed.atsKeywords?.missingKeywords && parsed.atsKeywords.missingKeywords.length > 0) {
+      console.error(`   ⚠️  Missing Keywords: ${parsed.atsKeywords.missingKeywords.join(', ')}`);
+    }
     
     console.error('\n🔗 ═══════════════════════════════════════════════════════════');
     console.error('🔗 SHAREABLE LINK (COPY THIS):');

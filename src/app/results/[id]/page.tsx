@@ -174,7 +174,7 @@ export default async function ResultsPage({ params }: PageProps) {
             fontWeight: '900',
             color: 'rgba(5, 5, 4, 1)',
           }}>
-            Strengths
+            What you want | What I've Done
           </h4>
           
           <div style={{ display: 'grid', gap: '0.75rem' }}>
