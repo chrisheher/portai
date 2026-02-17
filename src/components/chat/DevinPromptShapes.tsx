@@ -37,7 +37,7 @@ const COOPER_PROMPTS = [
 
 
 const CREATIVE_PROMPTS = [
-  "is there a structure to creativity?",
+"I'm just not a creative person, ok?",
   "what are the stages of creativity",
   "How does the 'eccentric genius' myth obscure the drudgery of creative work",
   "Why does everything I think of feel derivative?",
@@ -142,7 +142,7 @@ export default function DevinPromptShapes({
       case 'scout':
         PROMPTS = SCOUT_PROMPTS; // ✅ Now dynamic from JSON
         modeColors = { 
-          fill: '#01090456', 
+          fill: '#010904df', 
           stroke: 'rgba(4, 37, 29, 0.6)', 
           text: 'rgb(255, 255, 255)' 
         };
@@ -286,7 +286,8 @@ export default function DevinPromptShapes({
       const x = containerRect.width / 2;
       const y = -20;
 
-      const body = Matter.Bodies.rectangle(x, y, width, height, {
+      const roughVerts = createRoughVertices(width, height);
+      const body = Matter.Bodies.fromVertices(x, y, [roughVerts], {
         restitution: 0.6,
         friction: 0.1,
         density: 0.001,
@@ -462,6 +463,20 @@ export default function DevinPromptShapes({
       )}
     </div>
   );
+}
+
+function createRoughVertices(width: number, height: number): { x: number; y: number }[] {
+  const hw = width / 2;
+  const hh = height / 2;
+  const xr = width * 0.07;
+  const yr = height * 0.22;
+  const r = (scale: number) => (Math.random() - 0.5) * 2 * scale;
+  return [
+    { x: -hw + r(xr), y: -hh + r(yr) },
+    { x: hw + r(xr), y: -hh + r(yr) },
+    { x: hw + r(xr), y: hh + r(yr) },
+    { x: -hw + r(xr), y: hh + r(yr) },
+  ];
 }
 
 function wrapText(ctx: CanvasRenderingContext2D, text: string | undefined, maxWidth: number): string[] {

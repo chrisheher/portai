@@ -16,6 +16,7 @@ interface JobAnalysisResult {
     match: string;
     evidence: string;
     confidence: 'high' | 'medium' | 'low';
+    priorityNumber?: 1 | 2 | 3;
   }>;
   gaps: Array<{
     requirement: string;
@@ -485,6 +486,16 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
 Portfolio:
 ${JSON.stringify(portfolioConfig, null, 2)}
 
+TOP PRIORITIES IDENTIFICATION:
+Before analyzing, identify the top 3 priorities/requirements from the job description by looking for:
+1. Responsibilities mentioned first or emphasized in the job posting
+2. Required qualifications vs. preferred qualifications (prioritize required)
+3. Repeated themes or requirements mentioned multiple times
+4. Key phrases like "primary focus," "core responsibility," "must have"
+
+The first sentence of the "summary" field MUST state these three priorities clearly.
+Example: "This position prioritizes: (1) GTM content strategy for SaaS products, (2) technical writing for developer audiences, and (3) cross-functional collaboration with product teams."
+
 PROJECT-FOCUSED ANALYSIS:
 The portfolio contains ${(portfolioConfig as any).projects?.length || 0} projects spanning GTM launches, developer content, employer branding, and technical writing. When making recommendations:
 
@@ -496,21 +507,43 @@ The portfolio contains ${(portfolioConfig as any).projects?.length || 0} project
    - Technical domain (AI/ML, DevOps, cloud, etc.)
    - Impact metrics similar to job KPIs
 
-Available projects:
-${(portfolioConfig as any).projects?.map((p: any) => `- ${p.title} (${p.company}) - ${p.category}`).join('\n') || 'None'}
+Available projects with impact metrics:
+${(portfolioConfig as any).projects?.map((p: any) => {
+  const impacts = Array.isArray(p.impact) ? p.impact.join('; ') : '';
+  return `- ${p.title} (${p.company}) - ${p.category} | Impact: ${impacts}`;
+}).join('\n') || 'None'}
+
+STRENGTHS SECTION - PRIORITY MAPPING:
+The "strengths" array MUST map to the top 3 priorities identified from the job description. For each strength:
+1. The "priorityNumber" MUST be 1, 2, or 3 — matching the exact priority number from your summary sentence
+2. The "category" should reflect which priority it addresses
+3. The "match" should quote the specific job requirement
+4. The "evidence" MUST include:
+   - Specific project name from portfolio
+   - Quantified impact/metric from that project
+   - Direct connection to how this addresses the job priority
+
+Example strength entry:
+{
+  "category": "GTM Launch",
+  "match": "drive product launch content strategy",
+  "evidence": "Led Sentry Performance GTM campaign ('See Slow Faster') generating $1.8M in attributed pipeline and 1.2k content-sourced leads, directly demonstrating ability to drive product launch content that impacts revenue.",
+  "confidence": "high"
+}
 
 EVIDENCE QUALITY RULES:
 ✅ GOOD evidence is:
-- Specific: "Led 15% growth in developer engagement through technical blog series"
-- Quantified: "Reduced documentation time 40% via automation"
-- Project-based: "Built See Slow Faster campaign generating 2M+ impressions"
-- Outcome-focused: "Drove 500+ SQLs through content strategy"
+- Project-specific: Names the actual portfolio project
+- Quantified: Includes metrics from portfolio (e.g., "$1.8M pipeline," "72% increase," "45k visits")
+- Outcome-focused: Shows business impact, not just activity
+- Connected: Explicitly links project outcome to job requirement
 
 ❌ BAD evidence is:
 - Generic: "Has content strategy experience"
 - Vague: "Worked on marketing campaigns"
 - Skill-listing: "Knows React and TypeScript"
-- Resume-speak: "Excellent communication skills"`,
+- Resume-speak: "Excellent communication skills"
+- Missing metrics: No quantifiable outcomes`,
           cache_control: { type: "ephemeral" }
         }
       ],
@@ -535,10 +568,15 @@ AVAILABLE CATEGORIES (use ONLY these for "category" field - pick the one that be
 - Content Strategy
 
 CRITICAL INSTRUCTIONS:
+- FIRST, identify the top 3 priorities/requirements from this job description
+- The "summary" field MUST start with: "This position prioritizes: (1) [priority 1], (2) [priority 2], and (3) [priority 3]."
+- Each of the 3 "strengths" should directly address one of these priorities with:
+  * Specific project name from the portfolio
+  * Quantified metrics/impact from that project
+  * Clear connection between the project outcome and the job priority
 - For "match", extract a DIRECT QUOTE (10 words or fewer) directly from the job description
 - For "projectsToFeature", use ACTUAL project titles from the portfolio (e.g., "Sentry Performance GTM campaign", "DroneDeploy Safety AI", "Airbnb Career website")
 - Select 2-4 projects that best match the job requirements based on category, industry, and required skills
-- Reference specific projects in "evidence" fields when explaining strengths
 
 ATS OPTIMIZATION INSTRUCTIONS:
 - Identify keywords from job description that are NOT in the portfolio - add to "missingKeywords"
@@ -550,10 +588,32 @@ ATS OPTIMIZATION INSTRUCTIONS:
   * Highlight tools/platforms mentioned in job description
 - For "phrasingsToUse", extract 3-5 key phrases directly from the job posting (exact quotes)
 
-Return valid JSON (max 5 strengths, max 3 gaps):
+Return valid JSON (exactly 3 strengths mapping to top 3 priorities, max 3 gaps):
 {
   "matchScore": <number between 15-95>,
-  "strengths": [{"category":"GTM Launch","match":"\"lead product launch content\"","evidence":"Led Sentry Performance launch with See Slow Faster campaign generating $1.8M pipeline","confidence":"high"}],
+  "strengths": [
+    {
+      "priorityNumber": 1,
+      "category":"GTM Launch",
+      "match":"lead product launch content strategy",
+      "evidence":"Led Sentry Performance GTM campaign ('See Slow Faster') generating $1.8M in attributed pipeline, 1.2k content-sourced leads, and 3.5k visits (2.3x site average), demonstrating proven ability to drive product launch content that directly impacts revenue.",
+      "confidence":"high"
+    },
+    {
+      "priorityNumber": 2,
+      "category":"Technical Writing",
+      "match":"create technical content for developer audiences",
+      "evidence":"Created Sentry Dogfooding Chronicles (25+ blog posts) generating 45k site visits (40% organic) and $100K-$150K annual SEO value, plus developer content portfolio with 480 SQL conversions (9.5% attributed to ARR growth from $45M to $90M).",
+      "confidence":"high"
+    },
+    {
+      "priorityNumber": 3,
+      "category":"Content Strategy",
+      "match":"cross-functional collaboration with product teams",
+      "evidence":"Built content production systems at Sentry reducing production time 50% (3-4 weeks to 1-2 weeks) through GitHub-based editorial workflow with engineering SMEs, plus DroneDeploy sales enablement system showing $10M+ pipeline influence.",
+      "confidence":"high"
+    }
+  ],
   "gaps": [{"requirement":"Python","severity":"moderate","suggestion":"Emphasize JS skills"}],
   "standoutQualities": ["Full-stack"],
   "atsKeywords": {
@@ -564,7 +624,7 @@ Return valid JSON (max 5 strengths, max 3 gaps):
     "atsOptimizationTips":["Mirror exact job title in resume header","Use phrase 'developer-focused content' from job description","Quantify impact using metrics format from job posting"]
   },
   "recommendations": {"coverLetterFocus":["React"],"skillsToHighlight":["TypeScript"],"projectsToFeature":["Sentry Performance GTM campaign", "DroneDeploy Safety AI"]},
-  "summary": "Strong technical match."
+  "summary": "This position prioritizes: (1) GTM content strategy for SaaS product launches, (2) technical writing for developer audiences, and (3) cross-functional collaboration with product and engineering teams. Chris demonstrates strong alignment across all three priorities with quantified proof points from Sentry, DroneDeploy, and Airbnb projects showing consistent ability to drive pipeline ($1.8M+), engage technical audiences (45k+ visits), and build scalable content systems (50% efficiency gains)."
 }`
       }]
     });

@@ -1,11 +1,10 @@
 {
- 
 
   "personal": {
     "name": "Chris Heher",
-    "title": "Writer | Marketer | Conversational Design",
+    "title": "Copyriter | Content Marketer | Conversational Designer",
     "location": "Jersey City, NJ",
-    "bio": "Crafting strategic content that turns complex technical concepts into compelling narratives that drive pipeline and revenue."
+    "bio": "Crafting strategic content that turns complex technical concepts into compelling narratives that drive pipeline."
   },
 
   "categoryMappings": {
@@ -78,8 +77,7 @@
       "GTM", "Go-to-market", "Go-to-Market Strategy", "Product Launch", "Launch Strategy", "Product Release",
       "Brand Messaging", "Brand Voice", "Brand Strategy", "Messaging", "Positioning", "Value Proposition",
       "Copywriting", "Copywriter", "Copy Development", "Long-form", "Long-form Content",
-      "Content Marketing", "Marketing Content", "Product Marketing", "Product Marketing Manager",
-      "Editorial Strategy", "Editorial", "Editorial Calendar", "Content Calendar",
+      "Content Marketing", "Marketing Content", "Product Marketing", "Product Marketing Manager",      "Editorial Strategy", "Editorial", "Editorial Calendar", "Content Calendar",
       "Thought Leadership", "Industry Thought Leader", "Executive Communications",
       "Content Operations", "Content Ops", "Content Management", "Content Systems", "Content Workflow",
       "Editorial Workflow", "Production Workflow", "Content Governance", "Content Process",
@@ -102,19 +100,18 @@
       "ABM", "Account-Based Marketing", "Account-Based Strategy"
     ],
     "technical": [
-      "API", "APIs", "REST API", "API Documentation", "API Content",
+      "API", "API Content",
       "SDK", "Software Development Kit", "Developer Tools",
       "Developer", "Software Developer", "Engineering",
       "Technical", "Technical Skills", "Technical Fluency",
       "SaaS", "Software as a Service", "Cloud Software",
       "B2B", "B2B SaaS", "B2B Marketing", "Enterprise Software",
       "Enterprise", "Enterprise Sales", "Enterprise Solutions",
-      "Open Source", "Open-Source", "OSS",
+      "Open Source", "Open-Source",
       "AI", "Artificial Intelligence", "AI/ML", "Generative AI",
       "ML", "Machine Learning", "Deep Learning",
       "DevOps", "CI/CD", "Continuous Integration",
-      "Cloud", "Cloud Computing", "AWS", "Azure", "GCP",
-      "Software", "Software Engineering", "Software Development",
+      "Cloud", "Cloud Computing", "AWS",  "Software", "Software Engineering", "Software Development",
       "Documentation", "Technical Documentation", "Docs",
       "Monitoring", "Application Monitoring", "Observability",
       "Performance", "Application Performance", "Performance Monitoring", "APM"
@@ -199,8 +196,7 @@
     "Deep experience in developer tools and enterprise SaaS",
     "Bridges gap between technical teams and business stakeholders",
     "Strong understanding of AI/ML, cybersecurity, and DevOps concepts",
-    "Builds scalable content systems and production workflows that reduce time-to-publish by 30-40%",
-    "Establishes content governance frameworks and editorial processes for cross-functional teams"
+    "Builds scalable content systems and production workflows"
   ],
 
   "content_systems_expertise": {
@@ -218,10 +214,9 @@
           "Established review process with engineering SMEs ensuring technical accuracy"
         ],
         "tools_processes": [
-          "GitHub-based editorial workflow for technical reviews",
+          "installed editorial workflow for technical reviews, including creative briefs and zero drafts",
           "Notion-based content calendar with intake forms",
-          "Style guide and voice/tone documentation",
-          "Content briefs template system"
+          "Style guide and voice/tone documentation"
         ]
       },
       {

@@ -11,6 +11,7 @@ interface JobAnalysisProps {
       match: string;
       evidence: string;
       confidence: 'high' | 'medium' | 'low';
+      priorityNumber?: number;
     }>;
     gaps: Array<{
       requirement: string;
@@ -86,7 +87,7 @@ const getLinksForCategory = (category: string) => {
 };
 
   const scoreColors = getScoreColor(data.matchScore);
-  const keywordCoverage = data.atsKeywords 
+  const keywordCoverage = data.atsKeywords
     ? ((data.atsKeywords.critical.length + data.atsKeywords.recommended.length) / 
        (portfolioConfig.ATSKeywords.core.length + portfolioConfig.ATSKeywords.technical.length)) * 100
     : 0;
@@ -127,11 +128,16 @@ const getLinksForCategory = (category: string) => {
           </div>
           <div style={{ flex: 1, minWidth: '250px' }}>
             <p style={{ margin: '25px 0px 25px 0px', padding:'0px 25px 0px 25px',color: '#rgb(94, 70, 49)', fontSize: '1rem', lineHeight: '1.6' }}>
-              {data.summary}
+              {(() => {
+                const split = data.summary.match(/^(This position prioritizes:.*?\.)([\s\S]*)$/);
+                if (split) return <>{split[1]}<br /><br />{split[2].trim()}</>;
+                return data.summary;
+              })()}
             </p>
           </div>
         </div>
       </div>
+
    <div style={{ padding: '1rem', }}>
        <h3 className="text-xl font-semibold  ">
      ATS Keywords Match
@@ -180,7 +186,7 @@ const getLinksForCategory = (category: string) => {
             fontWeight: '900',
             color: 'rgba(5, 5, 4, 1)',
           }}>
-What you want <span className="ml-3 green">→</span> What I've done
+<i>What you want </i><span style={{ display: 'inline-block', width: '4px', height: '1.2em', background: 'rgba(17, 128, 30, 0.79)', borderRadius: '2px', margin: '0 0.6rem', verticalAlign: 'middle' }} /> What I've done
           </h4>
           
           <div style={{ display: 'grid', gap: '0.75rem' }}>
@@ -195,35 +201,41 @@ What you want <span className="ml-3 green">→</span> What I've done
       padding: '1rem',
       boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
     }}>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        marginBottom: '.75rem',
-        
-        flexWrap: 'wrap'
-      }}>
-        <div style={{ 
-          fontWeight: '900', 
-          color: '#010101ff',
-          fontSize: '1.2em',
-          
-          flex: 1
+      <div style={{ marginBottom: '0.75rem' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'baseline',
+          gap: '0.6rem',
+          flexWrap: 'wrap',
+          marginBottom: '0.75rem'
         }}>
-          {strength.match}      
+          <span style={{
+            fontSize: '1.2rem',
+            fontWeight: '700',
+            color: 'rgba(18, 21, 18, 0.85)',
+            letterSpacing: '.01em',
+            flexShrink: 0,
+          }}>
+            Priority {strength.priorityNumber ?? (idx + 1)} →
+          </span>
+          <span style={{
+            fontWeight: '900',
+            color: '#010101ff',
+            fontSize: '1.2em'
+          }}>
+            {strength.match}
+          </span>
         </div>
-        
-       
-      </div>
-      
-      <div style={{ 
-        fontSize: '1.1rem', 
-        color: '#382311ff',
-           paddingLeft: '.8rem',
-                    borderLeft: '5px solid rgba(17, 128, 30, 0.79)',
-          lineHeight: '1.5'          
-      }}>
-        {strength.evidence}
+
+        <div style={{
+          fontSize: '1.1rem',
+          color: '#382311ff',
+          paddingLeft: '.8rem',
+          borderLeft: '5px solid rgba(17, 128, 30, 0.79)',
+          lineHeight: '1.5'
+        }}>
+          {strength.evidence}
+        </div>
       </div>
        <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
           {/* Category badge */}
