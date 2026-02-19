@@ -138,43 +138,76 @@ const getLinksForCategory = (category: string) => {
         </div>
       </div>
 
-   <div style={{ padding: '1rem', }}>
-       <h3 className="text-xl font-semibold  ">
-     ATS Keywords Match
-    </h3>
-         {/* Job Description Keywords */}
-{data.atsKeywords?.jobKeywords && data.atsKeywords.jobKeywords.length > 0 && (
-  <div className="mt-2 p-4 rounded-lg border bg-white/90 " style={{ padding: '2rem', background: 'rgb(220 211 195 / 16%)',boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px'
- }}>
+   {data.atsKeywords && (
+  <div style={{ padding: '1rem' }}>
+    <h3 className="text-xl font-semibold" style={{ marginBottom: '0.75rem',   fontSize: '1.5rem' }}>Keyword Matches</h3>
 
-   
-    <div className="flex flex-wrap">
-      {data.atsKeywords.jobKeywords.map((keyword: string, i: number) => {
-        // Check if this keyword is also in critical (matched)
-        const isMatched = data.atsKeywords?.critical?.some(
-          (c: string) => c.toLowerCase() === keyword.toLowerCase()
-        );
+    {/* Matched: portfolio keywords confirmed in job description */}
+    {data.atsKeywords.critical.length > 0 && (
+      <div style={{
+        background: 'rgb(220 211 195 / 16%)',
+        borderRadius: '10px',
+        padding: '1rem 1.25rem',
+        marginBottom: '0.75rem',
+        boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
+      }}>
+        <div style={{ fontSize: '0.7rem', fontWeight: '700', color: 'rgba(17, 128, 30, 0.85)', textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: '0.75rem' }}>
         
-        return (
-          <span
-            key={i}
-            className={`px-1 py-1 m-1 rounded text-m font-medium ${
-              isMatched 
-                ? 'bg-green-100 text-green-800 border border-green-300' 
-                : 'bg-gray-100 text-gray-700 border border-gray-300'
-            }`}
-          >
-            {keyword}
-            {isMatched && <span className="ml-3">✓</span>}
-          </span>
-        );
-      })}
-    </div>
-   
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+          {data.atsKeywords.critical.map((kw: string, i: number) => (
+            <span key={i} style={{
+              padding: '0.25rem 0.6rem',
+              background: 'rgba(17, 128, 30, 0.1)',
+              border: '1px solid rgba(17, 128, 30, 0.35)',
+              borderRadius: '4px',
+              fontSize: '0.85rem',
+              color: '#1a4a1e',
+            }}>
+              {kw}
+            </span>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* Gaps: job terms not found in portfolio */}
+    {data.atsKeywords.jobKeywords && (() => {
+      const matched = new Set([
+        ...data.atsKeywords!.critical.map((k: string) => k.toLowerCase()),
+        ...data.atsKeywords!.recommended.map((k: string) => k.toLowerCase()),
+      ]);
+      const gaps = data.atsKeywords.jobKeywords.filter((k: string) => !matched.has(k.toLowerCase()));
+      if (!gaps.length) return null;
+      return (
+        <div style={{
+          background: 'rgb(220 211 195 / 16%)',
+          borderRadius: '10px',
+          padding: '1rem 1.25rem',
+          boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
+        }}>
+          <div style={{ fontSize: '0.7rem', fontWeight: '700', color: '#888', textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: '0.75rem' }}>
+            In job posting — not in portfolio ({gaps.length})
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+            {gaps.map((kw: string, i: number) => (
+              <span key={i} style={{
+                padding: '0.25rem 0.6rem',
+                background: 'rgba(100, 100, 100, 0.07)',
+                border: '1px solid rgba(100, 100, 100, 0.2)',
+                borderRadius: '4px',
+                fontSize: '0.85rem',
+                color: '#555',
+              }}>
+                {kw}
+              </span>
+            ))}
+          </div>
+        </div>
+      );
+    })()}
   </div>
-  
-)}
-  </div>      <div style={{ padding: '1rem'}}>
+)}      <div style={{ padding: '1rem'}}>
         {/* Strengths Section */}
         <div style={{ marginBottom: '2rem' }}>
           <h4 style={{
@@ -186,7 +219,7 @@ const getLinksForCategory = (category: string) => {
             fontWeight: '900',
             color: 'rgba(5, 5, 4, 1)',
           }}>
-<i>What you want </i><span style={{ display: 'inline-block', width: '4px', height: '1.2em', background: 'rgba(17, 128, 30, 0.79)', borderRadius: '2px', margin: '0 0.6rem', verticalAlign: 'middle' }} /> What I've done
+Priorities<span style={{ display: 'inline-block', width: '4px', height: '1.2em', background: 'rgba(17, 128, 30, 0.79)', borderRadius: '2px', margin: '0 0.6rem', verticalAlign: 'middle' }} /> Accomplishments
           </h4>
           
           <div style={{ display: 'grid', gap: '0.75rem' }}>
@@ -229,7 +262,7 @@ const getLinksForCategory = (category: string) => {
 
         <div style={{
           fontSize: '1.1rem',
-          color: '#382311ff',
+          color: 'rgb(0, 0, 0)',
           paddingLeft: '.8rem',
           borderLeft: '5px solid rgba(17, 128, 30, 0.79)',
           lineHeight: '1.5'
@@ -263,7 +296,7 @@ const getLinksForCategory = (category: string) => {
                 fontSize: '1.1rem',
                 fontWeight: '800',
                 boxShadow: '5px 3px 5px rgba(10, 10, 10, .8)',
-                background: 'rgb(64 52 31 / 22%)',
+                background: 'rgb(202 202 202 / 22%)',
                 color: '#0f100fff',
                 textDecoration: 'none',
                 transition: 'all 0.2s ease',

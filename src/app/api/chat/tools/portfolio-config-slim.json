@@ -175,9 +175,9 @@
       "End users", "Consumers", "B2B buyers"
     ],
     "expertise_level": {
-      "Content Strategy": "8+ years",
-      "Technical Writing": "8+ years",
-      "Product Marketing": "8+ years",
+      "Content Strategy": "10+ years",
+      "Technical Writing": "10+ years",
+      "Product Marketing": "10+ years",
       "Developer Relations": "5+ years",
       "Brand Voice": "8+ years",
       "GTM Strategy": "6+ years",
@@ -208,9 +208,9 @@
         "system": "Content production workflow and editorial calendar",
         "description": "Built end-to-end content workflow integrating product launches with editorial calendar, enabling cross-functional alignment between engineering, product, and marketing teams",
         "impact": [
-          "Reduced content production time from 3-4 weeks to 1-2 weeks",
+          "Reduced content production time from months to weeks",
           "Enabled 25+ blog series posts with consistent quality and voice",
-          "Created reusable content templates reducing start-from-scratch time by 40%",
+          "Created reusable content templates",
           "Established review process with engineering SMEs ensuring technical accuracy"
         ],
         "tools_processes": [
@@ -258,7 +258,7 @@
         "system": "Interactive content production pipeline",
         "description": "Built scalable workflow for producing interactive financial content at 3x velocity while maintaining design quality and compliance standards",
         "impact": [
-          "Increased content output from 4 pieces/month to 12 pieces/month",
+          "Creative brief quickly aligned stakeholders leading to fewer drafts before shipping",
           "Reduced design-to-publish time from 3 weeks to 1 week",
           "Created reusable design system for financial services clients",
           "Enabled non-designers to produce compliant content"

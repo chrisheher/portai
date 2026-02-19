@@ -284,12 +284,12 @@ function calculateMatchScore(
   const marketingScore = Math.min((marketingMatches / 3) * 100, 100);
 
   // 3. Industry Fit (0-100)
-  let industryScore = 50;
-  if (jobLower.includes('saas')) industryScore += 7;
-  if (jobLower.includes('developer')) industryScore += 7;
-  if (jobLower.includes('enterprise')) industryScore += 7;  
-  if (jobLower.includes('advertising')) industryScore += 7;
-  if (jobLower.includes('b2b')) industryScore += 7;
+  let industryScore = 40;
+  if (jobLower.includes('saas')) industryScore += 6;
+  if (jobLower.includes('developer')) industryScore += 6;
+  if (jobLower.includes('enterprise')) industryScore += 6;  
+  if (jobLower.includes('advertising')) industryScore += 6;
+  if (jobLower.includes('b2b')) industryScore += 6;
   industryScore = Math.min(industryScore, 100);
 
   // 4. Technical Fluency (0-100)
@@ -527,7 +527,7 @@ Example strength entry:
 {
   "category": "GTM Launch",
   "match": "drive product launch content strategy",
-  "evidence": "Led Sentry Performance GTM campaign ('See Slow Faster') generating $1.8M in attributed pipeline and 1.2k content-sourced leads, directly demonstrating ability to drive product launch content that impacts revenue.",
+  "evidence": "Led Sentry Performance GTM campaign ('See Slow Faster') — $1.8M in attributed pipeline, 1.2k content-sourced leads, 3.5k visits (2.3x site average).",
   "confidence": "high"
 }
 
@@ -536,14 +536,15 @@ EVIDENCE QUALITY RULES:
 - Project-specific: Names the actual portfolio project
 - Quantified: Includes metrics from portfolio (e.g., "$1.8M pipeline," "72% increase," "45k visits")
 - Outcome-focused: Shows business impact, not just activity
-- Connected: Explicitly links project outcome to job requirement
+- Ends on the result: the metric IS the conclusion — no explanatory tail needed
 
 ❌ BAD evidence is:
 - Generic: "Has content strategy experience"
 - Vague: "Worked on marketing campaigns"
 - Skill-listing: "Knows React and TypeScript"
 - Resume-speak: "Excellent communication skills"
-- Missing metrics: No quantifiable outcomes`,
+- Missing metrics: No quantifiable outcomes
+- Concluding with "demonstrating...": NEVER end evidence with "demonstrating [ability/experience/etc]" — let the numbers speak`,
           cache_control: { type: "ephemeral" }
         }
       ],
@@ -596,21 +597,21 @@ Return valid JSON (exactly 3 strengths mapping to top 3 priorities, max 3 gaps):
       "priorityNumber": 1,
       "category":"GTM Launch",
       "match":"lead product launch content strategy",
-      "evidence":"Led Sentry Performance GTM campaign ('See Slow Faster') generating $1.8M in attributed pipeline, 1.2k content-sourced leads, and 3.5k visits (2.3x site average), demonstrating proven ability to drive product launch content that directly impacts revenue.",
+      "evidence":"Led Sentry Performance GTM campaign ('See Slow Faster') — $1.8M in attributed pipeline, 1.2k content-sourced leads, 3.5k visits (2.3x site average).",
       "confidence":"high"
     },
     {
       "priorityNumber": 2,
       "category":"Technical Writing",
       "match":"create technical content for developer audiences",
-      "evidence":"Created Sentry Dogfooding Chronicles (25+ blog posts) generating 45k site visits (40% organic) and $100K-$150K annual SEO value, plus developer content portfolio with 480 SQL conversions (9.5% attributed to ARR growth from $45M to $90M).",
+      "evidence":"Sentry Dogfooding Chronicles — 25+ posts, 45k site visits (40% organic), $100K-$150K annual SEO value, 480 SQL conversions (9.5% attributed to ARR growth from $45M to $90M).",
       "confidence":"high"
     },
     {
       "priorityNumber": 3,
       "category":"Content Strategy",
       "match":"cross-functional collaboration with product teams",
-      "evidence":"Built content production systems at Sentry reducing production time 50% (3-4 weeks to 1-2 weeks) through GitHub-based editorial workflow with engineering SMEs, plus DroneDeploy sales enablement system showing $10M+ pipeline influence.",
+      "evidence":"Built GitHub-based editorial workflow at Sentry cutting production time 50% (3-4 weeks → 1-2 weeks). DroneDeploy sales enablement: ~$850K influence on $10M pipeline.",
       "confidence":"high"
     }
   ],
@@ -690,12 +691,6 @@ Return valid JSON (exactly 3 strengths mapping to top 3 priorities, max 3 gaps):
       
       fallbackAnalysis.shareableLink = await generateShareableLink(fallbackAnalysis);
       
-      console.error('\n🔗 ═══════════════════════════════════════════════════════════');
-      console.error('🔗 SHAREABLE LINK (FALLBACK):');
-      console.error('🔗 ═══════════════════════════════════════════════════════════');
-      console.error(fallbackAnalysis.shareableLink);
-      console.error('🔗 ═══════════════════════════════════════════════════════════\n');
-      
       return fallbackAnalysis;
     }
 
@@ -760,11 +755,6 @@ Return valid JSON (exactly 3 strengths mapping to top 3 priorities, max 3 gaps):
       console.error(`   ⚠️  Missing Keywords: ${parsed.atsKeywords.missingKeywords.join(', ')}`);
     }
     
-    console.error('\n🔗 ═══════════════════════════════════════════════════════════');
-    console.error('🔗 SHAREABLE LINK (COPY THIS):');
-    console.error('🔗 ═══════════════════════════════════════════════════════════');
-    console.error(parsed.shareableLink);
-    console.error('🔗 ═══════════════════════════════════════════════════════════\n');
     console.error('🔥 === END ===\n');
 
     return parsed;
@@ -809,12 +799,6 @@ export const analyzeJob = tool({
       const analysis = await analyzeJobDescription(jobContent);
 
       console.error(`✅ TOOL COMPLETE: ${Date.now() - toolStart}ms`);
-      
-      if (analysis.shareableLink) {
-        console.error('\n📎 Final shareable link:');
-        console.error(analysis.shareableLink);
-      }
-      console.error('');
 
       return analysis;
 
