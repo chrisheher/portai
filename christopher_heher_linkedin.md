@@ -1,18 +1,6 @@
-# LinkedIn Profile — Christopher Heher
 
----
-
-## HEADLINE
-
-Content systems | Enterprise narratives | I am what AI ain't | portai.app
-
----
-
-## ABOUT
 
 I build the content infrastructure that makes companies worth reading — and worth buying from.
-
-Twelve years in. The through-line is the same: I show up where product complexity and audience skepticism collide and I make it legible. That's happened at Sentry, DroneDeploy, Airbnb, HP, Google, Cincoro, Ceros, and a handful of agencies before all of that.
 
 What I actually do: I identify the core tension in a product story, find the language that resolves it, then build the systems that let teams scale it. "See Slow Faster" — the tagline I wrote for Sentry's Performance monitoring launch — wasn't just a line. It was the product promise distilled to three words after months of working alongside the engineering team to understand what slow actually costs a developer. That campaign drove $1.8M in attributed pipeline.
 
@@ -28,14 +16,10 @@ portai.app | chrisheher@gmail.com | Jersey City, NJ
 
 ---
 
-## EXPERIENCE
-
-### Fractional Content Lead
-**Independent** | January 2023 – Present | Remote
 
 Working on a project basis across GTM launches, employer brand, developer content, and brand strategy. Each engagement starts with the same question: what is the business problem this content is supposed to solve?
 
-- **DroneDeploy Safety AI launch** — Full-funnel content campaign (tagline, landing page, email, sales enablement). ~$850K influence on ~$10M pipeline. 140K views across assets. 20% email click-to-open rate.
+~$850K influence on ~$10M pipeline. 140K views across assets. 20% email click-to-open rate.
 - **Airbnb career website** — Employer value strategy, UX wireframes, site copy. 72% increase in applications post-launch. 170% increase from underrepresented groups. 3.4x page view increase.
 - **HP Presence launch** — Strategy briefs, white papers. $680K closed-won deals attributed to content. 200K downloads. 10x content ROI vs. B2B benchmarks.
 - **Cincoro Tequila brand launch** — Brand manifesto, social content calendar, web copy. Grew following to 91K+, exceeding Don Julio's comparable presence. Brand grew to 1.5M bottles sold.
@@ -45,15 +29,12 @@ Working on a project basis across GTM launches, employer brand, developer conten
 
 ---
 
-### Technical Content Strategist
-**Sentry** | March 2020 – October 2022 | Remote
-
+### Technical Content Strategist | Sentry
 Sentry is an application monitoring platform used by millions of developers. I owned developer content, social, and GTM campaigns — and built the systems that made all three scale.
 
 ARR grew from $45M to $90M during my tenure (Series B → Series C). Sentry hit $1B unicorn valuation months after I launched the Performance product campaign.
 
-**Dogfooding Chronicles** | Syndicated content series
-25+ posts turning internal product usage into external thought leadership. 45K site visits (40% organic). $100K–$150K annual SEO value. 15+ backlinks per post. ~$100K quarterly ARR attributed directly to content.
+**Dogfooding Chronicles** | Syndicated content series turning internal product usage into external thought leadership. 45K site visits (40% organic). $100K–$150K annual SEO value. 15+ backlinks per post. ~$100K quarterly ARR attributed directly to content.
 
 **Performance launch — "See Slow Faster"** | GTM campaign
 Wrote the tagline and full-funnel campaign after achieving cross-functional consensus with engineering on what the product's end benefit actually was. $1.8M in attributed sales pipeline. ~1.2K content-sourced leads. Campaign content generated ~3.5K visits (2.3x site average).
@@ -129,7 +110,3 @@ Mercedes-Benz account. Produced social, copy, video, banners, and led the full r
 **Code** — TypeScript, React, Matter.js
 
 ---
-
-## FEATURED
-
-**portai.app** — AI-powered portfolio. Paste a job description, get a match analysis against my actual work with proof points. Built in Next.js + Claude API.

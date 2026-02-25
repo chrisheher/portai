@@ -1,20 +1,18 @@
-# chris heher
-**content | strategy | brand**
 
-chrisheher@gmail.com | [portfolio](https://portai.app)
+AI product experience |  **DroneDeploy Safety AI launch** — Full-funnel content campaign (tagline, landing page, email, sales enablement). 
 
----
+content systems | 
 
-## 88% match
 
-Why flit between resumes and job descriptions when AI can do that for us. Here are three green flags supporting my fit for Gurobi's **Director of Content** position:
 
-### You want → *"high-impact thought leadership pieces that shape market perception"*
+
 
 **I have →** Created thought leadership content at DroneDeploy and HP, strategically positioning their products as category leaders
 
 **Prove it →**
 - **HP Presence GTM**: 200k downloads/views during fiscal launch year, 10x content ROI vs. B2B benchmarks, $680K in closed-won deals attributed to white paper content (~8% of total pipeline)
+
+
 - **Sentry Dogfooding Chronicles**: 25+ blog posts generated 45k site visits (40% organic), $100K-$150K annual SEO value replacing paid search spend
 
 ---
@@ -37,13 +35,6 @@ Why flit between resumes and job descriptions when AI can do that for us. Here a
 - **Sentry Performance launch**: $1.8M in attributed sales pipeline, ~1.2k content-sourced leads, campaign content generated ~3.5k visits (2.3x site average), contributed to $1B unicorn valuation
 - **DroneDeploy Safety AI**: Full-funnel campaign from awareness → decision, 3k landing page visits across TOFU content
 
----
-
-## experience
-*(project | deliverable | result)*
-
-### freelance content lead
-*01/23 - present*
 
 Working on a project basis, I've added value in all aspects of the content marketing ecosystem: process (creative briefs/zero drafts), insight (brand strategy/content roadmaps), execution (copy development), and optimization (metrics)
 
@@ -97,7 +88,7 @@ Ceros is a B2B content creation platform; think photoshop for front-end code. I 
 - Reduced design-to-publish time from 3 weeks to 1 week
 - Created reusable design system enabling non-designers to produce compliant content
 
-**Key deliverables**:
+
 
 **Let's Make This Brief** | Created project brief template for studio churning 300+ client deliverables yearly
 

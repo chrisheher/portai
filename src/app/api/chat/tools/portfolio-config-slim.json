@@ -16,7 +16,7 @@
     },
     "Technical Writing": {
       "links": [
-        {"name": "Dogfooding Chronicles", "url": "/?show=dogfooding"},
+        {"name": "Dogfooding Chronicles", "url": "/?show=sentry-dogfooding"},
         {"name": "Tech Content", "url": "/?show=tech-content"},
         {"name": "Sentry developer content", "url": "/?show=sentry-dev"}
       ]
@@ -350,7 +350,6 @@
       "impact": [
         "Long-tail keyword dominance:--$50K-$150K/year in paid search ads",
       "Organic traffic: $75K-$200K (replacement cost of paid search)",
-
         "25+ blog posts generated a total of ~45k site visits -- 40% of which were organic"
       ],
       "links": [

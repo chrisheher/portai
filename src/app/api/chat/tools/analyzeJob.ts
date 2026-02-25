@@ -274,31 +274,34 @@ function calculateMatchScore(
   const marketingSkills = ((portfolioConfig.ATSKeywords as any).marketing || []).map((k: string) => k.toLowerCase());
   const techTerms = (portfolioConfig.ATSKeywords.technical || []).map((k: string) => k.toLowerCase());
   const softSkills = (portfolioConfig.ATSKeywords.soft || []).map((k: string) => k.toLowerCase());
-  
+  const industryKeywords = ((portfolioConfig.ATSKeywords as any).industry || []).map((k: string) => k.toLowerCase());
+
   // 1. Core Skills Score (0-100)
+  // Denominator = ~10% of keyword list size — needs solid coverage but not exhaustive
   const coreMatches = coreSkillsNeeded.filter((skill: string) => jobLower.includes(skill)).length;
-  const coreScore = Math.min((coreMatches / 3) * 100, 100);
+  const coreDenominator = Math.max(1, Math.round(coreSkillsNeeded.length * 0.10));
+  const coreScore = Math.min((coreMatches / coreDenominator) * 100, 100);
 
   // 2. Marketing Skills Score (0-100)
   const marketingMatches = marketingSkills.filter((skill: string) => jobLower.includes(skill)).length;
-  const marketingScore = Math.min((marketingMatches / 3) * 100, 100);
+  const marketingDenominator = Math.max(1, Math.round(marketingSkills.length * 0.10));
+  const marketingScore = Math.min((marketingMatches / marketingDenominator) * 100, 100);
 
   // 3. Industry Fit (0-100)
-  let industryScore = 40;
-  if (jobLower.includes('saas')) industryScore += 6;
-  if (jobLower.includes('developer')) industryScore += 6;
-  if (jobLower.includes('enterprise')) industryScore += 6;  
-  if (jobLower.includes('advertising')) industryScore += 6;
-  if (jobLower.includes('b2b')) industryScore += 6;
-  industryScore = Math.min(industryScore, 100);
+  // Baseline of 30 — many good-fit SaaS/DevTools roles won't use portfolio industry terms explicitly
+  const industryMatches = industryKeywords.filter((term: string) => jobLower.includes(term)).length;
+  const industryDenominator = Math.max(1, Math.round(industryKeywords.length * 0.10));
+  const industryScore = Math.min(30 + (industryMatches / industryDenominator) * 70, 100);
 
   // 4. Technical Fluency (0-100)
   const techMatches = techTerms.filter((term: string) => jobLower.includes(term)).length;
-  const techScore = Math.min((techMatches / 3) * 100, 100);
+  const techDenominator = Math.max(1, Math.round(techTerms.length * 0.10));
+  const techScore = Math.min((techMatches / techDenominator) * 100, 100);
 
   // 5. Soft Skills Score (0-100)
   const softMatches = softSkills.filter((skill: string) => jobLower.includes(skill)).length;
-  const softScore = Math.min((softMatches / 3) * 100, 100);
+  const softDenominator = Math.max(1, Math.round(softSkills.length * 0.10));
+  const softScore = Math.min((softMatches / softDenominator) * 100, 100);
 
   // Calculate weighted score
   const baseScore = Math.round(
@@ -733,6 +736,22 @@ Return valid JSON (exactly 3 strengths mapping to top 3 priorities, max 3 gaps):
     if (!Array.isArray(parsed.strengths)) parsed.strengths = [];
     if (!Array.isArray(parsed.gaps)) parsed.gaps = [];
     if (!parsed.summary) parsed.summary = 'Analysis complete';
+
+    // Enrich legal/compliance gaps with relevant portfolio evidence
+    const legalTerms = ['legal', 'compliance', 'regulatory', 'gdpr', 'soc', 'hipaa', 'privacy', 'audit', 'risk', 'governance'];
+    parsed.gaps = parsed.gaps.map((gap) => {
+      const isLegalGap = legalTerms.some(term =>
+        gap.requirement?.toLowerCase().includes(term) ||
+        gap.suggestion?.toLowerCase().includes(term)
+      );
+      if (isLegalGap) {
+        return {
+          ...gap,
+          suggestion: `${gap.suggestion} Relevant experience: led content for Sentry's SOC 2 Type II certification — see https://blog.sentry.io/sentry-receives-soc-2-type-2-certification/`
+        };
+      }
+      return gap;
+    });
     
     if (parsed.recommendations?.projectsToFeature && Array.isArray(parsed.recommendations.projectsToFeature)) {
       const projectNames = parsed.recommendations.projectsToFeature as unknown as string[];
