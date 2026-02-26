@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getAnalysis } from '@/lib/db/shareableResults';
 import { MessageSquare } from 'lucide-react';
 import portfolioConfig from '@/components/chat/portconfig.json';
+import ResumeSection from './ResumeSection';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -224,6 +225,31 @@ export default async function ResultsPage({ params }: PageProps) {
                   )}
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* Tailored Resume */}
+        {analysis.resume && (
+          <div style={{ marginTop: '6rem', marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <h4 style={{ margin: 0, fontSize: '1.5rem', fontWeight: '900', color: 'rgba(5, 5, 4, 1)' }}>
+                Tailored Resume
+              </h4>
+              <ResumeSection resume={analysis.resume} />
+            </div>
+            <div style={{
+              background: 'rgb(220 211 195 / 16%)',
+              borderRadius: '10px',
+              padding: '1.5rem 2rem',
+              boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
+              whiteSpace: 'pre-line',
+              fontSize: '0.95rem',
+              lineHeight: '1.7',
+              color: 'rgb(0, 0, 0)',
+              fontFamily: 'kcgangster, monospace'
+            }}>
+              {analysis.resume}
             </div>
           </div>
         )}

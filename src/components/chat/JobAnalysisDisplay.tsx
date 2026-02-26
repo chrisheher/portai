@@ -1,5 +1,6 @@
 // src/components/chat/JobAnalysisDisplay.tsx
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import { MessageSquare } from 'lucide-react';
 import portfolioConfig from './portconfig.json';
 
@@ -46,10 +47,21 @@ interface JobAnalysisProps {
     redFlags?: string[];
     summary: string;
     fetchedContent?: string;
+    resume?: string;
   };
 }
 
 export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
+  const [copied, setCopied] = useState(false);
+
+  const copyResume = () => {
+    if (!data.resume) return;
+    navigator.clipboard.writeText(data.resume).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
   const getScoreColor = (score: number) => {
     if (score >= 80) return { bg: 'rgba(32, 32, 31, 1)', border: 'rgba(34, 197, 94, 0.3)', text: '#22c55e' };
     if (score >= 60) return { bg: 'rgb(220, 211, 195)', border: 'rgba(234, 179, 8, 0)', text: '#ffffffff' };
@@ -87,10 +99,6 @@ const getLinksForCategory = (category: string) => {
 };
 
   const scoreColors = getScoreColor(data.matchScore);
-  const keywordCoverage = data.atsKeywords
-    ? ((data.atsKeywords.critical.length + data.atsKeywords.recommended.length) / 
-       (portfolioConfig.ATSKeywords.core.length + portfolioConfig.ATSKeywords.technical.length)) * 100
-    : 0;
 
   return (
     <div style={{
@@ -578,8 +586,47 @@ Priorities<span style={{ display: 'inline-block', width: '4px', height: '1.2em',
           </div>
         )}
 
-        {/* Recommendations / Project Links */}
-       
+        {/* Tailored Resume */}
+        {data.resume && (
+          <div style={{ marginTop: '6rem', marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <h4 style={{ margin: 0, fontSize: '1.5rem', fontWeight: '900', color: 'rgba(5, 5, 4, 1)' }}>
+                Tailored Resume
+              </h4>
+              <button
+                onClick={copyResume}
+                style={{
+                  padding: '6px 16px',
+                  fontSize: '0.85rem',
+                  fontWeight: '700',
+                  background: copied ? 'rgba(17, 128, 30, 0.15)' : 'rgb(202 202 202 / 22%)',
+                  border: `1px solid ${copied ? 'rgba(17, 128, 30, 0.4)' : 'rgba(100,100,100,0.2)'}`,
+                  borderRadius: '4px',
+                  color: copied ? '#1a4a1e' : '#0f100fff',
+                  cursor: 'pointer',
+                  boxShadow: '2px 2px 5px rgba(10,10,10,0.15)',
+                  transition: 'all 0.2s ease',
+                  fontFamily: 'inherit'
+                }}
+              >
+                {copied ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+            <div style={{
+              background: 'rgb(220 211 195 / 16%)',
+              borderRadius: '10px',
+              padding: '1.5rem 2rem',
+              boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
+              whiteSpace: 'pre-line',
+              fontSize: '0.95rem',
+              lineHeight: '1.7',
+              color: 'rgb(0, 0, 0)',
+              fontFamily: 'kcgangster, monospace'
+            }}>
+              {data.resume}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

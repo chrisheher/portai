@@ -42,6 +42,7 @@ interface JobAnalysisResult {
   };
   summary: string;
   shareableLink?: string;
+  resume?: string;
 }
 
 interface KeywordMatches {
@@ -428,6 +429,109 @@ async function generateShareableLink(analysis: JobAnalysisResult): Promise<strin
   }
 }
 
+/**
+ * Generate a tailored resume from job analysis + portfolio data
+ */
+async function generateResume(
+  analysis: JobAnalysisResult,
+  jobContent: string
+): Promise<string> {
+  try {
+    const resumeStart = Date.now();
+
+    const projectSummaries = (portfolioConfig as any).projects?.map((p: any) => ({
+      title: p.title,
+      company: p.company,
+      category: p.category,
+      impact: Array.isArray(p.impact) ? p.impact.join('; ') : ''
+    })) || [];
+
+    const response = await anthropic.messages.create({
+      model: 'claude-opus-4-5-20251101',
+      max_tokens: 1600,
+      temperature: 0.7,
+      messages: [{
+        role: 'user',
+        content: `Generate a tailored resume for Chris Heher targeting this specific job.
+
+JOB DESCRIPTION (first 2000 chars):
+${jobContent.slice(0, 2000)}
+
+ANALYSIS OUTPUT:
+- Match Score: ${analysis.matchScore}%
+- Priority Strengths:
+${analysis.strengths.map(s => `  Priority ${s.priorityNumber ?? '?'}: "${s.match}" — ${s.evidence}`).join('\n')}
+- ATS Keywords Matched: ${analysis.atsKeywords?.critical?.join(', ') || 'none'}
+- Exact Phrases from Job to Weave In: ${analysis.atsKeywords?.phrasingsToUse?.join(' | ') || 'none'}
+
+PORTFOLIO PROJECTS:
+${JSON.stringify(projectSummaries, null, 2)}
+
+RULES — follow every one:
+1. Extract the exact job title from the job description. Use it verbatim in the headline (e.g. "Senior Content Strategist" not "Content Expert").
+2. Weave 5-7 exact phrases from the job description into experience bullets. Do not paraphrase them — use them word-for-word.
+3. Put ATS keywords from the analysis into the headline skills, bullets, and Skills section.
+4. Skills section: 15–25 hard skills only, comma-separated. No soft skills (no "communication", "collaboration", "leadership").
+5. Match the three "Strongest Matches" sections to the three priority strengths from the analysis.
+
+OUTPUT FORMAT — use this structure exactly, no preamble:
+
+[Exact Job Title from Posting]
+[ATS Skill 1] | [ATS Skill 2] | [ATS Skill 3] | [ATS Skill 4]
+chrisheher@gmail.com  |  Jersey City, NJ  |  portai.app
+
+---
+
+STRONGEST MATCHES FOR THIS ROLE
+
+Priority 1 → [strength.match]
+[One sentence evidence using metric from portfolio. Weave in exact phrase from job.]
+
+Priority 2 → [strength.match]
+[One sentence evidence using metric from portfolio. Weave in exact phrase from job.]
+
+Priority 3 → [strength.match]
+[One sentence evidence using metric from portfolio. Weave in exact phrase from job.]
+
+---
+
+EXPERIENCE
+
+Technical Content Strategist  |  Sentry  |  2020–2022
+•  [Bullet weaving in exact phrase from job] — [metric]
+•  [Bullet weaving in exact phrase from job] — [metric]
+•  [Bullet] — [metric]
+
+Senior Content Strategist  |  DroneDeploy  |  2022–2023
+•  [Bullet weaving in exact phrase from job] — [metric]
+•  [Bullet] — [metric]
+
+[Add 1–2 more roles if relevant: Ceros, Airbnb, HP, TBWA, Momentum, 360i, Razorfish]
+
+---
+
+SKILLS AND TOOLS
+[15–25 hard skills, comma-separated, no soft skills]
+
+---
+
+KEYWORDS
+${analysis.atsKeywords?.critical?.join(', ') || ''}
+
+Return only the resume. No commentary before or after.`
+      }]
+    });
+
+    const textContent = response.content.find(c => c.type === 'text');
+    const resumeText = textContent?.type === 'text' ? textContent.text.trim() : '';
+    console.error(`⏱️  Resume generation: ${Date.now() - resumeStart}ms`);
+    return resumeText;
+  } catch (err) {
+    console.error('❌ Resume generation failed:', err);
+    return '';
+  }
+}
+
 async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisResult> {
   try {
     console.error('\n🔥 === JOB ANALYSIS START ===');
@@ -760,8 +864,14 @@ Return valid JSON (exactly 3 strengths mapping to top 3 priorities, max 3 gaps):
       }
     }
 
-    // Step 8: Generate shareable link
-    parsed.shareableLink = await generateShareableLink(parsed);
+    // Step 8: Generate shareable link + resume in parallel
+    console.error('📄 Generating shareable link + tailored resume...');
+    const [shareableLink, resume] = await Promise.all([
+      generateShareableLink(parsed),
+      generateResume(parsed, jobContent)
+    ]);
+    parsed.shareableLink = shareableLink;
+    if (resume) parsed.resume = resume;
 
     const totalTime = Date.now() - totalStart;
     console.error(`✅ COMPLETE: ${totalTime}ms`);
