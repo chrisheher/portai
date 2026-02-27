@@ -66,6 +66,25 @@
         {"name": "See Slow Faster", "url": "/?show=sentry-performance"},
         {"name": "Dogfooding Chronicles", "url": "/?show=dogfooding"}
       ]
+    },
+    "UX Writing": {
+      "links": [
+        {"name": "Airbnb Careers", "url": "/?show=airbnb"},
+        {"name": "Sentry Product Pages", "url": "/?show=sentry-pages"},
+        {"name": "DroneDeploy Product Pages", "url": "/?show=safety-ai"}
+      ]
+    },
+    "Global / Distributed": {
+      "links": [
+        {"name": "Sentry Vienna — Hidden Champion", "url": "https://blog.sentry.io/become-a-hidden-champion-work-with-me-in-vienna/"},
+        {"name": "Sentry developer content", "url": "/?show=sentry-dev"}
+      ]
+    },
+    "Cybersecurity / Compliance": {
+      "links": [
+        {"name": "Sentry SOC 2 Type II", "url": "https://blog.sentry.io/sentry-receives-soc-2-type-2-certification/"},
+        {"name": "Sentry developer content", "url": "/?show=sentry-dev"}
+      ]
     }
   },
 
@@ -85,7 +104,10 @@
       "Style Guide", "Brand Guidelines", "Voice and Tone", "Editorial Standards",
       "Content Framework", "Content Architecture", "Content Infrastructure",
       "Demand Generation", "Demand Gen", "Lead Generation", "Sales Enablement", "Sales Content",
-      "Competitive Analysis", "Market Research", "Competitive Intelligence"
+      "Competitive Analysis", "Market Research", "Competitive Intelligence",
+      "UX Writing", "UX Copywriting", "Microcopy", "Product Copy", "In-Product Content",
+      "Information Architecture", "Content Design", "Conversational Design", "Onboarding Copy",
+      "Global", "International", "Distributed Teams", "Remote Teams", "Cross-timezone", "EMEA", "Global Content"
     ],
     "marketing": [
       "Pipeline", "Sales Pipeline", "Pipeline Influence", "Pipeline Attribution",
@@ -308,17 +330,20 @@
       "type": "product_launch",
       "category": "GTM Launch",
       "tagline": "See Slow Faster",
-      "campaignListDescription": "Product releases run the risk of getting bogged down in their own technical benefits. For Sentry's Performance monitoring release, this meant turning jargony features (such as improved visibility into p95 response times) into a simple, differentiating insight -- See Slow Faster",
+      "globalExperience": true,
+      "campaignListDescription": "Product releases run the risk of getting bogged down in their own technical benefits. For Sentry's Performance monitoring release, this meant turning jargony features (such as improved visibility into p95 response times) into a simple, differentiating insight — See Slow Faster. This campaign was built in close cross-functional collaboration with Sentry's distributed engineering team, including the Vienna, Austria office, where I embedded with engineers to understand the product deeply enough to write about it credibly. The resulting tagline and full-funnel campaign drove $1.8M in attributed pipeline.",
       "impact": [
         "$1.8M in attributed sales pipeline",
         "~1.2k content sourced leads",
         "Campaign content generated ~3.5k visits (2.3x site average)",
-        "$1b unicorn valuation achieved months after Performance product launch"
+        "$1b unicorn valuation achieved months after Performance product launch",
+        "Built cross-timezone editorial workflow coordinating US + Vienna (Austria) engineering teams"
       ],
       "links": [
         {"name": "awareness content", "url": "https://blog.sentry.io/how-slow-is-slow/"},
         {"name": "release blog", "url": "https://blog.sentry.io/see-slow-faster-with-performance-monitoring/"},
-        {"name": "product page", "url": "https://sentry.io/solutions/application-performance-monitoring/"}
+        {"name": "product page", "url": "https://sentry.io/solutions/application-performance-monitoring/"},
+        {"name": "Vienna team — Hidden Champion", "url": "https://blog.sentry.io/become-a-hidden-champion-work-with-me-in-vienna/"}
       ]
     },
     {
@@ -327,7 +352,7 @@
       "type": "product_launch",
       "category": "GTM Launch",
       "tagline": "Your AI In the Sky",
-      "campaignListDescription": "Worksite injuries cost the construction industry $5 billion annually. DroneDeploy's Safety AI uses computer vision to identify safety violations in real-time, turning reactive incident reports into proactive prevention.",
+      "campaignListDescription": "Worksite injuries cost the construction industry $5 billion annually. DroneDeploy's Safety AI uses computer vision to identify safety violations in real-time, turning reactive incident reports into proactive prevention. Full-funnel UX writing: product page microcopy, landing page copy, CTA hierarchy, and awareness-through-decision content architected to move a construction safety buyer from unfamiliar with AI to ready to demo.",
       "impact": [
         "$450k per quarter in attribute content influence (~10% of total pipeline)",
   " ~140k views across content assets",
@@ -394,11 +419,14 @@
       "company": "airbnb",
       "type": "employer_brand",
       "category": "Employer Brand",
-      "campaignListDescription": "As lead writer for Airbnb's career website, I developed their employer value proposition coming out of their Live and Work Anywhere policy, then executed on that strategy with compelling content.",
+      "uxWriting": true,
+      "campaignListDescription": "As lead UX writer and content strategist for Airbnb's career site redesign, I built the employer value proposition from scratch — wireframes, IA, microcopy, and long-form narrative — around their Live and Work Anywhere policy. Every hire touchpoint, from nav labels to role-page headers to the EVP statement, went through me.",
       "impact": [
         "72% increase in applications first post-launch quarter",
         "170% increase in applications from underrepresented groups",
-        "3.4x increase in page views vs. previous site"
+        "3.4x increase in page views vs. previous site",
+        "UX copy and IA reduced bounce rate on key job family pages",
+        "Modular content system supported 50+ job families with pre-approved, brand-consistent copy blocks"
       ],
       "links": [
         {"name": "Home page", "url": "https://careers.airbnb.com/"},
@@ -426,15 +454,20 @@
       "company": "Sentry",
       "type": "technical_content",
       "category": "Developer Relations",
-      "campaignListDescription": "Sentry is an application monitoring platform that tracks various metrics and logs to optimize code health. My role involved creating developer-focused content that simplified complex technical concepts, making them accessible and engaging for a broad audience of software engineers.",
+      "globalExperience": true,
+      "campaignListDescription": "Sentry is an application monitoring platform used by millions of developers. My role spanned developer content, UX writing for docs and onboarding flows, and product microcopy — all written for an audience that stops reading the moment they catch a bad analogy or a vague CTA. Includes in-product copy for error messages, empty states, and SDK setup flows, plus long-form content designed to earn trust with engineers who distrust marketing on principle. Worked extensively with Sentry's distributed team across San Francisco and Vienna, Austria — coordinating SME interviews, editorial reviews, and launch sequencing across time zones.",
       "impact": [
         "ARR: $45M → $90M during my tenure (Series B→C growth)",
         "~480 SQL conversions (9.5% attributed to ARR)",
-        "~150k page visits in total"
+        "~150k page visits in total",
+        "Cross-timezone content workflow with US + Vienna (Austria) engineering teams",
+        "Led content strategy for Sentry's SOC 2 Type II certification — translating security compliance into enterprise-facing messaging for a developer-skeptical audience"
       ],
       "links": [
         {"name": "Why debugging Javascript sucks", "url": "https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/"},
-        {"name": "How slow is slow?", "url": "https://blog.sentry.io/how-slow-is-slow/"}
+        {"name": "How slow is slow?", "url": "https://blog.sentry.io/how-slow-is-slow/"},
+        {"name": "Vienna team — Hidden Champion", "url": "https://blog.sentry.io/become-a-hidden-champion-work-with-me-in-vienna/"},
+        {"name": "SOC 2 Type II certification", "url": "https://blog.sentry.io/sentry-receives-soc-2-type-2-certification/"}
       ]
     },
     {
@@ -442,11 +475,13 @@
       "company": "DroneDeploy",
       "type": "product_pages",
       "category": "SaaS / B2B",
-      "campaignListDescription": "Collaborating with product and sales teams, I piqued curiosity, ensured technical accuracy, and optimized each page by adding cross-links to related solutions and guides for mid- and bottom-funnel engagement.",
+      "uxWriting": true,
+      "campaignListDescription": "UX writing and microcopy for DroneDeploy's product suite — hero headlines, feature callouts, CTA copy, navigation labels, and in-product tooltips — built in close collaboration with product and design to serve both site visitors evaluating the platform and existing customers learning new capabilities. Emphasis on translating drone/AI/computer vision concepts for construction and enterprise buyers who are technically literate but not engineers.",
       "impact": [
         "$2.5m content share for ground robotics",
         "1.7% engagement rate to take meaningful action",
-        "28% increase in handraisers"
+        "28% increase in handraisers",
+        "Microcopy and CTA copy contributed to mid-funnel engagement gains across Safety AI, Ground Robotics, and Data on Demand product pages"
       ],
       "links": [
         {"name": "Ground robotics page", "url": "https://www.dronedeploy.com/product/robotics"},
@@ -458,11 +493,13 @@
       "company": "Sentry",
       "type": "product_pages",
       "category": "SaaS / B2B",
-      "campaignListDescription": "Partnered with software engineers to co-produce content that articulated value propositions while moving users into trial.",
+      "uxWriting": true,
+      "campaignListDescription": "UX writing and microcopy across Sentry's product surface — hero statements, feature descriptions, CTA copy, empty states, onboarding tooltips, and solution pages — all written in close partnership with engineering and design. The goal: copy that converts skeptical developers who read every word and trust nothing they don't recognize.",
       "impact": [
         "Internal product release alignment boosted CTR by 15–20% around launch week",
         "Over 1.1k opportunities captured by form signups",
-        "15% adoption lift YoY"
+        "15% adoption lift YoY",
+        "Microcopy and CTA rewrites directly tied to trial signup improvements across performance, full-stack, and enterprise solution pages"
       ],
       "links": [
         {"name": "Enterprise page", "url": "https://www.sentry.dev/for/enterprise/"},

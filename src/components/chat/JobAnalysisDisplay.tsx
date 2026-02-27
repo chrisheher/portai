@@ -114,7 +114,7 @@ const getLinksForCategory = (category: string) => {
         padding: '1rem',
         borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
       }}>
-        <div className='rounded' style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap',  background: 'rgb(220 211 195 / 16%)',  boxShadow:' inset rgba(130, 130, 130, 0.5) 2px 2px 16px 3px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px'}}>
+        <div className='rounded' style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap',  background: 'rgb(220 211 195 / 35%)',  boxShadow:' inset rgba(130, 130, 130, 0.5) 2px 2px 16px 3px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px'}}>
           <div style={{
             width: '85px',
             marginLeft: '20px',
@@ -131,12 +131,12 @@ const getLinksForCategory = (category: string) => {
             <div style={{ fontSize: '2rem', fontWeight: '700', color: scoreColors.text }}>
               {data.matchScore}%
             </div>
-            <div style={{ fontSize: '0.7rem', color: '#rgba(255, 255, 255, 1)', textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '0.7rem', color: 'rgba(0, 0, 0, 0.5)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: '600' }}>
               Match
             </div>
           </div>
           <div style={{ flex: 1, minWidth: '250px' }}>
-            <p style={{ margin: '25px 0px 25px 0px', padding:'0px 25px 0px 25px',color: '#rgb(94, 70, 49)', fontSize: '1rem', lineHeight: '1.6' }}>
+            <p style={{ margin: '25px 0px 25px 0px', padding:'0px 25px 0px 25px', color: 'rgb(60, 45, 30)', fontSize: '1.05rem', lineHeight: '1.7', fontWeight: '450' }}>
               {(() => {
                 const split = data.summary.match(/^(This position prioritizes:.*?\.)([\s\S]*)$/);
                 if (split) return <>{split[1]}<br /><br />{split[2].trim()}</>;
@@ -176,7 +176,7 @@ const getLinksForCategory = (category: string) => {
     {/* Matched: portfolio keywords confirmed in job description */}
     {data.atsKeywords.critical.length > 0 && (
       <div style={{
-        background: 'rgb(220 211 195 / 16%)',
+        background: 'rgb(220 211 195 / 35%)',
         borderRadius: '10px',
         padding: '1rem 1.25rem',
         marginBottom: '0.75rem',
@@ -212,7 +212,7 @@ const getLinksForCategory = (category: string) => {
       if (!gaps.length) return null;
       return (
         <div style={{
-          background: 'rgb(220 211 195 / 16%)',
+          background: 'rgb(220 211 195 / 35%)',
           borderRadius: '10px',
           padding: '1rem 1.25rem',
           boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
@@ -259,7 +259,7 @@ Priorities<span style={{ display: 'inline-block', width: '4px', height: '1.2em',
   
   return (
     <div key={idx} style={{
-      background: 'rgb(220 211 195 / 16%)',
+      background: 'rgb(220 211 195 / 35%)',
       borderRadius: '10px',
       marginTop: '1.4rem',
       padding: '1rem',
@@ -293,10 +293,11 @@ Priorities<span style={{ display: 'inline-block', width: '4px', height: '1.2em',
 
         <div style={{
           fontSize: '1.1rem',
-          color: 'rgb(0, 0, 0)',
+          color: 'rgb(30, 28, 25)',
           paddingLeft: '.8rem',
           borderLeft: '5px solid rgba(17, 128, 30, 0.79)',
-          lineHeight: '1.5'
+          lineHeight: '1.65',
+          fontWeight: '450'
         }}>
           {strength.evidence}
         </div>
@@ -365,7 +366,7 @@ Priorities<span style={{ display: 'inline-block', width: '4px', height: '1.2em',
             <div style={{ display: 'grid', gap: '2.875rem' }}>
               {data.gaps.map((gap, idx) => (
                 <div key={idx} style={{
-                       background: 'rgb(220 211 195 / 16%)',
+                       background: 'rgb(220 211 195 / 35%)',
       boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',                  borderRadius: '12px',
                   padding: '1.25rem'
                 }}>
@@ -390,7 +391,7 @@ Priorities<span style={{ display: 'inline-block', width: '4px', height: '1.2em',
                       borderRadius: '20px',
                       fontSize: '0.75rem',
                       fontWeight: '600',
-                           background: 'rgb(220 211 195 / 16%)',
+                           background: 'rgb(220 211 195 / 35%)',
                       color: gap.severity === 'critical' 
                         ? '#ef4444' 
                         : gap.severity === 'moderate'
@@ -402,12 +403,12 @@ Priorities<span style={{ display: 'inline-block', width: '4px', height: '1.2em',
                       {gap.severity}
                     </span>
                   </div>
-                  <div style={{ 
-                    fontSize: '1rem', 
-                    color: 'rgba(21, 18, 18, 1)',
+                  <div style={{
+                    fontSize: '1.05rem',
+                    color: 'rgb(40, 35, 30)',
                     paddingLeft: '1rem',
                     borderLeft: '3px solid rgba(24, 23, 22, 0.3)',
-                    lineHeight: '1.5',
+                    lineHeight: '1.65',
                     marginBottom: gap.transferable ? '0.75rem' : 0
                   }}>
                     {gap.suggestion}
@@ -453,7 +454,7 @@ Priorities<span style={{ display: 'inline-block', width: '4px', height: '1.2em',
             }}>
               {data.culturalFit.signals.length > 0 && (
                 <div style={{
-                       background: 'rgb(220 211 195 / 16%)',
+                       background: 'rgb(220 211 195 / 35%)',
                   borderRadius: '10px',
                   padding: '1rem 1.25rem'
                 }}>
@@ -481,7 +482,7 @@ Priorities<span style={{ display: 'inline-block', width: '4px', height: '1.2em',
 
               {data.culturalFit.alignment.length > 0 && (
                 <div style={{
-                       background: 'rgb(220 211 195 / 16%)',
+                       background: 'rgb(220 211 195 / 35%)',
                   border: '1px solid rgba(34, 197, 94, 0.2)',
                   borderRadius: '10px',
                   padding: '1rem 1.25rem'
@@ -636,7 +637,7 @@ Priorities<span style={{ display: 'inline-block', width: '4px', height: '1.2em',
               </button>
             </div>
             <div style={{
-              background: 'rgb(220 211 195 / 16%)',
+              background: 'rgb(220 211 195 / 35%)',
               borderRadius: '10px',
               padding: '1.5rem 2rem',
               boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',

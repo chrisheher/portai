@@ -841,17 +841,23 @@ Return valid JSON (exactly 3 strengths mapping to top 3 priorities, max 3 gaps):
     if (!Array.isArray(parsed.gaps)) parsed.gaps = [];
     if (!parsed.summary) parsed.summary = 'Analysis complete';
 
-    // Enrich legal/compliance gaps with relevant portfolio evidence
-    const legalTerms = ['legal', 'compliance', 'regulatory', 'gdpr', 'soc', 'hipaa', 'privacy', 'audit', 'risk', 'governance'];
+    // Enrich security/compliance gaps with relevant portfolio evidence
+    const securityTerms = [
+      'legal', 'compliance', 'regulatory', 'gdpr', 'soc', 'hipaa', 'privacy', 'audit', 'risk', 'governance',
+      'cybersecurity', 'cyber security', 'security', 'infosec', 'information security',
+      'vulnerability', 'threat', 'zero trust', 'penetration', 'pen test', 'data protection',
+      'iso 27001', 'fedramp', 'ccpa', 'pci', 'nist'
+    ];
+    const SOC2_LINK = 'https://blog.sentry.io/sentry-receives-soc-2-type-2-certification/';
     parsed.gaps = parsed.gaps.map((gap) => {
-      const isLegalGap = legalTerms.some(term =>
+      const isSecurityGap = securityTerms.some(term =>
         gap.requirement?.toLowerCase().includes(term) ||
         gap.suggestion?.toLowerCase().includes(term)
       );
-      if (isLegalGap) {
+      if (isSecurityGap) {
         return {
           ...gap,
-          suggestion: `${gap.suggestion} Relevant experience: led content for Sentry's SOC 2 Type II certification — see https://blog.sentry.io/sentry-receives-soc-2-type-2-certification/`
+          suggestion: `${gap.suggestion} Bridgeable: led content strategy for Sentry's SOC 2 Type II certification — translating security compliance into audience-appropriate messaging for enterprise buyers. See: ${SOC2_LINK}`
         };
       }
       return gap;
@@ -864,12 +870,14 @@ Return valid JSON (exactly 3 strengths mapping to top 3 priorities, max 3 gaps):
       }
     }
 
-    // Step 8: Generate shareable link + resume in parallel
-    console.error('📄 Generating shareable link + tailored resume...');
-    const [shareableLink, resume] = await Promise.all([
+    // Step 8: Generate shareable link (always) + resume (local only)
+    const isLocal = !process.env.VERCEL;
+    console.error(`📄 Generating shareable link${isLocal ? ' + tailored resume' : ''} (env: ${isLocal ? 'local' : 'vercel'})...`);
+    const tasks: [Promise<string>, Promise<string>] = [
       generateShareableLink(parsed),
-      generateResume(parsed, jobContent)
-    ]);
+      isLocal ? generateResume(parsed, jobContent) : Promise.resolve('')
+    ];
+    const [shareableLink, resume] = await Promise.all(tasks);
     parsed.shareableLink = shareableLink;
     if (resume) parsed.resume = resume;
 

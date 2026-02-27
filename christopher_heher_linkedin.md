@@ -12,8 +12,6 @@ I also grew Sentry's social following from 15k to 84k. Not by posting more. By p
 
 The "AI ain't" part: I use AI daily (Claude, Gemini, Peec). I also know what it can't do, which is develop taste, earn trust with a skeptical technical audience, or hold a strategic point of view through five rounds of stakeholder edits. That part's still mine.
 
-portai.app | chrisheher@gmail.com | Jersey City, NJ
-
 ---
 
 

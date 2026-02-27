@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
     );
 
     const lastUserMessage = messages[messages.length - 1]?.content;
-    console.log('💬 Last user message:', lastUserMessage);
+    console.log('💬 Last user message:', typeof lastUserMessage === 'string' ? lastUserMessage.slice(0, 120) + (lastUserMessage.length > 120 ? '…' : '') : lastUserMessage);
 
 
     console.log('🤖 Calling Claude API...');
@@ -188,7 +188,10 @@ When the user provides ANYTHING related to job descriptions or URLs to job posti
       const toolInput = toolUseContent.input || {};
       
       console.log('🔧 Tool called:', toolName);
-      console.log('📥 Tool input:', JSON.stringify(toolInput, null, 2));
+      const logInput = toolName === 'analyzeJob' && typeof (toolInput as any).jobDescription === 'string'
+        ? { jobDescription: (toolInput as any).jobDescription.slice(0, 120) + '…' }
+        : toolInput;
+      console.log('📥 Tool input:', JSON.stringify(logInput, null, 2));
       
       if (toolFunctions[toolName]) {
         const toolFunction = toolFunctions[toolName];
