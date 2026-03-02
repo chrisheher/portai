@@ -2,9 +2,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { systemPrompt, presetReplies as importedPresetReplies } from '@/lib/config-loader';
-import { getPresentation } from './tools/getPresentation';
-import { getProjects } from './tools/getProjects';
-import { getSkills } from './tools/getSkills';
 import { analyzeJob } from './tools/analyzeJob';
 
 const anthropic = new Anthropic({
@@ -12,9 +9,6 @@ const anthropic = new Anthropic({
 });
 
 const toolFunctions: Record<string, any> = {
-  getPresentation,
-  getProjects,
-  getSkills,
   analyzeJob,
 };
 
@@ -116,14 +110,6 @@ export async function POST(req: NextRequest) {
 
 CRITICAL TOOL USAGE INSTRUCTIONS:
 
-1. PROJECT FILTERING:
-When the user asks about projects, you MUST analyze their query and extract filter parameters:
-- If they mention a COMPANY NAME (DroneDeploy, Sentry, Airbnb, etc.) → use keyword parameter
-- If they mention a TECHNOLOGY (React, Python, Ceros, Gemini, etc.) → use techStack parameter  
-- If they mention a CATEGORY (SaaS, DevOps, Developer Relations, etc.) → use category parameter
-- If they ask for "best", "featured", "top", or "favorite" projects → use featured: true
-
-2. JOB ANALYSIS - CRITICAL:
 When the user provides ANYTHING related to job descriptions or URLs to job postings, you MUST call the analyzeJob tool immediately.`;
 
     const response = await anthropic.messages.create({
@@ -135,36 +121,6 @@ When the user provides ANYTHING related to job descriptions or URLs to job posti
         content: msg.content
       })),
       tools: [
-        {
-          name: "getProjects",
-          description: "Get and display project portfolio with filters",
-          input_schema: {
-            type: "object",
-            properties: {
-              keyword: { type: "string", description: "Filter by keyword" },
-              techStack: { type: "string", description: "Filter by technology" },
-              category: { type: "string", description: "Filter by category" },
-              featured: { type: "boolean", description: "Show featured only" }
-            },
-            required: []
-          }
-        },
-        {
-          name: "getSkills",
-          description: "Get technical skills",
-          input_schema: { type: "object", properties: {}, required: [] }
-        },
-       
-        {
-          name: "getPresentation",
-          description: "Get presentation",
-          input_schema: { type: "object", properties: {}, required: [] }
-        },
-        {
-          name: "getInternship",
-          description: "Get internship info",
-          input_schema: { type: "object", properties: {}, required: [] }
-        },
         {
           name: "analyzeJob",
           description: "Analyze job descriptions",

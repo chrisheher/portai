@@ -143,28 +143,7 @@ const getLinksForCategory = (category: string) => {
                 return data.summary;
               })()}
             </p>
-            {data.shareableLink && (
-              <a
-                href={data.shareableLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: 'inline-block',
-                  marginLeft: '25px',
-                  marginBottom: '20px',
-                  fontSize: '0.8rem',
-                  fontWeight: '700',
-                  color: '#271d0eff',
-                  textDecoration: 'none',
-                  letterSpacing: '0.05em',
-                  textTransform: 'uppercase',
-                  borderBottom: '1px solid rgba(39, 29, 14, 0.3)',
-                  paddingBottom: '1px',
-                }}
-              >
-                Full report →
-              </a>
-            )}
+          
           </div>
         </div>
       </div>

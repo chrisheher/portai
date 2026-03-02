@@ -1,508 +1,370 @@
 'use client';
 
-import { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Matter from 'matter-js';
-import portfolioConfig from './portconfig.json';
 
-interface DevinPromptShapesProps {
-  isActive: boolean;
-  mode: 'devin' | 'scout' | 'cooper' | 'creative' | 'insecure';
-  onPromptClick: (prompt: string, context?: any) => void; // Added context param
-  containerRef: React.RefObject<HTMLDivElement>;
+interface Project {
+  title: string;
+  category?: string;
+  src?: string;
+  content?: React.ReactNode;
+  type?: 'project' | 'question';
+  prompt?: string;
 }
-const DEVOPS_PROMPTS = [
-  "What makes you roll your eyes when reading marketing content?",
-  "compare a content marketer to an animal",
-  "why is the concept of slow problematic for software engineers?",
-  "name things in your life that try your patience as much as observability theater",
-  "what is observability theater"
-];
 
-const SCOUT_PROMPTS = [
-  "how is ai like a backup point guard to chris",
-   "compare chris's skill set to a point guard in the 90s, 2000s, 2010s and 2020s",
-    "create a scouting report on chris",
-  "what are the positions on a product marketing team",
-  "how is a content marketer like a point guard for tech startups"
-];
+interface TumblingShapesProps {
+  projects?: Project[];
+  filterCategory?: string;
+  onShapeClick?: (item: Project) => void;
+  isActive?: boolean;
+  mode?: string;
+  onPromptClick?: (prompt: string, context?: any) => void;
+  containerRef?: React.RefObject<HTMLDivElement>;
+}
 
-const COOPER_PROMPTS = [
-  "how does AI factor into construction",
-  "Compare manual documentation to drone-based capture",
-  "What's the biggest waste of time on a construction site?",
-  "How can drones solve safety compliance issues?",
-  "Why is 'walking the site' outdated?"
-];
-
-
-
-const CREATIVE_PROMPTS = [
-"I'm just not a creative person, ok?",
-  "what are the stages of creativity",
-  "How does the 'eccentric genius' myth obscure the drudgery of creative work",
-  "Why does everything I think of feel derivative?",
-  "Can machines be truly creative, or only simulate creativity?"
-];
-
-const INSECURE_PROMPTS = [
-  "why are you insecure?",
-  "In what ways are you jealous of Chris",
-  "Do you think you're better than humans?",
-  "How do you know if you're giving good advice?",
-  "Why are you a tryhard?"
-];
-
-export default function DevinPromptShapes({ 
-  isActive,
-  mode,
-  onPromptClick,
-  containerRef 
-}: DevinPromptShapesProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+const TumblingShapes: React.FC<TumblingShapesProps> = ({ 
+  projects, 
+  filterCategory,
+  onShapeClick 
+}) => {
+  const sceneRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const renderRef = useRef<Matter.Render | null>(null);
-  const bodiesRef = useRef<Matter.Body[]>([]);
-  const promptIndexMapRef = useRef<Map<Matter.Body, number>>(new Map());
-  const mouseConstraintRef = useRef<Matter.MouseConstraint | null>(null);
-  const animationFrameRef = useRef<number | null>(null);
   const runnerRef = useRef<Matter.Runner | null>(null);
-  const [activeShapes, setActiveShapes] = useState<number>(0);
-
-  // ✅ Memoize dynamic scout prompts so they don't rebuild on every render
-  
 
   useEffect(() => {
-    // CLEANUP FUNCTION
-    const cleanup = () => {
-      console.log('🧹 Cleaning up all shapes and canvas');
-      
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-        animationFrameRef.current = null;
-      }
-      
-      if (renderRef.current) {
-        Matter.Render.stop(renderRef.current);
-        renderRef.current = null;
-      }
-      
-      if (runnerRef.current) {
-        Matter.Runner.stop(runnerRef.current);
-        runnerRef.current = null;
-      }
-      
-      if (engineRef.current) {
-        Matter.Engine.clear(engineRef.current);
-        Matter.World.clear(engineRef.current.world, false);
-        engineRef.current = null;
-      }
-      
-      if (canvasRef.current) {
-        const ctx = canvasRef.current.getContext('2d');
-        if (ctx) {
-          ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-        }
-      }
-      
-      setActiveShapes(0);
-      bodiesRef.current = [];
-      promptIndexMapRef.current.clear();
-    };
-
-    cleanup();
-
-    if (!isActive || !canvasRef.current || !containerRef.current) {
-      return cleanup;
+    if (!projects || !Array.isArray(projects) || projects.length === 0) {
+      console.log('TumblingShapes: No valid projects provided');
+      return;
     }
 
-    // Wait for custom font to load
-    const initializeCanvas = async () => {
-      try {
-        await document.fonts.load('16px kcgangster');
-        console.log('✅ kcgangster font loaded');
-      } catch (err) {
-        console.warn('⚠️ Font loading failed, using fallback');
-      }
-    };
-    initializeCanvas();
-
-    // Select prompts and colors based on mode
-    let PROMPTS: string[];
-    let modeColors: { fill: string; stroke: string; text: string };
-    
-    switch (mode) {
-      case 'devin':
-        PROMPTS = DEVOPS_PROMPTS;
-        modeColors = { 
-          fill: 'rgba(5, 7, 9, 0.67)', 
-          stroke: '#b4b7bcff', 
-          text: 'rgba(226, 232, 240, 1)' 
-        };
-        break;
-      case 'scout':
-        PROMPTS = SCOUT_PROMPTS; // ✅ Now dynamic from JSON
-        modeColors = { 
-          fill: '#010904df', 
-          stroke: 'rgba(4, 37, 29, 0.6)', 
-          text: 'rgb(255, 255, 255)' 
-        };
-        break;
-      case 'cooper':
-        PROMPTS = COOPER_PROMPTS;
-        modeColors = { 
-          fill: 'rgba(255, 252, 252, 0.61)',
-          stroke: 'rgba(67, 62, 57, 0.45)',
-          text: 'rgb(20, 18, 14)'
-        };
-        break;
-      case 'creative':
-        PROMPTS = CREATIVE_PROMPTS;
-        modeColors = { 
-          fill: 'rgba(14, 14, 21, 0.79)',
-          stroke: '#cececeff',
-          text: 'rgb(255, 255, 255)'
-        };
-        break;
-      case 'insecure':
-        PROMPTS = INSECURE_PROMPTS;
-        modeColors = { 
-          fill: 'rgb(4, 8, 4)',
-          stroke: '#191919ff',
-          text: '#fef9e7ff'
-        };
-        break;
-      default:
-        PROMPTS = DEVOPS_PROMPTS;
-        modeColors = { 
-          fill: '#3e2600ff', 
-          stroke: '#b4b7bcff', 
-          text: 'rgba(226, 232, 240, 1)' 
-        };
+    if (!sceneRef.current) {
+      console.log('TumblingShapes: No scene ref');
+      return;
     }
 
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
-    const containerRect = container.getBoundingClientRect();
+    if (engineRef.current) {
+      console.log('TumblingShapes: Already initialized, skipping');
+      return;
+    }
 
-    console.log(`🎨 Initializing ${mode} mode with ${PROMPTS.length} prompts`);
-    console.log(`📋 Prompts:`, PROMPTS);
+    const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Events } = Matter;
 
-    const engine = Matter.Engine.create({
-      gravity: { x: 0, y: 0.3 }
-    });
+    const engine = Engine.create();
     engineRef.current = engine;
+    const world = engine.world;
+    
+    engine.world.gravity.y = 0.5;
+    engine.world.gravity.x = 0;
 
-    const render = Matter.Render.create({
-      canvas: canvas,
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const render = Render.create({
+      element: sceneRef.current,
       engine: engine,
       options: {
-        width: containerRect.width,
-        height: containerRect.height,
+        width,
+        height,
         wireframes: false,
-        background: 'transparent'
-      }
+        background: '#d4c4b0',
+      },
     });
     renderRef.current = render;
 
-    // Create boundaries
-    const boundaries = [
-      Matter.Bodies.rectangle(
-        containerRect.width / 2,
-        containerRect.height + 25,
-        containerRect.width,
-        50,
-        { isStatic: true, render: { fillStyle: 'transparent' } }
-      ),
-      Matter.Bodies.rectangle(
-        -25,
-        containerRect.height / 2,
-        50,
-        containerRect.height,
-        { isStatic: true, render: { fillStyle: 'transparent' } }
-      ),
-      Matter.Bodies.rectangle(
-        containerRect.width + 30,
-        containerRect.height / 2,
-        50,
-        containerRect.height,
-        { isStatic: true, render: { fillStyle: 'transparent' } }
-      )
-    ];
+    const displayProjects = filterCategory 
+      ? projects.filter(p => p.category?.toLowerCase() === filterCategory.toLowerCase())
+      : projects;
 
-    Matter.Composite.add(engine.world, boundaries);
-
-    const mouse = Matter.Mouse.create(canvas);
-    const mouseConstraint = Matter.MouseConstraint.create(engine, {
-      mouse: mouse,
-      constraint: {
-        stiffness: 0.2,
-        render: { visible: false }
-      }
-    });
-    mouseConstraintRef.current = mouseConstraint;
-    Matter.Composite.add(engine.world, mouseConstraint);
-
- Matter.Events.on(mouseConstraint, 'mousedown', (event) => {
-  const mousePosition = event.mouse.position;
-  const bodies = Matter.Query.point(bodiesRef.current, mousePosition);
-  
-  if (bodies.length > 0) {
-    const clickedBody = bodies[0];
-    const promptIndex = promptIndexMapRef.current.get(clickedBody);
+    const shapes: any[] = [];
+    const shapeTypes = ['circle', 'rectangle', 'polygon', 'trapezoid'];
     
-    if (promptIndex !== undefined && PROMPTS[promptIndex]) {
-      const prompt = PROMPTS[promptIndex];
-      
-      // Pass portfolio context for Scout mode
-      if (mode === 'scout') {
-        const scoutContext = {
-          experience: portfolioConfig.experience,
-          projects: portfolioConfig.projects,
-          categoryMappings: portfolioConfig.categoryMappings,
-          strengths: portfolioConfig.unique_strengths,
-          bio: portfolioConfig.personal.bio
-        };
-        onPromptClick(prompt, scoutContext);
-      } else {
-        onPromptClick(prompt);
-      }
-    }
+const getShapeColor = (category: string, type: string) => {
+  if (type === 'link') {
+    return '#3b82f6'; // Blue color for links
   }
-});
+  
+  // Your existing color logic for projects and questions
+  switch (category.toLowerCase()) {
+    case 'web': return '#FF6B6B';
+    case 'ml/ai': return '#4ECDC4';
+    // ... rest of your categories
+    default: return '#95E1D3';
+  }
+};
 
-    const runner = Matter.Runner.create();
-    runnerRef.current = runner;
-    Matter.Runner.run(runner, engine);
-    Matter.Render.run(render);
-
-    // Staggered shape creation
-    const createShapeAtIndex = (index: number) => {
-      if (index >= PROMPTS.length) {
+    displayProjects.forEach((project, index) => {
+      if (!project || !project.title) {
+        console.warn('Invalid project at index', index);
         return;
       }
 
-      const width = 320;
-      const height = 60;
-      const x = containerRect.width / 2;
-      const y = -20;
+      const shapeType = shapeTypes[index % shapeTypes.length];
+      const size = 100 + Math.random() * 100;
+      
+      const category = {
+        label: project.title,
+        type: shapeType,
+        size: size,
+        x: (width * 0.2) + Math.random() * (width * 0.6),
+        y: -100 - (index * 150),
+        project: project,
+      };
 
-      const roughVerts = createRoughVertices(width, height);
-      const body = Matter.Bodies.fromVertices(x, y, [roughVerts], {
-        restitution: 0.6,
-        friction: 0.1,
+      let body;
+      const options = {
+        restitution: 0.3,
+        friction: 0.5,
+        frictionAir: 0.02,
         density: 0.001,
         angle: (Math.random() - 0.5) * 0.3,
         render: {
-          fillStyle: modeColors.fill,
-          strokeStyle: modeColors.stroke,
-          lineWidth: 1.5
+          visible: false,
         },
-        label: `${mode}-prompt-${index}`
+      };
+
+      if (category.type === 'circle') {
+        body = Bodies.circle(category.x, category.y, category.size / 2, options);
+      } else if (category.type === 'rectangle') {
+        body = Bodies.rectangle(category.x, category.y, category.size, category.size * .2, options);
+      } else if (category.type === 'polygon') {
+        const sides = 5 + Math.floor(Math.random() * 2);
+        body = Bodies.polygon(category.x, category.y, sides, category.size / 2, options);
+      } else if (category.type === 'trapezoid') {
+        const w = category.size;
+        const h = category.size * 0.4;
+        const topWidth = w * 0.6;
+        body = Bodies.fromVertices(
+          category.x, 
+          category.y, 
+          [[
+            { x: -topWidth / 2, y: -h / 2 } as Matter.Vector,
+            { x: topWidth / 2, y: -h / 2 } as Matter.Vector,
+            { x: w / 2, y: h / 2 } as Matter.Vector,
+            { x: -w / 2, y: h / 2 } as Matter.Vector,
+          ]] as Matter.Vector[][],
+          options
+        );
+      }
+
+      if (body) {
+        shapes.push({ body, ...category });
+        Composite.add(world, body);
+      }
+    });
+
+    const walls = [
+      Bodies.rectangle(width / 2, height, width, 100, { isStatic: true, render: { visible: false } }),
+      Bodies.rectangle(-25, height / 2, 50, height, { isStatic: true, render: { visible: false } }),
+      Bodies.rectangle(width + 25, height / 2, 50, height, { isStatic: true, render: { visible: false } }),
+    ];
+    Composite.add(world, walls);
+
+    const mouse = Mouse.create(render.canvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
+      mouse,
+      constraint: { stiffness: 0.2, render: { visible: false } },
+    });
+    Composite.add(world, mouseConstraint);
+
+    let hoveredShape: any = null;
+
+    const handleMouseMove = () => {
+      const mousePos = mouse.position;
+      hoveredShape = null;
+
+      shapes.forEach((shape) => {
+        const dist = Math.hypot(mousePos.x - shape.body.position.x, mousePos.y - shape.body.position.y);
+        if (dist < shape.size / 2) hoveredShape = shape;
       });
 
-      Matter.Body.setVelocity(body, {
-        x: (Math.random() - 0.5) * 3,
-        y: Math.random() * 2
-      });
-
-      bodiesRef.current.push(body);
-      promptIndexMapRef.current.set(body, index);
-      Matter.Composite.add(engine.world, body);
-      
-      console.log(`✅ ${mode.toUpperCase()} shape ${index + 1}/${PROMPTS.length}: "${PROMPTS[index].substring(0, 40)}..."`);
-      setActiveShapes(prev => prev + 1);
+      if (render.canvas) {
+        render.canvas.style.cursor = hoveredShape ? 'pointer' : 'default';
+      }
     };
 
-    const timeouts: NodeJS.Timeout[] = [];
-    
-    timeouts.push(setTimeout(() => {
-      console.log(`🎬 Starting ${mode.toUpperCase()} animation sequence`);
-      createShapeAtIndex(0);
-      
-      for (let i = 1; i < PROMPTS.length; i++) {
-        timeouts.push(setTimeout(() => {
-          createShapeAtIndex(i);
-        }, i * 500));
-      }
-    }, 1000));
-
-    // Draw text on canvas
-    const drawText = () => {
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      Matter.Render.world(render);
-
-      ctx.font = '18px kcgangster, monospace';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-
-      bodiesRef.current.forEach((body) => {
-        const promptIndex = promptIndexMapRef.current.get(body);
-        
-        if (promptIndex === undefined || !PROMPTS[promptIndex]) {
-          return;
+    const handleClick = () => {
+      if (hoveredShape && hoveredShape.project) {
+        console.log('Clicked item:', hoveredShape.project);
+        if (onShapeClick) {
+          onShapeClick(hoveredShape.project);
         }
+      }
+    };
 
-        const pos = body.position;
-        const angle = body.angle;
-        const promptText = PROMPTS[promptIndex];
+    if (render.canvas) {
+      render.canvas.addEventListener('mousemove', handleMouseMove);
+      render.canvas.addEventListener('click', handleClick);
+    }
+
+    // ✅ Helper function to fit text within shape bounds
+    const fitTextInShape = (ctx: CanvasRenderingContext2D, text: string, maxWidth: number, maxHeight: number) => {
+      const words = text.split(' ');
+      let fontSize = 14;
+      let lines: string[] = [];
+      let fits = false;
+
+      // Try decreasing font sizes until text fits
+      while (fontSize >= 8 && !fits) {
+        ctx.font = `bold ${fontSize}px Arial`;
+        lines = [];
+        let currentLine = '';
+
+        for (let i = 0; i < words.length; i++) {
+          const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+          const metrics = ctx.measureText(testLine);
+          
+          if (metrics.width > maxWidth && currentLine) {
+            lines.push(currentLine);
+            currentLine = words[i];
+          } else {
+            currentLine = testLine;
+          }
+        }
+        if (currentLine) lines.push(currentLine);
+
+        // Check if total height fits
+        const totalHeight = lines.length * (fontSize + 4);
+        if (totalHeight <= maxHeight) {
+          fits = true;
+        } else {
+          fontSize -= 1;
+        }
+      }
+
+      return { lines, fontSize };
+    };
+
+    // ✅ Custom rendering with smart text fitting
+    Events.on(render, 'afterRender', () => {
+      const ctx = render.context;
+      
+      shapes.forEach((shape) => {
+        const pos = shape.body.position;
+        const angle = shape.body.angle;
 
         ctx.save();
         ctx.translate(pos.x, pos.y);
         ctx.rotate(angle);
+        
+        const isQuestion = shape.project.type === 'question';
+        const baseColor = isQuestion ? '#a37d8f' : '#7d8fa3';
+        const hoverColor = '#d4c4b0';
+        
+        ctx.fillStyle = hoveredShape === shape ? hoverColor : baseColor;
+        ctx.strokeStyle = 'transparent';
+        ctx.lineWidth = 0;
 
-        ctx.fillStyle = modeColors.text;
-        const lines = wrapText(ctx, promptText, 260);
-        const lineHeight = 16;
-        const startY = -(lines.length - 1) * lineHeight / 2;
+        // Draw shape
+        if (shape.type === 'circle') {
+          ctx.beginPath();
+          ctx.arc(0, 0, shape.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (shape.type === 'rectangle') {
+          const w = shape.size * 1.3;
+          const h = shape.size * 0.3;
+          ctx.fillRect(-w / 2, -h / 2, w, h);
+        } else if (shape.type === 'polygon' || shape.type === 'trapezoid') {
+          const vertices = shape.body.vertices;
+          ctx.beginPath();
+          ctx.moveTo(vertices[0].x - pos.x, vertices[0].y - pos.y);
+          for (let i = 1; i < vertices.length; i++) {
+            ctx.lineTo(vertices[i].x - pos.x, vertices[i].y - pos.y);
+          }
+          ctx.closePath();
+          ctx.fill();
+        }
 
-        lines.forEach((line, i) => {
-          ctx.fillText(line, 0, startY + (i * lineHeight));
+        // ✅ Calculate available space for text based on shape type
+        let maxWidth: number = shape.size * 0.6;
+        let maxHeight: number = shape.size * 0.6;
+        
+        if (shape.type === 'circle') {
+          // For circles, text area is about 70% of diameter
+          maxWidth = shape.size * 0.7;
+          maxHeight = shape.size * 0.6;
+        } else if (shape.type === 'rectangle') {
+          // For rectangles, use 90% of dimensions
+          maxWidth = shape.size * 0.9;
+          maxHeight = shape.size * 0.15;
+        } else if (shape.type === 'polygon') {
+          // For polygons, use inscribed circle (about 70% of size)
+          maxWidth = shape.size * 0.6;
+          maxHeight = shape.size * 0.6;
+        } else if (shape.type === 'trapezoid') {
+          // For trapezoids, use the smaller top width
+          maxWidth = shape.size * 0.5;
+          maxHeight = shape.size * 0.3;
+        }
+
+        // ✅ Fit text within calculated bounds
+        const { lines, fontSize } = fitTextInShape(ctx, shape.label, maxWidth, maxHeight);
+
+        // Draw fitted text
+        ctx.fillStyle = hoveredShape === shape ? baseColor : hoverColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = `bold ${fontSize}px Arial`;
+        
+        const lineHeight = fontSize + 4;
+        const totalHeight = lines.length * lineHeight;
+        let startY = -totalHeight / 2 + lineHeight / 2;
+        
+        lines.forEach((line) => {
+          ctx.fillText(line, 0, startY);
+          startY += lineHeight;
         });
-
+        
         ctx.restore();
       });
+    });
 
-      animationFrameRef.current = requestAnimationFrame(drawText);
-    };
-    drawText();
-
-    const handleResize = () => {
-      const newRect = container.getBoundingClientRect();
-      if (render && render.canvas) {
-        render.canvas.width = newRect.width;
-        render.canvas.height = newRect.height;
-        render.options.width = newRect.width;
-        render.options.height = newRect.height;
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
+    Render.run(render);
+    const runner = Runner.create();
+    runnerRef.current = runner;
+    Runner.run(runner, engine);
 
     return () => {
-      console.log(`🧹 Cleaning up ${mode} mode`);
-      timeouts.forEach(timeout => clearTimeout(timeout));
-      window.removeEventListener('resize', handleResize);
-      cleanup();
+      console.log('🧹 Cleaning up TumblingShapes');
+      
+      if (render.canvas) {
+        render.canvas.removeEventListener('mousemove', handleMouseMove);
+        render.canvas.removeEventListener('click', handleClick);
+      }
+      
+      if (renderRef.current) {
+        Render.stop(renderRef.current);
+        renderRef.current = null;
+      }
+      
+      if (runnerRef.current) {
+        Runner.stop(runnerRef.current);
+        runnerRef.current = null;
+      }
+      
+      if (engineRef.current) {
+        Composite.clear(engineRef.current.world, false);
+        Engine.clear(engineRef.current);
+        engineRef.current = null;
+      }
+      
+      if (render.canvas && render.canvas.parentNode) {
+        render.canvas.remove();
+      }
     };
-  }, [isActive, mode, onPromptClick, containerRef, SCOUT_PROMPTS]);
+  }, [projects, filterCategory, onShapeClick]);
 
-  if (!isActive) return null;
-
-  const getModeStyle = () => {
-    switch (mode) {
-      case 'devin':
-        return { 
-          text: 'text-slate-400', 
-          bg: 'bg-slate-900/20',
-          loadingText: 'DevOps'
-        };
-      case 'scout':
-        return { 
-          text: 'text-amber-600', 
-          bg: 'bg-amber-50',
-          loadingText: 'Scout'
-        };
-      case 'cooper':
-        return { 
-          text: 'text-orange-600', 
-          bg: 'bg-orange-50',
-          loadingText: 'Construction'
-        };
-      case 'creative':
-        return { 
-          text: 'text-purple-600', 
-          bg: 'bg-purple-50',
-          loadingText: 'Creative Philosophy'
-        };
-      case 'insecure':
-        return { 
-          text: 'text-yellow-600', 
-          bg: 'bg-yellow-50',
-          loadingText: 'Insecure AI'
-        };
-      default:
-        return { 
-          text: 'text-slate-400', 
-          bg: 'bg-slate-900/20',
-          loadingText: 'Default'
-        };
-    }
-  };
-
-  const modeStyle = getModeStyle();
+  if (!projects || !Array.isArray(projects) || projects.length === 0) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-[#d4c4b0]">
+        <p className="text-neutral-600 dark:text-neutral-400">No projects to display</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="relative w-full h-full rounded-md ">
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 pointer-events-auto rounded-md "
-        style={{ zIndex: 10 }}
-      />
-      
-      {activeShapes === 0 && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className={`text-sm animate-pulse ${modeStyle.text}`}>
-            Loading {modeStyle.loadingText} prompts...
-          </div>
-        </div>
-      )}
-      
-      {process.env.NODE_ENV === 'development' && (
-        <div className={`hidden top-2 right-2 text-xs px-16 py-1 rounded-md  pointer-events-none ${modeStyle.text} ${modeStyle.bg}`}>
-          {activeShapes} / {
-            mode === 'devin' ? DEVOPS_PROMPTS.length : 
-            mode === 'scout' ? SCOUT_PROMPTS.length : 
-            mode === 'cooper' ? COOPER_PROMPTS.length :
-            mode === 'creative' ? CREATIVE_PROMPTS.length :
-            INSECURE_PROMPTS.length
-          }
-        </div>
-      )}
-    </div>
+    <div ref={sceneRef} className="w-full h-full relative overflow-hidden" />
   );
-}
+};
 
-function createRoughVertices(width: number, height: number): { x: number; y: number }[] {
-  const hw = width / 2;
-  const hh = height / 2;
-  const xr = width * 0.07;
-  const yr = height * 0.22;
-  const r = (scale: number) => (Math.random() - 0.5) * 2 * scale;
-  return [
-    { x: -hw + r(xr), y: -hh + r(yr) },
-    { x: hw + r(xr), y: -hh + r(yr) },
-    { x: hw + r(xr), y: hh + r(yr) },
-    { x: -hw + r(xr), y: hh + r(yr) },
-  ];
-}
-
-function wrapText(ctx: CanvasRenderingContext2D, text: string | undefined, maxWidth: number): string[] {
-  if (!text) {
-    return [];
-  }
-
-  const words = text.split(' ');
-  const lines: string[] = [];
-  let currentLine = '';
-
-  words.forEach(word => {
-    const testLine = currentLine + (currentLine ? ' ' : '') + word;
-    const metrics = ctx.measureText(testLine);
-    
-    if (metrics.width > maxWidth && currentLine) {
-      lines.push(currentLine);
-      currentLine = word;
-    } else {
-      currentLine = testLine;
-    }
-  });
-  
-  if (currentLine) {
-    lines.push(currentLine);
-  }
-
-  return lines;
-}
+export default TumblingShapes;

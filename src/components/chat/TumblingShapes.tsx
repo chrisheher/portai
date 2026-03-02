@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import Matter from 'matter-js';
 var decomp = require('poly-decomp');
 
@@ -29,9 +30,11 @@ interface TumblingShapesProps {
   onShapeClick?: (item: Project) => void;
   mode?: 'initial' | 'links';
   chatCentered?: boolean;
+  /** id of DOM element to render canvas into; defaults to 'output_area' */
+  containerId?: string;
 }
 
-const TumblingShapes: React.FC<TumblingShapesProps> = ({ projects = [], filterCategory, onShapeClick, mode = 'initial', chatCentered = false }) => {
+const TumblingShapes: React.FC<TumblingShapesProps> = ({ projects = [], filterCategory, onShapeClick, mode = 'initial', chatCentered = false, containerId = 'output_area' }) => {
   const sceneRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const renderRef = useRef<Matter.Render | null>(null);
@@ -270,14 +273,25 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
     const projectBodies: Matter.Body[] = [];
     bodiesRef.current = [];
 
-    // Use provided projects or default to 5 letters
-    const itemsToRender = projects.length > 0 ? projects : [
-      { title: 'copywriting', type: 'project' as const },
-      { title: 'humanized ai', type: 'project' as const },
-      { title: 'resume scan tool', type: 'project' as const },
-      { title: 'interactive/ux', type: 'project' as const },
-      { title: 'simplified technical content', type: 'project' as const }
-   ].filter(Boolean);
+    // List of canonical consciousness questions we can drop if no projects are provided
+    const consciousnessQuestions = [
+      "Is consciousness fundamentally physical?",
+      "Can consciousness exist without a brain?",
+      "What is the relationship between awareness and self?",
+      "Is consciousness continuous or discrete?",
+      "How does subjective experience arise?",
+      "Does consciousness imply free will?",
+      "Can machines ever be conscious?",
+      "Is there a difference between human and animal consciousness?",
+      "Does the universe itself have consciousness?",
+      "Can consciousness be measured objectively?"
+    ];
+
+    // Use provided projects or default to those ten questions encoded as "project" items
+    const itemsToRender = projects.length > 0 ? projects : consciousnessQuestions.map(q => ({
+      title: q,
+      type: 'question' as const
+    }));
 
     itemsToRender.forEach((project, index) => {
          if (!project) return; // Extra safety check
@@ -728,7 +742,14 @@ hoveredBodyRef.current = foundHover;
   }, 
   [projects, filterCategory, onShapeClick]);
 
-  return <div ref={sceneRef} style={{ width: '100%', height: '100vh' }} />;
+  const containerEl = typeof window !== 'undefined' ? document.getElementById(containerId) : null;
+  const content = <div ref={sceneRef} style={{ width: '100%', height: '100%' }} />;
+  if (containerEl) {
+    // render inside specified container using portal
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    return ReactDOM.createPortal(content, containerEl);
+  }
+  return content;
 };
 
 export default TumblingShapes;
