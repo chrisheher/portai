@@ -49,6 +49,14 @@ interface JobAnalysisProps {
     fetchedContent?: string;
     resume?: string;
     shareableLink?: string;
+    rubricScores?: {
+      role_alignment: number;
+      domain_coverage: number;
+      skill_match: number;
+      impact_alignment: number;
+      gap_risk: number;
+      reasoning: string;
+    };
   };
 }
 
@@ -147,6 +155,65 @@ const getLinksForCategory = (category: string) => {
           </div>
         </div>
       </div>
+
+      {/* Rubric Breakdown */}
+      {data.rubricScores && (
+        <div style={{ padding: '0 1rem 1rem' }}>
+          <h4 style={{
+            margin: '0 0 0.75rem 0',
+            fontSize: '1.5rem',
+            fontWeight: '900',
+            color: 'rgba(5, 5, 4, 1)',
+          }}>
+            Score Breakdown
+          </h4>
+          <div style={{
+            background: 'rgb(220 211 195 / 35%)',
+            borderRadius: '10px',
+            padding: '1.25rem 1.5rem',
+            boxShadow: 'inset rgba(130, 130, 130, 0.5) 3px 6px 6px 6px, rgba(0, 0, 0, 0.06) 0px 2px 4px 0px',
+            display: 'grid',
+            gap: '1rem',
+          }}>
+            {([
+              { label: 'Role Alignment',   key: 'role_alignment'   },
+              { label: 'Domain Coverage',  key: 'domain_coverage'  },
+              { label: 'Skill Match',      key: 'skill_match'      },
+              { label: 'Impact Alignment', key: 'impact_alignment' },
+              { label: 'Gap Risk',         key: 'gap_risk'         },
+            ] as const).map(({ label, key }) => {
+              const val = data.rubricScores![key] as number;
+              const pct = (val / 20) * 100;
+              const barColor = pct >= 75
+                ? 'rgba(17, 128, 30, 0.85)'
+                : pct >= 50
+                ? 'rgba(200, 150, 20, 0.85)'
+                : 'rgba(200, 60, 30, 0.85)';
+              const textColor = pct >= 75
+                ? 'rgba(17, 128, 30, 1)'
+                : pct >= 50
+                ? 'rgba(160, 110, 0, 1)'
+                : 'rgba(180, 40, 20, 1)';
+              return (
+                <div key={key}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
+                    <span style={{ fontSize: '1rem', color: 'rgb(40, 30, 20)', fontWeight: '700' }}>{label}</span>
+                    <span style={{ fontSize: '1.1rem', color: textColor, fontWeight: '800', fontVariantNumeric: 'tabular-nums' }}>{val}/20</span>
+                  </div>
+                  <div style={{ height: '10px', background: 'rgba(0,0,0,0.12)', borderRadius: '5px', overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${pct}%`, background: barColor, borderRadius: '5px', transition: 'width 0.4s ease' }} />
+                  </div>
+                </div>
+              );
+            })}
+            {data.rubricScores.reasoning && (
+              <p style={{ margin: '0.25rem 0 0', fontSize: '0.95rem', color: 'rgb(60, 45, 30)', fontStyle: 'italic', lineHeight: '1.6', borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '0.85rem' }}>
+                {data.rubricScores.reasoning}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
    {data.atsKeywords && (
   <div style={{ padding: '1rem' }}>

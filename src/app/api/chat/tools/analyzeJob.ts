@@ -9,8 +9,18 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+interface RubricScores {
+  role_alignment: number;
+  domain_coverage: number;
+  skill_match: number;
+  impact_alignment: number;
+  gap_risk: number;
+  reasoning: string;
+}
+
 interface JobAnalysisResult {
   matchScore: number;
+  rubricScores?: RubricScores;
   strengths: Array<{
     category: string;
     match: string;
@@ -73,8 +83,6 @@ function extractMatchingKeywords(
   jobText: string, 
   portfolioKeywords: typeof portfolioConfig.ATSKeywords
 ): KeywordMatches {
-  const jobLower = jobText.toLowerCase();
-  
   const matches: KeywordMatches = {
     critical: [],
     recommended: [],
@@ -229,145 +237,110 @@ function enrichProjectsWithLinks(
 }
 
 /**
- * Calculate qualitative adjustments based on role fit factors
+ * Calculate match score using Claude as a 5-dimension rubric judge (Haiku for speed)
  */
-function calculateQualitativeScore(jobContent: string): number {
-  const jobLower = jobContent.toLowerCase();
-  let score = 0;
-  
-  // Role level mismatch penalties/bonuses
-  if (jobLower.includes('junior') || jobLower.includes('entry')) {
-    score -= 0; // Too junior/overqualified
-  } else if (jobLower.includes('senior') || jobLower.includes('lead')) {
-    score += 0; // Sweet spot
-  }
-  
-  // Red flags
-  if (jobLower.includes('must have') && jobLower.includes('phd')) score -= 0;
-  if (jobLower.includes('relocation required') && !jobLower.includes('remote')) score -=0;
-  if (jobLower.includes('on-site only') || jobLower.includes('no remote')) score -= 0;
-  if (jobLower.includes('frequent travel') && jobLower.includes('50%')) score -= 0;
-
-  console.error(`🎨 Qualitative adjustments: ${score > 0 ? '+' : ''}${score}`);
-  
-  return score;
-}
-
-/**
- * Calculate match score based on content/marketing role fit
- */
-function calculateMatchScore(
+async function calculateMatchScore(
   keywordMatches: KeywordMatches,
   jobContent: string
-): number {
-  const weights = {
-    coreSkills: 0.5,
-    marketingSkills: 0.2,
-    industryFit: 0.1,
-    technicalFluency: 0.15,
-    softSkills: 0.05
+): Promise<{ score: number; rubric?: RubricScores }> {
+  const scoreStart = Date.now();
+
+  const portfolioSummary = {
+    roles: [
+      'Technical Content Strategist — Sentry (2020–2022)',
+      'Senior Content Strategist — DroneDeploy (2022–2023)',
+      'Content Strategist — Ceros, Airbnb, HP, agencies (2014–2020)'
+    ],
+    keyProjects: ((portfolioConfig as any).projects || []).slice(0, 10).map((p: any) => ({
+      title: p.title,
+      company: p.company,
+      category: p.category,
+      impact: Array.isArray(p.impact) ? p.impact[0] : (p.impact || '')
+    })),
+    matchedKeywords: keywordMatches.critical.slice(0, 15)
   };
 
-  const jobLower = jobContent.toLowerCase();
-  
-  // Pull from config instead of hardcoding
-  const coreSkillsNeeded = (portfolioConfig.ATSKeywords.core || []).map((k: string) => k.toLowerCase());
-  const marketingSkills = ((portfolioConfig.ATSKeywords as any).marketing || []).map((k: string) => k.toLowerCase());
-  const techTerms = (portfolioConfig.ATSKeywords.technical || []).map((k: string) => k.toLowerCase());
-  const softSkills = (portfolioConfig.ATSKeywords.soft || []).map((k: string) => k.toLowerCase());
-  const industryKeywords = ((portfolioConfig.ATSKeywords as any).industry || []).map((k: string) => k.toLowerCase());
+  let rawRubricText = '';
+  try {
+    const response = await anthropic.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 500,
+      temperature: 0.2,
+      messages: [{
+        role: 'user',
+        content: `Score this candidate-job match on 5 dimensions (0–20 each). Return only valid JSON, no commentary.
 
-  // 1. Core Skills Score (0-100)
-  // Denominator = ~10% of keyword list size — needs solid coverage but not exhaustive
-  const coreMatches = coreSkillsNeeded.filter((skill: string) => jobLower.includes(skill)).length;
-  const coreDenominator = Math.max(1, Math.round(coreSkillsNeeded.length * 0.10));
-  const coreScore = Math.min((coreMatches / coreDenominator) * 100, 100);
+CANDIDATE PORTFOLIO:
+${JSON.stringify(portfolioSummary, null, 2)}
 
-  // 2. Marketing Skills Score (0-100)
-  const marketingMatches = marketingSkills.filter((skill: string) => jobLower.includes(skill)).length;
-  const marketingDenominator = Math.max(1, Math.round(marketingSkills.length * 0.10));
-  const marketingScore = Math.min((marketingMatches / marketingDenominator) * 100, 100);
+JOB DESCRIPTION (first 1800 chars):
+${jobContent.slice(0, 1800)}
 
-  // 3. Industry Fit (0-100)
-  // Baseline of 30 — many good-fit SaaS/DevTools roles won't use portfolio industry terms explicitly
-  const industryMatches = industryKeywords.filter((term: string) => jobLower.includes(term)).length;
-  const industryDenominator = Math.max(1, Math.round(industryKeywords.length * 0.10));
-  const industryScore = Math.min(30 + (industryMatches / industryDenominator) * 70, 100);
+Score each dimension 0–20:
+1. role_alignment — Does seniority, scope, and title match the candidate's level?
+2. domain_coverage — How well does the candidate's industry background overlap with this role's domain?
+3. skill_match — How completely do the candidate's demonstrated skills cover the required skills?
+4. impact_alignment — Do the candidate's portfolio metrics match what this role values (pipeline, growth, engagement, etc.)?
+5. gap_risk — How likely are gaps to disqualify the candidate? (20 = no meaningful gaps, 0 = deal-breaker gaps)
 
-  // 4. Technical Fluency (0-100)
-  const techMatches = techTerms.filter((term: string) => jobLower.includes(term)).length;
-  const techDenominator = Math.max(1, Math.round(techTerms.length * 0.10));
-  const techScore = Math.min((techMatches / techDenominator) * 100, 100);
+Return exactly this JSON shape:
+{"role_alignment":0,"domain_coverage":0,"skill_match":0,"impact_alignment":0,"gap_risk":0,"reasoning":"one sentence explaining the overall fit"}`
+      }]
+    });
 
-  // 5. Soft Skills Score (0-100)
-  const softMatches = softSkills.filter((skill: string) => jobLower.includes(skill)).length;
-  const softDenominator = Math.max(1, Math.round(softSkills.length * 0.10));
-  const softScore = Math.min((softMatches / softDenominator) * 100, 100);
+    const textContent = response.content.find(c => c.type === 'text');
+    if (!textContent || textContent.type !== 'text') throw new Error('No text in rubric response');
 
-  // Calculate weighted score
-  const baseScore = Math.round(
-    coreScore * weights.coreSkills +
-    marketingScore * weights.marketingSkills +
-    industryScore * weights.industryFit +
-    techScore * weights.technicalFluency +
-    softScore * weights.softSkills
-  );
+    rawRubricText = textContent.text.trim();
+    console.error(`🤖 Haiku raw response: ${rawRubricText}`);
 
-  // Experience level adjustment
-  let experienceModifier = 0;
-  if (jobLower.includes('senior') || jobLower.includes('lead')) {
-    experienceModifier = 10;
-  } else if (jobLower.includes('junior') || jobLower.includes('entry')) {
-    experienceModifier = -10;
+    const scores = JSON.parse(fixMalformedJSON(rawRubricText));
+    const total =
+      (scores.role_alignment   || 0) +
+      (scores.domain_coverage  || 0) +
+      (scores.skill_match      || 0) +
+      (scores.impact_alignment || 0) +
+      (scores.gap_risk         || 0);
+
+    console.error(`📊 Rubric scores (Claude-as-Judge):
+    Role Alignment:   ${scores.role_alignment}/20
+    Domain Coverage:  ${scores.domain_coverage}/20
+    Skill Match:      ${scores.skill_match}/20
+    Impact Alignment: ${scores.impact_alignment}/20
+    Gap Risk:         ${scores.gap_risk}/20
+    Reasoning: ${scores.reasoning}
+    TOTAL: ${total}/100`);
+    console.error(`⏱️  Rubric scoring: ${Date.now() - scoreStart}ms`);
+
+    return { score: Math.max(15, Math.min(97, total + 10)), rubric: scores as RubricScores };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error(`⚠️  Rubric scoring failed: ${msg}`);
+    if (rawRubricText) console.error(`⚠️  Raw text that failed: ${rawRubricText}`);
+    // Fallback: simple keyword count heuristic
+    const fallback = Math.min(95, 40 + keywordMatches.critical.length * 3 + keywordMatches.recommended.length);
+    console.error(`⚠️  Fallback score: ${fallback}`);
+    return { score: fallback };
   }
-
-  const qualitativeAdjustment = calculateQualitativeScore(jobContent);
-  const finalScore = baseScore + experienceModifier + qualitativeAdjustment;
-  
-  console.error(`📊 Score breakdown:
-    Core Skills: ${Math.round(coreScore * weights.coreSkills)} (${coreMatches}/${coreSkillsNeeded.length} matches)
-    Marketing: ${Math.round(marketingScore * weights.marketingSkills)} (${marketingMatches}/${marketingSkills.length} matches)
-    Industry: ${Math.round(industryScore * weights.industryFit)}
-    Technical: ${Math.round(techScore * weights.technicalFluency)} (${techMatches}/${techTerms.length} matches)
-    Soft Skills: ${Math.round(softScore * weights.softSkills)} (${softMatches}/${softSkills.length} matches)
-    Experience mod: ${experienceModifier}
-    Qualitative: ${qualitativeAdjustment}
-    TOTAL: ${finalScore}`);
-
-  return Math.max(15, Math.min(95, finalScore));
 }
 
 /**
- * Apply score modifiers based on gaps and special factors
+ * Apply score bonuses based on job attributes.
+ * Gap penalties are intentionally omitted — gap_risk is already
+ * one of Haiku's five rubric dimensions, so penalizing again here
+ * would double-count the same signal.
  */
-function applyScoreModifiers(
-  baseScore: number,
-  jobContent: string,
-  gaps: JobAnalysisResult['gaps']
-): number {
-  let score = baseScore;
-  
-  // Penalties for gaps
-  const criticalGaps = gaps.filter(g => g.severity === 'critical').length;
-  score -= criticalGaps * 12;
-  
-  const moderateGaps = gaps.filter(g => g.severity === 'moderate').length;
-  score -= moderateGaps * 2;
-  
-  // Bonuses for desirable attributes
+function applyScoreModifiers(blendedScore: number, jobContent: string): number {
+  let score = blendedScore;
+
   const jobLower = jobContent.toLowerCase();
   if (jobLower.includes('remote')) score += 5;
   if (jobLower.includes('flexible')) score += 3;
   if (jobLower.includes('startup') && jobLower.includes('series')) score += 5;
-  
-  // Years of experience alignment (portfolio shows 8 years)
- 
-  console.error(`🎯 Score modifiers:
-    Critical gaps penalty: -${criticalGaps * 12}
-    Moderate gaps penalty: -${moderateGaps * 5}
-    Final adjusted score: ${Math.max(15, Math.min(95, score))}`);
-  
-  return Math.max(15, Math.min(95, score));
+
+  const final = Math.max(15, Math.min(97, score));
+  console.error(`🎯 Score modifiers → final: ${final}`);
+  return final;
 }
 
 /**
@@ -564,10 +537,8 @@ async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisRes
       });
     }
 
-    // Step 2: Calculate base match score
-    const scoreStart = Date.now();
-    const baseScore = calculateMatchScore(keywordMatches, jobContent);
-    console.error(`⏱️  Score calculation: ${Date.now() - scoreStart}ms`);
+    // Step 2: Calculate base match score (Claude-as-Judge rubric)
+    const { score: baseScore, rubric: rubricScores } = await calculateMatchScore(keywordMatches, jobContent);
     
     // Step 3: Truncate job description
     const maxJobLength = 3000;
@@ -614,11 +585,14 @@ The portfolio contains ${(portfolioConfig as any).projects?.length || 0} project
    - Technical domain (AI/ML, DevOps, cloud, etc.)
    - Impact metrics similar to job KPIs
 
-Available projects with impact metrics:
+Available projects with skill tags and impact metrics:
 ${(portfolioConfig as any).projects?.map((p: any) => {
   const impacts = Array.isArray(p.impact) ? p.impact.join('; ') : '';
-  return `- ${p.title} (${p.company}) - ${p.category} | Impact: ${impacts}`;
+  const tags = Array.isArray(p.skill_tags) ? p.skill_tags.join(', ') : '';
+  return `- ${p.title} (${p.company}) [${p.category}]\n  Skill tags: ${tags}\n  Impact: ${impacts}`;
 }).join('\n') || 'None'}
+
+PROJECT SELECTION RULE: For each of the 3 priorities, find the project whose skill_tags most directly match the language of that priority. Prefer exact or near-exact tag matches over category-level matches. If two projects tie, choose the one with the stronger metric.
 
 STRENGTHS SECTION - PRIORITY MAPPING:
 The "strengths" array MUST map to the top 3 priorities identified from the job description. For each strength:
@@ -674,6 +648,10 @@ AVAILABLE CATEGORIES (use ONLY these for "category" field - pick the one that be
 - SaaS / B2B
 - AI / ML
 - Content Strategy
+
+ROLE-SPECIFIC OVERRIDES (apply before general analysis):
+- If the job mentions cybersecurity, security, compliance, SOC 2, HIPAA, GDPR, FedRAMP, or similar: the "Sentry developer content" project includes direct SOC 2 Type II certification content strategy. Treat this as a STRENGTH (not a gap). Include "Sentry developer content" in projectsToFeature. Do NOT list security/compliance as a gap.
+- If the job mentions global, distributed, remote, international, or cross-timezone: the "Sentry developer content" project includes cross-timezone coordination with US + Vienna (Austria) engineering teams. Feature this project.
 
 CRITICAL INSTRUCTIONS:
 - FIRST, identify the top 3 priorities/requirements from this job description
@@ -826,14 +804,16 @@ Return valid JSON (exactly 3 strengths mapping to top 3 priorities, max 3 gaps):
       parsed.atsKeywords.jobKeywords = keywordMatches.jobKeywords;
     }
 
-    // Step 7: Apply score modifiers based on gaps
-    if (parsed.gaps && Array.isArray(parsed.gaps)) {
-      parsed.matchScore = applyScoreModifiers(
-     baseScore,
-        jobContent,
-        parsed.gaps
-      );
-    }
+    // Step 7: Blend Haiku rubric (70%) with Opus judgment (30%), then apply bonuses.
+    // Opus sees the full job + portfolio context so its score is a useful signal,
+    // but the rubric is more consistent — weight it higher.
+    const opusScore = typeof parsed.matchScore === 'number' ? parsed.matchScore : baseScore;
+    const blended = Math.round(baseScore * 0.7 + opusScore * 0.3);
+    console.error(`🔀 Score blend: Haiku ${baseScore} × 0.7 + Opus ${opusScore} × 0.3 = ${blended}`);
+    parsed.matchScore = applyScoreModifiers(blended, jobContent);
+
+    // Attach rubric breakdown for display
+    if (rubricScores) parsed.rubricScores = rubricScores;
 
     // Validate
     if (typeof parsed.matchScore !== 'number') parsed.matchScore = baseScore;
@@ -848,21 +828,29 @@ Return valid JSON (exactly 3 strengths mapping to top 3 priorities, max 3 gaps):
       'vulnerability', 'threat', 'zero trust', 'penetration', 'pen test', 'data protection',
       'iso 27001', 'fedramp', 'ccpa', 'pci', 'nist'
     ];
-    const SOC2_LINK = 'https://blog.sentry.io/sentry-receives-soc-2-type-2-certification/';
-    parsed.gaps = parsed.gaps.map((gap) => {
-      const isSecurityGap = securityTerms.some(term =>
-        gap.requirement?.toLowerCase().includes(term) ||
-        gap.suggestion?.toLowerCase().includes(term)
+    const isSecurityRole = securityTerms.some(term => jobContent.toLowerCase().includes(term));
+
+    // For security roles: remove security gaps (we have direct SOC2 evidence) + inject project
+    if (isSecurityRole) {
+      parsed.gaps = parsed.gaps.filter((gap) => {
+        const isSecurityGap = securityTerms.some(term =>
+          gap.requirement?.toLowerCase().includes(term) ||
+          gap.suggestion?.toLowerCase().includes(term)
+        );
+        return !isSecurityGap;
+      });
+
+      // Ensure Sentry developer content is featured
+      if (!parsed.recommendations) parsed.recommendations = { coverLetterFocus: [], skillsToHighlight: [], projectsToFeature: [] };
+      if (!Array.isArray(parsed.recommendations.projectsToFeature)) parsed.recommendations.projectsToFeature = [];
+      const alreadyFeatured = (parsed.recommendations.projectsToFeature as any[]).some((p: any) =>
+        (typeof p === 'string' ? p : p.name || '').toLowerCase().includes('sentry developer')
       );
-      if (isSecurityGap) {
-        return {
-          ...gap,
-          suggestion: `${gap.suggestion} Bridgeable: led content strategy for Sentry's SOC 2 Type II certification — translating security compliance into audience-appropriate messaging for enterprise buyers. See: ${SOC2_LINK}`
-        };
+      if (!alreadyFeatured) {
+        (parsed.recommendations.projectsToFeature as any[]).push('Sentry developer content');
       }
-      return gap;
-    });
-    
+    }
+
     if (parsed.recommendations?.projectsToFeature && Array.isArray(parsed.recommendations.projectsToFeature)) {
       const projectNames = parsed.recommendations.projectsToFeature as unknown as string[];
       if (projectNames.length > 0) {

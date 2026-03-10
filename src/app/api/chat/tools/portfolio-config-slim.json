@@ -313,6 +313,7 @@
       "company": "The Charles NYC",
       "type": "brand_campaign",
       "category": "Brand Voice",
+      "skill_tags": ["brand voice", "brand launch", "social media strategy", "content calendar", "audience growth", "consumer brand", "brand identity"],
       "description": "Celebrity tequila brand launch - social media strategy and brand voice for Michael Jordan's tequila company",
       "campaignListDescription": "George Clooney. The Rock. Kendall Jenner. Bryan Cranston. Celebrity tequila is a crowded space. So when Michael Jordan and four other NBA owners started their own tequila company, I was there to help them find a way to help their brand stand out among the stars. Cincoro translates to 'five rings'. And so the story of Cincoro Tequila is the passion and competitive spirit its five owners share as they each chase their next championship ring.",
       "impact": [
@@ -329,6 +330,7 @@
       "company": "Sentry",
       "type": "product_launch",
       "category": "GTM Launch",
+      "skill_tags": ["go-to-market strategy", "product launch", "B2B SaaS", "developer marketing", "cross-functional collaboration", "pipeline attribution", "full-funnel content", "distributed teams", "global content", "technical positioning"],
       "tagline": "See Slow Faster",
       "globalExperience": true,
       "campaignListDescription": "Product releases run the risk of getting bogged down in their own technical benefits. For Sentry's Performance monitoring release, this meant turning jargony features (such as improved visibility into p95 response times) into a simple, differentiating insight — See Slow Faster. This campaign was built in close cross-functional collaboration with Sentry's distributed engineering team, including the Vienna, Austria office, where I embedded with engineers to understand the product deeply enough to write about it credibly. The resulting tagline and full-funnel campaign drove $1.8M in attributed pipeline.",
@@ -351,6 +353,7 @@
       "company": "DroneDeploy",
       "type": "product_launch",
       "category": "GTM Launch",
+      "skill_tags": ["go-to-market strategy", "AI/ML product launch", "UX writing", "B2B SaaS", "construction tech", "full-funnel content", "landing page copy", "email campaigns", "product marketing", "non-technical buyer"],
       "tagline": "Your AI In the Sky",
       "campaignListDescription": "Worksite injuries cost the construction industry $5 billion annually. DroneDeploy's Safety AI uses computer vision to identify safety violations in real-time, turning reactive incident reports into proactive prevention. Full-funnel UX writing: product page microcopy, landing page copy, CTA hierarchy, and awareness-through-decision content architected to move a construction safety buyer from unfamiliar with AI to ready to demo.",
       "impact": [
@@ -371,6 +374,7 @@
       "company": "Sentry",
       "type": "content_series",
       "category": "Thought Leadership",
+      "skill_tags": ["technical writing", "developer audience", "thought leadership", "SEO content", "blog series", "organic traffic", "long-form content", "technical storytelling", "content operations"],
       "campaignListDescription": "Dogfooding is the process in which a company uses its own product as a quality control mechanism. This concept was a perfect fit for Sentry to showcase how its software engineers were using Sentry's own platform to track errors in the codebase. Creating stories out of these mundane coding hiccups established Sentry as a thought leader across key industry blogs without sounding preachy or pedantic.",
       "impact": [
         "Long-tail keyword dominance:--$50K-$150K/year in paid search ads",
@@ -387,6 +391,7 @@
       "company": "HP",
       "type": "product_launch",
       "category": "Thought Leadership",
+      "skill_tags": ["thought leadership", "white papers", "B2B content", "distributed workforce", "enterprise audience", "long-form content", "content ROI", "executive communications", "hybrid work"],
       "campaignListDescription": "The pandemic altered the fabric of society. And nowhere was this more evident than in the office. As HP's content strategist, I helped position their Presence videoconferencing suite to be the connective tissue for distributed workforces.",
       "impact": [
         "200k downloads/views during fiscal launch year",
@@ -405,6 +410,7 @@
       "company": "DroneDeploy",
       "type": "partnership_content",
       "category": "AI / ML",
+      "skill_tags": ["AI/ML", "robotics", "partnership content", "B2B", "industrial tech", "product marketing", "pipeline influence"],
       "campaignListDescription": "Working in partnership with Boston Dynamics, DroneDeploy's industrial inspection platform captures frequent and consistent data on assets that need regular monitoring in ways which scale up site visibility while dialing down man hours.",
       "impact": [
         "8.5% deals influenced in pipeline"
@@ -419,6 +425,7 @@
       "company": "airbnb",
       "type": "employer_brand",
       "category": "Employer Brand",
+      "skill_tags": ["UX writing", "information architecture", "employer brand", "content systems", "content governance", "microcopy", "stakeholder management", "brand consistency", "content modularization", "DEI content"],
       "uxWriting": true,
       "campaignListDescription": "As lead UX writer and content strategist for Airbnb's career site redesign, I built the employer value proposition from scratch — wireframes, IA, microcopy, and long-form narrative — around their Live and Work Anywhere policy. Every hire touchpoint, from nav labels to role-page headers to the EVP statement, went through me.",
       "impact": [
@@ -438,6 +445,7 @@
       "company": "Google gpay",
       "type": "developer_content",
       "category": "Developer Relations",
+      "skill_tags": ["developer relations", "API documentation", "developer content", "technical tutorial", "video script", "SDK", "developer marketing", "instrumentation"],
       "campaignListDescription": "Google's GPay API was designed to be simple. Which meant the content for its tutorial video needed to act likewise. So instead of a smug, stemwinding video that wastes a developer's time with phony rapport, I articulated the simplest path to instrumentation.",
       "impact": [
         "35k views during i/o launch event",
@@ -454,6 +462,7 @@
       "company": "Sentry",
       "type": "technical_content",
       "category": "Developer Relations",
+      "skill_tags": ["developer relations", "technical writing", "UX writing", "onboarding content", "in-product copy", "error messages", "SDK documentation", "developer audience", "global content", "distributed teams", "compliance content", "SOC 2", "cybersecurity messaging", "ARR growth"],
       "globalExperience": true,
       "campaignListDescription": "Sentry is an application monitoring platform used by millions of developers. My role spanned developer content, UX writing for docs and onboarding flows, and product microcopy — all written for an audience that stops reading the moment they catch a bad analogy or a vague CTA. Includes in-product copy for error messages, empty states, and SDK setup flows, plus long-form content designed to earn trust with engineers who distrust marketing on principle. Worked extensively with Sentry's distributed team across San Francisco and Vienna, Austria — coordinating SME interviews, editorial reviews, and launch sequencing across time zones.",
       "impact": [
@@ -475,6 +484,7 @@
       "company": "DroneDeploy",
       "type": "product_pages",
       "category": "SaaS / B2B",
+      "skill_tags": ["UX writing", "product pages", "microcopy", "CTA copy", "B2B SaaS", "non-technical buyer", "product marketing", "mid-funnel content", "hero copy", "navigation copy"],
       "uxWriting": true,
       "campaignListDescription": "UX writing and microcopy for DroneDeploy's product suite — hero headlines, feature callouts, CTA copy, navigation labels, and in-product tooltips — built in close collaboration with product and design to serve both site visitors evaluating the platform and existing customers learning new capabilities. Emphasis on translating drone/AI/computer vision concepts for construction and enterprise buyers who are technically literate but not engineers.",
       "impact": [
@@ -493,6 +503,7 @@
       "company": "Sentry",
       "type": "product_pages",
       "category": "SaaS / B2B",
+      "skill_tags": ["UX writing", "product pages", "microcopy", "developer audience", "conversion copy", "CTA copy", "trial signup", "enterprise SaaS", "B2B", "product marketing"],
       "uxWriting": true,
       "campaignListDescription": "UX writing and microcopy across Sentry's product surface — hero statements, feature descriptions, CTA copy, empty states, onboarding tooltips, and solution pages — all written in close partnership with engineering and design. The goal: copy that converts skeptical developers who read every word and trust nothing they don't recognize.",
       "impact": [
