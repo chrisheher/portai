@@ -511,7 +511,7 @@ function ChatLanding({
         { name: 'Great moments in application monitoring', url: 'https://blog.sentry.io/great-moments-in-application-monitoring/' }
       ],
 
-      campaignListDescription: 'Sentry is an application monitoring platform that tracks various metrics and logs to optimize code health. My role involved creating developer-focused content that simplified complex technical concepts, making them accessible and engaging for a broad audience of software engineers.',
+      campaignListDescription: 'Sentry is an application monitoring platform that tracks various metrics and logs to optimize code health. My role involved creating developer-focused content to make code health -- and hygiene -- engaging for software engineers.',
       impact: [
         { stat: 'ARR: $45M → $90M during my tenure  (Series B→C growth).' },
         { stat: '~480 SQL conversions (9.5% attributed to ARR)' },
@@ -525,7 +525,7 @@ function ChatLanding({
         { name: 'facade inspections', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections' },
         { name: 'Stockpile', url: 'https://www.dronedeploy.com/blog/closing-the-gap-how-archer-western-and-dronedeploy-observed-a-1-1-difference-in-stockpile-quantities-compared-to-traditional-survey-methods' }
       ],
-      campaignListDescription: ' Enterprise-grade drone technology fights the perception that drones are nothing more than just some neat plaything. My role at DroneDeploy was to articulate the benefits integrated drone software provides teams at the worksite: improved collaboration, inch-perfect measurements, and a better way of tracking progress.',
+      campaignListDescription: ' Enterprise-grade drone technology fights the perception that drones are more toy than tool. These blogs and white papers articulate the benefits drone software provides construction teams: improved collaboration, inch-perfect measurements, and a better way of tracking progress.',
       impact: [
         { stat: 'Product pages drove ~450 handraisers among construction professionals,' },
         { stat: '2x handraisers compared to previous content' },

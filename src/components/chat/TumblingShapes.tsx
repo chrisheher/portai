@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import Matter from 'matter-js';
 var decomp = require('poly-decomp');
 
