@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import TumblingShapes from './TumblingShapes';
 
 // Inline Carousel Component - SPLIT SCREEN LAYOUT
@@ -220,6 +220,18 @@ function ChatLanding({
   
   // NEW: Track which section (C, I, S) is active
   const [activeSection, setActiveSection] = useState<'C' | 'I' | 'S' | null>(null);
+
+  // Navigation history for back button
+  type NavSnapshot = {
+    displayedItems: Project[];
+    mode: 'initial' | 'links';
+    activeSection: 'C' | 'I' | 'S' | null;
+    carouselData: typeof carouselData | null;
+    localDescription: string | null;
+    chatCentered: boolean;
+    promptModeActive: boolean;
+  };
+  const navHistory = useRef<NavSnapshot[]>([]);
 
   // NEW: Section descriptions for C, I, S
   const sectionDescriptions = {
@@ -707,6 +719,18 @@ useEffect(() => {
 // ========== END DEEP LINK HANDLING ==========
   // ========== END DEEP LINK HANDLING ==========
 
+  const pushHistory = useCallback(() => {
+    navHistory.current.push({
+      displayedItems,
+      mode,
+      activeSection,
+      carouselData,
+      localDescription,
+      chatCentered,
+      promptModeActive,
+    });
+  }, [displayedItems, mode, activeSection, carouselData, localDescription, chatCentered, promptModeActive]);
+
   const handleShapeClick = useCallback((item: Project) => {
     console.log('📍 Shape clicked:', item.title, item);
     
@@ -743,6 +767,7 @@ useEffect(() => {
         // Special handling for Cincoro - show carousel instead of tumbling links
         if (item.title === 'Cincoro tequila | brand launch' && item.images && item.images.length > 0) {
           console.log('🎠 Showing Cincoro carousel');
+          pushHistory();
           setDisplayedItems([{
             title: item.title,
             type: 'campaign' as const,
@@ -774,6 +799,7 @@ useEffect(() => {
         }));
         
         console.log(`📢 Showing ${linkShapes.length} links`);
+        pushHistory();
         setDisplayedItems(linkShapes);
         // Clear activeSection when drilling into a specific campaign
         setActiveSection(null);
@@ -795,6 +821,7 @@ useEffect(() => {
     // C CLICK - Show campaigns (copywriting)
     if (item.title === 'copywriting') {
       console.log('📢 C clicked - showing copywriting campaigns');
+      pushHistory();
       setActiveSection('C');  // NEW: Set active section
       const copywritingCampaigns = [
         campaignData['cincoro'],
@@ -811,7 +838,7 @@ useEffect(() => {
     // H CLICK - Show prompt modes (humanized ai)
     if (item.title === 'humanized ai') {
       console.log('🎯 H clicked - creating prompt mode shapes');
-      
+      pushHistory();
       setLocalDescription(
         'Cooper the Super is a customer persona trained on the content I produced at DroneDeploy. \n' + 
         'Hank Hardass evaluates my talents, skills, and intangibles through a basketball lens.\n' + 
@@ -866,7 +893,7 @@ useEffect(() => {
     // R CLICK - Job analysis (resume scan tool)
     if (item.title === 'resume scan tool') {
       console.log('💼 R clicked - activating job analysis mode');
-      
+      pushHistory();
       setDisplayedItems(initialProjects);
       setMode('links');
       setChatCentered(true);
@@ -880,6 +907,7 @@ useEffect(() => {
     // I CLICK - Show interactive/ux campaigns
     if (item.title === 'interactive/ux') {
       console.log('🎮 I clicked - showing interactive/ux campaigns');
+      pushHistory();
       setActiveSection('I');  // NEW: Set active section
       const allInteractive = Object.values(interactiveData);
       setDisplayedItems(allInteractive);
@@ -890,30 +918,43 @@ useEffect(() => {
     // S CLICK - Show simplified technical content campaigns
     if (item.title === 'simplified technical content') {
       console.log('📄 S clicked - showing technical content campaigns');
+      pushHistory();
       setActiveSection('S');  // NEW: Set active section
       const allTechnical = Object.values(technicalData);
       setDisplayedItems(allTechnical);
       setMode('links');
       return;
     }
-  }, [mode, campaignData, interactiveData, technicalData, initialProjects, sLinks, iLinks, onChatCenter, onDevinModeClick, onScoutModeClick, onCooperModeClick, onCreativeModeClick, onInsecureModeClick, onJobAnalysisOpen, onSkillsClick]);
+  }, [mode, campaignData, interactiveData, technicalData, initialProjects, sLinks, iLinks, onChatCenter, onDevinModeClick, onScoutModeClick, onCooperModeClick, onCreativeModeClick, onInsecureModeClick, onJobAnalysisOpen, onSkillsClick, pushHistory]);
 
   const handleBackClick = () => {
     console.log('⬅️ Back button clicked');
-    
+
+    if (navHistory.current.length > 0) {
+      const prev = navHistory.current.pop()!;
+      setDisplayedItems(prev.displayedItems);
+      setMode(prev.mode);
+      setActiveSection(prev.activeSection);
+      setCarouselData(prev.carouselData);
+      setLocalDescription(prev.localDescription);
+      setChatCentered(prev.chatCentered);
+      setPromptModeActive(prev.promptModeActive);
+      if (!prev.chatCentered) onChatCenter?.(false);
+      window.history.replaceState({}, '', window.location.pathname);
+      return;
+    }
+
+    // Full reset when no history remains
     setDisplayedItems([]);
     setMode('initial');
     setChatCentered(false);
     setPromptModeActive(false);
     setCarouselData(null);
     setLocalDescription(null);
-    setActiveSection(null);  // NEW: Reset active section
+    setActiveSection(null);
     onChatCenter?.(false);
     onJobAnalysisClose?.();
-    
-    // Clear URL params when going back
     window.history.replaceState({}, '', window.location.pathname);
-    
     console.log('✅ State reset complete');
   };
 
@@ -969,7 +1010,7 @@ useEffect(() => {
 maxWidth: '100%',
             zIndex: '601',
             maxHeight: '85vh',
-            padding: '10px 0px 0px 140px',
+            padding: '10px 25px 7px 70px',
       
             color: '#3e2e20ff',
             borderRadius: '10px',
