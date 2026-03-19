@@ -681,11 +681,7 @@ else if (insecureMode) {
         setShowLoadingQuotes(false);
       })
       .catch((err) => {
-        console.error('❌ Error fetching AI response:', {
-          error: err,
-          message: err.message,
-          mode: devinMode ? 'devin' : scoutMode ? 'scout' : 'none'
-        });
+        console.error('❌ Error fetching AI response:', String(err), err?.message, err?.stack);
         toast.error('Failed to get AI response. Check console for details.');
         setLoadingSubmit(false);
         setShowLoadingQuotes(false);
@@ -782,7 +778,7 @@ else if (insecureMode) {
     console.log('🗑️ Chat messages cleared');
 
       setActivePromptDescription(
-      <span className="top-[30px] fixed inline-block text-center text-xl">Surly Devin is a sardonic senior engineer who sees through observability theater and marketing BS.
+      <span className="top-[55px] left-[125px] fixed inline-block text-center text-xl">Surly Devin is a sardonic senior engineer who sees through observability theater and marketing BS.
     </span>);
 
   }, [setMessages]);
@@ -799,7 +795,7 @@ else if (insecureMode) {
     setShowChatResponse(true);
     console.log('🗑️ Chat messages cleared');
 
-  setActivePromptDescription( <span className="top-[30px] fixed inline-block text-center text-xl"> Hank Hardass is a professional scout analyzing Christopher Heher's portfolio through a hooper's lens.</span>);
+  setActivePromptDescription( <span className="top-[55px] left-[125px]fixed inline-block text-center text-xl"> Hank Hardass is a professional scout analyzing Christopher Heher's portfolio through a hooper's lens.</span>);
 
   }, [setMessages]);
 
@@ -815,7 +811,7 @@ setCreativeMode(false);
   setShowChatResponse(true);
   console.log('🗑️ Chat messages cleared');
 
-    setActivePromptDescription(<span className="top-[30px] fixed inline-block text-center text-xl"> Cooper the Super is a construction superintendent who traded clipboards for drones.</span>);
+    setActivePromptDescription(<span className="top-[55px] left-[125px] fixed inline-block text-center text-xl"> Cooper the Super is a construction superintendent who traded clipboards for drones.</span>);
 }, [setMessages]);
 
 
@@ -829,7 +825,7 @@ const handleCreativeModeClick = useCallback(() => {
   setChatCentered(true);
   setMessages([]);
   setShowChatResponse(true);
-     setActivePromptDescription(<span className="top-[30px] fixed inline-block text-center text-xl">Ruminatrix whips your creative side into productive submission.</span>);
+     setActivePromptDescription(<span className="top-[55px] left-[125px]fixed inline-block text-center text-xl">Ruminatrix whips your creative side into productive submission.</span>);
   console.log('🗑️ Chat messages cleared');
 }, [setMessages]);
 
@@ -843,7 +839,7 @@ const handleInsecureModeClick = useCallback(() => {
   setChatCentered(true);
   setMessages([]);
   setShowChatResponse(true);
-     setActivePromptDescription(<span className="top-[30px] fixed inline-block text-center text-xl">Hey-o I'm Aidan. I'm twitchy, awkward, and aware enough to know my own flaws.</span>);
+     setActivePromptDescription(<span className="top-[55px] left-[125px] fixed inline-block text-center text-xl">Hey-o I'm Aidan. I'm twitchy, awkward, and aware enough to know my own flaws.</span>);
   console.log('🗑️ Chat messages cleared');
 }, [setMessages]);
 
