@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width initial-scale=1 user-scalable=no" />
+    <title>Christopher Heher + Artsy</title>
+  <style>
+    
+    @font-face {
+    font-family: arizona;
+    src: url(../ABC/ABCArizonaFlare-Thin-Trial.otf) format("opentype");
+}
+      @font-face {
+    font-family: arizona;
+    src: url(../ABC/ABCArizonaFlare-Bold-Trial.otf) format("opentype"); /* ← your bold file name here */
+    font-weight: bold; /* or 700 */
+}
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Lobster+Two:400,700" rel="stylesheet" type="text/css">
+
+    <link href="ABC/normalize.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/prop-types@15/prop-types.js"></script>
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.js"></script>
+    <script src="https://unpkg.com/spectacle@^4/dist/spectacle.js"></script>
+    <script src="https://unpkg.com/spectacle@^4/lib/one-page.js"></script>
+    <script type="text/spectacle">
+      () => {
+        // --------------------------------------------------------------------
+        // Code stuff to use in the presentation.
+        // (We can't link in / require files, but we can approximate here.)
+        // --------------------------------------------------------------------
+        // Customize the default theme.
+        const { themes: { defaultTheme } } = Spectacle;
+        const theme = defaultTheme({
+          primary: "#ff4081",
+          
+            fonts: {
+          header: '"arizona", Helvetica, Arial, sans-serif',
+          text: '"Open Sans Condensed", Helvetica, Arial, sans-serif'
+        }
+        });
+
+        // Example source code for a source code slide.
+        const exampleDeck = `
+return (
+  <Deck transition={['zoom','slide']} transitionDuration={800}>
+    <Slide bgColor="primary">
+      <Heading size={1} fit caps>
+        React Presentations
+      </Heading>
+      <Heading size={2} fit caps>
+        Written In React
+      </Heading>
+    </Slide>
+    <Slide bgColor="black">
+      <Heading size={1} fit textColor="primary" textFont="secondary">
+        Wait What?
+      </Heading>
+    </Slide>
+    <Slide bgColor="primary" textColor="black" align="center top">
+      <Heading size={1} textColor="black" textFont="primary">
+        Thats right
+      </Heading>
+      <List>
+        <ListItem>Inline style based theme system</ListItem>
+        <ListItem>Autofit Text</ListItem>
+        <ListItem>PDF Export</ListItem>
+      </List>
+    </Slide>
+  </Deck>
+)
+        `.trim();
+
+        // Interactive code.
+        const { Component } = React;
+        const { Heading } = Spectacle;
+
+        class Interactive extends Component {
+          constructor() {
+            super();
+            this.state = {
+              count: 0
+            };
+            this.handleClick = this.handleClick.bind(this);
+          }
+          handleClick() {
+            this.setState({
+              count: this.state.count + 1
+            });
+          }
+          render() {
+            const styles = {
+              padding: 20,
+              background: "black",
+              minWidth: 300,
+              marginTop: 20,
+              textTransform: "uppercase",
+              border: "none",
+              color: "white",
+              outline: "none",
+              fontWeight: "bold",
+              fontSize: "2em"
+            };
+            return (
+              <div>
+              {this.state.count < 5 ?
+                <div>
+                  <Heading size={5} textColor="black">
+                    The button has been clicked {this.state.count} times
+                  </Heading>
+                  <button style={styles} type="button" onClick={this.handleClick}>Click Me</button>
+                </div> :
+                  <Heading size={5} fit caps textColor="black">Easy there pal</Heading>
+                }
+              </div>
+            );
+          }
+        }
+
+        // --------------------------------------------------------------------
+        // The presentation!
+        // --------------------------------------------------------------------
+        return (
+          <Deck transition={["zoom", "slide"]} theme={theme} transitionDuration={500}>
+            <Slide transition={["zoom"]} bgColor="#000000">
+             <Heading></Heading><Text  textFont="arizona" textColor="white" size={6}   textColor="white" textAlign="right" margin="0px -39px 0px 400px">
+
+Christopher Heher + Artsy 
+</Text>
+<Text  textFont="arizona" textColor="white" textSize="32px"   textColor="white" textAlign="right" margin="0px -39px 0px 400px">
+
+
+</Text>
+
+            </Slide>
+           
+
+
+  <Slide transition={["slide"]} bgColor="white">
+
+<Heading size={6} bold textAlign="left"  textFont="arizona"   margin="120px 0px 0px -100px"      textColor="white">    </Heading>
+<Text textColor="black"  textFont="arizona" textSize="40px" margin="-208px 298px -3px -80px" textAlign="left"  > 
+Assignment #1
+        </Text>
+        <Text textColor="black"  textFont="arizona" textSize="22px" margin="29px 280px 0px -80px" textAlign="left"  > 
+
+  Propose one focused content initiative designed to engage prospective mid-tier galleries and move them closer to partnering with Artsy.
+                
+ 
+  </Text>
+
+  
+ 
+</Slide>
+ <Slide transition={["slide"]} bgColor="#eb4134">
+
+<Heading size={6} bold textAlign="left"  textFont="arizona"   margin="-20px 0px 0px -40px"      textColor="white">    Artsy does the drudgery
+        </Heading>
+
+        <Text textColor="white"  textFont="arizona" textSize="24px" margin="9px 240px 0px -40px" textAlign="left"  > 
+Galleries view Artsy as a competitive threat. Let’s lower their anxiety by showcasing all the unglamourous -- but necessary -- work Artsy does for its partners. 
+
+  </Text>
+
+  
+ 
+</Slide>
+  <Slide transition={["slide"]} bgColor="#eb4134">
+    
+    <Heading size={6}  textFont="arizona"  margin="-10px 0px 0px 0px"  textAlign="left" textColor="white">  
+      </Heading>
+         <Text textFont="arizona" textColor="white"  textAlign="left" margin="-70px 0px 0px 0px" textSize="40px"> Details
+  </Text>
+  
+
+<List style={{listStyleType: "none"}}>    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="-10px 250px 20px 0px" textSize="24px">
+     <b>Goal</b> | Showcase Artsy's value while lowering a gallery owner's anxiety about a partnership.
+    </Text></ListItem></Appear>
+        <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 250px 20px 0px" textSize="24px">
+<b>Audience definition</b> | Time-poor gallery owners/directors cynical about the value Artsy (or any other partner) provides.
+
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 150px 20px 0px" textSize="24px">
+<b>Content type</b> | Social video (but can expand to sales enablement / customer stories etc.) 
+    </Text></ListItem></Appear>
+
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 250px 20px 0px" textSize="24px">
+<b>Channel Plan</b> | Instagram/Tiktok  (similar to "Artsy saves" campaign currently running).
+        
+        </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 250px 20px 0px" textSize="24px">
+<b>Metrics</b> |  Social shares/form fills; but also how many partners that see the campaign and want to share their Artsy drudgery story?
+    </Text></ListItem></Appear>
+
+        
+        </List>
+     
+</Slide>
+  
+ <Slide transition={["slide"]} bgColor="white">
+
+<Heading size={6} bold textAlign="left"  textFont="arizona"   margin="120px 0px 0px -100px"      textColor="white">    </Heading>
+<Text textColor="black"  textFont="arizona" textSize="40px" margin="-208px 298px -3px -80px" textAlign="left"  > 
+Assignment #2
+        </Text>
+        <Text textColor="black"  textFont="arizona" textSize="22px" margin="29px 280px 0px -80px" textAlign="left"  > 
+
+Identify three specific improvements or opportunities that would strengthen partners.artsy.net as a marketing channel.
+                
+ 
+  </Text>
+
+  
+ 
+</Slide>
+
+ <Slide transition={["slide"]} bgColor="#eb4134">
+    
+    <Heading size={6}  textFont="arizona"  margin="-10px 0px 0px -50px"  textAlign="left" textColor="white">  
+      </Heading>
+         <Text textFont="arizona" textColor="white"  textAlign="left" margin="-30px 0px 0px -50px" textSize="40px"> Suggested changes
+  </Text>
+  
+
+<List style={{listStyleType: "none"}}>    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="-10px 50px 20px -50px" textSize="24px">
+     <b>Balance the buttons</b> | Currently, all buttons lead to the form at the bottom of the page. This feels aggressive, particularly considering Artsy's ICP is a prickly gallery owner already skeptical about the value of a partnership. Also worth noting is the general UX rule you want to have at least a 1:1 ratio of content offramps (blogs, videos, customer stories, etc.) to forms/contact fields with buttons on the page. Thankfully Artsy has a wealth of content to leverage (webinar, state of the gallery reports) for this to be a quick lift.
+    </Text></ListItem></Appear>
+        <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 50px 20px -50px" textSize="24px">
+<b>Success in numbers</b> | How many pieces has Artsy sold for its partners?  How much more visibility has it provided a gallery's website on average? Let's get Artsy's three strongest stats out there as proof points a partnership produces real value.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 50px 20px -50px" textSize="24px">
+<b>Articulate the drudgery</b> | Get one layer deeper in what actually Artsy provides. It's not just "consumer marketing emails", its running a gallery's CRM/demand gen motion.
+    </Text></ListItem></Appear>
+
+   
+        
+        </List>
+     
+</Slide>
+  
+   <Slide transition={["zoom"]} bgColor="black">
+             <Heading></Heading><Text  textFont="arizona" textColor="white" size={6}   textColor="white" textAlign="right" margin="10px -39px 0px 400px">
+
+Thank you for your attention.
+
+</Text>
+<Text textSize="12px" textColor="white" textFont="arizona" textAlign="right" margin="166px -39px -100px 408px">
+*This is speculative work created specifically for the purpose of demonstrating my capabilities as a candidate. It is not intended to be used as a consumer-facing deliverable, as Artsy does not (yet) have the right to use or implement any part of this work without entering into a separate agreement.
+</Text>
+            </Slide>
+ 
+          </Deck>
+        );
+      }
+    </script>
+</body>
+</html>
