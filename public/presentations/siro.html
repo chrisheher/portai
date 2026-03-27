@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width initial-scale=1 user-scalable=no" />
+    <title>Christopher Heher + Siro</title>
+  <style>
+    
+    @font-face {
+    font-family: arizona;
+    src: url(../ABC/ABCArizonaFlare-Thin-Trial.otf) format("opentype");
+}
+      @font-face {
+    font-family: arizona;
+    src: url(../ABC/ABCArizonaFlare-Bold-Trial.otf) format("opentype"); /* ← your bold file name here */
+    font-weight: bold; /* or 700 */
+}
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Lobster+Two:400,700" rel="stylesheet" type="text/css">
+
+    <link href="ABC/normalize.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/prop-types@15/prop-types.js"></script>
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.js"></script>
+    <script src="https://unpkg.com/spectacle@^4/dist/spectacle.js"></script>
+    <script src="https://unpkg.com/spectacle@^4/lib/one-page.js"></script>
+    <script type="text/spectacle">
+      () => {
+        // --------------------------------------------------------------------
+        // Code stuff to use in the presentation.
+        // (We can't link in / require files, but we can approximate here.)
+        // --------------------------------------------------------------------
+        // Customize the default theme.
+        const { themes: { defaultTheme } } = Spectacle;
+        const theme = defaultTheme({
+          primary: "#ff4081",
+          
+            fonts: {
+          header: '"arizona", Helvetica, Arial, sans-serif',
+          text: '"Open Sans Condensed", Helvetica, Arial, sans-serif'
+        }
+        });
+
+        // Example source code for a source code slide.
+        const exampleDeck = `
+return (
+  <Deck transition={['zoom','slide']} transitionDuration={800}>
+    <Slide bgColor="primary">
+      <Heading size={1} fit caps>
+        React Presentations
+      </Heading>
+      <Heading size={2} fit caps>
+        Written In React
+      </Heading>
+    </Slide>
+    <Slide bgColor="black">
+      <Heading size={1} fit textColor="primary" textFont="secondary">
+        Wait What?
+      </Heading>
+    </Slide>
+    <Slide bgColor="primary" textColor="black" align="center top">
+      <Heading size={1} textColor="black" textFont="primary">
+        Thats right
+      </Heading>
+      <List>
+        <ListItem>Inline style based theme system</ListItem>
+        <ListItem>Autofit Text</ListItem>
+        <ListItem>PDF Export</ListItem>
+      </List>
+    </Slide>
+  </Deck>
+)
+        `.trim();
+
+        // Interactive code.
+        const { Component } = React;
+        const { Heading } = Spectacle;
+
+        class Interactive extends Component {
+          constructor() {
+            super();
+            this.state = {
+              count: 0
+            };
+            this.handleClick = this.handleClick.bind(this);
+          }
+          handleClick() {
+            this.setState({
+              count: this.state.count + 1
+            });
+          }
+          render() {
+            const styles = {
+              padding: 20,
+              background: "black",
+              minWidth: 300,
+              marginTop: 20,
+              textTransform: "uppercase",
+              border: "none",
+              color: "white",
+              outline: "none",
+              fontWeight: "bold",
+              fontSize: "2em"
+            };
+            return (
+              <div>
+              {this.state.count < 5 ?
+                <div>
+                  <Heading size={5} textColor="black">
+                    The button has been clicked {this.state.count} times
+                  </Heading>
+                  <button style={styles} type="button" onClick={this.handleClick}>Click Me</button>
+                </div> :
+                  <Heading size={5} fit caps textColor="black">Easy there pal</Heading>
+                }
+              </div>
+            );
+          }
+        }
+
+        // --------------------------------------------------------------------
+        // The presentation!
+        // --------------------------------------------------------------------
+        return (
+          <Deck transition={["zoom", "slide"]} theme={theme} transitionDuration={500}>
+<Slide transition={["zoom"]} bgColor="#000000">
+  <Heading></Heading>
+    <Text  textFont="arizona" textColor="white" size={6}   textColor="white" textAlign="right" margin="0px -39px 0px 400px">
+
+        Christopher Heher + Siro 
+
+
+    </Text>
+
+
+</Slide>
+
+<Slide transition={["slide"]} bgColor="#060606">
+  <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", width: "100%", height: "100%" }}>
+    
+    {/* Left 1/3 — Text content */}
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start", paddingRight: "0px" }}>
+      <Text textColor="white" textFont="arizona" textSize="38px" margin="160px -300px 16px -150px" textAlign="left">
+        Siro content engine schematics
+      </Text>
+      <Text textColor="white" textFont="arizona" textSize="24px" margin="10px 40px 0 -150px" textAlign="left">
+        Having lived aboard a sportfishing yacht for several years (and rebuilt its 671 Detroit Diesel), can I be really faulted for taking Siro's ask for a content engine in their job description literally?
+      </Text>
+    </div>
+
+    {/* Right 2/3 — Stacked images */}
+    <div style={{
+      flex: 2,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "space-between",
+      height: "100%",
+      gap: "16px",
+      
+    }}>
+      <img src={"../ABC/metwo.gif"}  style={{ width: "71%", margin:"-30px 0px 0px 370px", height: "25%", objectFit: "contain" }} />
+      <img src={"../ABC/siro.png"} style={{ width: "83%", margin:"0px 0px 0px 370px", height: "50%", objectFit: "contain" }} />
+      <img src={"../ABC/ham.gif"} style={{ width: "71%", margin:"0px 0px 0px 370px", height: "25%", objectFit: "contain" }} />
+    </div>
+
+  </div>
+</Slide>
+<Slide transition={["slide"]} bgColor="black">
+  <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", width: "100%", height: "100%" }}>
+    
+    {/* Left 2/3 — Text content */}
+    <div style={{ flex: 2, paddingRight: "140px", margin: "10px 0px 0px -140px"}}>
+      <Heading size={6} bold textAlign="left" textFont="arizona" textColor="white" margin="-80px 0 16px 0">    </Heading>
+         <Text textColor="white" textFont="arizona" textSize="40px" textAlign="left" margin="0 0 16px 0px">
+
+    Fuel system -> foundational content
+  
+         </Text>
+      <Text textColor="white" textFont="arizona" textSize="24px" textAlign="left" margin="0 0 16px 0">
+       Successful content engines run on the combusted distribution of core messaging and product insights.
+      </Text>
+
+      <List style={{ listStyleType: "none", margin:"20px 0 16px 0", padding: 0 }}>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="22px" margin="40px 0 16px 0">
+           
+              <b>fuel</b> -> product roadmaps, brand strategy documents
+           
+            </Text>
+          </ListItem>
+        </Appear>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="22px" margin="0 60px 16px 0">
+           <b>injectors</b> -> project briefs inject this raw fuel into the content generation process
+            </Text>
+          </ListItem>
+        </Appear>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="22px" margin="0 60px 16px 0">
+             
+              <b>pump  </b> -> Demand gen so there's a steady stream of potential content activations. 
+         
+
+            </Text>
+          </ListItem>
+        </Appear>
+      </List>
+    </div>
+
+    {/* Right 1/3 — Image */}
+    <div style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Image src={"../ABC/floww.jpg"} style={{ width: "120%", height: "120%" }} />
+    </div>
+
+  </div>
+</Slide>
+  <Slide transition={["slide"]} bgColor="black">
+  <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", width: "120%", height: "100%" }}>
+    
+    {/* Left 2/3 — Text content */}
+    <div style={{ flex: 2.5, paddingRight: "140px", margin: "0px 0px 0px -140px"}}>
+      <Heading size={6} bold textAlign="left" textFont="arizona" textColor="white" margin="0 -200px 16px 0">   </Heading>
+           <Text textColor="white" textFont="arizona" textSize="40px" textAlign="left" margin="-20px -700px 16px 0px">
+
+       Pistons -> Content Production 
+          
+          </Text>
+
+      <Text textColor="white" textFont="arizona" textSize="22px" textAlign="left" margin="0 -600px 16px 0">
+    
+     Just as pistons convert fuel into power, content production converts internal inputs into consumer-facing content. 
+
+      </Text>
+
+      <List style={{ listStyleType: "none", margin: 0, padding: 0 }}>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="22px" margin="40px -550px 16px 0">
+
+              <b>Compression </b> -> human generated prompts calibrate content to specific strategy and structure.
+
+            </Text>
+          </ListItem>
+        </Appear>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="22px" margin="0 -450px 16px 0">
+
+              <b>Combustion </b> -> AI content output
+
+            </Text>
+          </ListItem>
+        </Appear>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="22px" margin="0 -450px 16px 0">
+        
+              <b>Downstroke (exhaust)</b> -> copyediting, whether by human in the loop or a custom agent
+
+        
+            </Text>
+          </ListItem>
+        </Appear>
+      </List>
+    </div>
+
+    {/* Right 1/3 — Image */}
+     <div style={{  display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <Image width="47%" margin="30px 0 20px 500px" src={"../ABC/comb.gif"} />
+     </div>
+  </div>
+</Slide>
+ <Slide transition={["slide"]} bgColor="black">
+  <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", width: "100%", height: "100%" }}>
+    
+    {/* Left 2/3 — Text content */}
+    <div style={{ flex: 2, paddingRight: "140px", margin: "10px 0px 0px -100px"}}>
+      <Heading size={6} bold textAlign="left" textFont="arizona" textColor="white" margin="0 0 16px 0"></Heading>
+            <Text textColor="white" textFont="arizona" textSize="40px" textAlign="left" margin="-60px -300px 16px 0">
+
+Approvals/feedback system -> filters
+            </Text>
+      <Text textColor="white" textFont="arizona" textSize="24px" textAlign="left" margin="0 0 16px 0">
+    Filters prevent contaminants from gumming up the content works. We can tier content filtering based on priority:
+
+
+      </Text>
+
+      <List style={{ listStyleType: "none", margin: 0, padding: 0 }}>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="24px" margin="40px 0 16px 0">
+           
+
+            <b>Tier 1 -> AI + copywriter</b> are responsible for lower stakes content, taking a quick pass at social posts, email copy for quality control (last-mile copyediting).
+
+
+            </Text>
+          </ListItem>
+        </Appear>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="24px" margin="20px 0 16px 0">
+           
+           <b> Tier 2-> AI + copywriter + SME</b>  work together to publish higher-visibility content: white papers, thought leadership
+
+            </Text>
+          </ListItem>
+        </Appear>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="24px" margin="20px 0 16px 0">
+            
+         <b> Tier 3 -> AI + copywriter + SME + executive</b> GTM campaigns, press releases, executive ghostwriting
+
+            
+            </Text>
+          </ListItem>
+        </Appear>
+      </List>
+    </div>
+
+    {/* Right 1/3 — Image */}
+    <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <Image src={"../ABC/filter.jpg"} style={{ width: "140%", paddingLeft: "60px", height: "140%" }} />
+    </div>
+
+  </div>
+</Slide>
+<Slide transition={["slide"]} bgColor="black">
+  <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", width: "100%", height: "100%" }}>
+    
+    {/* Left 2/3 — Text content */}
+    <div style={{ flex: 2, paddingRight: "140px", margin: "10px 0px 0px -100px"}}>
+      <Heading size={6} bold textAlign="left" textFont="arizona" textColor="white" margin="0 -200px 16px 0">    </Heading>
+     <Text textColor="white" textFont="arizona" textSize="40px" textAlign="left" margin="0 0 16px 0">
+Sales enablement -> crankshaft
+            </Text>  
+
+      <Text textColor="white" textFont="arizona" textSize="24px" textAlign="left" margin="0 0px 0 16px 0">
+        Just as an engine's crankshaft converts a piston's linear energy into the rotational power which moves the flywheel, sales enablement converts the content engine's energy (eyeballs and clicks) into pipeline movement.
+      </Text>
+
+      <List style={{ listStyleType: "none", margin: 0, padding: 0 }}>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="24px" margin="40px 0 16px 0">
+              <b>Crankshaft journals</b> | content tagged by stage, persona, vertical, and objection — the precise connection points between content and rep need
+            </Text>
+          </ListItem>
+        </Appear>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="24px" margin="30px 0 16px 0">
+              <b>The flywheel</b> | CMS platform (Notion, Contentful, etc.) that propels the content into the market.
+            </Text>
+          </ListItem>
+        </Appear>
+      </List>
+    </div>
+
+    {/* Right 1/3 — GIF + Caption stacked */}
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", paddingTop: "10px", paddingLeft: "40px" }}>
+      <Image src={"../ABC/shtwo.gif"} height="90%" width="95%"/>
+      <Text textColor="white" textFont="arizona" textSize="14px" textAlign="center" margin="12px 0px 0 0">
+        As a salesperson buffs his brogues before closing a deal, an engine's crankshaft journal requires a similar level of cleanliness.
+      </Text>
+    </div>
+
+  </div>
+</Slide>
+ <Slide transition={["slide"]} bgColor="black">
+  <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", width: "100%", height: "100%" }}>
+    
+    {/* Left 2/3 — Text content */}
+    <div style={{ flex: 2, paddingRight: "140px", margin: "10px 0px 0px -100px"}}>
+      <Heading size={6} bold textAlign="left" textFont="arizona" textColor="white" margin="0 0 16px 0"></Heading>
+           <Text textColor="white" textFont="arizona" textSize="40px" textAlign="left" margin="-40px -500px 16px -40px">
+
+Optimization -> gauges 
+           </Text>
+      
+
+      <Text textColor="white" textFont="arizona" textSize="24px" textAlign="left" margin="0 -550px 16px -40px">
+Captains don't often admire the horizon; they're too busy flitting their eyes between helm gauges -- engine temperature, oil pressure, tachometer -- to make sure everything's running as it should.
+
+      </Text>
+
+      <List style={{ listStyleType: "none", margin: 0, padding: 0 }}>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="22px" margin="40px -450px 16px -40px">
+           
+        <b>Tachometer</b> measures content velocity: pieces published per week, percentage of quarterly editorial calendar completed.
+
+            </Text>
+          </ListItem>
+        </Appear>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="22px" margin="20px -450px 16px -40px">
+           
+              <b>Oil pressure gauge</b> measures distribution reach and amplification metrics
+            </Text>
+          </ListItem>
+        </Appear>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="22px" margin="20px -450px 16px -40px">
+            
+             <b>Temperature gauge</b> indicates content-market fit — the heat created from friction between what's being published and what Siro's audience actually wants.
+
+            
+            </Text>
+          </ListItem>
+        </Appear>
+      </List>
+    </div>
+
+    {/* Right 1/3 — Image */}
+      <Image src={"../ABC/helm.jpg"} style={{ width: "60%", height: "auto", margin: "120px 0px 0px 510px" }} />
+
+  </div>
+</Slide>
+<Slide transition={["slide"]} bgColor="black">
+  <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", width: "100%", height: "100%" }}>
+    
+    {/* Left 2/3 — Text content */}
+    <div style={{ flex: 2, paddingRight: "140px", margin: "10px 0px 0px -100px"}}>
+      <Heading size={6} bold textAlign="left" textFont="arizona" textColor="#8C8C8C
+" margin="0 0 16px 0"> </Heading>
+   <Text textColor="white" textFont="arizona" textSize="40px" textAlign="left" margin="-60px -500px  16px 0">
+Oil -> collaboration
+   </Text>
+
+      <Text textColor="white" textFont="arizona" textSize="22px" textAlign="left" margin="0 -500px 16px 0">
+Oil circulates through every moving part in an engine; the same can be said about collaboration's role in keeping a content engine running smooth.
+      </Text>
+
+      <List style={{ listStyleType: "none", margin: 0, padding: 0 }}>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="22px" margin="40px -500px 16px 0">
+           
+   <b>Zero drafts </b> between this role and key stakeholders provides quick alignment on content vision before prompt is created. 
+
+            </Text>
+          </ListItem>
+        </Appear>
+        <Appear>
+          <ListItem>
+            <Text textColor="white" textFont="arizona" textSize="22px" margin="30px -400px 16px 0">
+           
+  <b>Collarborative editing</b> with github-style version control.
+            </Text>
+          </ListItem>
+        </Appear>
+    
+      </List>
+    </div>
+
+    {/* Right 1/3 — Image */}
+    <div style={{ alignItems: "center", justifyContent: "center" }}>
+      <Image src={"../ABC/oil.gif"} style={{ width: "60%", height: "auto",  margin:"40px 0 16px 480px" }} />
+    </div>
+
+  </div>
+</Slide>
+<Slide transition={["zoom"]} bgImage={"../ABC/dd.gif"} bgDarken={0}>
+  <Text
+    textFont="arizona"
+    textColor="white"
+    size={6}
+    textAlign="right"
+    margin="10px -139px 0px 500px"
+  >
+    Thank you for your attention.
+  </Text>
+</Slide>
+ 
+          </Deck>
+        );
+      }
+    </script>
+</body>
+</html>
