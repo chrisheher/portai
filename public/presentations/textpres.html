@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width initial-scale=1 user-scalable=no" />
+    <title>Christopher Heher + Text</title>
+  <style>
+    
+    @font-face {
+    font-family: arizona;
+    src: url(../ABC/ABCArizonaFlare-Thin-Trial.otf) format("opentype");
+}
+      @font-face {
+    font-family: arizona;
+    src: url(../ABC/ABCArizonaFlare-Bold-Trial.otf) format("opentype"); /* ← your bold file name here */
+    font-weight: bold; /* or 700 */
+}
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Lobster+Two:400,700" rel="stylesheet" type="text/css">
+
+    <link href="ABC/normalize.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/prop-types@15/prop-types.js"></script>
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.js"></script>
+    <script src="https://unpkg.com/spectacle@^4/dist/spectacle.js"></script>
+    <script src="https://unpkg.com/spectacle@^4/lib/one-page.js"></script>
+    <script type="text/spectacle">
+      () => {
+        // --------------------------------------------------------------------
+        // Code stuff to use in the presentation.
+        // (We can't link in / require files, but we can approximate here.)
+        // --------------------------------------------------------------------
+        // Customize the default theme.
+        const { themes: { defaultTheme } } = Spectacle;
+        const theme = defaultTheme({
+          primary: "#ffffff",
+          
+            fonts: {
+          header: '"arizona", Helvetica, Arial, sans-serif',
+          text: '"Open Sans Condensed", Helvetica, Arial, sans-serif'
+        }
+        });
+
+        // Example source code for a source code slide.
+        const exampleDeck = `
+return (
+  <Deck transition={['zoom','slide']} transitionDuration={800}>
+    <Slide bgColor="primary">
+      <Heading size={1} fit caps>
+        React Presentations
+      </Heading>
+      <Heading size={2} fit caps>
+        Written In React
+      </Heading>
+    </Slide>
+    <Slide bgColor="black">
+      <Heading size={1} fit textColor="primary" textFont="secondary">
+        Wait What?
+      </Heading>
+    </Slide>
+    <Slide bgColor="primary" textColor="black" align="center top">
+      <Heading size={1} textColor="black" textFont="primary">
+        Thats right
+      </Heading>
+      <List>
+        <ListItem>Inline style based theme system</ListItem>
+        <ListItem>Autofit Text</ListItem>
+        <ListItem>PDF Export</ListItem>
+      </List>
+    </Slide>
+  </Deck>
+)
+        `.trim();
+
+        // Interactive code.
+        const { Component } = React;
+        const { Heading } = Spectacle;
+
+        class Interactive extends Component {
+          constructor() {
+            super();
+            this.state = {
+              count: 0
+            };
+            this.handleClick = this.handleClick.bind(this);
+          }
+          handleClick() {
+            this.setState({
+              count: this.state.count + 1
+            });
+          }
+          render() {
+            const styles = {
+              padding: 20,
+              background: "black",
+              minWidth: 300,
+              marginTop: 20,
+              textTransform: "uppercase",
+              border: "none",
+              color: "white",
+              outline: "none",
+              fontWeight: "bold",
+              fontSize: "2em"
+            };
+            return (
+              <div>
+              {this.state.count < 5 ?
+                <div>
+                  <Heading size={5} textColor="black">
+                    The button has been clicked {this.state.count} times
+                  </Heading>
+                  <button style={styles} type="button" onClick={this.handleClick}>Click Me</button>
+                </div> :
+                  <Heading size={5} fit caps textColor="black">Easy there pal</Heading>
+                }
+              </div>
+            );
+          }
+        }
+
+        // --------------------------------------------------------------------
+        // The presentation!
+        // --------------------------------------------------------------------
+        return (
+          <Deck transition={["zoom", "slide"]} theme={theme} transitionDuration={500}>
+            <Slide transition={["zoom"]} bgColor="black">
+             <Heading></Heading>
+                <Text  textFont="arizona" textColor="white" size={6}   textColor="white" textAlign="right" margin="0px -39px 0px 400px">
+
+Christopher Heher + Text 
+
+                  </Text>
+
+                    <Text  textFont="arizona" textColor="white" textSize="32px"   textColor="white" textAlign="right" margin="0px -39px 0px 400px">
+    Two manifestoes, one candidate.       
+
+
+</Text>
+
+            </Slide>
+           
+
+       <Slide transition={["zoom"]} bgColor="black">
+             <Heading></Heading><Text  textFont="arizona" textColor="white" size={6}   textColor="white" textAlign="left" margin="0px -39px 0px -100px">
+
+Manifesto #1 </Text>
+<Text  textFont="arizona" textColor="white" textSize="32px"   textColor="white" textAlign="left" bold margin="0px -39px 0px -100px">
+Text reminds retail of the secret it forgot. 
+
+
+</Text>
+
+            </Slide>
+
+<Slide transition={["slide"]} bgColor="#28282B">
+
+    <Text textColor="white" textFont="arizona" textSize="30px" textAlign="left"  margin="-50px 200px 20px 30px">
+    Text reminds retail of the secret it forgot. 
+
+    
+      </Text>
+
+
+      <List style={{listStyleType: "none"}}>   
+        
+             <Appear><ListItem><Text textColor="white" textFont="arizona" margin="30px 300px 20px 30px" textSize="24px">
+     Customer service was recognized as a sales tactic by those who grew the retail industry into what it is today:
+
+
+    </Text></ListItem></Appear>
+        
+        <Appear><ListItem>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", margin: "30px 200px 20px 30px" }}>
+            <Text textColor="white" textFont="arizona" textSize="24px" margin="0" style={{ flex: 1 }}><i>"The goal as a company is to have customer service that is not just the best, but legendary".</i></Text>
+            <Text textColor="white" textFont="arizona" textSize="24px" margin="0 0 0 20px" style={{ whiteSpace: "nowrap" }}>—Sam Walton</Text>
+          </div>
+        </ListItem></Appear>
+        <Appear><ListItem>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", margin: "30px 200px 20px 30px" }}>
+            <Text textColor="white" textFont="arizona" textSize="24px" margin="0" style={{ flex: 1 }}><i>"You're really not in business to make a profit. You're in business to render a service that is so good people are willing to pay a profit in recognition of what you're doing for them."</i></Text>
+            <Text textColor="white" textFont="arizona" textSize="24px" margin="0 0 0 20px" style={{ whiteSpace: "nowrap" }}>—Stanley Marcus</Text>
+          </div>
+        </ListItem></Appear>
+        <Appear><ListItem>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", margin: "50px 250px 20px 30px" }}>
+            <Text textColor="white" textFont="arizona" textSize="24px" margin="0" style={{ flex: 1 }}><i>"Give the lady what she wants"</i></Text>
+            <Text textColor="white" textFont="arizona" textSize="24px" margin="0 0 0 150px" style={{ whiteSpace: "nowrap" }}>—Marshall Fields</Text>
+          </div>
+        </ListItem></Appear>
+
+        
+        </List>
+ 
+
+
+</Slide>
+
+<Slide transition={["slide"]} bgColor="#28282B">
+
+  
+    <Text textColor="white" textFont="arizona" textSize="30px" textAlign="left"  margin="-60px 200px 20px -60px">
+    
+
+    
+      </Text>
+
+
+      <List style={{listStyleType: "none"}}>    
+        <Appear><ListItem><Text textColor="white" textFont="arizona" margin="40px 200px 20px 0px" textSize="24px">
+But somewhere in its shift from brick-and-mortar to online, the retail industry forgot the secret to its own success.
+  </Text></ListItem></Appear>
+<Appear><ListItem><Text textColor="white" textFont="arizona" margin="40px 200px 20px 0px" textSize="24px">
+
+Today, sales and marketing teams don't talk about serving customers as part of their growth engines -- they talk about acquiring and retaining them.  
+
+
+    </Text></ListItem></Appear>
+        <Appear><ListItem><Text textColor="white" textFont="arizona" margin="40px 200px 20px 0px" textSize="24px">
+In reducing the customer relationship to pipelines and funnels, companies have distorted their view of customer service; as if making a genuine effort to serve their customer is now passe, an afterthought, a brake on their own growth engines.
+
+
+    </Text></ListItem></Appear>
+        <Appear><ListItem><Text textColor="white" textFont="arizona" margin="40px 200px 20px 0px" textSize="24px">
+Text sees customer service the same way Walton, Marcus, and Field saw it: as the fuel for growth engines built to drive not only this sale -- but the next one as well.
+
+
+
+    </Text></ListItem></Appear>
+
+
+        
+        </List>
+ 
+
+
+</Slide>
+
+<Slide transition={["slide"]} bgColor="#28282B">
+  <div style={{ display: "flex", flexDirection: "row", alignItems: "center", width: "100%", height: "100%", padding: "20px 0" }}>
+    {/* Left: Text Column */}
+    <div style={{ flex: 1, paddingRight: "0px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+    <Text textColor="white" textFont="arizona" textSize="32px" textAlign="left" margin="0 110px 20px -150px">
+       
+     Awareness/ social activation  
+   
+    </Text>
+    <Text textColor="white" textFont="arizona" textSize="24px" textAlign="left"  margin="0 100px 20px -150px">
+Customer service as a sales tactic has been around since capitalism was invented. Let's highlight this with clips of vhs-era sales seminars preaching what Text is about to practice in the product phase.
+
+      
+      </Text>
+   
+      </div>
+
+    {/* Right: Images Column */}
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+      
+            <video  width="100%"  src={"../ABC/text_small.mp4"} />
+
+   
+    </div>
+
+  </div>
+</Slide>
+  <Slide transition={["slide"]} bgColor="#28282B">
+  <div style={{ display: "flex", flexDirection: "row", width: "100%", height: "100%", gap: "40px" }}>
+
+    {/* Left: Text block */}
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <Heading size={6} bold textAlign="center" textFont="arizona"  margin="-79px -629px 0 -161px" textColor="white"> Putting it all together (manifesto -> pillars)</Heading>
+           
+
+        <Text textColor="white" textFont="arizona" textSize="20px" textAlign="right" margin="50px -60px 0 -100px">
+      Text reminds retail of the secret it forgot.<br/><br/>
+        Customer service has been the foundation of businesses that built the retail industry  - Walmart, Niemann Marcus, Marshall Fields.<br/><br/>
+     But in its shift from brick-and-mortar to digital, retail forgot the secret to its own success. Today, sales and marketing teams talk about acquiring and retaining customers — not serving them.<br/><br/>
+       In reducing the customer relationship to pipelines and funnels, companies have distorted their view of customer service; as if making a genuine effort to serve their customer is now passe, an afterthought, a brake on their own growth engines.
+<br/><br/>
+Text sees customer service the same way Walton, Marcus, and Field saw it: as the fuel for growth engines built to drive not just this sale - but the next one.      </Text>
+    </div>
+
+    {/* Right: List */}
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <List style={{ listStyleType: "none", margin: 0, padding: 0 }}>
+        <Appear><ListItem>
+          <Text textColor="white" textFont="arizona" margin="10px -100px 20px 60px" textSize="20px"><b>Direct </b>| "Text reminds retail of the secret it forgot" takes a stand without hedging or explaining.</Text>
+        </ListItem></Appear>
+        <Appear><ListItem>
+          <Text textColor="white" textFont="arizona" margin="40px -100px 20px 60px" textSize="20px"><b> Savvy </b>| Anchoring the argument in retail history signals Text is doing the thinking the rest of the market isn't.</Text>
+        </ListItem></Appear>
+        <Appear><ListItem>
+          <Text textColor="white" textFont="arizona" margin="40px -100px 20px 60px" textSize="20px"><b>Proactive |</b> "Fuel for growth engines built to drive not just this sale — but the next one" suggests customer service's compounding value.</Text>
+        </ListItem></Appear>
+        <Appear><ListItem>
+          <Text textColor="white" textFont="arizona"  margin="40px -100px 20px 60px" textSize="20px"><b>Perceptive</b> | By taking the view that retail has forgotten the value of customer service — Text is perceiving what competitors are missing. </Text>
+        </ListItem></Appear>
+      </List>
+    </div>
+
+  </div>
+</Slide>
+
+
+<Slide transition={["zoom"]} bgColor="black">
+             <Heading></Heading><Text  textFont="arizona" textColor="white" size={6}   textColor="white" textAlign="left" margin="0px -39px 0px -100px">
+
+Approach #2 </Text>
+<Text  textFont="arizona" textColor="white" textSize="32px"   textColor="white" textAlign="left" bold margin="0px -39px 0px -100px">
+After thirty years, Text is done waiting.
+
+
+</Text>
+</Slide>
+
+
+
+
+
+
+<Slide transition={["slide"]} bgColor="#28282B">
+
+    <Text textColor="white" textFont="arizona" textSize="30px" textAlign="left"  margin="0px 200px 20px -30px">
+    After thirty years, Text is done waiting.
+
+    
+      </Text>
+
+
+      <List style={{listStyleType: "none"}}>   
+        
+             <Appear><ListItem><Text textColor="white" textFont="arizona" margin="30px 100px 20px -30px" textSize="22px">
+Ever since Clippy uncoiled itself to the world on Windows 95, customers have all waited for a service interface that treats them with the dignity they deserve. 
+ </Text></ListItem></Appear>
+ <Appear><ListItem><Text textColor="white" textFont="arizona" margin="30px 100px 20px -30px" textSize="22px">
+For three decades, human-coded support tools — web chats, phone directories, ticket queues — have confused customers with clunky, generic responses or, worse, aggravated them with costly blind spots and lapses in judgment.
+
+
+    </Text></ListItem></Appear>
+        
+        <Appear><ListItem><Text textColor="white" textFont="arizona" margin="30px 100px 20px -30px" textSize="22px">
+   Thirty years of deep human frustration, finally solved by artificial intelligence.
+
+    </Text></ListItem></Appear>
+        <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 100px 20px -30px" textSize="22px">
+Trusting AI to handle customer service can feel ironic and wrong; why let some machine-learnt language parser handle how your customer personally interacts with your brand?
+    
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 100px 20px -30px" textSize="22px">
+But the truth is that AI is the first technology that can not only read your customer — not just their complaint or question, but their intent behind it - but then respond in ways which meet their needs while matching your brand's unique voice.
+    </Text></ListItem></Appear>
+
+           <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 100px 20px -30px" textSize="22px">
+That level of context and customization changes the entire retail game - from clearing customer tickets to creating customer opportunities.
+    </Text></ListItem></Appear>
+ 
+        </List>
+ 
+
+
+</Slide>
+
+
+<Slide transition={["slide"]} bgColor="#28282B">
+  <div style={{ display: "flex", flexDirection: "row", alignItems: "center", width: "100%", height: "100%", padding: "20px 0" }}>
+    {/* Left: Text Column */}
+    <div style={{ flex: 1, paddingRight: "0px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+    <Text textColor="white" textFont="arizona" textSize="32px" textAlign="left" margin="0 110px 20px -150px">
+       
+Home page activation
+   
+    </Text>
+    <Text textColor="white" textFont="arizona" textSize="22px" textAlign="left"  margin="0 10px 20px -150px">
+The strength in this approach is in its visual representation of the ellipse for the narrative home page.<br/><br/>
+Using the ellipsis to represent both the chat agent and the thirty-year wait for a solution ties well with the narrative.
+      
+      </Text>
+   
+      </div>
+
+    {/* Right: Images Column */}
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+      
+            <Image src={"../ABC/speed.gif"} width="100%" />
+
+   
+    </div>
+
+  </div>
+</Slide>
+
+
+<Slide transition={["slide"]} bgColor="#28282B">
+  <div style={{ display: "flex", flexDirection: "row", width: "100%", height: "100%", gap: "40px" }}>
+
+    {/* Left: Text block */}
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <Heading size={6} bold textAlign="center" margin="-9px -629px 0 -161px" textFont="arizona" textColor="white">Putting it all together (manifesto -> pillars)</Heading>
+      
+      
+      
+      <Text textColor="white" textFont="arizona" textSize="18px" textAlign="right" margin="40px -34px 20px -132px">
+      After thirty years, Text is done waiting.<br/><br/>
+Ever since Clippy uncoiled itself to the world on Windows 95, customers have  waited for a service interface that treats them with the dignity they deserve. <br/><br/>For three decades, human-coded support tools — web chats, phone directories, ticket queues — have confused customers with clunky, generic responses or, worse, aggravated them with costly blind spots and lapses in judgment.<br/><br/>
+Thirty years of deep human frustration, solved by artificial intelligence.<br/><br/>
+Trusting AI to handle customer service can feel ironic and wrong; why let some machine-learnt language parser handle your customer's personal dialogue with your brand?<br/><br/>
+But the truth is that AI is the first technology that can read your customer — not just their complaint, but their intent behind it - then respond in ways that personally meets their needs and match your brand's voice.<br/><br/>
+That level of context and customization changes the entire retail game - from clearing customer tickets to creating customer opportunities.
+
+      </Text>
+    </div>
+
+    {/* Right: List */}
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <List style={{ listStyleType: "none", margin:"40px 0 20px 30px", padding: 0 }}>
+        <Appear><ListItem>
+          <Text textColor="white" textFont="arizona" margin="56px -100px 20px 0" textSize="22px"><b>Direct </b>| After thirty years, Text is done waiting" states a case without ambiguity.</Text>
+        </ListItem></Appear>
+        <Appear><ListItem>
+          <Text textColor="white" textFont="arizona" margin="40px -180px 20px 0" textSize="22px"><b> Savvy </b>| "Thirty years of deep human frustration, solved by artificial intelligence" taps into a widely-shared view of a technology that's too ubiquitous to be ineffective..</Text>
+        </ListItem></Appear>
+        <Appear><ListItem>
+          <Text textColor="white" textFont="arizona" margin="40px -180px 20px 0" textSize="22px"><b>Proactive</b> | "From clearing customer tickets to creating customer opportunities" changes service from a reactive to proactive posture. </Text>
+        </ListItem></Appear>
+        <Appear><ListItem>
+          <Text textColor="white" textFont="arizona"  margin="40px -180px 20px 0" textSize="22px"><b>Perceptive</b> | "Not just their complaint, but their intent behind it" speaks to AI's ability to perceive the customer that Clippy and other chat agents never could.
+ </Text>
+        </ListItem></Appear>
+      </List>
+    </div>
+
+  </div>
+</Slide>
+ <Slide transition={["zoom"]} bgColor="black">
+             <Heading></Heading><Text  textFont="arizona" textColor="white" size={6}   textColor="white" textAlign="right" margin="10px -39px 0px 400px">
+
+Thank you for your attention.
+
+</Text>
+<Text textSize="14px" textColor="white" textFont="arizona" textAlign="right" margin="166px -30px -100px 408px">
+*This is speculative work created specifically for the purpose of demonstrating my capabilities as a candidate. It is not intended to be used as a consumer-facing deliverable, as Text does not (yet) have the right to use or implement any part of this work without entering into a separate agreement.
+</Text>
+            </Slide>
+          </Deck>
+        );
+      }
+    </script>
+</body>
+</html>
