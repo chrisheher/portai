@@ -22,11 +22,11 @@ export const metadata: Metadata = {
   },
   description:
     "Professional portfolio of Chris Heher",
-  authors: [{ name: "Chris Heher", url: "https://onlychr.is" }],
+  authors: [{ name: "Chris Heher", url: "https://heureka.works" }],
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://onlychr.is",
+    url: "https://heureka.works",
     title: "Chris Heher",
     description: "content | brand | strategy",
     siteName: "Chris Heher Portfolio",
