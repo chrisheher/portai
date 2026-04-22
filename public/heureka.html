@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heureka — The Rough Breath</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'abcmedium';
+  src: url('./ABC/ABCArizonaFlare-Thin-Trial.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold: #c4a35a;
+  --gold-pale: rgba(196,163,90,0.12);
+  --ink: #111110;
+  --ink-mid: #1c1c18;
+  --cream: #e8e4d4;
+  --parchment: #fdfbf2;
+  --parchment-dark: #e4dfd0;
+  --muted: rgba(232,228,212,0.5);
+  --faint: rgba(232,228,212,0.1);
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'DM Mono', monospace;
+  background: var(--parchment);
+}
+
+/* ── LAYOUT ── */
+#app {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── SEAM ── */
+#seam {
+  position: absolute;
+  left: 50%;
+  top: 0; bottom: 0;
+  width: 1px;
+  z-index: 20;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    var(--gold) 20%,
+    var(--gold) 80%,
+    transparent 100%
+  );
+  opacity: 0.5;
+}
+
+/* ── LEFT PANEL ── */
+#left {
+  background: var(--parchment);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ghost H behind left text */
+#ghost-h {
+  position: absolute;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(220px, 30vw, 380px);
+  font-weight: 700;
+  color: rgba(255,255,255,0.025);
+  top: 50%;
+  left: 50%;
+  transform: translate(-46%, -50%);
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+/* slides stack */
+#slides-left {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+.left-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(2rem, 5vw, 4rem) clamp(2rem, 5vw, 4.5rem);
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.55s cubic-bezier(0.4,0,0.2,1),
+              transform 0.55s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+}
+
+.left-slide.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.left-slide.exit-up {
+  opacity: 0;
+  transform: translateY(-28px);
+}
+
+.slide-body {
+  font-family: 'abcmedium', serif;
+  font-size: clamp(20px, 2.2vw, 22px);
+  margin: 0px 60px 0px 100px;
+  line-height: 1.4;
+  color: var(--black);
+  font-weight: 600;
+
+}
+
+.slide-body em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+
+/* etymology chain */
+.ety-chain { margin-top: 1.5rem; }
+.ety-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 0.5px solid rgba(255,255,255,0.05);
+}
+.ety-lang {
+  width: 60px;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.ety-word {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(20px, 2.5vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.ety-word .h-gold { color: var(--gold); }
+.ety-word .h-dim  { color: var(--muted); }
+.ety-word .h-gone { opacity: 0.1; }
+.ety-note {
+  margin-left: auto;
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+/* triadic */
+.triadic { display: flex; flex-direction: column; gap: 0.85rem; margin-top: 1.5rem; }
+.triadic-item {
+  padding: 0.9rem 1.1rem;
+  border-left: 1px solid var(--gold);
+  background: rgba(255,255,255,0.018);
+}
+.triadic-label {
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  opacity: 0.8;
+}
+.triadic-text {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(12px, 1.3vw, 15px);
+  line-height: 1.6;
+  color: rgba(232,228,212,0.8);
+}
+
+/* close slide big type */
+.big-close {
+  font-size: clamp(22px, 3vw, 38px);
+  line-height: 1.3;
+}
+.until-line {
+  display: block;
+  margin-top: 0.75rem;
+  color: var(--gold);
+  font-style: italic;
+  font-size: clamp(24px, 3.5vw, 44px);
+}
+
+
+/* ── RIGHT PANEL ── */
+#right {
+  background: var(--parchment);
+  position: relative;
+  overflow: hidden;
+  transform: translateX(-50px);
+}
+
+.right-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--parchment);
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1),
+              transform 0.6s cubic-bezier(0.4,0,0.2,1);
+  transform: translateX(30px);
+}
+
+.right-slide svg,
+.right-slide img {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  max-height: calc(100% - 4rem);
+  object-fit: contain;
+}
+
+.right-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.right-slide.exit-left {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.img-caption {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  color: #b0aa96;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* huereka 'k' entrance */
+#huereka-k-anim {
+  transform: translateX(-40px);
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+}
+.right-slide.active #huereka-k-anim {
+  transform: translateX(0);
+}
+
+/* huereka 'a' entrance */
+#huereka-a-anim {
+  transform: translateY(60%);
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+}
+.right-slide.active #huereka-a-anim {
+  transform: translateY(0);
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-thumb { background: rgba(196,163,90,0.3); }
+
+</style>
+</head>
+<body>
+
+<div id="app">
+
+
+  <!-- ── LEFT ── -->
+  <div id="left">
+    <div id="slides-left">
+
+      <div class="left-slide active" data-index="0">
+        <div class="slide-body">
+          Eureka -  bellowed infamously upon the discovery of gold - celebrates an insight made obvious only in hindsight.
+        </div>
+    
+       
+      </div>
+
+      <div class="left-slide" data-index="1">
+      <div class="slide-body">A word so important that it emblazons California's state seal.<br/><br/>But eureka is neutered from its original meaning.
+</div>
+     
+   
+        </div>
+      </div>
+
+      <div class="left-slide" data-index="2">
+        
+               <div class="slide-body">
+                   <div class="slide-body" style="margin: 0px 0px 0px 0px;"> 
+
+          After Archimedes realized he could measure the volume of an irregular object (like a king's crown) by how much water it displaces, he leapt out of his bath and ran naked through the streets shouting not eureka - but heureka!
+        </div>
+        <div class="slide-body" style="font-size: clamp(28px, 3.8vw, 48px); letter-spacing: -0.02em;">
+
+        </div>
+      </div>
+      </div>
+
+      <div class="left-slide" data-index="3">
+        <div class="slide-body">     <div class="slide-body" style="margin: 0px 0px 0px 0px;">
+          That h is significant, as it connects eureka's celebration to heuristic, the process which produced it. <br/> <br/>Put another way: if eureka is the etymological equivalent of a coach lighting a victory cigar, a heuristic is his game plan.
+        </div>
+      </div>
+ </div>
+      <div class="left-slide" data-index="4">
+        <div class="slide-body" style="margin:0px 0px 0px 100px;"">Somewhere along the way the h, a letter which the Greeks called 'rough breath', disappeared, severing the eureka moment from the heuristic method that produced it. 
+</div>
+        
+      </div>
+
+      <div class="left-slide" data-index="5">
+        <div class="slide-body"style="margin: -70px -20px 0px 57px;"  >That h, that rough breath,  that is creative heuristics: reading support tickets to understand not just what your product does but why it matters, the project brief achieving consensus between the builders of your product and its sellers, the zero draft between writer and expert in which a seed of a eureka insight is planted - that is what marketing content has lost.</div>
+          
+      </div>
+
+      <div class="left-slide" data-index="6">
+        <div class="slide-body" style="margin: 0px 0px 0px 100px;">
+          It was lost when content became a numbers game -- one in which  metrics replaced methods, and people cared more about the numbers on the spreads.<br/><br/>
+       And so the eureka insight that opens minds and closes deals became impossible to discover because companies were too busy producing content for its own sake.</div>
+      </div>
+
+      <div class="left-slide" data-index="7">
+        <div class="slide-body">
+          Your content is the first - and perhaps only - salesperson your user meets. <br/><br/> And this is where a creative heuristic earns its value, by communicating the eureka insight which says what you need to say in a way no one ever thought of - until we did.
+        </div>
+      </div>
+
+    </div>
+
+  <!-- ── RIGHT ── -->
+  <div id="right">
+
+
+    <!-- 0: prospector seal -->
+    <div class="right-slide active" data-index="0" style="padding:0;overflow:hidden;">
+      <div id="prospector-wrap" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;overflow:hidden;">
+        <pre id="prospector-art" style="font-size:10px;line-height:1.15;color:#000000;font-family:'abcmedium',monospace;white-space:pre;transform-origin:center center;display:block;text-shadow:0 0 1px #000;-webkit-text-stroke:0.5px #000;"></pre>
+      </div>
+    </div>
+
+    <!-- 1: neutered word -->
+    <div class="right-slide" data-index="1" style="padding:0;overflow:hidden;">
+      <div id="seal-wrap" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;overflow:hidden;">
+        <pre id="seal-art" style="font-size:10px;line-height:0.75;letter-spacing:-0.05em;color:#000000;white-space:pre;transform-origin:center center;display:block;filter:contrast(1.2) brightness(1.1);text-shadow:0 0 1px #000;-webkit-text-stroke:0.5px #000;"></pre>
+      </div>
+    </div>
+
+    <!-- 2: Archimedes bath -->
+    <div class="right-slide" data-index="2" style="padding:0;overflow:hidden;">
+      <div id="arch-wrap" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;overflow:hidden;">
+        <pre id="arch-art" style="font-size:10px;line-height:1.15;color:#000000;font-family:'abcmedium',monospace;white-space:pre;transform-origin:center center;display:block;text-shadow:0 0 1px #000;-webkit-text-stroke:0.5px #000;"></pre>
+      </div>
+    </div>
+
+    <!-- 3: victory cigar / game plan -->
+    <div class="right-slide" data-index="3" style="padding:0;overflow:hidden;">
+      <div style="display:flex;width:100%;height:100%;">
+        <div id="cigar-wrap" style="flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden; margin:0px 0px 0px -100px;">
+          <pre id="cigar-art" style="font-size:10px;line-height:1.15;color:#000000;font-family:'abcmedium',monospace;white-space:pre;transform-origin:center center;display:block;text-shadow:0 0 1px #000;-webkit-text-stroke:0.5px #000;"></pre>
+        </div>
+        <div id="playsheet-wrap" style="flex:0.8;display:flex;align-items:center;justify-content:center;overflow:hidden; margin:0px 0px 0px -150px;">
+          <pre id="playsheet-art" style="font-size:10px;line-height:1.15;color:#000000;font-family:'abcmedium',monospace;white-space:pre;transform-origin:center center;display:block;text-shadow:0 0 1px #000;-webkit-text-stroke:0.5px #000;"></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4: tool -->
+    <div class="right-slide" data-index="4" style="padding:0;overflow:hidden;">
+      <div id="tool-wrap" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;overflow:hidden; margin:0px 0px 0px -50px;">
+        <pre id="tool-art" style="font-size:10px;line-height:1.15;color:#000000;font-family:'abcmedium',monospace;white-space:pre;transform-origin:center center;display:block;text-shadow:0 0 1px #000;-webkit-text-stroke:0.5px #000;"></pre>
+      </div>
+    </div>
+
+    <!-- 5: rough breath / triadic -->
+    <div class="right-slide" data-index="5" style="padding:0;overflow:hidden;">
+      <div id="h-wrap" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;overflow:hidden;  margin:0px 0px 0px -50px;">
+        <pre id="h-art" style="font-size:10px;line-height:1.15;color:#000000;font-family:'abcmedium',monospace;white-space:pre;transform-origin:center center;display:block;text-shadow:0 0 1px #000;-webkit-text-stroke:0.5px #000;"></pre>
+      </div>
+    </div>
+
+
+
+    <!-- 7: salesperson / close -->
+    <div class="right-slide" data-index="6" style="padding:0;overflow:hidden;">
+     <div id="zach-wrap" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;overflow:hidden;">
+        <pre id="zach-art" style="font-size:10px;line-height:0.9;letter-spacing:-0.08em;color:#000000;font-family:'abcmedium',monospace;white-space:pre;transform-origin:center center;display:block;text-shadow:0 0 2px #000,0 0 1px #000;-webkit-text-stroke:1px #000;filter:contrast(1.6) brightness(0.85);"></pre>
+      </div>
+    
+    </div>
+<div class="right-slide" data-index="7" style="padding:0;overflow:hidden;">
+      <div id="huereka-wrap" style="position:relative;width:100%;height:100%;overflow:hidden;">
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+          <pre id="huereka-art" style="font-size:10px;line-height:1.15;color:#000000;font-family:'abcmedium',monospace;white-space:pre;transform-origin:center center;display:block;text-shadow:0 0 2px #000,0 0 2px #000,0 0 1px #000;-webkit-text-stroke:1px #000;"></pre>
+        </div>
+        <div id="huereka-k-anim" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+          <pre id="huereka-art-k" style="font-size:10px;line-height:1.15;color:#000000;font-family:'abcmedium',monospace;white-space:pre;transform-origin:center center;display:block;text-shadow:0 0 2px #000,0 0 2px #000,0 0 1px #000;-webkit-text-stroke:1px #000;"></pre>
+        </div>
+        <div id="huereka-a-anim" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+          <pre id="huereka-art-a" style="font-size:10px;line-height:1.15;color:#000000;font-family:'abcmedium',monospace;white-space:pre;transform-origin:center center;display:block;text-shadow:0 0 2px #000,0 0 2px #000,0 0 1px #000;-webkit-text-stroke:1px #000;"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+const total = 8;
+let cur = 0;
+let isAnimating = false;
+
+const leftSlides  = document.querySelectorAll('.left-slide');
+const rightSlides = document.querySelectorAll('.right-slide');
+
+function goTo(n) {
+  if (isAnimating || n === cur || n < 0 || n >= total) return;
+  isAnimating = true;
+
+  const prev = cur;
+  cur = n;
+
+  // left panel
+  leftSlides[prev].classList.remove('active');
+  leftSlides[prev].classList.add('exit-up');
+  setTimeout(() => leftSlides[prev].classList.remove('exit-up'), 560);
+
+  setTimeout(() => leftSlides[cur].classList.add('active'), 80);
+
+  // right panel
+  rightSlides[prev].classList.remove('active');
+  rightSlides[prev].classList.add('exit-left');
+  setTimeout(() => rightSlides[prev].classList.remove('exit-left'), 620);
+
+  setTimeout(() => {
+    rightSlides[cur].classList.add('active');
+    isAnimating = false;
+  }, 100);
+
+}
+
+function nav(dir) { goTo(cur + dir); }
+
+// keyboard
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') nav(1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   nav(-1);
+});
+
+// scroll / wheel
+let wheelAccum = 0;
+let wheelTimer;
+const WHEEL_THRESHOLD = 180;
+window.addEventListener('wheel', e => {
+  wheelAccum += e.deltaY;
+  clearTimeout(wheelTimer);
+  wheelTimer = setTimeout(() => { wheelAccum = 0; }, 300);
+  if (wheelAccum > WHEEL_THRESHOLD)       { wheelAccum = 0; nav(1); }
+  else if (wheelAccum < -WHEEL_THRESHOLD) { wheelAccum = 0; nav(-1); }
+}, { passive: true });
+
+// touch
+let touchStartY = 0;
+window.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
+window.addEventListener('touchend', e => {
+  const dy = touchStartY - e.changedTouches[0].clientY;
+  if (Math.abs(dy) > 40) nav(dy > 0 ? 1 : -1);
+}, { passive: true });
+
+const brailleArts = [];
+
+function fitBrailleArt(preId, wrapId, text, mult = 0.665, narrowX = 1, tallY = 1) {
+  const pre  = document.getElementById(preId);
+  const wrap = document.getElementById(wrapId);
+  pre.textContent = text;
+
+  function fit() {
+    pre.style.transform = '';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const scaleX = wrap.clientWidth  / pre.scrollWidth;
+      const scaleY = wrap.clientHeight / pre.scrollHeight;
+      const s = Math.min(scaleX, scaleY) * mult; pre.style.transform = `scale(${s * narrowX}, ${s * tallY})`;
+    }));
+  }
+
+  brailleArts.push(fit);
+  document.fonts.ready.then(fit);
+}
+
+window.addEventListener('resize', () => brailleArts.forEach(f => f()));
+
+import('./img/prospector.js').then(m => fitBrailleArt('prospector-art', 'prospector-wrap', m.default));
+import('./img/arch.js').then(m => fitBrailleArt('arch-art',       'arch-wrap',       m.default));
+import('./img/seal.js').then(m => fitBrailleArt('seal-art',       'seal-wrap',       m.default, 0.665, 0.9));
+import('./img/cigar.js').then(m => fitBrailleArt('cigar-art',       'cigar-wrap',       m.default));
+import('./img/playsheet.js').then(m => fitBrailleArt('playsheet-art', 'playsheet-wrap', m.default));
+import('./img/h.js').then(m => fitBrailleArt('tool-art',   'tool-wrap',   m.default));
+import('./img/tool.js').then(m => fitBrailleArt('h-art',         'h-wrap',         m.default));
+import('./img/zach.js').then(m => fitBrailleArt('zach-art',     'zach-wrap',     m.default));
+import('./img/huereka.js').then(m => { const full = m.default; const K_START = 311, K_END = 359, A_START = 359; const B = '⠀'; const blank = (l, from, to) => { const a = [...l]; for (let i = from; i < Math.min(to ?? a.length, a.length); i++) a[i] = B; return a.join(''); }; const main = full.split('\n').map(l => blank(l, K_START)).join('\n'); const kOnly = full.split('\n').map(l => blank(blank(l, 0, K_START), K_END)).join('\n'); const aOnly = full.split('\n').map(l => blank(l, 0, A_START)).join('\n'); fitBrailleArt('huereka-art',   'huereka-wrap', main,  0.818, 1, 1.4); fitBrailleArt('huereka-art-k', 'huereka-wrap', kOnly, 0.818, 1, 1.4); fitBrailleArt('huereka-art-a', 'huereka-wrap', aOnly, 0.818, 1, 1.4); });
+</script>
+
+</body>
+</html>

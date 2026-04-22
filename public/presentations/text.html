@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width initial-scale=1 user-scalable=no" />
-    <title>Christopher Heher + Text</title>
+    <title>Christopher Heher + Artsy</title>
   <style>
     
     @font-face {
@@ -37,7 +37,7 @@
         // Customize the default theme.
         const { themes: { defaultTheme } } = Spectacle;
         const theme = defaultTheme({
-          primary: "#ffffff",
+          primary: "#ff4081",
           
             fonts: {
           header: '"arizona", Helvetica, Arial, sans-serif',
@@ -125,9 +125,9 @@ return (
         // --------------------------------------------------------------------
         // The presentation!
         // --------------------------------------------------------------------
-        return (
+        return (x
           <Deck transition={["zoom", "slide"]} theme={theme} transitionDuration={500}>
-            <Slide transition={["zoom"]} bgColor="black">
+            <Slide transition={["zoom"]} bgColor="#000000">
              <Heading></Heading><Text  textFont="arizona" textColor="white" size={6}   textColor="white" textAlign="right" margin="0px -39px 0px 400px">
 
 Christopher Heher + Text 
@@ -142,50 +142,49 @@ Christopher Heher + Text
 
 
 <Slide transition={["slide"]} bgColor="white">
-<Heading size={6} bold textAlign="left"  textFont="arizona"   margin="120px 0px 0px -100px"     textColor="black">    </Heading>
+<Heading size={6} bold textAlign="left"  textFont="arizona"   margin="120px 0px 0px -100px"      textColor="white">    </Heading>
     <Text textColor="black"  textFont="arizona" textSize="40px" margin="-208px 298px -3px -80px" textAlign="left"  > 
     Home page review       
      </Text>
-
 </Slide>
 
-<Slide transition={["slide"]} bgColor="#28282B">
+<Slide transition={["slide"]} bgColor="white">
   <div style={{ display: "flex", flexDirection: "row", alignItems: "center", width: "100%", height: "100%", padding: "20px 0" }}>
     {/* Left: Text Column */}
     <div style={{ flex: 1, paddingRight: "0px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-    <Text textColor="white" textFont="arizona" textSize="32px" textAlign="left" margin="-33px -113px 20px -160px">
+    <Text textColor="black" textFont="arizona" textSize="32px" textAlign="left" margin="0 10px 20px -150px">
     
-      Suggestion #1:<br /> Say something above the fold only Text can say.
+      Suggestion #1: Say something above the fold only Text can say
     
       </Text>
-    <Text textColor="white" textFont="arizona" textSize="20px" textAlign="left"  margin="0 0 20px -160px">
+    <Text textColor="black" textFont="arizona" textSize="20px" textAlign="left"  margin="0 0 20px -150px">
     
-      Users give websites 50 milliseconds before deciding whether to engage with content below the fold or bounce. Which means it's imperative brands differentiate themselves at first glance. <br/><br/>Tweaking above the fold messaging to match  Text's value prop "Upgrade your agents from support to sales" would be more effective.
+      Users give websites 50 milliseconds to decide whether to engage with content or bounce. Which is why it's imperative brands differentiate themselves from the jump. In my opinion, messaging closer to Text's value prop "Upgrade your agents from support to sales" would be more effective.
     
       </Text>
     </div>
 
     {/* Right: Images Column */}
     <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
-      <Image  width="100%"  margin="0 0 20px 250px" src={"../ABC/atf.png"} />
-      <Image  width="100%" margin="0 0 20px 250px" src={"../ABC/atf2.png"} />
+      <Image  width="100%"  margin="0 0 20px 200px" src={"../ABC/atf.png"} />
+      <Image  width="100%" margin="0 0 20px 200px" src={"../ABC/atf2.png"} />
     </div>
 
   </div>
 </Slide>
 
-<Slide transition={["slide"]} bgColor="#28282B">
+<Slide transition={["slide"]} bgColor="white">
   <div style={{ display: "flex", flexDirection: "row", alignItems: "center", width: "100%", height: "100%", padding: "20px 0" }}>
     {/* Left: Text Column */}
     <div style={{ flex: 1, paddingRight: "0px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-    <Text textColor="white" textFont="arizona" textSize="32px" textAlign="left" margin="-40px 10px 20px -150px">
+    <Text textColor="black" textFont="arizona" textSize="32px" textAlign="left" margin="-40px 10px 20px -150px">
        
-      Suggestion #2:<br /> Balance the buttons.
+      Suggestion #2: Balance the buttons.
    
     </Text>
-    <Text textColor="white" textFont="arizona" textSize="20px" textAlign="left"  margin="0 30px 20px -150px">
+    <Text textColor="black" textFont="arizona" textSize="20px" textAlign="left"  margin="0 10px 20px -150px">
       
-  Generally you want a 1:1 ratio between content off-ramps (customer stories, blog posts, etc.) and signup forms. All nine buttons on the home page link to the trial signup page. Because of this, Text denies its users opportunities to better understand their value prop before making they make their decision.
+  Generally you want a 1:1 ratio between  content offramps (customer stories, blog posts, etc.) to signup forms. All nine buttons on the home page link to trial signup page. Because of this, users may feel rushed and are unable to understand  Text's value prop.
       
   </Text>
    
@@ -194,10 +193,13 @@ Christopher Heher + Text
     {/* Right: Images Column */}
     <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
               <Image  margin="0 0 20px 200px" src={"../ABC/butts.png"} />
+
+                    
+
         <Image height="200px" width="100%" margin="0 0 20px 200px" src={"../ABC/cust.png"} />
-<Text textColor="white" textFont="arizona" textSize="16px" textAlign="center"  margin="-30px 0 0px 160px">
+<Text textColor="black" textFont="arizona" textSize="16px" textAlign="left"  margin="0 0 20px 100px">
       
-  <i>I felt a little bamboozled thinking this button was to read the Wembley case study.</i>
+  <i>I felt a bit bamboozled thinking this button was to read the case study.</i>
       </Text>
     </div>
 
@@ -205,18 +207,17 @@ Christopher Heher + Text
 </Slide>
   
 
-<Slide transition={["slide"]} bgColor="#28282B">
+<Slide transition={["slide"]} bgColor="white">
   <div style={{ display: "flex", flexDirection: "row", alignItems: "center", width: "100%", height: "100%", padding: "20px 0" }}>
     {/* Left: Text Column */}
     <div style={{ flex: 1, paddingRight: "0px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-    <Text textColor="white" textFont="arizona" textSize="32px" textAlign="left" margin="0 110px 20px -150px">
+    <Text textColor="black" textFont="arizona" textSize="32px" textAlign="left" margin="0 10px 20px -150px">
        
-      Suggestion #3:<br />Dial in the call to action
+      Suggestion #3: Turn volume up on call to action
    
     </Text>
-    <Text textColor="white" textFont="arizona" textSize="20px" textAlign="left"  margin="0 10px 20px -150px">
-      While I (eventually) did make the connection between the above the fold's picture and messaging and the footer, there are too many sections in between (11 by my count) for that connection to register with a user quickly scanning the page.
-
+    <Text textColor="black" textFont="arizona" textSize="20px" textAlign="left"  margin="0 0 20px -150px">
+      I can see the connection between the above the fold picture and messaging and the footer, but there are too many sections in between (I counted 11) for that connection to register with users.
       
       </Text>
    
@@ -224,10 +225,7 @@ Christopher Heher + Text
 
     {/* Right: Images Column */}
     <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
-      
-            <Image  width="100%"  margin="0 0 20px 200px" src={"../ABC/atf.png"} />
-
-      <Image height="200px" width="100%" margin="0 0 20px 200px" src={"../ABC/footer.png"} />
+        <Image height="200px" width="100%" margin="0 0 20px 100px" src={"../ABC/footer.png"} />
 
     </div>
 
@@ -235,50 +233,25 @@ Christopher Heher + Text
 </Slide>
 
 <Slide transition={["slide"]} bgColor="white">
-<Heading size={6} bold textAlign="left"  textFont="arizona"     textColor="white">    </Heading>
-    <Text textColor="black"  textFont="arizona" textSize="40px" margin="-80px 0px 0px -100px" textAlign="left"  > 
-  Hesitant buyer page review       
+<Heading size={6} bold textAlign="left"  textFont="arizona"   margin="120px 0px 0px -100px"      textColor="white">    </Heading>
+    <Text textColor="black"  textFont="arizona" textSize="40px" margin="-208px 298px -3px -80px" textAlign="left"  > 
+  Hesitant Buyer page review       
      </Text>
 </Slide>
 
- <Slide transition={["slide"]} bgColor="#28282B">
+
+<Slide transition={["slide"]} bgColor="white">
   <div style={{ display: "flex", flexDirection: "row", alignItems: "center", width: "100%", height: "100%", padding: "20px 0" }}>
     {/* Left: Text Column */}
     <div style={{ flex: 1, paddingRight: "0px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-    <Text textColor="white" textFont="arizona" textSize="32px" textAlign="left" margin="0 10px 20px -150px">
+    <Text textColor="black" textFont="arizona" textSize="32px" textAlign="left" margin="0 10px 20px -150px">
        
-      Suggestion #1:<br />Rotate objections in above the fold copy
+      Suggestion #1: Align content with strategy
    
     </Text>
-   
-    <Text textColor="white" textFont="arizona" textSize="20px" textAlign="left"  margin="0 0 20px -150px">
+    <Text textColor="black" textFont="arizona" textSize="20px" textAlign="left"  margin="0 0 20px -150px">
       
-     Text can complement the "I'm not sure" phrase with a range of objections ("let me think on it", "I'm just browsing", "I can find it cheaper somewhere else") using a simple text rotation plugin.
-      
-    </Text>
-   
-      </div>
-
-    {/* Right: Images Column */}
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
-        <Image  margin="0 0 20px 200px" src={"../ABC/rotate.png"} />
-
-    </div>
-
-  </div>
-</Slide>
-<Slide transition={["slide"]} bgColor="#28282B">
-  <div style={{ display: "flex", flexDirection: "row", alignItems: "center", width: "100%", height: "100%", padding: "20px 0" }}>
-    {/* Left: Text Column */}
-    <div style={{ flex: 1, paddingRight: "0px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-    <Text textColor="white" textFont="arizona" textSize="32px" textAlign="left" margin="-90px 10px 20px -100px">
-       
-      Suggestion #2:<br />Align content with strategy
-   
-    </Text>
-    <Text textColor="white" textFont="arizona" textSize="20px" textAlign="left"  margin="0 100px 20px -100px">
-      
-      The title "Converting Hesitant Buyers" reads like a top-of-funnel awareness play but content on the page is more product-focused, reflecting a middle-funnel strategy.   
+      Title is top of funnel awareness play but content is product based   middle funnel 
 
       </Text>
    
@@ -286,77 +259,62 @@ Christopher Heher + Text
 
     {/* Right: Images Column */}
     <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
-       <Image  margin="0 0 20px 120px" src={"../ABC/sales.png"} /> 
-      <Image  margin="0 0 20px 120px" src={"../ABC/dash.png"} />
+        <Image height="200px" width="100%" margin="0 0 20px 100px" src={"../ABC/footer.png"} />
 
     </div>
 
   </div>
 </Slide>
 
-
- 
- <Slide transition={["slide"]} bgColor="#28282B">
+ <Slide transition={["slide"]} bgColor="white">
   <div style={{ display: "flex", flexDirection: "row", alignItems: "center", width: "100%", height: "100%", padding: "20px 0" }}>
     {/* Left: Text Column */}
     <div style={{ flex: 1, paddingRight: "0px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-    <Text textColor="white" textFont="arizona" textSize="32px" textAlign="left" margin="0 10px 20px -150px">
+    <Text textColor="black" textFont="arizona" textSize="32px" textAlign="left" margin="0 10px 20px -150px">
+       
+      Suggestion #2: Rotate objections in above the fold copy
+   
+    </Text>
+    <Text textColor="black" textFont="arizona" textSize="20px" textAlign="left"  margin="0 0 20px -150px">
+      
+There can be a range of hesitations "just browsing"  that be featured above the fold.
+      </Text>
+   
+      </div>
+
+    {/* Right: Images Column */}
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+        <Image height="200px" width="100%" margin="0 0 20px 100px" src={"../ABC/footer.png"} />
+
+    </div>
+
+  </div>
+</Slide>
+ 
+ <Slide transition={["slide"]} bgColor="white">
+  <div style={{ display: "flex", flexDirection: "row", alignItems: "center", width: "100%", height: "100%", padding: "20px 0" }}>
+    {/* Left: Text Column */}
+    <div style={{ flex: 1, paddingRight: "0px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+    <Text textColor="black" textFont="arizona" textSize="32px" textAlign="left" margin="0 10px 20px -150px">
        
       Suggestion #3: Get one layer deeper 
    
     </Text>
-    <Text textColor="white" textFont="arizona" textSize="20px" textAlign="left"  margin="0 50px 20px -150px">
-While the awareness vs. product content doesn't need to be binary, content should deliver context on the claims made above the fold. 
+    <Text textColor="black" textFont="arizona" textSize="20px" textAlign="left"  margin="0 0 20px -150px">
       
-</Text>
+The claim " Text AI spots hesitation, re-engages shoppers at the right moment, and turns doubt into revenue." above the fold isn't really explained in this page. Is it a visitor returning? Then what statistics support this? 
+      </Text>
    
       </div>
 
     {/* Right: Images Column */}
     <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
-        <Image margin="0 0 20px 200px" height="130%" src={"../ABC/claim.png"} />
+        <Image height="200px" width="100%" margin="0 0 20px 100px" src={"../ABC/footer.png"} />
 
     </div>
 
   </div>
 </Slide>
- <Slide transition={["slide"]} bgColor="#28282B">
-  <div style={{ display: "flex", flexDirection: "row", alignItems: "center", width: "100%", height: "100%", padding: "20px 0" }}>
-    {/* Left: Text Column */}
-    <div style={{ flex: 1, paddingRight: "0px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-    <Text textColor="white" textFont="arizona" textSize="32px" textAlign="left" margin="0 10px 20px -150px">
-       
-      Suggestion #4:<br />Change "isn't" to "shouldn't be" in footer
-   
-    </Text>
-    <Text textColor="white" textFont="arizona" textSize="20px" textAlign="left"  margin="0 0 20px -150px">
-      
- It's a solid insight, and could also work as the headline above the fold.
-
- 
-      
-</Text>
-   
-      </div>
-
-    {/* Right: Images Column */}
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
-        <Image margin="0 0 20px 100px" src={"../ABC/hesy.png"} />
-
-    </div>
-
-  </div>
-</Slide>
-  <Slide transition={["zoom"]} bgColor="black">
-             <Heading></Heading><Text  textFont="arizona" textColor="white" size={6}   textColor="white" textAlign="right" margin="10px -39px 0px 400px">
-
-Thank you for your attention.
-
-</Text>
-<Text textSize="14px" textColor="white" textFont="arizona" textAlign="right" margin="166px -30px -100px 408px">
-
-</Text>
-            </Slide>
           </Deck>
         );
       }
