@@ -638,6 +638,7 @@ useEffect(() => {
           title: link.name,
           url: link.url,
           type: 'link' as const,
+          shape: link.shape,
           campaignListDescription: campaign.campaignListDescription,
           impact: campaign.impact,
           campaignTitle: campaign.title
