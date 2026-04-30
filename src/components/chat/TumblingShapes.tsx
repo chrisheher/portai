@@ -968,13 +968,14 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
     Events.on(render, 'afterRender', () => {
       const context = render.context;
       
-      // Smaller font for links mode to fit better inside shapes
-      const fontSize = mode === 'links' ? '16px' : '20px';
-      context.font = `${fontSize} "kcgangster", Arial`;
       context.textAlign = 'center';
       context.textBaseline = 'middle';
 
       bodiesRef.current.forEach(({ body, project, shapeType }) => {
+        const campaignTitle = (project as any).campaignTitle ?? '';
+        const isSmallCampaign = campaignTitle === 'DroneDeploy | Safety AI' || campaignTitle === 'Sentry Dogfooding Chronicles' || campaignTitle === 'HP Presence | thought leadership';
+        const fontSize = mode === 'links' ? (isSmallCampaign ? '12px' : '16px') : '20px';
+        context.font = `${fontSize} "kcgangster", Arial`;
         const { position, angle } = body;
         
         // Check if this is an image shape
