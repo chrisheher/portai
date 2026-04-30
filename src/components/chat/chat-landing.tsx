@@ -369,6 +369,23 @@ function ChatLanding({
         { stat: '~300 companies initiated trial during launch window (vs. 90 in pre-launch quarter)' }
       ]
     },
+    'safety-ai': {
+      title: 'DroneDeploy | Safety AI',
+      type: 'campaign' as const,
+      links: [
+        { name: 'awareness | use case', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections', shape: 'tree' as const },
+        { name: 'awareness | white paper', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf', shape: 'tree' as const },
+        { name: 'consideration | blog post', url: 'https://www.dronedeploy.com/blog/safety-smarter-artificial-intelligence-and-your-work-site', shape: 'tree' as const },
+        { name: 'decision | product page', url: 'https://www.dronedeploy.com/product/safety-ai', shape: 'tree' as const }
+      ],
+      description: 'GTM content campaign',
+      campaignListDescription: 'Worksite injuries cost the construction industry $5 billion annually. DroneDeploy\'s Safety AI uses computer vision to identify safety violations in real-time, turning reactive incident reports into proactive prevention.',
+      impact: [
+        { stat: '$10M+ pipeline influence from Safety AI content' },
+        { stat: '70 companies engaged in trial walks, indicating healthy conversion from awareness to hands-on experience.' },
+        { stat: '~3k total landing page visits across top-of-funnel content.' }
+      ]
+    },
     'sentry-dogfooding': {
       title: 'Sentry Dogfooding Chronicles',
       type: 'campaign' as const,
@@ -913,7 +930,7 @@ useEffect(() => {
       setDisplayedItems(linkShapes);
       setMode('links');
       return;
-    }
+    } 
 
     // E CLICK (engagement funnels) → safety-ai links
     if (item.title === 'evergreen') {

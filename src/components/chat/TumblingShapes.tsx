@@ -969,7 +969,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
       const context = render.context;
       
       // Smaller font for links mode to fit better inside shapes
-      const fontSize = mode === 'links' ? '18px' : '20px';
+      const fontSize = mode === 'links' ? '16px' : '20px';
       context.font = `${fontSize} "kcgangster", Arial`;
       context.textAlign = 'center';
       context.textBaseline = 'middle';
