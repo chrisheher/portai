@@ -19,7 +19,7 @@ interface Project {
   content?: React.ReactNode;
 type?: 'project' | 'link' | 'campaign' | 'image' | 'question';
   prompt?: string;
-  shape?: 'letterH' | 'letterC' | 'letterR' | 'letterI' | 'letterS' | 'letterE' | 'letterU' | 'letterK' | 'letterA' | 'dollarSign' | 'slash' | 'bracketOpen' | 'bracketClose' | 'parenOpen' | 'parenClose' | 'pill' | 'rect' | 'diamond' | 'parallelogram' | 'arrowRight' | 'tree' | 'keystone';
+  shape?: 'letterH' | 'letterC' | 'letterR' | 'letterI' | 'letterS' | 'letterE' | 'letterU' | 'letterK' | 'letterA' | 'dollarSign' | 'slash' | 'bracketOpen' | 'bracketClose' | 'parenOpen' | 'parenClose' | 'pill' | 'rect' | 'diamond' | 'parallelogram' | 'arrowRight' | 'tree' | 'keystone' | 'chatBubble' | 'videoCamera' | 'telephone' | 'drone' | 'dogBowl';
   imageSrc?: string;
   url?: string;
 }
@@ -898,6 +898,41 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           Body.setAngle(body, -Math.PI / 18);
           break;
         }
+        case 'dogBowl': {
+          body = Bodies.rectangle(x, y, 240, 240, {
+            render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
+            restitution: 0.1, friction: 1, density: 0.003
+          });
+          break;
+        }
+        case 'drone': {
+          body = Bodies.rectangle(x, y, 240, 120, {
+            render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
+            restitution: 0.15, friction: 0.5, density: 0.001
+          });
+          break;
+        }
+        case 'chatBubble': {
+          body = Bodies.circle(x, y, 100, {
+            render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
+            restitution: 0.2, friction: 0.9
+          });
+          break;
+        }
+        case 'videoCamera': {
+          body = Bodies.rectangle(x, y, 230, 140, {
+            render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
+            restitution: 0.2, friction: 0.9
+          });
+          break;
+        }
+        case 'telephone': {
+          body = Bodies.rectangle(x, y, 160, 160, {
+            render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
+            restitution: 0.2, friction: 0.9
+          });
+          break;
+        }
         case 'letterS':
         default:
           body = Body.create({
@@ -938,6 +973,9 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
 
     Composite.add(world, [...projectBodies, ground, leftWall, rightWall]);
 
+    const hasDrones = bodiesRef.current.some(({ shapeType }) => shapeType === 'drone');
+    if (hasDrones) engine.gravity.y = 0.08;
+
     Render.run(render);
     const runner = Runner.create();
     Runner.run(runner, engine);
@@ -973,7 +1011,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
 
       bodiesRef.current.forEach(({ body, project, shapeType }) => {
         const campaignTitle = (project as any).campaignTitle ?? '';
-        const isSmallCampaign = campaignTitle === 'DroneDeploy | Safety AI' || campaignTitle === 'Sentry Dogfooding Chronicles' || campaignTitle === 'HP Presence | thought leadership';
+        const isSmallCampaign = campaignTitle === 'DroneDeploy | Safety AI' || campaignTitle === 'Sentry Dogfooding Chronicles' || campaignTitle === 'HP Presence | thought leadership' || campaignTitle === 'Sentry | Product pages' || campaignTitle === 'Sentry developer content';
         const fontSize = mode === 'links' ? (isSmallCampaign ? '12px' : '16px') : '20px';
         context.font = `${fontSize} "kcgangster", Arial`;
         const { position, angle } = body;
@@ -1101,13 +1139,227 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
 
           }
 
+          // ── Chat bubble ──────────────────────────────────────────
+          if (shapeType === 'chatBubble') {
+            const isHov = hoveredBodyRef.current === body;
+            const shapeFill = mode === 'initial'
+              ? (isHov ? 'rgb(18,11,5)' : '#dcd3c3')
+              : (isHov ? '#dcd3c3' : '#312113');
+            const rx = 95, ry = 72, cy2 = -18, sw = 13;
+            context.fillStyle = shapeFill;
+            // Outer ellipse
+            context.beginPath();
+            context.ellipse(0, cy2, rx, ry, 0, 0, Math.PI * 2);
+            context.fill();
+            // Tail
+            context.beginPath();
+            context.moveTo(-rx * 0.18, cy2 + ry - sw * 0.5);
+            context.lineTo(-rx * 0.62, cy2 + ry + 34);
+            context.lineTo(rx * 0.06, cy2 + ry - sw * 0.8);
+            context.closePath();
+            context.fill();
+            // Punch interior
+            context.save();
+            context.globalCompositeOperation = 'destination-out';
+            context.fillStyle = 'rgba(0,0,0,1)';
+            context.beginPath();
+            context.ellipse(0, cy2, rx - sw, ry - sw, 0, 0, Math.PI * 2);
+            context.fill();
+            context.restore();
+          }
+
+          // ── Video camera ─────────────────────────────────────────
+          if (shapeType === 'videoCamera') {
+            const isHov = hoveredBodyRef.current === body;
+            const col = mode === 'initial'
+              ? (isHov ? 'rgb(18,11,5)' : '#dcd3c3')
+              : (isHov ? '#dcd3c3' : '#312113');
+            context.strokeStyle = col;
+            context.lineWidth = 13;
+            context.lineJoin = 'round';
+            const bx = -110, by = -60, bw = 155, bh = 120, r = 18;
+            // Rounded rect body
+            context.beginPath();
+            context.moveTo(bx + r, by);
+            context.lineTo(bx + bw - r, by);
+            context.quadraticCurveTo(bx + bw, by, bx + bw, by + r);
+            context.lineTo(bx + bw, by + bh - r);
+            context.quadraticCurveTo(bx + bw, by + bh, bx + bw - r, by + bh);
+            context.lineTo(bx + r, by + bh);
+            context.quadraticCurveTo(bx, by + bh, bx, by + bh - r);
+            context.lineTo(bx, by + r);
+            context.quadraticCurveTo(bx, by, bx + r, by);
+            context.closePath();
+            context.stroke();
+            // Triangle lens
+            const tx = bx + bw + 6;
+            context.beginPath();
+            context.moveTo(tx, by + 22);
+            context.lineTo(tx + 58, by + bh / 2);
+            context.lineTo(tx, by + bh - 22);
+            context.closePath();
+            context.stroke();
+          }
+
+          // ── Telephone ────────────────────────────────────────────
+          if (shapeType === 'telephone') {
+            const isHov = hoveredBodyRef.current === body;
+            const col = mode === 'initial'
+              ? (isHov ? 'rgb(18,11,5)' : '#dcd3c3')
+              : (isHov ? '#dcd3c3' : '#312113');
+            context.fillStyle = col;
+            // Body base (trapezoid)
+            context.beginPath();
+            context.moveTo(-65, 10);
+            context.lineTo(65, 10);
+            context.lineTo(55, 80);
+            context.lineTo(-55, 80);
+            context.closePath();
+            context.fill();
+            // Handset arch
+            context.strokeStyle = col;
+            context.lineWidth = 18;
+            context.lineCap = 'round';
+            context.beginPath();
+            context.arc(0, 10, 60, Math.PI, 0, false);
+            context.stroke();
+            // Punch keypad buttons (3×3 grid)
+            context.save();
+            context.globalCompositeOperation = 'destination-out';
+            context.fillStyle = 'rgba(0,0,0,1)';
+            const btnW = 11, btnH = 9, gapX = 17, gapY = 13;
+            const startX = -btnW / 2 - gapX, startY = 22;
+            for (let row = 0; row < 3; row++) {
+              for (let col2 = 0; col2 < 3; col2++) {
+                context.fillRect(
+                  startX + col2 * (btnW + gapX),
+                  startY + row * (btnH + gapY),
+                  btnW, btnH
+                );
+              }
+            }
+            context.restore();
+          }
+
+          // ── Drone ────────────────────────────────────────────────
+          if (shapeType === 'drone') {
+            const isHov = hoveredBodyRef.current === body;
+            const col = mode === 'initial'
+              ? (isHov ? 'rgb(18,11,5)' : '#dcd3c3')
+              : (isHov ? '#dcd3c3' : '#312113');
+            context.fillStyle = col;
+            context.strokeStyle = col;
+            context.lineJoin = 'round';
+            context.lineCap = 'round';
+
+            // Central hexagonal body
+            context.beginPath();
+            context.moveTo(-56, -22); context.lineTo(56, -22);
+            context.lineTo(84, 0);    context.lineTo(56, 22);
+            context.lineTo(-56, 22);  context.lineTo(-84, 0);
+            context.closePath();
+            context.fill();
+
+            // Arms (four diagonal struts)
+            const arms = [[-42, -10, -90, -38], [42, -10, 90, -38], [-42, 10, -90, 38], [42, 10, 90, 38]];
+            context.lineWidth = 14;
+            arms.forEach(([x1, y1, x2, y2]) => {
+              context.beginPath();
+              context.moveTo(x1, y1); context.lineTo(x2, y2);
+              context.stroke();
+            });
+
+            // Rotor mounts (small circles at arm ends)
+            [[-90, -38], [90, -38], [-90, 38], [90, 38]].forEach(([mx, my]) => {
+              context.beginPath();
+              context.arc(mx, my, 9, 0, Math.PI * 2);
+              context.fill();
+            });
+
+            // Propeller blades (horizontal capsules above/below mounts)
+            context.lineWidth = 10;
+            [[-90, -38], [90, -38], [-90, 38], [90, 38]].forEach(([mx, my]) => {
+              context.beginPath();
+              context.moveTo(mx - 32, my); context.lineTo(mx + 32, my);
+              context.stroke();
+            });
+
+            // Landing skids (curved arcs below body)
+            context.lineWidth = 11;
+            context.beginPath();
+            context.arc(-55, 55, 28, Math.PI * 0.15, Math.PI * 0.85, false);
+            context.stroke();
+            context.beginPath();
+            context.arc(55, 55, 28, Math.PI * 0.15, Math.PI * 0.85, false);
+            context.stroke();
+          }
+
+          // ── Dog bowl ─────────────────────────────────────────────
+          if (shapeType === 'dogBowl') {
+            const isHov = hoveredBodyRef.current === body;
+            const col = mode === 'initial'
+              ? (isHov ? 'rgb(18,11,5)' : '#dcd3c3')
+              : (isHov ? '#dcd3c3' : '#312113');
+            context.fillStyle = col;
+
+            context.save();
+            context.scale(0.75, 0.75);
+
+            const rimY = 5, rimW = 149, kibbleR = 18;
+            const rows = [
+              { cy: rimY -  9, xs: [-117, -72, -24, 24,  72, 117] },
+              { cy: rimY - 31, xs: [ -96, -48,   0, 48,  96] },
+              { cy: rimY - 51, xs: [ -74, -27,  21, 69] },
+              { cy: rimY - 69, xs: [ -51,  -5,  40] },
+              { cy: rimY - 84, xs: [ -24,  21] },
+            ];
+
+            // 1. Kibble circles (solid, no highlights)
+            rows.forEach(({ cy, xs }) => xs.forEach(cx => {
+              context.beginPath();
+              context.arc(cx, cy, kibbleR, 0, Math.PI * 2);
+              context.fill();
+            }));
+
+            // 2. Bowl body — flared sides, curved base
+            context.beginPath();
+            context.moveTo(-rimW, rimY);
+            context.lineTo(rimW, rimY);
+            context.bezierCurveTo(rimW + 20, rimY + 38, rimW + 24, rimY + 72, rimW * 0.9, rimY + 108);
+            context.bezierCurveTo(rimW * 0.55, rimY + 125, -rimW * 0.55, rimY + 125, -rimW * 0.9, rimY + 108);
+            context.bezierCurveTo(-rimW - 24, rimY + 72, -rimW - 20, rimY + 38, -rimW, rimY);
+            context.closePath();
+            context.fill();
+
+            // 3. Punch rim + paw print only
+            context.save();
+            context.globalCompositeOperation = 'destination-out';
+            context.fillStyle = 'rgba(0,0,0,1)';
+
+            context.fillRect(-rimW + 2, rimY - 3, (rimW - 2) * 2, 6);
+
+            const pawX = 0, pawY = rimY + 66 + 13;
+            context.beginPath();
+            context.ellipse(pawX, pawY, 16, 13, 0, 0, Math.PI * 2);
+            context.fill();
+            ([[-21, pawY - 20, 8, 6], [-8, pawY - 26, 8, 6],
+              [  8, pawY - 26, 8, 6], [21, pawY - 20, 8, 6]] as number[][]).forEach(([tx, ty, rx, ry]) => {
+              context.beginPath();
+              context.ellipse(tx, ty, rx, ry, 0, 0, Math.PI * 2);
+              context.fill();
+            });
+
+            context.restore(); // restore destination-out
+            context.restore(); // restore scale
+          }
+
           // Draw title label on shape
           const isHovered = hoveredBodyRef.current === body;
           const textColor = mode === 'initial'
             ? (isHovered ? '#dcd3c3' : '#312113')
             : (isHovered ? '#312113' : '#dcd3c3');
           context.fillStyle = textColor;
-          const textYOffset = shapeType === 'letterA' ? 30 : shapeType === 'letterE' ? -15 : shapeType === 'letterR' ? -25 : 0;
+          const textYOffset = shapeType === 'letterA' ? 30 : shapeType === 'letterE' ? -15 : shapeType === 'letterR' ? -25 : shapeType === 'dogBowl' ? 25 : 0;
           const rotateShapes = ['letterI', 'tree', 'slash', 'bracketOpen', 'bracketClose', 'parenOpen', 'parenClose', 'dollarSign'];
           if (shapeType && rotateShapes.includes(shapeType)) {
             context.save();
@@ -1204,7 +1456,8 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           const original = originalColors.get(hoveredBodyRef.current.id);
           if (original) {  // Safety check
             const prevMapping = bodiesRef.current.find(m => m.body === hoveredBodyRef.current);
-            if (prevMapping?.shapeType !== 'dollarSign') {
+            const customDrawn = ['dollarSign', 'chatBubble', 'videoCamera', 'telephone', 'drone', 'dogBowl'];
+            if (!customDrawn.includes(prevMapping?.shapeType ?? '')) {
               hoveredBodyRef.current.render.fillStyle = original.fill;
               hoveredBodyRef.current.render.strokeStyle = original.stroke;
               if (hoveredBodyRef.current.parts && hoveredBodyRef.current.parts.length > 1) {
@@ -1225,7 +1478,8 @@ const currentHover: Matter.Body = foundHover;  // ← Explicit type annotation
   // Check if this is an image shape - don't change color if it is
   const isImage = bodyMapping && (bodyMapping.project as any).type === 'image';
   
-  if (!isImage && bodyMapping?.shapeType !== 'dollarSign') {
+  const customDrawnShapes = ['dollarSign', 'chatBubble', 'videoCamera', 'telephone', 'drone', 'dogBowl'];
+  if (!isImage && !customDrawnShapes.includes(bodyMapping?.shapeType ?? '')) {
     // Hover color depends on mode:
     // Initial mode: brown hover (dark on light)
     // Links mode: beige hover (light on dark)

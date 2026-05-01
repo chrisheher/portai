@@ -155,7 +155,7 @@ function CarouselContent({ carouselData }: {
 interface Link {
   name: string;
   url: string;
-  shape?: 'letterC' | 'letterH' | 'letterR' | 'letterI' | 'letterS' | 'letterE' | 'letterU' | 'letterK' | 'letterA' | 'dollarSign' | 'slash' | 'bracketOpen' | 'bracketClose' | 'parenOpen' | 'parenClose' | 'pill' | 'rect' | 'diamond' | 'parallelogram' | 'arrowRight' | 'tree' | 'keystone';
+  shape?: 'letterC' | 'letterH' | 'letterR' | 'letterI' | 'letterS' | 'letterE' | 'letterU' | 'letterK' | 'letterA' | 'dollarSign' | 'slash' | 'bracketOpen' | 'bracketClose' | 'parenOpen' | 'parenClose' | 'pill' | 'rect' | 'diamond' | 'parallelogram' | 'arrowRight' | 'tree' | 'keystone' | 'chatBubble' | 'videoCamera' | 'telephone' | 'drone' | 'dogBowl';
 }
 
 interface Project {
@@ -333,11 +333,11 @@ function ChatLanding({
       title: 'Sentry | Performance GTM campaign',
       type: 'campaign' as const,
       links: [
-        { name: 'thought leadership ', url: 'https://blog.sentry.io/how-slow-is-slow/' },
-        { name: 'release blog', url: 'https://blog.sentry.io/see-slow-faster-with-performance-monitoring/' },
-        { name: 'product page', url: 'https://sentry.io/solutions/application-performance-monitoring/' },
-        { name: 'sales enablement', url: 'https://sentry.io/customers/atlassian-jira/' },
-        { name: 'webinar', url: 'https://www.youtube.com/watch?v=J0tAK6dKY3Y/' }
+        { name: 'thought leadership ', url: 'https://blog.sentry.io/how-slow-is-slow/', shape: 'slash' as const },
+        { name: 'release blog', url: 'https://blog.sentry.io/see-slow-faster-with-performance-monitoring/', shape: 'bracketOpen' as const },
+        { name: 'product page', url: 'https://sentry.io/solutions/application-performance-monitoring/', shape: 'parenOpen' as const },
+        { name: 'sales enablement', url: 'https://sentry.io/customers/atlassian-jira/', shape: 'parenClose' as const },
+        { name: 'webinar', url: 'https://www.youtube.com/watch?v=J0tAK6dKY3Y/', shape: 'bracketClose' as const }
       ],
       images: [],
 
@@ -373,10 +373,10 @@ function ChatLanding({
       title: 'DroneDeploy | Safety AI',
       type: 'campaign' as const,
       links: [
-        { name: 'awareness | use case', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections', shape: 'tree' as const },
-        { name: 'awareness | white paper', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf', shape: 'tree' as const },
-        { name: 'consideration | blog post', url: 'https://www.dronedeploy.com/blog/safety-smarter-artificial-intelligence-and-your-work-site', shape: 'tree' as const },
-        { name: 'decision | product page', url: 'https://www.dronedeploy.com/product/safety-ai', shape: 'tree' as const }
+        { name: 'awareness | use case', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections', shape: 'drone' as const },
+        { name: 'awareness | white paper', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf', shape: 'drone' as const },
+        { name: 'consideration | blog post', url: 'https://www.dronedeploy.com/blog/safety-smarter-artificial-intelligence-and-your-work-site', shape: 'drone' as const },
+        { name: 'decision | product page', url: 'https://www.dronedeploy.com/product/safety-ai', shape: 'drone' as const }
       ],
       description: 'GTM content campaign',
       campaignListDescription: 'Worksite injuries cost the construction industry $5 billion annually. DroneDeploy\'s Safety AI uses computer vision to identify safety violations in real-time, turning reactive incident reports into proactive prevention.',
@@ -390,11 +390,11 @@ function ChatLanding({
       title: 'Sentry Dogfooding Chronicles',
       type: 'campaign' as const,
       links: [
-        { name: 'Go-Getting Lazy loading', url: 'https://blog.sentry.io/go-getting-lazy-loading/', shape: 'slash' as const },
-        { name: 'Using Sentry Performance to get Sentry Performant', url: 'https://blog.sentry.io/using-sentry-performance-to-make-sentry-performant', shape: 'bracketOpen' as const },
-        { name: 'Verifying large refactors with Sentry', url: 'https://blog.sentry.io/verifying-large-refactors-in-production-with-sentry/?original_referrer=https%3A%2F%2Fwww.google.com%2F', shape: 'parenOpen' as const },
-        { name: 'Thinking backward, moving forward', url: 'https://blog.sentry.io/dogfooding-chronicles-thinking-backward-moving-forward', shape: 'parenClose' as const },
-        { name: 'Patching a flood of 404s', url: 'https://blog.sentry.io/patching-a-flood-of-404s/', shape: 'bracketClose' as const }
+        { name: 'Go-Getting Lazy loading', url: 'https://blog.sentry.io/go-getting-lazy-loading/', shape: 'dogBowl' as const },
+        { name: 'Using Sentry Performance to get Sentry Performant', url: 'https://blog.sentry.io/using-sentry-performance-to-make-sentry-performant', shape: 'dogBowl' as const },
+        { name: 'Verifying large refactors with Sentry', url: 'https://blog.sentry.io/verifying-large-refactors-in-production-with-sentry/?original_referrer=https%3A%2F%2Fwww.google.com%2F', shape: 'dogBowl' as const },
+        { name: 'Thinking backward, moving forward', url: 'https://blog.sentry.io/dogfooding-chronicles-thinking-backward-moving-forward', shape: 'dogBowl' as const },
+        { name: 'Patching a flood of 404s', url: 'https://blog.sentry.io/patching-a-flood-of-404s/', shape: 'dogBowl' as const }
       ],
       impact: [
         { stat: 'Revenue tripled in the two years since series launch' },
@@ -407,10 +407,10 @@ function ChatLanding({
       title: 'HP Presence | thought leadership',
       type: 'campaign' as const,
       links: [
-        { name: 'The new office for the way people want to work', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf', shape: 'slash' as const },
-        { name: 'The new era of work', url: 'https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf', shape: 'bracketOpen' as const },
-        { name: 'A new blueprint for an uncertain world', url: 'https://getstarted.hbs.net/hubfs/2025%20Partner%20Campaigns/HP_Services_Hybrid_A-New-Blueprint-for-an-Uncertain-World_Consideration_ebook_2022.pdf.pdf?hsLang=en', shape: 'parenOpen' as const },
-        { name: 'Get ready today to do tomorrow\'s work', url: 'https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf', shape: 'bracketClose' as const }
+        { name: 'The new office for the way people want to work', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf', shape: 'chatBubble' as const },
+        { name: 'The new era of work', url: 'https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf', shape: 'videoCamera' as const },
+        { name: 'A new blueprint for an uncertain world', url: 'https://getstarted.hbs.net/hubfs/2025%20Partner%20Campaigns/HP_Services_Hybrid_A-New-Blueprint-for-an-Uncertain-World_Consideration_ebook_2022.pdf.pdf?hsLang=en', shape: 'telephone' as const },
+        { name: 'Get ready today to do tomorrow\'s work', url: 'https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf', shape: 'chatBubble' as const }
       ],
       campaignListDescription: 'The pandemic altered the fabric of society. And nowhere was this more evident than in the office. As HP\'s content strategist, I helped position their Presence videoconferencing suite to be the connective tissue for distributed workforces.',
       impact: [
@@ -493,10 +493,10 @@ function ChatLanding({
       title: 'Sentry | Product pages',
       type: 'campaign' as const,
       links: [
-        { name: 'Sentry | Enterprise page', url: 'https://www.sentry.dev/for/enterprise/' },
-        { name: 'Sentry | Full stack', url: 'https://sentry.io/for/full-stack/' },
-        { name: 'Sentry | Performance monitoring', url: 'https://www.sentry.dev/solutions/application-performance-monitoring/' },
-         { name: 'Sentry | Mobile development', url: 'https://sentry.io/solutions/mobile-developers/' }
+        { name: 'Sentry | Enterprise page', url: 'https://www.sentry.dev/for/enterprise/', shape: 'slash' as const },
+        { name: 'Sentry | Full stack', url: 'https://sentry.io/for/full-stack/', shape: 'bracketOpen' as const },
+        { name: 'Sentry | Performance monitoring', url: 'https://www.sentry.dev/solutions/application-performance-monitoring/', shape: 'parenOpen' as const },
+        { name: 'Sentry | Mobile development', url: 'https://sentry.io/solutions/mobile-developers/', shape: 'parenClose' as const }
       ],
 
       campaignListDescription: 'Partnered with software engineers to co-produce content that articualted value propositions and while moving users into trial.',
@@ -546,10 +546,10 @@ function ChatLanding({
       title: 'Sentry developer content',
       type: 'campaign' as const,
       links: [
-        { name: 'Why debugging Javascript sucks', url: 'https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/' },
-         { name: 'How slow is slow?', url: 'https://blog.sentry.io/how-slow-is-slow/' },
-        { name: 'Python 3 compatibility', url: 'https://blog.sentry.io/python-3-compatibility-what-to-know/' },
-        { name: 'Great moments in application monitoring', url: 'https://blog.sentry.io/great-moments-in-application-monitoring/' }
+        { name: 'Why debugging Javascript sucks', url: 'https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/', shape: 'slash' as const },
+        { name: 'How slow is slow?', url: 'https://blog.sentry.io/how-slow-is-slow/', shape: 'bracketOpen' as const },
+        { name: 'Python 3 compatibility', url: 'https://blog.sentry.io/python-3-compatibility-what-to-know/', shape: 'parenOpen' as const },
+        { name: 'Great moments in application monitoring', url: 'https://blog.sentry.io/great-moments-in-application-monitoring/', shape: 'parenClose' as const }
       ],
 
       campaignListDescription: 'Sentry is an application monitoring platform that tracks various metrics and logs to optimize code health. My role involved creating developer-focused content to make code health -- and hygiene -- engaging for software engineers.',
@@ -921,7 +921,7 @@ useEffect(() => {
         title: link.name,
         url: link.url,
         type: 'link' as const,
-        shape: 'dollarSign' as const,
+        shape: link.shape,
         campaignListDescription: campaign.campaignListDescription,
         impact: campaign.impact,
         campaignTitle: campaign.title
