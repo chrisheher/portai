@@ -272,15 +272,11 @@ function ChatLanding({
 
   // HEUREKA letters
   const initialProjects = useMemo(() => [
-    { title: 'heuristic',         hoverTitle: 'why the h matters',                              type: 'project' as const },
-    { title: 'evangelism',        hoverTitle: 'Dogfooding Chronicles — syndicated blog content series',           type: 'project' as const },
-    { title: 'ux writing',        hoverTitle: 'Layered, responsive content across websites, apps, and product pages for clients airbnb, sentry, and DroneDeploy',            type: 'project' as const },
-    { title: 'revops content',    hoverTitle: 'sentry performance gtm launch',                               type: 'project' as const },
-    { title: 'evergreen',hoverTitle: 'content that outlasted its campaign',                 
-      type: 'project' as const },
-    { title: 'keystone content',  hoverTitle: 'load-bearing brand manifesto + social rollout for cincoro tequila\'s launch',                       type: 'project' as const },
-    { title: 'authority content', hoverTitle: 'technical content written at an expert\'s eye level',                type: 'project' as const },
-    { title: 'personal projects', hoverTitle: 'novel, library',                     type: 'project' as const },
+    { title: 'copywriting', hoverTitle: 'GTM content — campaigns that moved pipeline', type: 'project' as const },
+    { title: 'heureka creative process', hoverTitle: 'why the h matters',                           type: 'project' as const },
+    { title: 'relatable developer content', hoverTitle: 'revenue-driving content strategy',            type: 'project' as const },
+    { title: 'interactive content', hoverTitle: 'interactive & UX writing',                    type: 'project' as const },
+    { title: 'simple, direct, technical', hoverTitle: 'technical & AI content',                      type: 'project' as const },
   ], []);
 
   // S-related links (simplified technical content - formerly R)
@@ -462,10 +458,10 @@ function ChatLanding({
       title: 'DroneDeploy | Product pages',
       type: 'campaign' as const,
       links: [
-        { name: 'DroneDeploy | Ground Robotics', url: 'https://www.dronedeploy.com/product/robotics' },
-          { name: 'DroneDeploy | Dock Automation', url: 'https://www.dronedeploy.com/product/dock-automation' },
-        { name: 'DroneDeploy | Data on Demand', url: 'https://www.dronedeploy.com/data-on-demand' },
-        { name: 'DroneDeploy | Industrial Inspection', url: 'https://www.dronedeploy.com/product/robotic-industrial-inspection' }
+        { name: 'DroneDeploy | Ground Robotics', url: 'https://www.dronedeploy.com/product/robotics', shape: 'drone' as const },
+        { name: 'DroneDeploy | Dock Automation', url: 'https://www.dronedeploy.com/product/dock-automation', shape: 'drone' as const },
+        { name: 'DroneDeploy | Data on Demand', url: 'https://www.dronedeploy.com/data-on-demand', shape: 'drone' as const },
+        { name: 'DroneDeploy | Industrial Inspection', url: 'https://www.dronedeploy.com/product/robotic-industrial-inspection', shape: 'drone' as const }
       ],
       campaignListDescription: 'Collaborating with product and sales teams, I piqued curiosity, ensured technical accuracy, and optimized each page by adding cross-links to related solutions and guides for mid- and bottom-funnel engagement.',
       impact: [
@@ -493,10 +489,10 @@ function ChatLanding({
       title: 'Sentry | Product pages',
       type: 'campaign' as const,
       links: [
-        { name: 'Sentry | Enterprise page', url: 'https://www.sentry.dev/for/enterprise/', shape: 'slash' as const },
-        { name: 'Sentry | Full stack', url: 'https://sentry.io/for/full-stack/', shape: 'bracketOpen' as const },
-        { name: 'Sentry | Performance monitoring', url: 'https://www.sentry.dev/solutions/application-performance-monitoring/', shape: 'parenOpen' as const },
-        { name: 'Sentry | Mobile development', url: 'https://sentry.io/solutions/mobile-developers/', shape: 'parenClose' as const }
+        { name: 'Sentry | Enterprise page', url: 'https://www.sentry.dev/for/enterprise/', shape: 'bracketOpen' as const },
+        { name: 'Sentry | Full stack', url: 'https://sentry.io/for/full-stack/', shape: 'parenOpen' as const },
+        { name: 'Sentry | Performance monitoring', url: 'https://www.sentry.dev/solutions/application-performance-monitoring/', shape: 'parenClose' as const },
+        { name: 'Sentry | Mobile development', url: 'https://sentry.io/solutions/mobile-developers/', shape: 'bracketClose' as const }
       ],
 
       campaignListDescription: 'Partnered with software engineers to co-produce content that articualted value propositions and while moving users into trial.',
@@ -618,6 +614,30 @@ function ChatLanding({
         { stat: 'Lead-to-opportunity conversion: +15–20%' },
         { stat: '30% lift in MQL volume' }
       ]
+    },
+    'dd-construction': {
+      title: 'DroneDeploy | Construction site content',
+      type: 'campaign' as const,
+      links: [
+        { name: 'The ultimate Guide to Facade Inspections', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections', shape: 'drone' as const },
+        { name: 'Closing The Gap in Stockpile Quantification', url: 'https://dronedeploy.com/blog/closing-the-gap-how-archer-western-and-dronedeploy-observed-a-1-1-difference-in-stockpile-quantities-compared-to-traditional-survey-methods', shape: 'drone' as const },
+        { name: 'Within Striking Distance: The Dangers of Underground Utilities', url: 'https://www.dronedeploy.com/blog/within-striking-distance-risks-and-consequences-of-manual-utility-mapping', shape: 'drone' as const },
+        { name: 'Flying beyond line of sight', url: 'https://www.dronedeploy.com/blog/flying-beyond-visual-line-of-sight-the-complete-guide-to-bvlos-waivers-and-docked-drones', shape: 'drone' as const }
+      ],
+      campaignListDescription: '',
+      impact: []
+    },
+    'chronosphere': {
+      title: 'Chronosphere',
+      type: 'campaign' as const,
+      links: [
+        { name: 'the future of observability', url: 'https://chronosphere.io/learn/the-future-of-observability-the-rise-of-cloud-native/', shape: 'slash' as const },
+        { name: 'observability today', url: 'https://chronosphere.io/learn/observability-today-better-data-lower-costs/', shape: 'bracketClose' as const },
+        { name: 'The Future of observability', url: 'https://chronosphere.io/learn/the-future-of-observability-prometheus-conformance-program/', shape: 'bracketOpen' as const },
+        { name: 'Year in review', url: 'https://chronosphere.io/learn/12-months-in-review-chronospheres-top-highlights/', shape: 'parenClose' as const }
+      ],
+      campaignListDescription: '',
+      impact: []
     }
   }), []);
 
@@ -836,166 +856,87 @@ useEffect(() => {
         return;
       }
       
-      // Regular link click - just open URL
+      // Regular link click - internal links in same tab, external in new tab
       if (item.type === 'link' || item.type === 'image') {
         if (item.url) {
           console.log('🔗 Opening link:', item.url);
-          window.open(item.url, '_blank');
+          const isExternal = item.url.startsWith('http://') || item.url.startsWith('https://');
+          if (isExternal) {
+            window.open(item.url, '_blank');
+          } else {
+            window.location.href = item.url;
+          }
           return;
         }
       }
     }
     
-    // HANDLE INITIAL MODE - When user clicks HEUREKA letters
+    // HANDLE INITIAL MODE - C H R I S
 
-    // H CLICK - heuristic → processes (AI personas)
-    if (item.title === 'heuristic') {
+    // C CLICK → GTM campaigns
+    if (item.title === 'copywriting') {
+      pushHistory();
+      const links = [
+        { title: 'Sentry | Performance GTM campaign', url: '/?show=sentry-performance', shape: 'letterC' as const },
+        { title: 'cincoro tequila brand launch', url: '/?show=cincoro', shape: 'letterH' as const },
+        { title: 'HP | Presence white papers', url: '/?show=hp-presence', shape: 'letterR' as const },
+        { title: 'DroneDeploy | Safety AI launch content', url: '/?show=safety-ai', shape: 'letterI' as const },
+        { title: 'social media potpourri',             url: '/public/social.pdf',        shape: 'letterS' as const },
+      ].map(l => ({ ...l, type: 'link' as const }));
+      setDisplayedItems(links);
+      setMode('links');
+      return;
+    }
+
+    // H CLICK → heureka.html
+    if (item.title === 'heureka creative process') {
       window.location.href = '/heureka.html';
       return;
     }
 
-    if (item.title === 'heuristic_old') {
-      console.log('🎯 H clicked - showing AI personas (processes)');
+    // R CLICK → revenue / writing samples
+    if (item.title === 'relatable developer content') {
       pushHistory();
-      setActiveSection('H');
-      setLocalDescription(sectionDescriptions['H']);
-      const promptModes = [
-        { title: 'Cooper the Super', type: 'link' as const, promptMode: 'cooper', url: '#cooper', description: 'A grizzled construction superintendent who, despite keeping manual levels and string lines, traded disposable cameras for drones. Ask about reality capture, jobsite technology, or why manual documentation is killing productivity.' },
-        { title: 'Hank Hardass', type: 'link' as const, promptMode: 'scout', url: '#scout', description: 'A professional scout providing honest assessments, player comps' },
-        { title: 'ruminatrix', type: 'link' as const, promptMode: 'creative', url: '#creative', description: 'Bow down before ruminatrix and feel your creative ideas soar.' },
-        { title: 'Insecure Aidan', type: 'link' as const, promptMode: 'insecure', url: '#insecure', description: 'Hey-o I\'m Aidan a twitchy awkward ai entity aware enough to know my own flaws.' },
-        { title: 'Surly Devin', type: 'link' as const, promptMode: 'devin', url: '#devin', description: 'Surly Devin is a sardonic software engineer who cuts through observability theater and marketing BS.' }
-      ];
-      setDisplayedItems(promptModes);
-      setMode('links');
-      setPromptModeActive(true);
-      return;
-    }
-
-    // E CLICK (evangelism) → sentry-dogfooding
-    if (item.title === 'evangelism') {
-      console.log('📢 E (evangelism) clicked - loading sentry-dogfooding');
-      pushHistory();
-      const campaign = campaignData['sentry-dogfooding'];
-      const linkShapes = campaign.links.map((link: Link) => ({
-        title: link.name,
-        url: link.url,
-        type: 'link' as const,
-        shape: link.shape,
-        campaignListDescription: campaign.campaignListDescription,
-        impact: campaign.impact,
-        campaignTitle: campaign.title
-      }));
-      setDisplayedItems(linkShapes);
+      const links = [
+        { title: 'sentry | dogfooding chronicles', url: '/?show=sentry-dogfooding', shape: 'letterC' as const },
+        { title: 'google | gpay instrumentation videos', url: '/?show=gpay', shape: 'letterH' as const },
+        { title: 'sentry | thought leadership',        url: '/?show=sentry-dev',        shape: 'letterR' as const },
+        { title: 'NetApp | Azure migration guide', url: 'https://www.netapp.com/media/16141-wp-azure-migration.pdf', shape: 'letterI' as const },
+        { title: 'chronosphere | data cardinality content',       url: '/?show=chronosphere',      shape: 'letterS' as const },
+      ].map(l => ({ ...l, type: 'link' as const }));
+      setDisplayedItems(links);
       setMode('links');
       return;
     }
 
-    // U CLICK - ux writing → all individual links from sub-pages
-    if (item.title === 'ux writing') {
-      console.log('🎨 U clicked - showing ux writing links');
+    // I CLICK → interactive / UX writing
+    if (item.title === 'interactive content') {
       pushHistory();
-      setActiveSection('U');
-      const uxShapes = ['pill', 'rect', 'diamond', 'parallelogram', 'arrowRight'] as const;
-      const allLinks = Object.values(interactiveData).flatMap((campaign) =>
-        campaign.links.map((link: Link) => ({
-          title: link.name,
-          url: link.url,
-          type: 'link' as const,
-          campaignListDescription: campaign.campaignListDescription,
-          impact: campaign.impact,
-          campaignTitle: campaign.title
-        }))
-      ).map((link, index) => ({ ...link, shape: uxShapes[index % uxShapes.length] }));
-      setDisplayedItems(allLinks);
+      const links = [
+        { title: 'sentry | product pages', url: '/?show=sentry-pages', shape: 'letterC' as const },
+        { title: 'DroneDeploy | product pages',     url: '/?show=dd-pages',     shape: 'letterH' as const },
+        { title: 'airbnb | career site',       url: '/?show=airbnb',       shape: 'letterR' as const },
+        { title: 'ceros | fintech clients',      url: '/?show=fintech',      shape: 'letterI' as const },
+        { title: 'ux webinar',   url: '#',                   shape: 'letterS' as const },
+      ].map(l => ({ ...l, type: 'link' as const }));
+      setDisplayedItems(links);
       setMode('links');
       return;
     }
 
-    // R CLICK - revops content → hp-presence
-    if (item.title === 'revops content') {
-      console.log('📄 R clicked - sentry-performance');
+    // S CLICK → technical / AI content
+    if (item.title === 'simple, direct, technical') {
       pushHistory();
-      const campaign = campaignData['sentry-performance'];
-      const linkShapes = campaign.links.map((link: Link) => ({
-        title: link.name,
-        url: link.url,
-        type: 'link' as const,
-        shape: link.shape,
-        campaignListDescription: campaign.campaignListDescription,
-        impact: campaign.impact,
-        campaignTitle: campaign.title
-      }));
-      setDisplayedItems(linkShapes);
+      const sDescription = 'Technical content runs the risk of getting bogged down in its own jargon. To counter this, I approach with professional ignorance, do the required reading, and work authentically with subject matter experts.';
+      const links = [
+        { title: 'DroneDeploy | construction site content',  url: '/?show=dd-construction',  shape: 'letterC' as const },
+        { title: 'reality capture white paper',  url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf',                shape: 'letterH' as const },
+        { title: 'coming soon',  url: '#',                shape: 'letterR' as const },
+        { title: 'sentry | instrumentation blog posts',  url: 'https://blog.sentry.io/jamstack-next-js-netlify-and-sentry-how-the-pieces-fit/?original_referrer=https%3A%2F%2Fwww.google.com%2F',                shape: 'letterI' as const },
+        { title: 'coming soon',  url: '#',                shape: 'letterS' as const },
+      ].map(l => ({ ...l, type: 'link' as const, campaignListDescription: sDescription }));
+      setDisplayedItems(links);
       setMode('links');
-      return;
-    } 
-
-    // E CLICK (engagement funnels) → safety-ai links
-    if (item.title === 'evergreen') {
-      console.log('🔥 E (evergreen) clicked - loading safety-ai');
-      pushHistory();
-      setActiveSection('E2');
-      const campaign = campaignData['evergreen'];
-      const linkShapes = campaign.links.map((link: Link) => ({
-        title: link.name,
-        url: link.url,
-        type: 'link' as const,
-        shape: 'tree' as const,
-        campaignListDescription: campaign.campaignListDescription,
-        impact: campaign.impact,
-        campaignTitle: campaign.title
-      }));
-      setDisplayedItems(linkShapes);
-      setMode('links');
-      return;
-    }
-
-    // K CLICK - keystone content → cincoro
-    if (item.title === 'keystone content') {
-      console.log('🥃 K clicked - loading cincoro carousel');
-      pushHistory();
-      const campaign = campaignData['cincoro'];
-      if ('images' in campaign && campaign.images && campaign.images.length > 0) {
-        setCarouselData({
-          images: campaign.images,
-          title: campaign.title,
-          campaignListDescription: campaign.campaignListDescription,
-          impact: campaign.impact
-        });
-        setDisplayedItems([{ ...campaign, shape: 'keystone' as const }]);
-        setMode('links');
-      }
-      return;
-    }
-
-    // A CLICK - authority content → sentry-performance
-    if (item.title === 'authority content') {
-      console.log('⚡ A clicked - loading sentry-performance');
-      pushHistory();
-      const campaign = campaignData['auth'];
-      const linkShapes = campaign.links.map((link: Link) => ({
-        title: link.name,
-        url: link.url,
-        type: 'link' as const,
-        shape: 'letterI' as const,
-        campaignListDescription: campaign.campaignListDescription,
-        impact: campaign.impact,
-        campaignTitle: campaign.title
-      }));
-      setDisplayedItems(linkShapes);
-      setMode('links');
-      return;
-    }
-
-    // ! CLICK - personal projects
-    if (item.title === 'personal projects') {
-      console.log('⭐ ! clicked - personal projects');
-      pushHistory();
-      setChatCentered(true);
-      onChatCenter?.(true);
-      onSkillsClick?.();
-      onJobAnalysisOpen?.();
       return;
     }
   }, [mode, campaignData, interactiveData, technicalData, initialProjects, sLinks, iLinks, onChatCenter, onDevinModeClick, onScoutModeClick, onCooperModeClick, onCreativeModeClick, onInsecureModeClick, onJobAnalysisOpen, onSkillsClick, pushHistory]);

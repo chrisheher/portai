@@ -153,7 +153,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
     function getRVertices() {
       const vertices = [];
       const stemW     = 55;  // stem width
-      const height    = 175; // total height
+      const height    = 219; // total height
       const armR      = 70;  // outer arm radius; arc center at (stemW, armR)
       const armInnerR = 12;  // inner arm radius (arm thickness ≈ 42)
       const N = 22;          // quarter-circle segments
@@ -652,31 +652,20 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
       // In initial mode, assign specific letters to specific titles
       if (mode === 'initial') {
         switch (project.title) {
-          case 'heuristic':
-            shapeType = 'letterH';
-            break;
-          case 'evangelism':
-            shapeType = 'letterE';
-            break;
-          case 'ux writing':
-            shapeType = 'letterU';
-            break;
-          case 'revops content':
-            shapeType = 'letterR';
-            break;
-          case 'evergreen':
-            shapeType = 'letterE';
-            break;
-          case 'keystone content':
-            shapeType = 'letterK';
-            break;
-          case 'authority content':
-            shapeType = 'letterA';
-            break;
-          case 'personal projects':
-            shapeType = 'letterI';
-            break;
+          case 'copywriting': shapeType = 'letterC'; break;
+          case 'heureka creative process': shapeType = 'letterH'; break;
+          case 'relatable developer content': shapeType = 'letterR'; break;
+          case 'interactive content': shapeType = 'letterI'; break;
+          case 'simple, direct, technical': shapeType = 'letterS'; break;
           // legacy
+          case 'heuristic':        shapeType = 'letterH'; break;
+          case 'evangelism':       shapeType = 'letterE'; break;
+          case 'ux writing':       shapeType = 'letterU'; break;
+          case 'revops content':   shapeType = 'letterR'; break;
+          case 'evergreen':        shapeType = 'letterE'; break;
+          case 'keystone content': shapeType = 'letterK'; break;
+          case 'authority content':shapeType = 'letterA'; break;
+          case 'personal projects':shapeType = 'letterI'; break;
           case 'copywriting': shapeType = 'letterC'; break;
           case 'humanized ai': shapeType = 'letterH'; break;
           case 'resume scan tool': shapeType = 'letterR'; break;
@@ -699,9 +688,14 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
   }
 }
       
-      // Fixed lane order: H E U R E K A !
-      // Each title gets a dedicated lane (0–7) so shapes always fall in left→right order.
+      // Fixed lane order: C H R I S
       const laneMap: Record<string, number> = {
+        'copywriting': 0,
+        'heureka creative process': 1,
+        'relatable developer content': 2,
+        'interactive content': 3,
+        'simple, direct, technical': 4,
+        // legacy
         'heuristic':         0,
         'evangelism':        1,
         'ux writing':        2,
@@ -711,7 +705,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         'authority content': 6,
         'personal projects': 7,
       };
-      const totalLanes = mode === 'initial' ? 8 : itemsToRender.length;
+      const totalLanes = mode === 'initial' ? 5 : itemsToRender.length;
       const laneIndex = laneMap[project.title] ?? index;
       const spacing = window.innerWidth / (totalLanes + 1);
       const xOffsets: Record<string, number> = { 'keystone content': 10 };
@@ -776,6 +770,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             friction: 50,
             slop: .02
           }, true);
+          Body.setAngle(body, Math.PI);
           break;
         case 'letterE':
           body = Bodies.fromVertices(x, y, [getEVertices()], {
@@ -1011,8 +1006,9 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
 
       bodiesRef.current.forEach(({ body, project, shapeType }) => {
         const campaignTitle = (project as any).campaignTitle ?? '';
-        const isSmallCampaign = campaignTitle === 'DroneDeploy | Safety AI' || campaignTitle === 'Sentry Dogfooding Chronicles' || campaignTitle === 'HP Presence | thought leadership' || campaignTitle === 'Sentry | Product pages' || campaignTitle === 'Sentry developer content';
-        const fontSize = mode === 'links' ? (isSmallCampaign ? '12px' : '16px') : '20px';
+        const isSmallCampaign = campaignTitle === 'DroneDeploy | Safety AI' || campaignTitle === 'Sentry Dogfooding Chronicles' || campaignTitle === 'HP Presence | thought leadership' || campaignTitle === 'Sentry | Product pages';
+        const isSentryDev = campaignTitle === 'Sentry developer content';
+        const fontSize = mode === 'links' ? (isSentryDev ? '13px' : isSmallCampaign ? '10px' : '14px') : '17px';
         context.font = `${fontSize} "kcgangster", Arial`;
         const { position, angle } = body;
         
@@ -1303,7 +1299,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.fillStyle = col;
 
             context.save();
-            context.scale(0.75, 0.75);
+            context.scale(0.5625, 0.5625);
 
             const rimY = 5, rimW = 149, kibbleR = 18;
             const rows = [
@@ -1359,25 +1355,29 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             ? (isHovered ? '#dcd3c3' : '#312113')
             : (isHovered ? '#312113' : '#dcd3c3');
           context.fillStyle = textColor;
-          const textYOffset = shapeType === 'letterA' ? 30 : shapeType === 'letterE' ? -15 : shapeType === 'letterR' ? -25 : shapeType === 'dogBowl' ? 25 : 0;
-          const rotateShapes = ['letterI', 'tree', 'slash', 'bracketOpen', 'bracketClose', 'parenOpen', 'parenClose', 'dollarSign'];
+          const textYOffset = shapeType === 'letterA' ? 30 : shapeType === 'letterE' ? -15 : shapeType === 'letterR' ? -20 : shapeType === 'dogBowl' ? 25 : 0;
+          const textXOffset = shapeType === 'letterR' ? 0 : 0;
+          const rotateShapes = ['letterC', 'letterI', 'letterS', 'tree', 'slash', 'bracketOpen', 'bracketClose', 'parenOpen', 'parenClose', 'dollarSign'];
           if (shapeType && rotateShapes.includes(shapeType)) {
             context.save();
             if (shapeType === 'dollarSign') {
-              context.font = `20px "kcgangster", Arial`;
+              context.font = `17px "kcgangster", Arial`;
             }
-            const angle = shapeType === 'tree' ? -Math.PI / 2
+            const angle = shapeType === 'letterC' ? Math.PI / 2
+              : shapeType === 'letterS' ? -Math.PI / 2
+              : shapeType === 'tree' ? -Math.PI / 2
               : shapeType === 'slash' ? Math.atan2(-280, 90)
               : ['bracketOpen', 'parenOpen'].includes(shapeType) ? -Math.PI / 2
               : shapeType === 'parenClose' ? Math.PI / 2
               : shapeType === 'bracketClose' ? -Math.PI / 2
               : Math.PI / 2;
             context.rotate(angle);
-            const textX = shapeType === 'tree' ? -110 : 0;
-            context.fillText(project.title, textX, 0);
+            const textX = shapeType === 'tree' ? -110 : shapeType === 'letterI' ? -50 : 0;
+            const textYRotated = shapeType === 'letterI' ? -15 : 0;
+            context.fillText(project.title, textX, textYRotated);
             context.restore();
           } else {
-            context.fillText(project.title, 0, textYOffset);
+            context.fillText(project.title, textXOffset, textYOffset);
           }
 
           context.restore();
