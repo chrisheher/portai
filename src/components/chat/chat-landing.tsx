@@ -155,7 +155,7 @@ function CarouselContent({ carouselData }: {
 interface Link {
   name: string;
   url: string;
-  shape?: 'letterC' | 'letterH' | 'letterR' | 'letterI' | 'letterS' | 'letterE' | 'letterU' | 'letterK' | 'letterA' | 'dollarSign' | 'slash' | 'bracketOpen' | 'bracketClose' | 'parenOpen' | 'parenClose' | 'pill' | 'rect' | 'diamond' | 'parallelogram' | 'arrowRight' | 'tree' | 'keystone' | 'chatBubble' | 'videoCamera' | 'telephone' | 'drone' | 'dogBowl';
+  shape?: 'letterC' | 'letterH' | 'letterR' | 'letterI' | 'letterS' | 'letterE' | 'letterU' | 'letterK' | 'letterA' | 'dollarSign' | 'slash' | 'bracketOpen' | 'bracketClose' | 'parenOpen' | 'parenClose' | 'pill' | 'rect' | 'diamond' | 'parallelogram' | 'arrowRight' | 'tree' | 'keystone' | 'chatBubble' | 'videoCamera' | 'telephone' | 'drone' | 'dogBowl' | 'curlyOpen' | 'curlyClose' | 'speaker' | 'microphone' | 'videoConference';
 }
 
 interface Project {
@@ -274,7 +274,7 @@ function ChatLanding({
   const initialProjects = useMemo(() => [
     { title: 'copywriting', hoverTitle: 'GTM content — campaigns that moved pipeline', type: 'project' as const },
     { title: 'heureka creative process', hoverTitle: 'why the h matters',                           type: 'project' as const },
-    { title: 'relatable developer content', hoverTitle: 'revenue-driving content strategy',            type: 'project' as const },
+    { title: 'relatable developer content', hoverTitle: 'developer content written by poser coder equal parts fugazi and cunning', type: 'project' as const },
     { title: 'interactive content', hoverTitle: 'interactive & UX writing',                    type: 'project' as const },
     { title: 'simple, direct, technical', hoverTitle: 'technical & AI content',                      type: 'project' as const },
   ], []);
@@ -388,7 +388,7 @@ function ChatLanding({
       links: [
         { name: 'Go-Getting Lazy loading', url: 'https://blog.sentry.io/go-getting-lazy-loading/', shape: 'dogBowl' as const },
         { name: 'Using Sentry Performance to get Sentry Performant', url: 'https://blog.sentry.io/using-sentry-performance-to-make-sentry-performant', shape: 'dogBowl' as const },
-        { name: 'Verifying large refactors with Sentry', url: 'https://blog.sentry.io/verifying-large-refactors-in-production-with-sentry/?original_referrer=https%3A%2F%2Fwww.google.com%2F', shape: 'dogBowl' as const },
+        { name: 'Verifying large refactors', url: 'https://blog.sentry.io/verifying-large-refactors-in-production-with-sentry/?original_referrer=https%3A%2F%2Fwww.google.com%2F', shape: 'dogBowl' as const },
         { name: 'Thinking backward, moving forward', url: 'https://blog.sentry.io/dogfooding-chronicles-thinking-backward-moving-forward', shape: 'dogBowl' as const },
         { name: 'Patching a flood of 404s', url: 'https://blog.sentry.io/patching-a-flood-of-404s/', shape: 'dogBowl' as const }
       ],
@@ -403,10 +403,11 @@ function ChatLanding({
       title: 'HP Presence | thought leadership',
       type: 'campaign' as const,
       links: [
-        { name: 'The new office for the way people want to work', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf', shape: 'chatBubble' as const },
+        { name: 'The new office for the way people want to work', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf', shape: 'telephone' as const },
         { name: 'The new era of work', url: 'https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf', shape: 'videoCamera' as const },
-        { name: 'A new blueprint for an uncertain world', url: 'https://getstarted.hbs.net/hubfs/2025%20Partner%20Campaigns/HP_Services_Hybrid_A-New-Blueprint-for-an-Uncertain-World_Consideration_ebook_2022.pdf.pdf?hsLang=en', shape: 'telephone' as const },
-        { name: 'Get ready today to do tomorrow\'s work', url: 'https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf', shape: 'chatBubble' as const }
+        { name: 'A new blueprint for an uncertain world', url: 'https://getstarted.hbs.net/hubfs/2025%20Partner%20Campaigns/HP_Services_Hybrid_A-New-Blueprint-for-an-Uncertain-World_Consideration_ebook_2022.pdf.pdf?hsLang=en', shape: 'microphone' as const },
+        { name: 'Get ready today to do tomorrow\'s work', url: 'https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf', shape: 'speaker' as const },
+        { name: 'HP Presence | video conferencing suite', url: 'https://www.hp.com/us-en/solutions/presence.html', shape: 'videoConference' as const }
       ],
       campaignListDescription: 'The pandemic altered the fabric of society. And nowhere was this more evident than in the office. As HP\'s content strategist, I helped position their Presence videoconferencing suite to be the connective tissue for distributed workforces.',
       impact: [
@@ -489,10 +490,10 @@ function ChatLanding({
       title: 'Sentry | Product pages',
       type: 'campaign' as const,
       links: [
-        { name: 'Sentry | Enterprise page', url: 'https://www.sentry.dev/for/enterprise/', shape: 'bracketOpen' as const },
-        { name: 'Sentry | Full stack', url: 'https://sentry.io/for/full-stack/', shape: 'parenOpen' as const },
-        { name: 'Sentry | Performance monitoring', url: 'https://www.sentry.dev/solutions/application-performance-monitoring/', shape: 'parenClose' as const },
-        { name: 'Sentry | Mobile development', url: 'https://sentry.io/solutions/mobile-developers/', shape: 'bracketClose' as const }
+        { name: 'Sentry | Enterprise page', url: 'https://www.sentry.dev/for/enterprise/', shape: 'slash' as const },
+        { name: 'Sentry | Full stack', url: 'https://sentry.io/for/full-stack/', shape: 'bracketOpen' as const },
+        { name: 'Sentry | Performance monitoring', url: 'https://www.sentry.dev/solutions/application-performance-monitoring/', shape: 'bracketClose' as const },
+        { name: 'Sentry | Mobile development', url: 'https://sentry.io/solutions/mobile-developers/', shape: 'parenClose' as const }
       ],
 
       campaignListDescription: 'Partnered with software engineers to co-produce content that articualted value propositions and while moving users into trial.',
@@ -863,9 +864,63 @@ useEffect(() => {
           const isExternal = item.url.startsWith('http://') || item.url.startsWith('https://');
           if (isExternal) {
             window.open(item.url, '_blank');
-          } else {
-            window.location.href = item.url;
+            return;
           }
+
+          // Handle /?show= links in-state to preserve nav history
+          const showMatch = item.url.match(/^\/?\\?show=(.+)$/) || item.url.match(/[?&]show=([^&]+)/);
+          const showParam = showMatch ? showMatch[1] : null;
+          if (showParam) {
+            if (campaignData[showParam as keyof typeof campaignData]) {
+              const campaign = campaignData[showParam as keyof typeof campaignData];
+              pushHistory();
+              if ('links' in campaign && campaign.links.length > 0) {
+                const linkShapes = campaign.links.map((link: Link) => ({
+                  title: link.name, url: link.url, type: 'link' as const,
+                  shape: link.shape,
+                  campaignListDescription: campaign.campaignListDescription,
+                  impact: campaign.impact, campaignTitle: campaign.title
+                }));
+                setDisplayedItems(linkShapes);
+                setMode('links');
+                window.history.pushState({}, '', item.url);
+                return;
+              }
+            } else if (technicalData[showParam as keyof typeof technicalData]) {
+              const td = technicalData[showParam as keyof typeof technicalData];
+              pushHistory();
+              if ('links' in td && td.links.length > 0) {
+                const linkShapes = td.links.map((link: Link) => ({
+                  title: link.name, url: link.url, type: 'link' as const,
+                  shape: link.shape,
+                  campaignListDescription: td.campaignListDescription,
+                  impact: td.impact, campaignTitle: td.title
+                }));
+                setDisplayedItems(linkShapes);
+                setMode('links');
+                window.history.pushState({}, '', item.url);
+                return;
+              }
+            } else if (interactiveData[showParam as keyof typeof interactiveData]) {
+              const id = interactiveData[showParam as keyof typeof interactiveData];
+              pushHistory();
+              if ('links' in id && id.links.length > 0) {
+                const linkShapes = id.links.map((link: Link) => ({
+                  title: link.name, url: link.url, type: 'link' as const,
+                  shape: link.shape,
+                  campaignListDescription: id.campaignListDescription,
+                  impact: id.impact, campaignTitle: id.title
+                }));
+                setDisplayedItems(linkShapes);
+                setMode('links');
+                window.history.pushState({}, '', item.url);
+                return;
+              }
+            }
+          }
+
+          // Fallback: navigate normally
+          window.location.href = item.url;
           return;
         }
       }
@@ -877,10 +932,10 @@ useEffect(() => {
     if (item.title === 'copywriting') {
       pushHistory();
       const links = [
-        { title: 'Sentry | Performance GTM campaign', url: '/?show=sentry-performance', shape: 'letterC' as const },
-        { title: 'cincoro tequila brand launch', url: '/?show=cincoro', shape: 'letterH' as const },
+        { title: 'cincoro tequila | brand launch', url: '/?show=cincoro', shape: 'letterC' as const },
+        { title: 'Sentry | Performance GTM campaign', url: '/?show=sentry-performance', shape: 'letterH' as const },
         { title: 'HP | Presence white papers', url: '/?show=hp-presence', shape: 'letterR' as const },
-        { title: 'DroneDeploy | Safety AI launch content', url: '/?show=safety-ai', shape: 'letterI' as const },
+        { title: 'DroneDeploy | Safety AI ', url: '/?show=safety-ai', shape: 'letterI' as const },
         { title: 'social media potpourri',             url: '/public/social.pdf',        shape: 'letterS' as const },
       ].map(l => ({ ...l, type: 'link' as const }));
       setDisplayedItems(links);
@@ -898,11 +953,11 @@ useEffect(() => {
     if (item.title === 'relatable developer content') {
       pushHistory();
       const links = [
-        { title: 'sentry | dogfooding chronicles', url: '/?show=sentry-dogfooding', shape: 'letterC' as const },
-        { title: 'google | gpay instrumentation videos', url: '/?show=gpay', shape: 'letterH' as const },
-        { title: 'sentry | thought leadership',        url: '/?show=sentry-dev',        shape: 'letterR' as const },
-        { title: 'NetApp | Azure migration guide', url: 'https://www.netapp.com/media/16141-wp-azure-migration.pdf', shape: 'letterI' as const },
-        { title: 'chronosphere | data cardinality content',       url: '/?show=chronosphere',      shape: 'letterS' as const },
+        { title: 'sentry | dogfooding chronicles', url: '/?show=sentry-dogfooding', shape: 'slash' as const },
+        { title: 'google | gpay instrumentation videos', url: '/?show=gpay', shape: 'bracketOpen' as const },
+        { title: 'sentry | thought leadership',        url: '/?show=sentry-dev',        shape: 'curlyOpen' as const },
+        { title: 'NetApp | Azure migration guide', url: 'https://www.netapp.com/media/16141-wp-azure-migration.pdf', shape: 'curlyClose' as const },
+        { title: 'chronosphere | data cardinality content',       url: '/?show=chronosphere',      shape: 'bracketClose' as const },
       ].map(l => ({ ...l, type: 'link' as const }));
       setDisplayedItems(links);
       setMode('links');
@@ -931,7 +986,7 @@ useEffect(() => {
       const links = [
         { title: 'DroneDeploy | construction site content',  url: '/?show=dd-construction',  shape: 'letterC' as const },
         { title: 'reality capture white paper',  url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf',                shape: 'letterH' as const },
-        { title: 'coming soon',  url: '#',                shape: 'letterR' as const },
+        { title: 'GE | aviation pages',  url: '/?show=ge',  shape: 'letterR' as const },
         { title: 'sentry | instrumentation blog posts',  url: 'https://blog.sentry.io/jamstack-next-js-netlify-and-sentry-how-the-pieces-fit/?original_referrer=https%3A%2F%2Fwww.google.com%2F',                shape: 'letterI' as const },
         { title: 'coming soon',  url: '#',                shape: 'letterS' as const },
       ].map(l => ({ ...l, type: 'link' as const, campaignListDescription: sDescription }));
@@ -1072,7 +1127,7 @@ maxWidth: '100%',
       )}
 
       {displayedItems[0]?.campaignListDescription && (
-        <div style={{ margin: '0px -30px -1px -8px' }}>
+        <div style={{ margin: '0px 35px -1px 0px' }}>
           {displayedItems[0].campaignListDescription}
         </div>
       )}
@@ -1163,7 +1218,7 @@ maxWidth: '100%',
         }}>
           {hoveredProject?.hoverTitle ?? (
             <>
-      Eureka (discovery) comes from the same word root as heuristic (process). <br/> I help brands discover their own gold by applying heuristic methods that generate the eureka moments that opens minds and closes deals.
+     Chris creates content with the belief that AI is the fire, not the chef.
 
 
             </>

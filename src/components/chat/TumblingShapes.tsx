@@ -19,7 +19,7 @@ interface Project {
   content?: React.ReactNode;
 type?: 'project' | 'link' | 'campaign' | 'image' | 'question';
   prompt?: string;
-  shape?: 'letterH' | 'letterC' | 'letterR' | 'letterI' | 'letterS' | 'letterE' | 'letterU' | 'letterK' | 'letterA' | 'dollarSign' | 'slash' | 'bracketOpen' | 'bracketClose' | 'parenOpen' | 'parenClose' | 'pill' | 'rect' | 'diamond' | 'parallelogram' | 'arrowRight' | 'tree' | 'keystone' | 'chatBubble' | 'videoCamera' | 'telephone' | 'drone' | 'dogBowl';
+  shape?: 'letterH' | 'letterC' | 'letterR' | 'letterI' | 'letterS' | 'letterE' | 'letterU' | 'letterK' | 'letterA' | 'dollarSign' | 'slash' | 'bracketOpen' | 'bracketClose' | 'parenOpen' | 'parenClose' | 'pill' | 'rect' | 'diamond' | 'parallelogram' | 'arrowRight' | 'tree' | 'keystone' | 'chatBubble' | 'videoCamera' | 'telephone' | 'drone' | 'dogBowl' | 'curlyOpen' | 'curlyClose' | 'speaker' | 'microphone' | 'videoConference';
   imageSrc?: string;
   url?: string;
 }
@@ -59,6 +59,8 @@ const bodiesRef = useRef<{ body: Matter.Body; project: Project; shapeType?: stri
 
     const engine = Engine.create();
     engineRef.current = engine;
+    const deviceScale = window.innerWidth >= 1440 ? 1.25 : 1.0;
+    const scaleVerts = (verts: { x: number; y: number }[]) => verts.map(v => ({ x: v.x * deviceScale, y: v.y * deviceScale }));
     const world = engine.world;
 
     const render = Render.create({
@@ -83,7 +85,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
     // ===== LETTER H =====
     function getHVertices() {
       const vertices = [];
-      const stemWidth = 68;
+      const stemWidth = 58;
       const totalHeight = 300;
       const archStartY = 173;
       const legWidth = 47;
@@ -188,35 +190,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
       return vertices.map(v => ({ x: v.x * 1.15, y: v.y * 1.15 }));
     }
 
-    // ===== LETTER I =====
-    function getIVertices() {
-      const vertices = [];
-      const width = 72;
-      const height = 227;
-      const dotRadius = 48;
-      const dotGap = 3.5;
 
-      vertices.push({ x: -width / 2, y: -height / 2.1 });
-      vertices.push({ x: -width / 2, y: height / 2.1 });
-      vertices.push({ x: -width / 2, y: height / 2 + dotGap });
-
-      const dotCenterY = height / 2 + dotGap + dotRadius;
-      const segments = 20;
-
-      // Arc traces the BOTTOM of the dot (away from stem) via negated sin
-      for (let i = 0; i <= segments; i++) {
-        const angle = Math.PI + (i / segments) * Math.PI * 1.4;
-        vertices.push({
-          x: Math.cos(angle) * dotRadius,
-          y: dotCenterY - Math.sin(angle) * dotRadius
-        });
-      }
-
-      vertices.push({ x: width / 2, y: height / 2 + dotGap });
-      vertices.push({ x: width / 2, y: height / 2 });
-      vertices.push({ x: width / 2, y: -height / 2 });
-      return vertices.map(v => ({ x: v.x * 1.15 * 0.8, y: v.y * 1.15 }));
-    }
 
     // ===== TOP C SHAPE =====
     function getTopCVertices(apertureExtend = 0) {
@@ -529,7 +503,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
 
     // ===== SLASH '/' =====
     function getSlashVertices() {
-      const strokeW = 65;
+      const strokeW = 45;
       const h = 310;
       const lean = 90;
       return [
@@ -544,7 +518,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
     function getBracketOpenVertices() {
       const barH = 22;
       const stemW = 42;
-      const w = 90;
+      const w = 70;
       const h = 300;
       return [
         { x: 0,    y: 0 },
@@ -708,11 +682,12 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
       const totalLanes = mode === 'initial' ? 5 : itemsToRender.length;
       const laneIndex = laneMap[project.title] ?? index;
       const spacing = window.innerWidth / (totalLanes + 1);
-      const xOffsets: Record<string, number> = { 'keystone content': 10 };
+      const xOffsets: Record<string, number> = { 'keystone content': 10, 'awareness | use case': -40, 'consideration | blog post': 40, 'decision | product page': 40, 'Using Sentry Performance to get Sentry Performant': 35 };
 
       const x = spacing * (laneIndex + 1) + (xOffsets[project.title] ?? 0);
       const isTree = (project as any).shape === 'tree';
-      const yStagger = isTree ? 600 : 350;
+      const isDrone = shapeType === 'drone';
+      const yStagger = isTree ? 600 : isDrone ? 500 : 800;
       const y = mode === 'links' ? -200 - (index * yStagger) : -200;
 
       
@@ -740,7 +715,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
 
       switch (shapeType) {
         case 'letterC':
-          body = Bodies.fromVertices(x, y, [getCVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getCVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1,
             friction: 1,
@@ -748,7 +723,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           }, true);
           break;
         case 'letterH':
-          body = Bodies.fromVertices(x, y, [getHVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getHVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1,
             friction: 50,
@@ -756,24 +731,35 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           }, true);
           break;
         case 'letterR':
-          body = Bodies.fromVertices(x, y, [getRVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getRVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1,
             friction: 50,
             slop: .02
           }, true);
           break;
-        case 'letterI':
-          body = Bodies.fromVertices(x, y, [getIVertices()], {
-            render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
+        case 'letterI': {
+          const iStemW = 66 * deviceScale;
+          const iStemH = 250 * deviceScale;
+          const iGap = 28 * deviceScale;
+          const iDotR = 55 * deviceScale;
+          const iStemPart = Bodies.rectangle(x, y, iStemW, iStemH, {
+            render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 }
+          });
+          const iDotPart = Bodies.circle(x, y + iStemH / 2 + iGap + iDotR, iDotR, {
+            render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 }
+          });
+          body = Body.create({
+            parts: [iStemPart, iDotPart],
             restitution: 0.1,
             friction: 50,
-            slop: .02
-          }, true);
+            slop: 0.02
+          });
           Body.setAngle(body, Math.PI);
           break;
+        }
         case 'letterE':
-          body = Bodies.fromVertices(x, y, [getEVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getEVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1,
             friction: 1,
@@ -781,7 +767,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           }, true);
           break;
         case 'letterU':
-          body = Bodies.fromVertices(x, y, [getUVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getUVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1,
             friction: 1,
@@ -789,7 +775,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           }, true);
           break;
         case 'letterK':
-          body = Bodies.fromVertices(x, y, [getKVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getKVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1,
             friction: 1,
@@ -797,7 +783,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           }, true);
           break;
         case 'letterA':
-          body = Bodies.fromVertices(x, y, [getAVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getAVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1,
             friction: 1,
@@ -805,75 +791,76 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           }, true);
           break;
         case 'keystone':
-          body = Bodies.fromVertices(x, y, [getKeystoneVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getKeystoneVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1, friction: 1, slop: .02
           }, true);
           break;
         case 'tree':
-          body = Bodies.fromVertices(x, y, [getTreeVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getTreeVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1, friction: 1, slop: .02
           }, true);
-          if (body) Matter.Body.setCentre(body, { x: 0, y: -80 }, true);
+          if (body) Matter.Body.setCentre(body, { x: 0, y: -80 * deviceScale }, true);
           break;
         case 'pill':
-          body = Bodies.fromVertices(x, y, [getPillVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getPillVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1, friction: 1, slop: .02
           }, true);
           break;
         case 'rect':
-          body = Bodies.fromVertices(x, y, [getRectVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getRectVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1, friction: 1, slop: .02
           }, true);
           break;
         case 'diamond':
-          body = Bodies.fromVertices(x, y, [getDiamondVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getDiamondVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1, friction: 1, slop: .02
           }, true);
           break;
         case 'parallelogram':
-          body = Bodies.fromVertices(x, y, [getParallelogramVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getParallelogramVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1, friction: 1, slop: .02
           }, true);
           break;
         case 'arrowRight':
-          body = Bodies.fromVertices(x, y, [getArrowRightVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getArrowRightVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1, friction: 1, slop: .02
           }, true);
           break;
         case 'slash':
-          body = Bodies.fromVertices(x, y, [getSlashVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getSlashVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1, friction: 1, slop: .02
           }, true);
           break;
         case 'bracketOpen':
-          body = Bodies.fromVertices(x, y, [getBracketOpenVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getBracketOpenVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1, friction: 1, slop: .02
           }, true);
           break;
         case 'bracketClose':
-          body = Bodies.fromVertices(x, y, [getBracketCloseVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getBracketCloseVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1, friction: 1, slop: .02
           }, true);
+          Body.setAngle(body, Math.PI / 12);
           break;
         case 'parenOpen':
-          body = Bodies.fromVertices(x, y, [getParenOpenVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getParenOpenVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1, friction: 1, slop: .02
           }, true);
           Body.setAngle(body, Math.PI / 6);
           break;
         case 'parenClose':
-          body = Bodies.fromVertices(x, y, [getParenCloseVertices()], {
+          body = Bodies.fromVertices(x, y, [scaleVerts(getParenCloseVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
             restitution: 0.1, friction: 1, slop: .02
           }, true);
@@ -885,7 +872,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           // to be a reliable collision primitive — compound bodies cause overlap issues.
           const dsW = 66 * 1.15 * ds;           // ≈ 50.8  (bar width only — narrow base so it tips)
           const dsH = 416 * 1.15 * 1.15 * 0.8 * ds; // ≈ 294  (full stem height)
-          body = Bodies.rectangle(x, y, dsW, dsH, {
+          body = Bodies.rectangle(x, y, dsW * deviceScale, dsH * deviceScale, {
             render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
             restitution: 0.1, friction: 1, density: 0.002, slop: 0.02
           });
@@ -894,48 +881,95 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           break;
         }
         case 'dogBowl': {
-          body = Bodies.rectangle(x, y, 240, 240, {
+          const isWideBowl = project.title === 'Using Sentry Performance to get Sentry Performant';
+          const isDogfoodingBowl = (project as any).campaignTitle === 'Sentry Dogfooding Chronicles';
+          const dfScale = isDogfoodingBowl ? 0.85 : 1;
+          body = Bodies.rectangle(x, y, (isWideBowl ? 295 * 1.5 : 295) * dfScale * deviceScale, 125 * dfScale * deviceScale, {
             render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
             restitution: 0.1, friction: 1, density: 0.003
           });
           break;
         }
         case 'drone': {
-          body = Bodies.rectangle(x, y, 240, 120, {
+          const isSafetyAiDrone = (project as any).campaignTitle === 'DroneDeploy | Safety AI';
+          body = Bodies.rectangle(x, y, (isSafetyAiDrone ? 288 : 320) * deviceScale, 160 * deviceScale, {
             render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
             restitution: 0.15, friction: 0.5, density: 0.001
           });
           break;
         }
         case 'chatBubble': {
-          body = Bodies.circle(x, y, 100, {
+          const isHp = (project as any).campaignTitle === 'HP Presence | thought leadership';
+          body = Bodies.circle(x, y, (isHp ? 150 : 100) * deviceScale, {
             render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
             restitution: 0.2, friction: 0.9
           });
           break;
         }
         case 'videoCamera': {
-          body = Bodies.rectangle(x, y, 230, 140, {
+          const isHp = (project as any).campaignTitle === 'HP Presence | thought leadership';
+          body = Bodies.rectangle(x, y, (isHp ? 345 : 230) * deviceScale, (isHp ? 210 : 140) * deviceScale, {
             render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
             restitution: 0.2, friction: 0.9
           });
           break;
         }
         case 'telephone': {
-          body = Bodies.rectangle(x, y, 160, 160, {
+          const isHp = (project as any).campaignTitle === 'HP Presence | thought leadership';
+          body = Bodies.rectangle(x, y, (isHp ? 240 : 160) * deviceScale, (isHp ? 240 : 160) * deviceScale, {
             render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
             restitution: 0.2, friction: 0.9
           });
+          break;
+        }
+        case 'speaker': {
+          const isHp = (project as any).campaignTitle === 'HP Presence | thought leadership';
+          body = Bodies.rectangle(x, y, (isHp ? 300 : 200) * deviceScale, (isHp ? 195 : 130) * deviceScale, {
+            render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
+            restitution: 0.2, friction: 0.9
+          });
+          break;
+        }
+        case 'videoConference': {
+          const isHp = (project as any).campaignTitle === 'HP Presence | thought leadership';
+          body = Bodies.rectangle(x, y, (isHp ? 330 : 220) * deviceScale, (isHp ? 320 : 213) * deviceScale, {
+            render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
+            restitution: 0.2, friction: 0.9
+          });
+          break;
+        }
+        case 'microphone': {
+          body = Bodies.rectangle(x, y, 140 * deviceScale, 195 * deviceScale, {
+            render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
+            restitution: 0.2, friction: 0.9
+          });
+          Body.setAngle(body, 75 * Math.PI / 180);
+          break;
+        }
+        case 'curlyOpen': {
+          body = Bodies.rectangle(x, y, 110 * deviceScale, 340 * deviceScale, {
+            render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
+            restitution: 0.15, friction: 0.9
+          });
+          Body.setAngle(body, -Math.PI / 9);
+          break;
+        }
+        case 'curlyClose': {
+          body = Bodies.rectangle(x, y, 110 * deviceScale, 340 * deviceScale, {
+            render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
+            restitution: 0.15, friction: 0.9
+          });
+          Body.setAngle(body, -Math.PI / 36);
           break;
         }
         case 'letterS':
         default:
           body = Body.create({
             parts: [
-              Bodies.fromVertices(x, y - 60, [getTopCVertices()], {
+              Bodies.fromVertices(x, y - 60 * deviceScale, [scaleVerts(getTopCVertices())], {
                 render: { fillStyle: fillColor }
               }),
-              Bodies.fromVertices(x, y + 60, [getBottomCVertices()], {
+              Bodies.fromVertices(x, y + 60 * deviceScale, [scaleVerts(getBottomCVertices())], {
                 render: { fillStyle: fillColor }
               })
             ]
@@ -969,7 +1003,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
     Composite.add(world, [...projectBodies, ground, leftWall, rightWall]);
 
     const hasDrones = bodiesRef.current.some(({ shapeType }) => shapeType === 'drone');
-    if (hasDrones) engine.gravity.y = 0.08;
+    if (hasDrones) engine.gravity.y = 0.16;
 
     Render.run(render);
     const runner = Runner.create();
@@ -1006,9 +1040,13 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
 
       bodiesRef.current.forEach(({ body, project, shapeType }) => {
         const campaignTitle = (project as any).campaignTitle ?? '';
-        const isSmallCampaign = campaignTitle === 'DroneDeploy | Safety AI' || campaignTitle === 'Sentry Dogfooding Chronicles' || campaignTitle === 'HP Presence | thought leadership' || campaignTitle === 'Sentry | Product pages';
+        const isSmallCampaign = campaignTitle === 'Sentry Dogfooding Chronicles';
         const isSentryDev = campaignTitle === 'Sentry developer content';
-        const fontSize = mode === 'links' ? (isSentryDev ? '13px' : isSmallCampaign ? '10px' : '14px') : '17px';
+        const isSafetyAi = campaignTitle === 'DroneDeploy | Safety AI';
+        const isSentryPerformance = campaignTitle === 'Sentry | Performance GTM campaign';
+        const isSentryPages = campaignTitle === 'Sentry | Product pages';
+        const isHpPresence = campaignTitle === 'HP Presence | thought leadership';
+        const fontSize = mode === 'links' ? (isSentryDev ? '13px' : isSafetyAi ? '21px' : isSentryPerformance ? '21px' : isSentryPages ? '28px' : isHpPresence ? '22px' : isSmallCampaign ? '10px' : '14px') : '17px';
         context.font = `${fontSize} "kcgangster", Arial`;
         const { position, angle } = body;
         
@@ -1088,6 +1126,8 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             const shapeFill = mode === 'initial'
               ? (isHov ? 'rgb(18, 11, 5)' : '#dcd3c3')
               : (isHov ? '#dcd3c3' : '#312113');
+            context.save();
+            context.scale(deviceScale, deviceScale);
             const ds = 2 / 3;
             const bW  = 66  * 1.15 * ds / 2; // ≈ 25.4   bar half-width
             const bH  = 416 * 1.15 * 1.15 * 0.8 * ds / 2; // ≈ 146.7  bar half-height (-20%)
@@ -1133,6 +1173,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.stroke();
             context.restore();
 
+            context.restore();
           }
 
           // ── Chat bubble ──────────────────────────────────────────
@@ -1141,6 +1182,9 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             const shapeFill = mode === 'initial'
               ? (isHov ? 'rgb(18,11,5)' : '#dcd3c3')
               : (isHov ? '#dcd3c3' : '#312113');
+            const hpScale = (project as any).campaignTitle === 'HP Presence | thought leadership' ? 1.5 : 1;
+            context.save();
+            context.scale(deviceScale * hpScale, deviceScale * hpScale);
             const rx = 95, ry = 72, cy2 = -18, sw = 13;
             context.fillStyle = shapeFill;
             // Outer ellipse
@@ -1154,13 +1198,6 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.lineTo(rx * 0.06, cy2 + ry - sw * 0.8);
             context.closePath();
             context.fill();
-            // Punch interior
-            context.save();
-            context.globalCompositeOperation = 'destination-out';
-            context.fillStyle = 'rgba(0,0,0,1)';
-            context.beginPath();
-            context.ellipse(0, cy2, rx - sw, ry - sw, 0, 0, Math.PI * 2);
-            context.fill();
             context.restore();
           }
 
@@ -1170,6 +1207,10 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             const col = mode === 'initial'
               ? (isHov ? 'rgb(18,11,5)' : '#dcd3c3')
               : (isHov ? '#dcd3c3' : '#312113');
+            const hpScale = (project as any).campaignTitle === 'HP Presence | thought leadership' ? 1.5 : 1;
+            context.save();
+            context.scale(deviceScale * hpScale, deviceScale * hpScale);
+            context.fillStyle = col;
             context.strokeStyle = col;
             context.lineWidth = 13;
             context.lineJoin = 'round';
@@ -1186,6 +1227,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.lineTo(bx, by + r);
             context.quadraticCurveTo(bx, by, bx + r, by);
             context.closePath();
+            context.fill();
             context.stroke();
             // Triangle lens
             const tx = bx + bw + 6;
@@ -1194,7 +1236,9 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.lineTo(tx + 58, by + bh / 2);
             context.lineTo(tx, by + bh - 22);
             context.closePath();
+            context.fill();
             context.stroke();
+            context.restore();
           }
 
           // ── Telephone ────────────────────────────────────────────
@@ -1203,6 +1247,9 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             const col = mode === 'initial'
               ? (isHov ? 'rgb(18,11,5)' : '#dcd3c3')
               : (isHov ? '#dcd3c3' : '#312113');
+            const hpScale = (project as any).campaignTitle === 'HP Presence | thought leadership' ? 1.5 : 1;
+            context.save();
+            context.scale(deviceScale * hpScale, deviceScale * hpScale);
             context.fillStyle = col;
             // Body base (trapezoid)
             context.beginPath();
@@ -1235,6 +1282,194 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
               }
             }
             context.restore();
+            context.restore();
+          }
+
+          // ── Speaker ──────────────────────────────────────────────
+          if (shapeType === 'speaker') {
+            const isHov = hoveredBodyRef.current === body;
+            const col = mode === 'initial'
+              ? (isHov ? 'rgb(18,11,5)' : '#dcd3c3')
+              : (isHov ? '#dcd3c3' : '#312113');
+            const hpScale = (project as any).campaignTitle === 'HP Presence | thought leadership' ? 1.5 : 1;
+            context.save();
+            context.scale(deviceScale * hpScale, deviceScale * hpScale);
+            context.fillStyle = col;
+            context.strokeStyle = col;
+            context.lineCap = 'round';
+            context.lineJoin = 'round';
+
+            // Speaker body + cone
+            context.beginPath();
+            context.moveTo(-52, -22);
+            context.lineTo(-14, -22);
+            context.lineTo(36, -52);
+            context.lineTo(36, 52);
+            context.lineTo(-14, 22);
+            context.lineTo(-52, 22);
+            context.closePath();
+            context.fill();
+
+            // Sound waves
+            context.lineWidth = 9;
+            context.beginPath();
+            context.arc(36, 0, 22, -Math.PI * 0.38, Math.PI * 0.38);
+            context.stroke();
+            context.beginPath();
+            context.arc(36, 0, 38, -Math.PI * 0.38, Math.PI * 0.38);
+            context.stroke();
+            context.beginPath();
+            context.arc(36, 0, 54, -Math.PI * 0.38, Math.PI * 0.38);
+            context.stroke();
+
+            context.restore();
+          }
+
+          // ── Microphone ───────────────────────────────────────────
+          if (shapeType === 'microphone') {
+            const isHov = hoveredBodyRef.current === body;
+            const col = mode === 'initial'
+              ? (isHov ? 'rgb(18,11,5)' : '#dcd3c3')
+              : (isHov ? '#dcd3c3' : '#312113');
+            context.save();
+            context.scale(deviceScale * 0.85, deviceScale * 0.85);
+            context.fillStyle = col;
+            context.strokeStyle = col;
+            context.lineCap = 'round';
+            context.lineJoin = 'round';
+
+            // Solid filled capsule
+            const capR = 36, capTop = -100, capBottom = -25;
+            context.beginPath();
+            context.arc(0, capTop + capR, capR, Math.PI, 0, false);
+            context.lineTo(capR, capBottom - capR);
+            context.arc(0, capBottom - capR, capR, 0, Math.PI, false);
+            context.closePath();
+            context.fill();
+
+            // U-arch — 270° sweep with upward-angled endpoints, thick rounded stroke
+            const archCY = 8, archR = 62;
+            context.lineWidth = 16;
+            context.beginPath();
+            context.arc(0, archCY, archR, -Math.PI / 4, 5 * Math.PI / 4, false);
+            context.stroke();
+
+            // Short vertical stem below arch
+            context.lineWidth = 16;
+            context.beginPath();
+            context.moveTo(0, archCY + archR);
+            context.lineTo(0, archCY + archR + 36);
+            context.stroke();
+
+            context.restore();
+          }
+
+          // ── Video conference monitor ─────────────────────────────
+          if (shapeType === 'videoConference') {
+            const isHov = hoveredBodyRef.current === body;
+            const col = mode === 'initial'
+              ? (isHov ? 'rgb(18,11,5)' : '#dcd3c3')
+              : (isHov ? '#dcd3c3' : '#312113');
+            const invCol = mode === 'initial' ? '#312113' : '#dcd3c3';
+            const hpScale = (project as any).campaignTitle === 'HP Presence | thought leadership' ? 1.5 : 1;
+            context.save();
+            context.scale(deviceScale * hpScale, deviceScale * hpScale);
+            context.lineCap = 'round';
+            context.lineJoin = 'round';
+
+            const mx = -105, my = -75, mw = 210, mh = 143, mr = 14;
+            const screenBottom = my + mh - 30;
+            const wcx = -16, wcy = -100, wcw = 32, wch = 22, wcr = 5;
+
+            // Helper: draw rounded rect path
+            const roundedRect = (rx: number, ry: number, rw: number, rh: number, rr: number) => {
+              context.beginPath();
+              context.moveTo(rx + rr, ry);
+              context.lineTo(rx + rw - rr, ry);
+              context.quadraticCurveTo(rx + rw, ry, rx + rw, ry + rr);
+              context.lineTo(rx + rw, ry + rh - rr);
+              context.quadraticCurveTo(rx + rw, ry + rh, rx + rw - rr, ry + rh);
+              context.lineTo(rx + rr, ry + rh);
+              context.quadraticCurveTo(rx, ry + rh, rx, ry + rh - rr);
+              context.lineTo(rx, ry + rr);
+              context.quadraticCurveTo(rx, ry, rx + rr, ry);
+              context.closePath();
+            };
+
+            // Fill monitor body
+            context.fillStyle = col;
+            roundedRect(mx, my, mw, mh, mr);
+            context.fill();
+
+            // Fill webcam body
+            roundedRect(wcx, wcy, wcw, wch, wcr);
+            context.fill();
+
+            // Fill webcam connector stem
+            context.fillRect(-5, wcy + wch, 10, my - (wcy + wch));
+
+            // Fill stand neck
+            context.fillRect(-5, my + mh, 10, 22);
+
+            // Fill stand base
+            context.fillRect(-58, my + mh + 16, 116, 12);
+
+            // --- Details in inverted colour ---
+            context.strokeStyle = invCol;
+            context.fillStyle = invCol;
+            context.lineWidth = 8;
+
+            // Webcam lens pill
+            context.lineWidth = 5;
+            context.beginPath();
+            context.moveTo(-7, wcy + wch / 2);
+            context.lineTo(7, wcy + wch / 2);
+            context.stroke();
+
+            context.lineWidth = 8;
+
+            // Screen bottom bezel divider
+            context.beginPath();
+            context.moveTo(mx + 6, screenBottom);
+            context.lineTo(mx + mw - 6, screenBottom);
+            context.stroke();
+
+            // Bottom pill button
+            context.lineWidth = 5;
+            context.beginPath();
+            context.moveTo(-13, screenBottom + 16);
+            context.lineTo(13, screenBottom + 16);
+            context.stroke();
+
+            context.lineWidth = 8;
+
+            // Vertical screen divider
+            context.beginPath();
+            context.moveTo(0, my + 6);
+            context.lineTo(0, screenBottom - 3);
+            context.stroke();
+
+            // Person left — head (filled)
+            context.beginPath();
+            context.arc(-54, my + 38, 17, 0, Math.PI * 2);
+            context.fill();
+
+            // Person left — shoulders (filled arch)
+            context.beginPath();
+            context.arc(-54, my + 72, 25, Math.PI, 0, true);
+            context.stroke();
+
+            // Person right — head
+            context.beginPath();
+            context.arc(54, my + 38, 17, 0, Math.PI * 2);
+            context.fill();
+
+            // Person right — shoulders
+            context.beginPath();
+            context.arc(54, my + 72, 25, Math.PI, 0, true);
+            context.stroke();
+
+            context.restore();
           }
 
           // ── Drone ────────────────────────────────────────────────
@@ -1247,6 +1482,10 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.strokeStyle = col;
             context.lineJoin = 'round';
             context.lineCap = 'round';
+
+            context.save();
+            const droneXScale = (project as any).campaignTitle === 'DroneDeploy | Safety AI' ? 2 * deviceScale * 0.67 * 0.9 : 2 * deviceScale * 0.67;
+            context.scale(droneXScale, 2 * deviceScale * 0.67);
 
             // Central hexagonal body
             context.beginPath();
@@ -1273,21 +1512,14 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             });
 
             // Propeller blades (horizontal capsules above/below mounts)
-            context.lineWidth = 10;
+            context.lineWidth = 7;
             [[-90, -38], [90, -38], [-90, 38], [90, 38]].forEach(([mx, my]) => {
               context.beginPath();
-              context.moveTo(mx - 32, my); context.lineTo(mx + 32, my);
+              context.moveTo(mx - 21, my); context.lineTo(mx + 21, my);
               context.stroke();
             });
 
-            // Landing skids (curved arcs below body)
-            context.lineWidth = 11;
-            context.beginPath();
-            context.arc(-55, 55, 28, Math.PI * 0.15, Math.PI * 0.85, false);
-            context.stroke();
-            context.beginPath();
-            context.arc(55, 55, 28, Math.PI * 0.15, Math.PI * 0.85, false);
-            context.stroke();
+            context.restore();
           }
 
           // ── Dog bowl ─────────────────────────────────────────────
@@ -1299,9 +1531,12 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.fillStyle = col;
 
             context.save();
-            context.scale(0.5625, 0.5625);
+            const isSentryDogfoodingBowl = (project as any).campaignTitle === 'Sentry Dogfooding Chronicles';
+            const bowlDfScale = isSentryDogfoodingBowl ? 0.85 : 1;
+            const bowlXScale = project.title === 'Using Sentry Performance to get Sentry Performant' ? 0.84375 * 1.5 * deviceScale * bowlDfScale : 0.84375 * deviceScale * bowlDfScale;
+            context.scale(bowlXScale, 0.5625 * deviceScale * bowlDfScale);
 
-            const rimY = 5, rimW = 149, kibbleR = 18;
+            const rimY = 5, rimW = 149, kibbleR = 9;
             const rows = [
               { cy: rimY -  9, xs: [-117, -72, -24, 24,  72, 117] },
               { cy: rimY - 31, xs: [ -96, -48,   0, 48,  96] },
@@ -1334,12 +1569,12 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
 
             context.fillRect(-rimW + 2, rimY - 3, (rimW - 2) * 2, 6);
 
-            const pawX = 0, pawY = rimY + 66 + 13;
+            const pawX = 0, pawY = rimY + 102;
             context.beginPath();
-            context.ellipse(pawX, pawY, 16, 13, 0, 0, Math.PI * 2);
+            context.ellipse(pawX, pawY, 8, 6.5, 0, 0, Math.PI * 2);
             context.fill();
-            ([[-21, pawY - 20, 8, 6], [-8, pawY - 26, 8, 6],
-              [  8, pawY - 26, 8, 6], [21, pawY - 20, 8, 6]] as number[][]).forEach(([tx, ty, rx, ry]) => {
+            ([[-21, pawY - 20, 4, 3], [-8, pawY - 26, 4, 3],
+              [  8, pawY - 26, 4, 3], [21, pawY - 20, 4, 3]] as number[][]).forEach(([tx, ty, rx, ry]) => {
               context.beginPath();
               context.ellipse(tx, ty, rx, ry, 0, 0, Math.PI * 2);
               context.fill();
@@ -1349,15 +1584,44 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.restore(); // restore scale
           }
 
+          // ── Curly braces { } ──────────────────────────────────────
+          if (shapeType === 'curlyOpen' || shapeType === 'curlyClose') {
+            const isHov = hoveredBodyRef.current === body;
+            const col = mode === 'initial'
+              ? (isHov ? 'rgb(18,11,5)' : '#dcd3c3')
+              : (isHov ? '#dcd3c3' : '#312113');
+            context.strokeStyle = col;
+            context.lineWidth = 51;
+            context.lineCap = 'round';
+            context.lineJoin = 'round';
+
+            context.save();
+            context.scale(deviceScale * 0.85, deviceScale * 0.85);
+            // Mirror for }
+            if (shapeType === 'curlyClose') context.scale(-1, 1);
+
+            // SVG path centered at origin (offset by -106, -243.5 from original coords)
+            // CP1 and last CP2 angled at 110° (20° past horizontal) for stem flare
+            context.beginPath();
+            context.moveTo(62, -198.5);
+            context.bezierCurveTo(-2, -175, -6, -173.5, -6, -113.5);
+            context.bezierCurveTo(-6, -53.5, -14, -26.5, -62, -3.5);
+            context.bezierCurveTo(7, 10.5, -6, 66.5, -6, 126.5);
+            context.bezierCurveTo(-6, 186.5, -2, 222, 62, 198.5);
+            context.stroke();
+
+            context.restore();
+          }
+
           // Draw title label on shape
           const isHovered = hoveredBodyRef.current === body;
           const textColor = mode === 'initial'
             ? (isHovered ? '#dcd3c3' : '#312113')
             : (isHovered ? '#312113' : '#dcd3c3');
           context.fillStyle = textColor;
-          const textYOffset = shapeType === 'letterA' ? 30 : shapeType === 'letterE' ? -15 : shapeType === 'letterR' ? -20 : shapeType === 'dogBowl' ? 25 : 0;
-          const textXOffset = shapeType === 'letterR' ? 0 : 0;
-          const rotateShapes = ['letterC', 'letterI', 'letterS', 'tree', 'slash', 'bracketOpen', 'bracketClose', 'parenOpen', 'parenClose', 'dollarSign'];
+          const textYOffset = shapeType === 'letterA' ? 30 : shapeType === 'letterE' ? -15 : shapeType === 'letterR' ? -25 : shapeType === 'letterH' ? -25 : shapeType === 'dogBowl' ? 25 : 0;
+          const textXOffset = shapeType === 'letterR' ? -15 : 0;
+          const rotateShapes = ['letterC', 'letterI', 'letterS', 'tree', 'slash', 'bracketOpen', 'bracketClose', 'parenOpen', 'parenClose', 'dollarSign', 'curlyOpen', 'curlyClose'];
           if (shapeType && rotateShapes.includes(shapeType)) {
             context.save();
             if (shapeType === 'dollarSign') {
@@ -1367,17 +1631,35 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
               : shapeType === 'letterS' ? -Math.PI / 2
               : shapeType === 'tree' ? -Math.PI / 2
               : shapeType === 'slash' ? Math.atan2(-280, 90)
-              : ['bracketOpen', 'parenOpen'].includes(shapeType) ? -Math.PI / 2
-              : shapeType === 'parenClose' ? Math.PI / 2
+              : shapeType === 'parenOpen' ? Math.PI / 2
+              : shapeType === 'bracketOpen' ? Math.PI / 2
+              : shapeType === 'parenClose' ? -Math.PI / 2
               : shapeType === 'bracketClose' ? -Math.PI / 2
+              : shapeType === 'curlyOpen' ? Math.PI / 2
+              : shapeType === 'curlyClose' ? Math.PI / 2
               : Math.PI / 2;
             context.rotate(angle);
-            const textX = shapeType === 'tree' ? -110 : shapeType === 'letterI' ? -50 : 0;
-            const textYRotated = shapeType === 'letterI' ? -15 : 0;
+            const textX = shapeType === 'tree' ? -110 : shapeType === 'letterI' ? -50 : shapeType === 'curlyOpen' ? -10 : shapeType === 'curlyClose' ? 25 : 0;
+            const textYRotated = shapeType === 'letterI' ? -5 : shapeType === 'curlyOpen' ? 15 : shapeType === 'curlyClose' ? -10 : 0;
             context.fillText(project.title, textX, textYRotated);
             context.restore();
           } else {
-            context.fillText(project.title, textXOffset, textYOffset);
+            if (shapeType === 'dogBowl') {
+              const baseSize = mode === 'links' ? 14 : 17;
+              const dfTextScale = (project as any).campaignTitle === 'Sentry Dogfooding Chronicles' ? 0.85 : 1;
+              context.font = `${baseSize * 1.25 * dfTextScale}px "kcgangster", Arial`;
+            }
+            if (shapeType === 'drone') {
+              const baseSize = parseFloat(fontSize);
+              context.font = `${baseSize * 0.8}px "kcgangster", Arial`;
+            }
+            if (project.title === 'A new blueprint for an uncertain world') {
+              const lineH = parseFloat(fontSize) * 1.3;
+              context.fillText('A new blueprint for', textXOffset, textYOffset - lineH / 2);
+              context.fillText('an uncertain world', textXOffset, textYOffset + lineH / 2);
+            } else {
+              context.fillText(project.title, textXOffset, textYOffset);
+            }
           }
 
           context.restore();
@@ -1456,7 +1738,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           const original = originalColors.get(hoveredBodyRef.current.id);
           if (original) {  // Safety check
             const prevMapping = bodiesRef.current.find(m => m.body === hoveredBodyRef.current);
-            const customDrawn = ['dollarSign', 'chatBubble', 'videoCamera', 'telephone', 'drone', 'dogBowl'];
+            const customDrawn = ['dollarSign', 'chatBubble', 'videoCamera', 'telephone', 'speaker', 'microphone', 'videoConference', 'drone', 'dogBowl', 'curlyOpen', 'curlyClose'];
             if (!customDrawn.includes(prevMapping?.shapeType ?? '')) {
               hoveredBodyRef.current.render.fillStyle = original.fill;
               hoveredBodyRef.current.render.strokeStyle = original.stroke;
@@ -1478,7 +1760,7 @@ const currentHover: Matter.Body = foundHover;  // ← Explicit type annotation
   // Check if this is an image shape - don't change color if it is
   const isImage = bodyMapping && (bodyMapping.project as any).type === 'image';
   
-  const customDrawnShapes = ['dollarSign', 'chatBubble', 'videoCamera', 'telephone', 'drone', 'dogBowl'];
+  const customDrawnShapes = ['dollarSign', 'chatBubble', 'videoCamera', 'telephone', 'speaker', 'microphone', 'videoConference', 'drone', 'dogBowl', 'curlyOpen', 'curlyClose'];
   if (!isImage && !customDrawnShapes.includes(bodyMapping?.shapeType ?? '')) {
     // Hover color depends on mode:
     // Initial mode: brown hover (dark on light)
