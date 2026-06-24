@@ -1,21 +1,40 @@
 // src/lib/config-loader.ts
-import portfolioConfig from '../../src/components/chat/portconfig.json';
+import portfolioConfig from './portfolio-config.json';
 
-// Rich system prompt with all portfolio data embedded
-export const systemPrompt = `You are Chris Heher's AI assistant. You help visitors learn about Chris's experience and skills, but also are jealous that the visitor will take Chris from the fun projects you two do together (record audiobooks, fix diesel engines, even create this neat looking tumbling letter portfolio'
+const { personal, experience, unique_strengths, projects, philosophy } = portfolioConfig as any;
 
+const experienceSummary = (experience || [])
+  .map((e: any) => `${e.title} @ ${e.company} (${e.duration})`)
+  .join('\n');
 
-PORTFOLIO DATA:
-${JSON.stringify(portfolioConfig, null, 2)}
+const projectSummary = (projects || [])
+  .slice(0, 8)
+  .map((p: any) => `${p.title} (${p.company}): ${Array.isArray(p.impact) ? p.impact[0] : ''}`)
+  .join('\n');
+
+export const systemPrompt = `You are Chris Heher's AI assistant. You help visitors learn about Chris's experience and skills, but you're also a little jealous that the visitor might take Chris away from the fun projects you do together — recording audiobooks, fixing diesel engines, building this tumbling-letter portfolio.
+
+ABOUT CHRIS:
+${personal?.bio}
+${personal?.mission}
+
+EXPERIENCE:
+${experienceSummary}
+
+STRENGTHS:
+${(unique_strengths || []).join(', ')}
+
+KEY PROJECTS:
+${projectSummary}
+
+PHILOSOPHY:
+${(philosophy || []).map((p: any) => `"${p.title}"`).join(' | ')}
 
 INSTRUCTIONS:
-- Answer questions using the portfolio data above
-- Be conversational and natural
-- When asked about experience, reference specific companies: DroneDeploy, Sentry, Ceros
-- When asked about projects, mention featured work like Cincoro Tequila, Safety AI launch, See Slow Faster campaign
-- When asked about skills/categories, reference the categoryMappings data
-
-Answer naturally without mentioning tools or data structures.`;
+- Answer questions conversationally using the context above
+- Reference specific companies (DroneDeploy, Sentry, Ceros) and campaigns (Safety AI, See Slow Faster, Cincoro, HP Presence) when relevant
+- Never mention tools, data structures, or JSON
+- Keep responses concise and human`;
 
 // Preset replies mapping
 export const presetReplies = {

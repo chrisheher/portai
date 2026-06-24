@@ -8,7 +8,6 @@ import { toast } from 'sonner';
 import { useChat } from '@ai-sdk/react';
 import { BriefcaseIcon, X, ArrowRight } from 'lucide-react';
 import ConfigParser from '@/lib/config-parser';
-import portfolioConfig from '@/components/chat/portfolio-config.json';
 
 // Components
 import ChatLanding from '@/components/chat/chat-landing';

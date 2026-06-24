@@ -1,0 +1,762 @@
+{
+  "personal": {
+    "name": "Chris Heher",
+    "title": "Copywriter | Content Strategist | Conversational Designer",
+    "location": "Jersey City, NJ",
+    "bio": "I am what AI ain't.",
+    "mission": "Your customers deserve better than to read robot. They want a human voice behind your brand — one that piques curiosity, not parrots information; one that intrigues, not inundates; and one that doesn't regurgitate words already written, but reveals fresh insights unique to your brand."
+  },
+
+  "philosophy": [
+    {
+      "title": "Content isn't read. It's scanned.",
+      "body": "Content is still being written as if it's being read on a page — despite the fact that it's scanned on a screen. I help brands think outside this paper perspective by designing content in ways that reflect the medium it's being consumed on."
+    },
+    {
+      "title": "Content written at eye level.",
+      "body": "I take pride in articulating technical concepts in ways that rise above their own jargon. My deep curiosity about a product allows me to write at an audience's eye level — neither talking down to them with oversimplified language nor wallowing in technical lingo that flies over their heads."
+    },
+    {
+      "title": "I am a chef. AI is my microwave.",
+      "body": "Content is what brands feed customers to create hunger for their product or service. I've handled all aspects of content creation: setting the menu (content strategy), cooking the meal (copywriting), plating (UX), and even as the maître d' (social media). And like a microwave, AI is an appliance meant to reheat leftovers — not cook a raw meal."
+    },
+    {
+      "title": "My process to word processing.",
+      "body": "I am a lifelong timeboxer — I order my productivity in 25-minute increments. Having this reliable process gives clients and colleagues peace of mind that I'll do what I say I can do, and before the deadline I said I'd do it."
+    }
+  ],
+
+  "experience": [
+    {
+      "title": "Freelance Content Marketer",
+      "company": "Independent",
+      "duration": "01/2025 - Present",
+      "description": "Strategic content, brand messaging, and GTM activations across B2B SaaS, AI, fintech, and consumer brands.",
+      "portfolioProjects": [
+        "Airbnb Career website",
+        "HP Presence launch",
+        "Cincoro Tequila brand launch",
+        "Google GPay instrumentation videos"
+      ],
+      "clients": [
+        {
+          "name": "Text",
+          "deliverable": "Wrote brand manifesto and messaging pillars for Text's pivot from customer service bots to agentic e-commerce."
+        },
+        {
+          "name": "Chronosphere",
+          "deliverable": "Blog and video content to amplify brand reach at KubeCon"
+        },
+        {
+          "name": "Reducto",
+          "deliverable": "Founder messaging and social activations for  checkbox detection feature launch"
+        },
+        {
+          "name": "Pocus",
+          "deliverable": "Social content and creative concepts for brand strategy"
+        }
+      ]
+    },
+    {
+      "title": "Lead writer",
+      "company": "DroneDeploy",
+      "duration": "2024",
+      "description": "Full-funnel content strategy for AI-powered drone software platform serving construction, energy, and industrial sectors.",
+      "portfolioProjects": [
+        "DroneDeploy Safety AI",
+        "DroneDeploy Ground Robotics",
+        "DroneDeploy Product Pages",
+        "DroneDeploy Construction content"
+      ]
+    },
+    {
+      "title": "Technical Content Strategist",
+      "company": "Sentry",
+      "duration": "2020 - 2022",
+      "description": "Developer content, UX writing, and GTM strategy for application monitoring platform during Series B→C growth ($45M→$90M ARR).",
+      "portfolioProjects": [
+        "Sentry Performance GTM campaign",
+        "Sentry Dogfooding Chronicles",
+        "Sentry developer content",
+        "Sentry Product Pages"
+      ]
+    },
+    {
+      "title": "Senior Content Strategist",
+      "company": "Ceros",
+      "duration": "05/2017 - 11/2019",
+      "description": "Led client briefing process, pitched content activations to trial clients, turned static PDFs into interactive experiential content.",
+      "highlights": [
+        "Created 'Let's Make This Brief' — universal brief template for studio producing 300+ client deliverables/year",
+        "Converted trial clients into paid seats through live technical content demonstrations"
+      ],
+      "portfolioProjects": ["Ceros | Fintech infographics", "GE | Experiential content"]
+    }],
+
+  "devrel_expertise": {
+    "overview": "Scaling DevRel content initatives, writing technical content  at an engineer's eye level, and translating developer feedback into marketing insights.",
+    "initiatives": [
+      {
+        "name": "Dogfooding Chronicles",
+        "description": "Syndicated content series bridging product development and developer community — turning internal engineering hiccups into external thought leadership without sounding preachy or pedantic.",
+        "impact": ["25+ posts, 45K site visits (40% organic)", "15+ backlinks per post", "~$100K quarterly ARR attributed to series", "$100K–$150K annual SEO value"]
+      },
+      {
+        "name": "Future of Frontend",
+        "description": "Helped coordinate Sentry's developer community event — guest booking, concept pitching, run-of-show content writing.",
+        "impact": ["Strengthened relationships with frontend engineering community"]
+      },
+      {
+        "name": "Developer social growth",
+        "description": "Led Sentry's developer social strategy through technically accurate, developer-native content — no fluff, no jargon abuse.",
+        "impact": ["Grew brand presence from 15K to 84K followers"]
+      },
+      {
+        "name": "Google GPay developer tutorials",
+        "description": "API instrumentation videos scripted for developer efficiency — articulating the simplest path to integration without wasting a developer's time with phony rapport.",
+        "impact": ["35K views at I/O launch", "~$1.5M ARR impact", "~500 new merchant integrations"]
+      }
+    ],
+    "technical_credibility": [
+      "GitHub-based editorial workflow with engineering SME reviews",
+      "Developer-focused style guide ensuring authentic voice with technical audiences",
+      "Cross-timezone collaboration with US + Vienna (Austria) engineering teams",
+      "Led SOC 2 Type II content strategy — translating compliance into enterprise-facing messaging"
+    ]
+  },
+
+  "tools_and_platforms": {
+    "content_and_design": ["Notion", "Webflow", "Figma", "Airtable", "Descript"],
+    "seo_and_analytics": ["GA4", "SEMRush", "Ahrefs", "HubSpot"],
+    "ai": ["Claude", "Gemini", "Peec", "Obsidian AI"],
+    "code": ["TypeScript", "React", "Matter.js"]
+  },
+
+  "categoryMappings": {
+    "GTM Launch": {
+      "keywords": ["gtm", "go-to-market", "B2B SaaS content", "product launch", "pipeline", "launch strategy", "product release"],
+      "links": [
+        {"name": "Sentry Performance GTM", "url": "/?show=sentry-performance"},
+        {"name": "DroneDeploy Safety AI", "url": "/?show=safety-ai"}
+      ]
+    },
+    "Technical Writing": {
+      "keywords": ["technical writing", "documentation", "technical content", "developer docs", "api"],
+      "links": [
+        {"name": "Dogfooding Chronicles", "url": "/?show=sentry-dogfooding"},
+        {"name": "Sentry developer content", "url": "/?show=sentry-dev"},
+        {"name": "GE Aviation turboprop", "url": "/?show=ge"},
+        {"name": "DroneDeploy tech content", "url": "/?show=dronedep"}
+      ]
+    },
+    "Developer Content": {
+      "keywords": ["developer", "devrel", "open source", "developer relations", "engineering blog", "dev tools"],
+      "links": [
+        {"name": "Sentry Performance", "url": "/?show=sentry-performance"},
+        {"name": "Dogfooding Chronicles", "url": "/?show=sentry-dogfooding"},
+        {"name": "Future of Frontend", "url": "https://sentry.io/resources/the-future-of-frontend/"}
+      ]
+    },
+    "Developer Relations": {
+      "keywords": ["devrel", "developer advocacy", "developer marketing", "sdk", "api documentation"],
+      "links": [
+        {"name": "Sentry Performance", "url": "/?show=sentry-performance"},
+        {"name": "Dogfooding", "url": "/?show=sentry-dogfooding"},
+        {"name": "Future of Frontend", "url": "https://sentry.io/resources/the-future-of-frontend/"}
+      ]
+    },
+    "Brand Voice": {
+      "keywords": ["brand voice", "tone", "brand identity", "messaging", "brand guidelines"],
+      "links": [
+        {"name": "Cincoro", "url": "/?show=cincoro"},
+        {"name": "Sentry Product Pages", "url": "/?show=sentry-pages"}
+      ]
+    },
+    "Thought Leadership": {
+      "keywords": ["thought leadership", "white paper", "whitepaper", "industry insights", "byline"],
+      "links": [
+        {"name": "HP Presence", "url": "/?show=hp-presence"}
+      ]
+    },
+    "Fintech": {
+      "keywords": ["fintech", "financial", "banking", "trading", "finance", "payments"],
+      "links": [
+        {"name": "Google GPay", "url": "/?show=gpay"},
+        {"name": "Fintech infographics", "url": "/?show=fintech"}
+      ]
+    },
+    "Employer Brand": {
+      "keywords": ["employer brand", "careers", "hr technology", "recruiting", "talent", "EVP", "culture"],
+      "links": [
+        {"name": "Airbnb Careers", "url": "/?show=airbnb"}
+      ]
+    },
+    "Social Media": {
+      "keywords": ["social media", "social channels", "social content", "social strategy", "content calendar"],
+      "links": [
+        {"name": "Cincoro", "url": "/?show=cincoro"},
+        {"name": "Social portfolio", "url": "/public/social.pdf"}
+      ]
+    },
+    "SaaS / B2B": {
+      "keywords": ["saas", "b2b", "enterprise", "software"],
+      "links": [
+        {"name": "DroneDeploy Safety AI", "url": "/?show=safety-ai"},
+        {"name": "DroneDeploy Product Pages", "url": "/?show=dd-pages"},
+        {"name": "Sentry Product Pages", "url": "/?show=sentry-pages"},
+        {"name": "Sentry Performance", "url": "/?show=sentry-performance"}
+      ]
+    },
+    "AI / ML": {
+      "keywords": ["ai", "artificial intelligence", "machine learning", "ml", "automation"],
+      "links": [
+        {"name": "DroneDeploy Safety AI", "url": "/?show=safety-ai"},
+        {"name": "Ground Robotics", "url": "/?show=robotics"}
+      ]
+    },
+    "Content Strategy": {
+      "keywords": ["content strategy", "editorial", "content marketing", "leadership", "collaboration", "content calendar", "content ops"],
+      "links": [
+        {"name": "See Slow Faster", "url": "/?show=sentry-performance"},
+        {"name": "Dogfooding Chronicles", "url": "/?show=sentry-dogfooding"},
+        {"name": "DroneDeploy Product Pages", "url": "/?show=dd-pages"}
+      ]
+    },
+    "UX Writing": {
+      "keywords": ["ux writing", "microcopy", "product copy", "onboarding", "in-product content"],
+      "links": [
+        {"name": "Airbnb Careers", "url": "/?show=airbnb"},
+        {"name": "Sentry Product Pages", "url": "/?show=sentry-pages"},
+        {"name": "DroneDeploy Product Pages", "url": "/?show=dd-pages"}
+      ]
+    },
+    "Global / Distributed": {
+      "keywords": ["global", "distributed", "remote", "international", "cross-timezone", "EMEA"],
+      "links": [
+        {"name": "Sentry Vienna — Hidden Champion", "url": "https://blog.sentry.io/become-a-hidden-champion-work-with-me-in-vienna/"},
+        {"name": "Sentry developer content", "url": "/?show=sentry-dev"}
+      ]
+    },
+    "Cybersecurity / Compliance": {
+      "keywords": ["cybersecurity", "security", "compliance", "SOC 2", "HIPAA", "GDPR", "FedRAMP"],
+      "links": [
+        {"name": "Sentry SOC 2 Type II", "url": "https://blog.sentry.io/sentry-receives-soc-2-type-2-certification/"},
+        {"name": "Sentry developer content", "url": "/?show=sentry-dev"}
+      ]
+    }
+  },
+
+  "ATSKeywords": {
+    "core": [
+      "Content Strategy", "Content Strategist", "Content Planning", "Content Development",
+      "Technical Writing", "Technical Writer", "Technical Documentation", "Technical Communication",
+      "Developer Relations", "DevRel", "Developer Advocacy", "Developer Marketing",
+      "GTM", "Go-to-market", "Go-to-Market Strategy", "Product Launch", "Launch Strategy", "Product Release",
+      "Brand Messaging", "Brand Voice", "Brand Strategy", "Messaging", "Positioning", "Value Proposition",
+      "Copywriting", "Copywriter", "Copy Development", "Long-form", "Long-form Content",
+      "Content Marketing", "Marketing Content", "Product Marketing", "Product Marketing Manager",
+      "Editorial Strategy", "Editorial", "Editorial Calendar", "Content Calendar",
+      "Thought Leadership", "Industry Thought Leader", "Executive Communications",
+      "Content Operations", "Content Ops", "Content Management", "Content Systems", "Content Workflow",
+      "Editorial Workflow", "Production Workflow", "Content Governance", "Content Process",
+      "Content Production", "Content Planning", "Content Scalability", "Content Templates",
+      "Style Guide", "Brand Guidelines", "Voice and Tone", "Editorial Standards",
+      "Content Framework", "Content Architecture", "Content Infrastructure",
+      "Demand Generation", "Demand Gen", "Lead Generation", "Sales Enablement", "Sales Content",
+      "Competitive Analysis", "Market Research", "Competitive Intelligence",
+      "UX Writing", "UX Copywriting", "Microcopy", "Product Copy", "In-Product Content",
+      "Information Architecture", "Content Design", "Conversational Design", "Onboarding Copy",
+      "Global", "International", "Distributed Teams", "Remote Teams", "Cross-timezone", "EMEA", "Global Content"
+    ],
+    "marketing": [
+      "Pipeline", "Sales Pipeline", "Pipeline Influence", "Pipeline Attribution",
+      "Campaign", "Campaign Management", "Marketing Campaigns", "Integrated Campaigns",
+      "Launch", "Product Launch", "Campaign Launch",
+      "Brand", "Branding", "Brand Development", "Brand Marketing",
+      "Social Media", "Social Media Marketing", "Social Content", "Social Strategy",
+      "Lead Generation", "Lead Gen", "Leads", "MQL", "SQL", "Marketing Qualified Leads",
+      "Inbound", "Inbound Marketing", "Inbound Strategy",
+      "Conversion", "Conversion Rate Optimization", "CRO",
+      "UX", "User Experience", "UX Writing", "UX Copywriting", "Microcopy",
+      "ABM", "Account-Based Marketing", "Account-Based Strategy"
+    ],
+    "technical": [
+      "API", "API Content",
+      "SDK", "Software Development Kit", "Developer Tools",
+      "Developer", "Software Developer", "Engineering",
+      "Technical", "Technical Skills", "Technical Fluency",
+      "SaaS", "Software as a Service", "Cloud Software",
+      "B2B", "B2B SaaS", "B2B Marketing", "Enterprise Software",
+      "Enterprise", "Enterprise Sales", "Enterprise Solutions",
+      "Open Source", "Open-Source",
+      "AI", "Artificial Intelligence", "AI/ML", "Generative AI",
+      "ML", "Machine Learning", "Deep Learning",
+      "DevOps", "CI/CD", "Continuous Integration",
+      "Cloud", "Cloud Computing", "AWS", "Software", "Software Engineering", "Software Development",
+      "Documentation", "Technical Documentation", "Docs",
+      "Monitoring", "Application Monitoring", "Observability",
+      "Performance", "Application Performance", "Performance Monitoring", "APM"
+    ],
+    "soft": [
+      "Leadership", "Team Leadership", "Thought Leadership",
+      "Communication", "Written Communication", "Verbal Communication",
+      "Collaboration", "Cross-functional Collaboration", "Team Collaboration",
+      "Strategic", "Strategic Thinking", "Strategic Planning",
+      "Cross-functional", "Cross-functional Teams", "Matrixed Organization",
+      "Stakeholder", "Stakeholder Management", "Executive Stakeholder",
+      "Storytelling", "Narrative", "Brand Storytelling",
+      "Project Management", "Program Management", "Agile"
+    ],
+    "industry": [
+      "Fintech", "Financial Technology", "Financial Services",
+      "Financial", "Banking", "Digital Banking",
+      "Payments", "Payment Processing", "Digital Payments",
+      "Healthcare", "HealthTech", "Digital Health",
+      "HR Technology", "HR Tech", "HCM", "Human Capital Management",
+      "Recruiting", "Recruitment", "Talent Acquisition",
+      "Construction", "Construction Technology", "ConTech",
+      "Drones", "Drone Technology", "UAV", "Robotics",
+      "Cybersecurity", "Security", "Information Security"
+    ],
+    "tools": [
+      "WordPress", "CMS", "Content Management System",
+      "HubSpot", "Marketo", "Marketing Automation",
+      "Salesforce", "CRM", "SFDC",
+      "Google Analytics", "GA", "Analytics",
+      "Figma", "Design Tools", "Adobe Creative Suite",
+      "GitHub", "Git", "Version Control",
+      "Jira", "Asana", "Project Management Tools", "Monday.com", "Trello",
+      "Slack", "Microsoft Teams", "Collaboration Tools",
+      "SEO", "Search Engine Optimization", "SEM",
+      "A/B Testing", "Experimentation", "Testing Tools",
+      "Notion", "Confluence", "Documentation Tools",
+      "Airtable", "Spreadsheets", "Database Management",
+      "Ceros", "Interactive Content Platforms",
+      "Greenhouse", "Lever", "ATS", "Applicant Tracking System"
+    ]
+  },
+
+  "skills": {
+    "writing_formats": [
+      "Blog posts", "White papers", "Case studies", "eBooks", "Guides",
+      "Product pages", "Landing pages", "Email campaigns", "Social media",
+      "Video scripts", "Webinar content", "Presentations", "Infographics",
+      "Press releases", "Thought leadership articles", "Technical tutorials",
+      "API documentation", "Developer guides", "Release notes", "Changelogs"
+    ],
+    "content_types": [
+      "Top-of-funnel (TOFU)", "Middle-of-funnel (MOFU)", "Bottom-of-funnel (BOFU)",
+      "Awareness content", "Consideration content", "Decision content",
+      "Educational content", "Sales enablement", "Customer success content"
+    ],
+    "audiences": [
+      "Developers", "Software Engineers", "Technical audiences",
+      "C-suite", "Executives", "Decision makers",
+      "Product managers", "Marketing teams", "Sales teams",
+      "End users", "Consumers", "B2B buyers"
+    ]
+  },
+
+  "unique_strengths": [
+    "Transforms technical jargon into brand-defining narratives — See Slow Faster ($1.8M pipeline), Your AI In the Sky (~$450K/quarter influence), Be the Hunted (Jägermeister rebrand)",
+    "8+ years in developer tools and enterprise SaaS (Sentry, DroneDeploy); earns trust with engineering audiences that distrust marketing on principle",
+    "Proven pipeline influence: 8-11% across roles, $10M+ total attributed",
+    "Builds scalable content systems: 50% production time reduction at Sentry, 70% sales self-serve at DroneDeploy, 3x output increase at Ceros",
+    "Developer community builder: grew Sentry social from 15K to 84K; Dogfooding Chronicles drove $100K quarterly ARR and 15+ backlinks/post",
+    "Strong understanding of AI/ML, cybersecurity, DevOps, observability, and construction tech"
+  ],
+
+  "content_systems_expertise": {
+    "overview": "Proven track record of building content production systems, editorial workflows, and governance frameworks that scale content operations while maintaining quality and consistency across distributed teams.",
+    "systems_built": [
+      {
+        "company": "Sentry",
+        "system": "Content production workflow and editorial calendar",
+        "description": "Built end-to-end content workflow integrating product launches with editorial calendar, enabling cross-functional alignment between engineering, product, and marketing teams",
+        "impact": [
+          "Reduced content production time 50% (3–4 weeks → 1–2 weeks)",
+          "Reusable templates saved 40% start-from-scratch time per piece",
+          "Enabled 25+ blog series posts with consistent quality and voice",
+          "Established GitHub-based editorial review process with engineering SMEs ensuring technical accuracy"
+        ],
+        "tools_processes": [
+          "GitHub-based editorial workflow for engineering SME reviews",
+          "Notion content calendar with intake forms and brief templates",
+          "Style guide and voice/tone documentation",
+          "Creative briefs and zero drafts cutting revision rounds"
+        ]
+      },
+      {
+        "company": "DroneDeploy",
+        "system": "Sales enablement content system",
+        "description": "Developed repeatable content framework connecting product releases to sales collateral, ensuring sales team had up-to-date materials aligned with product roadmap",
+        "impact": [
+          "Created modular content library enabling sales to self-serve 70% of content needs",
+          "Reduced sales content request turnaround from 2 weeks to 3 days",
+          "Established quarterly content planning tied to product releases",
+          "Built content attribution model showing $10M+ pipeline influence",
+          "Increased content output 3x while reducing per-piece production time"
+        ],
+        "tools_processes": [
+          "HubSpot integration for content distribution",
+          "Salesforce tagging for content attribution tracking",
+          "Quarterly content roadmap aligned with product releases",
+          "Sales enablement feedback loop process"
+        ]
+      },
+      {
+        "company": "Airbnb",
+        "system": "Employer brand content governance",
+        "description": "Established content governance framework for career site ensuring brand consistency while empowering recruiting teams to move quickly",
+        "impact": [
+          "Created modular content system supporting 50+ job families across 200+ pages",
+          "Reduced legal/compliance review time from 1 week to 2 days via pre-approved templates",
+          "Enabled recruiting teams to publish new content without writer bottleneck",
+          "Maintained brand voice consistency across 200+ pages"
+        ],
+        "tools_processes": [
+          "Content component library with approved modules",
+          "Greenhouse integration for job description templates",
+          "Brand voice guidelines with examples and anti-examples",
+          "Self-service content editing workflow"
+        ]
+      },
+      {
+        "company": "Ceros",
+        "system": "Interactive content production pipeline",
+        "description": "Built scalable workflow for producing interactive financial content at 3x velocity while maintaining design quality and compliance standards",
+        "impact": [
+          "Creative brief quickly aligned stakeholders leading to fewer drafts before shipping",
+          "Reduced design-to-publish time from 3 weeks to 1 week",
+          "Created reusable design system for financial services clients",
+          "Enabled non-designers to produce compliant content"
+        ],
+        "tools_processes": [
+          "Component-based design system in Ceros platform",
+          "Legal pre-approval process for common claims/disclosures",
+          "Quality checklist automation reducing review cycles",
+          "Client feedback workflow with versioning"
+        ]
+      }
+    ],
+    "core_competencies": [
+      "Editorial calendar management and content planning",
+      "Cross-functional workflow design (engineering, product, sales, legal)",
+      "Content governance and brand consistency at scale",
+      "Template systems and content modularization",
+      "Intake/request processes and SLA management",
+      "Content attribution and measurement frameworks",
+      "Style guide development and voice/tone documentation",
+      "Review/approval workflow optimization",
+      "Self-service content enablement for non-writers"
+    ]
+  },
+
+  "projects": [
+    {
+      "title": "Cincoro Tequila | brand launch",
+      "company": "The Charles NYC",
+      "type": "brand_campaign",
+      "category": "Brand Voice",
+      "skill_tags": ["brand voice", "brand launch", "social media strategy", "content calendar", "audience growth", "consumer brand", "brand identity"],
+      "description": "Celebrity tequila brand launch — social media strategy and brand voice for Michael Jordan's tequila company",
+      "campaignListDescription": "George Clooney. The Rock. Kylie Jenner. Bryan Cranston. Celebrity tequila is a crowded space. So when Michael Jordan and four other NBA owners started their own tequila company, I was there to help them stand out among the stars. Liquor brands are chosen by the stories they tell. Cincoro's story is the competitive spirit shared among its five owners — Cincoro translates to 'five rings.' That spirit distinguishes the brand: it wasn't enough for these owners to play the celebrity tequila game, they had to change it. Working with The Charles advertising agency, we communicated that competitive spirit through website, social, and a foundational manifesto built for the brand's future.",
+      "impact": [
+        "Created content processes and calendar delivering 2–3x higher engagement rates due to consistent posting schedules",
+        "Built social audience to 110K+ followers across platforms, exceeding brands with decades of history (Don Julio had ~97K Instagram in 2021)",
+        "Brand grew from zero to 1.5M bottles sold"
+      ],
+      "links": [
+        {"name": "Instagram", "url": "https://www.instagram.com/cincoro/"}
+      ]
+    },
+    {
+      "title": "Sentry Performance GTM campaign",
+      "company": "Sentry",
+      "type": "product_launch",
+      "category": "GTM Launch",
+      "skill_tags": ["go-to-market strategy", "product launch", "B2B SaaS", "developer marketing", "cross-functional collaboration", "pipeline attribution", "full-funnel content", "distributed teams", "global content", "technical positioning"],
+      "tagline": "See Slow Faster",
+      "globalExperience": true,
+      "campaignListDescription": "Product releases run the risk of getting bogged down in their own technical benefits. For Sentry's Performance monitoring release, this meant turning improved visibility into p95 response times into a simple, differentiating insight that articulates Sentry's competitive advantage. The result — See Slow Faster — helped Sentry create market share, own a POV as a brand, and build a foundation for future campaigns. Built in close cross-functional collaboration with Sentry's distributed engineering team including the Vienna, Austria office, where I embedded with engineers to understand the product deeply enough to write about it credibly.",
+      "impact": [
+        "$1.8M in attributed sales pipeline",
+        "~1.2k content-sourced leads",
+        "Campaign content generated ~3.5k visits (2.3x site average)",
+        "$1B unicorn valuation achieved months after Performance product launch",
+        "Built cross-timezone editorial workflow coordinating US + Vienna (Austria) engineering teams"
+      ],
+      "links": [
+        {"name": "Awareness content", "url": "https://blog.sentry.io/how-slow-is-slow/"},
+        {"name": "Release blog", "url": "https://blog.sentry.io/see-slow-faster-with-performance-monitoring/"},
+        {"name": "Product page", "url": "https://sentry.io/solutions/application-performance-monitoring/"},
+        {"name": "Vienna team — Hidden Champion", "url": "https://blog.sentry.io/become-a-hidden-champion-work-with-me-in-vienna/"}
+      ]
+    },
+    {
+      "title": "DroneDeploy Safety AI",
+      "company": "DroneDeploy",
+      "type": "product_launch",
+      "category": "GTM Launch",
+      "skill_tags": ["go-to-market strategy", "AI/ML product launch", "UX writing", "B2B SaaS", "construction tech", "full-funnel content", "landing page copy", "email campaigns", "product marketing", "non-technical buyer"],
+      "tagline": "Your AI In the Sky",
+      "campaignListDescription": "Enterprise-grade drone technology has blockers working against it: concerns over human safety and data privacy, executive resistance toward adopting new technologies, and the widespread perception that a drone is just some neat plaything. As lead writer at DroneDeploy, my role was to think through these blockers and articulate the end benefit that integrated drone software provides teams at worksites — improved collaboration, inch-perfect measurements, and a better way of tracking progress. Not having much of a construction background, I compensated with professional ignorance: deep curiosity combined with close collaboration with solutions engineers and subject matter experts to spin up compelling use cases.",
+      "impact": [
+        "$450K per quarter in attributed content influence (~10% of total pipeline)",
+        "~140K views across content assets",
+        "20% click-to-open rate for email campaigns",
+        "~3K total landing page visits across top-of-funnel content"
+      ],
+      "links": [
+        {"name": "Awareness | use case", "url": "https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections"},
+        {"name": "Awareness | white paper", "url": "https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf"},
+        {"name": "Consideration | blog post", "url": "https://www.dronedeploy.com/blog/safety-smarter-artificial-intelligence-and-your-work-site"},
+        {"name": "Decision | product page", "url": "https://www.dronedeploy.com/product/safety-ai"}
+      ]
+    },
+    {
+      "title": "Sentry Dogfooding Chronicles",
+      "company": "Sentry",
+      "type": "content_series",
+      "category": "Thought Leadership",
+      "skill_tags": ["technical writing", "developer audience", "thought leadership", "SEO content", "blog series", "organic traffic", "long-form content", "technical storytelling", "content operations"],
+      "campaignListDescription": "Dogfooding is the process in which a company uses its own product as a quality control mechanism — think: the Hair Club for Men guy. With Dogfooding Chronicles, we could tell the stories of software engineers who used the platform to improve the platform, syndicating unique anecdotes of how dev teams approached the inevitable flaws in their work with honesty and humor. In co-writing these pieces with subject matter experts, I was the producer and the SME was the musician: amplifying insights, syncing strategic points, and modulating their tone.",
+      "impact": [
+        "25+ blog posts generated ~45K site visits — 40% of which were organic",
+        "15+ backlinks per post across key developer publications",
+        "~$100K quarterly ARR attributed directly to content series",
+        "$100K–$150K annual SEO value (replacement cost of paid search)"
+      ],
+      "links": [
+        {"name": "Go-Getting Lazy Loading", "url": "https://blog.sentry.io/go-getting-lazy-loading/"},
+        {"name": "Using Sentry Performance to get Sentry Performant", "url": "https://blog.sentry.io/using-sentry-performance-to-make-sentry-performant"},
+        {"name": "Verifying large refactors", "url": "https://blog.sentry.io/verifying-large-refactors-in-production-with-sentry/"},
+        {"name": "Thinking backward, moving forward", "url": "https://blog.sentry.io/dogfooding-chronicles-thinking-backward-moving-forward"}
+      ]
+    },
+    {
+      "title": "HP Presence",
+      "company": "HP",
+      "type": "product_launch",
+      "category": "Thought Leadership",
+      "skill_tags": ["thought leadership", "white papers", "B2B content", "distributed workforce", "enterprise audience", "long-form content", "content ROI", "executive communications", "hybrid work"],
+      "campaignListDescription": "The pandemic altered the fabric of society. Nowhere was this more evident than the corporate office. As content strategist on Transmission's HP account, I helped position their Presence videoconferencing suite to be the connective tissue for distributed workforces. The question driving the work: how can businesses build out hybrid infrastructure that seamlessly incorporates devices, solutions, and services across distributed teams — such that remote workers' points can be heard with the same volume and clarity as those physically in the room?",
+      "impact": [
+        "8,940 total white paper downloads across all 10 assets in launch quarter",
+        "~2.5K MQLs generated from white paper download forms",
+        "$680K in closed-won deals with white paper download in buyer journey — direct revenue attribution",
+        "White paper landing pages drove 34,200 total site visits — 67% of which were organic"
+      ],
+      "links": [
+        {"name": "The new office for the way people want to work", "url": "https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf"},
+        {"name": "The new era of work", "url": "https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf"},
+        {"name": "A new blueprint for an uncertain world", "url": "https://getstarted.hbs.net/hubfs/2025%20Partner%20Campaigns/HP_Services_Hybrid_A-New-Blueprint-for-an-Uncertain-World_Consideration_ebook_2022.pdf.pdf?hsLang=en"},
+        {"name": "Get ready today to do tomorrow's work", "url": "https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf"}
+      ]
+    },
+    {
+      "title": "DroneDeploy Ground Robotics",
+      "company": "DroneDeploy",
+      "type": "partnership_content",
+      "category": "AI / ML",
+      "skill_tags": ["AI/ML", "robotics", "partnership content", "B2B", "industrial tech", "product marketing", "pipeline influence"],
+      "campaignListDescription": "Working in partnership with Boston Dynamics, DroneDeploy's industrial inspection platform captures frequent and consistent data on assets that need regular monitoring in ways which scale up site visibility while dialing down man hours.",
+      "impact": [
+        "8.5% deals influenced in pipeline"
+      ],
+      "links": [
+        {"name": "Ground Robotics", "url": "https://www.dronedeploy.com/product/robotics"},
+        {"name": "Industrial Inspection", "url": "https://www.dronedeploy.com/product/robotic-industrial-inspection"},
+        {"name": "Dock Automation", "url": "https://www.dronedeploy.com/product/dock-automation"}
+      ]
+    },
+    {
+      "title": "DroneDeploy | Construction content",
+      "company": "DroneDeploy",
+      "type": "technical_content",
+      "category": "Technical Writing",
+      "skill_tags": ["technical writing", "construction tech", "ConTech", "B2B", "long-form content", "SEO content", "drone technology", "enterprise buyer"],
+      "campaignListDescription": "Enterprise-grade drone technology fights the perception that drones are more toy than tool. These blogs and white papers articulate the benefits drone software provides construction teams: improved collaboration, inch-perfect measurements, and a better way of tracking progress.",
+      "impact": [
+        "28% increase in handraisers",
+        "35% increase in demo requests"
+      ],
+      "links": [
+        {"name": "Ultimate Guide to Facade Inspections", "url": "https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections"},
+        {"name": "Closing the Gap in Stockpile Quantification", "url": "https://dronedeploy.com/blog/closing-the-gap-how-archer-western-and-dronedeploy-observed-a-1-1-difference-in-stockpile-quantities-compared-to-traditional-survey-methods"},
+        {"name": "Within Striking Distance: Underground Utilities", "url": "https://www.dronedeploy.com/blog/within-striking-distance-risks-and-consequences-of-manual-utility-mapping"},
+        {"name": "Flying beyond visual line of sight", "url": "https://www.dronedeploy.com/blog/flying-beyond-visual-line-of-sight-the-complete-guide-to-bvlos-waivers-and-docked-drones"}
+      ]
+    },
+    {
+      "title": "Airbnb Career website",
+      "company": "Airbnb",
+      "type": "employer_brand",
+      "category": "Employer Brand",
+      "skill_tags": ["UX writing", "information architecture", "employer brand", "content systems", "content governance", "microcopy", "stakeholder management", "brand consistency", "content modularization", "DEI content"],
+      "uxWriting": true,
+      "campaignListDescription": "Coming out of the pandemic and the subsequent Great Resignation, competition for talent ratcheted up. Companies began treating career websites not as a job repository but as a digital moment to define their culture to candidates. Working with Airbnb executives and HR stakeholders at Symphony Studio, I established their Employer Brand Proposition — the values and benefits that differentiate Airbnb from not only their competitors, but the workforce at large. The result: responsive, mobile-friendly content articulating their Live and Work Anywhere policy that speaks simply, directly, and strategically to candidates.",
+      "impact": [
+        "72% increase in applications first post-launch quarter",
+        "170% increase in applications from underrepresented groups",
+        "3.4x increase in page views vs. previous site",
+        "UX copy and IA reduced bounce rate on key job family pages",
+        "Modular content system supported 50+ job families with pre-approved, brand-consistent copy blocks"
+      ],
+      "links": [
+        {"name": "Home page", "url": "https://careers.airbnb.com/"},
+        {"name": "Life at Airbnb", "url": "https://careers.airbnb.com/life-at-airbnb/"},
+        {"name": "Apprentice page", "url": "https://careers.airbnb.com/connect-engineering-apprenticeship/"}
+      ]
+    },
+    {
+      "title": "Google GPay instrumentation",
+      "company": "Google",
+      "type": "developer_content",
+      "category": "Developer Relations",
+      "skill_tags": ["developer relations", "API documentation", "developer content", "technical tutorial", "video script", "SDK", "developer marketing", "instrumentation"],
+      "campaignListDescription": "GPay is a one-touch checkout experience that works seamlessly between applications and e-commerce sites. Like all things Google, it was designed to be efficient — instrumented with only a few lines of code. Which means video content for its I/O premiere needed to act likewise. So instead of a smug, stemwinding video that wastes a developer's time with phony rapport, we got out of our own way and told the simplest, most direct path to instrumentation.",
+      "impact": [
+        "35K views during I/O launch event",
+        "1.5M ARR impact",
+        "~500 new integrations from live merchants"
+      ],
+      "links": [
+        {"name": "API demo (web)", "url": "https://www.youtube.com/watch?v=pZyGYUMZAeg"},
+        {"name": "API: What to know", "url": "https://www.youtube.com/watch?v=rP_UAPcIG4I"},
+        {"name": "API for Android", "url": "https://www.youtube.com/watch?v=SZorG5Hqjzc"}
+      ]
+    },
+    {
+      "title": "Sentry developer content",
+      "company": "Sentry",
+      "type": "technical_content",
+      "category": "Developer Relations",
+      "skill_tags": ["developer relations", "technical writing", "UX writing", "onboarding content", "in-product copy", "error messages", "SDK documentation", "developer audience", "global content", "distributed teams", "compliance content", "SOC 2", "cybersecurity messaging", "ARR growth"],
+      "globalExperience": true,
+      "campaignListDescription": "Sentry is an application monitoring platform that optimizes code health — tracking metrics and logs so CI/CD teams can resolve issues, optimize performance, and improve user experience. Because Sentry is a product built by developers for developers, content needed to speak their language (whether that's Rust, React, or Python) while also engaging CI/CD leaders on the platform's larger business value. This meant creating content that identified with a developer's daily struggles — not talking down with oversimplified language, nor wallowing in technical lingo that flies over their heads, but writing at eye level. Worked across San Francisco and Vienna, Austria engineering teams.",
+      "impact": [
+        "ARR: $45M → $90M during my tenure (Series B→C growth), contributing to $1B unicorn valuation",
+        "~480 SQL conversions (9.5% attributed to ARR)",
+        "~150K page visits in total",
+        "Grew developer social following from 15K to 84K through technically accurate, developer-native content",
+        "Cross-timezone content workflow with US + Vienna (Austria) engineering teams",
+        "Led content strategy for Sentry's SOC 2 Type II certification — translating security compliance into enterprise-facing messaging",
+        "Helped coordinate Future of Frontend developer event — guest booking, concept pitching, run-of-show writing",
+        "Built GitHub-based editorial workflow cutting production time from 3–4 weeks to 1–2 weeks; templates reduced start-from-scratch time by 40%"
+      ],
+      "links": [
+        {"name": "Why debugging Javascript sucks", "url": "https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/"},
+        {"name": "How slow is slow?", "url": "https://blog.sentry.io/how-slow-is-slow/"},
+        {"name": "Python 3 compatibility", "url": "https://blog.sentry.io/python-3-compatibility-what-to-know/"},
+        {"name": "Vienna team — Hidden Champion", "url": "https://blog.sentry.io/become-a-hidden-champion-work-with-me-in-vienna/"},
+        {"name": "SOC 2 Type II certification", "url": "https://blog.sentry.io/sentry-receives-soc-2-type-2-certification/"},
+        {"name": "Future of Frontend", "url": "https://sentry.io/resources/the-future-of-frontend/"}
+      ]
+    },
+    {
+      "title": "DroneDeploy Product Pages",
+      "company": "DroneDeploy",
+      "type": "product_pages",
+      "category": "SaaS / B2B",
+      "skill_tags": ["UX writing", "product pages", "microcopy", "CTA copy", "B2B SaaS", "non-technical buyer", "product marketing", "mid-funnel content", "hero copy", "navigation copy"],
+      "uxWriting": true,
+      "campaignListDescription": "UX writing and microcopy for DroneDeploy's product suite — hero headlines, feature callouts, CTA copy, navigation labels, and in-product tooltips — built in close collaboration with product and design to serve both site visitors evaluating the platform and existing customers learning new capabilities.",
+      "impact": [
+        "$2.5M content share for ground robotics",
+        "1.7% engagement rate to take meaningful action",
+        "28% increase in handraisers",
+        "Microcopy and CTA copy contributed to mid-funnel engagement gains across Safety AI, Ground Robotics, and Data on Demand product pages"
+      ],
+      "links": [
+        {"name": "Ground Robotics page", "url": "https://www.dronedeploy.com/product/robotics"},
+        {"name": "Data on Demand", "url": "https://www.dronedeploy.com/data-on-demand"},
+        {"name": "Industrial Inspection", "url": "https://www.dronedeploy.com/product/robotic-industrial-inspection"},
+        {"name": "Dock Automation", "url": "https://www.dronedeploy.com/product/dock-automation"}
+      ]
+    },
+    {
+      "title": "Sentry Product Pages",
+      "company": "Sentry",
+      "type": "product_pages",
+      "category": "SaaS / B2B",
+      "skill_tags": ["UX writing", "product pages", "microcopy", "developer audience", "conversion copy", "CTA copy", "trial signup", "enterprise SaaS", "B2B", "product marketing"],
+      "uxWriting": true,
+      "campaignListDescription": "UX writing and microcopy across Sentry's product surface — hero statements, feature descriptions, CTA copy, empty states, onboarding tooltips, and solution pages — all written in close partnership with engineering and design. The goal: copy that converts skeptical developers who read every word and trust nothing they don't recognize.",
+      "impact": [
+        "Internal product release alignment boosted CTR by 15–20% around launch week",
+        "Over 1.1K opportunities captured by form signups",
+        "15% adoption lift YoY",
+        "Microcopy and CTA rewrites directly tied to trial signup improvements across performance, full-stack, and enterprise solution pages"
+      ],
+      "links": [
+        {"name": "Enterprise page", "url": "https://www.sentry.dev/for/enterprise/"},
+        {"name": "Full stack", "url": "https://sentry.io/for/full-stack/"},
+        {"name": "Performance monitoring", "url": "https://www.sentry.dev/solutions/application-performance-monitoring/"},
+        {"name": "Mobile development", "url": "https://sentry.io/solutions/mobile-developers/"}
+      ]
+    },
+    {
+      "title": "GE | Experiential content",
+      "company": "GE",
+      "type": "interactive_content",
+      "category": "Technical Writing",
+      "skill_tags": ["interactive content", "experiential marketing", "technical storytelling", "B2B", "enterprise", "content strategy", "digital experience", "industrial tech"],
+      "campaignListDescription": "Taking specs and product roadmaps into an immersive digital experience with layered content and strategic calls to action — built for industrial buyers who think in specs, not slogans.",
+      "impact": [
+        "Click-through rate: +15–30%",
+        "Lead-to-opportunity conversion: +15–20%",
+        "30% lift in MQL volume"
+      ],
+      "links": [
+        {"name": "Aviation turboprop", "url": "https://www.ceros.com/inspire/project/ge-aviation-1"},
+        {"name": "Propulsion tech", "url": "https://www.ceros.com/inspire/project/ge-2"},
+        {"name": "Digital transformation", "url": "https://www.ceros.com/inspire/project/digital-transformation"},
+        {"name": "Unplanned downtime", "url": "https://www.ceros.com/inspire/project/unplanned-downtime"}
+      ]
+    },
+    {
+      "title": "Ceros | Fintech infographics",
+      "company": "Ceros",
+      "type": "interactive_content",
+      "category": "Fintech",
+      "skill_tags": ["fintech", "interactive content", "infographics", "financial services", "lead generation", "MQL", "Goldman Sachs", "Morgan Stanley", "Lending Club", "content ROI"],
+      "campaignListDescription": "Most digital content is still being written as if from a typewriter — despite being read on a screen. Static content written from this paper perspective, even if well-written and strategic, is viewed by customers as merely lumps of words. At Ceros, clients in trial often suffered from blank platform syndrome: an appreciation for the tool itself but a lack of understanding of its application to their broader content initiatives. From writing strategic briefs to pitching experiential activations and rewriting client inputs, I was central to turning static PDFs into interactive, mobile-friendly financial content that showcased the platform.",
+      "impact": [
+        "3x time spent on site compared to PDF content",
+        "1.75x SQL leads per month generated",
+        "Ceros closed financial clients producing this content while in trial"
+      ],
+      "links": [
+        {"name": "Lending Club Quiz", "url": "https://www.ceros.com/inspire/project/study-quiz-desktop"},
+        {"name": "Goldman Sachs | Taking the Heat (Vox)", "url": "https://www.vox.com/c/ad/21492335/voxcreative-goldman-sachs-sustainability"},
+        {"name": "Morgan Stanley | Sustainability", "url": "https://www.ceros.com/inspire/project/sustainability"}
+      ]
+    },
+    {
+      "title": "Chronosphere | Observability content",
+      "company": "Chronosphere",
+      "type": "technical_content",
+      "category": "Technical Writing",
+      "skill_tags": ["technical writing", "observability", "cloud-native", "developer content", "thought leadership", "long-form content", "monitoring", "DevOps"],
+      "campaignListDescription": "Technical thought leadership content for Chronosphere's cloud-native observability platform — translating complex monitoring concepts for engineering leaders evaluating modern observability stacks.",
+      "impact": [],
+      "links": [
+        {"name": "The future of observability", "url": "https://chronosphere.io/learn/the-future-of-observability-the-rise-of-cloud-native/"},
+        {"name": "Observability today", "url": "https://chronosphere.io/learn/observability-today-better-data-lower-costs/"},
+        {"name": "Prometheus conformance", "url": "https://chronosphere.io/learn/the-future-of-observability-prometheus-conformance-program/"},
+        {"name": "Year in review", "url": "https://chronosphere.io/learn/12-months-in-review-chronospheres-top-highlights/"}
+      ]
+    },
+    {
+      "title": "Text | UX & content audit",
+      "company": "Text",
+      "type": "consulting",
+      "category": "UX Writing",
+      "skill_tags": ["UX writing", "content strategy", "conversion copywriting", "CTA hierarchy", "above the fold", "content audit", "B2B SaaS", "AI", "ecommerce", "funnel alignment", "messaging strategy"],
+      "campaignListDescription": "Users give a website 50 milliseconds to decide whether to stay or bounce. I audited Text's homepage and Hesitant Buyer landing page to identify where messaging was losing that bet — and where it could win it back. Key findings: above-the-fold copy underselling a differentiated value prop; nine CTAs all routing to the same trial signup (no content offramps, no trust-building middle step); and a 'Hesitant Buyer' page whose headline promised awareness-stage content but delivered middle-funnel product specs. Recommendations focused on value prop clarity, CTA balance, funnel-stage alignment, and substantiating big claims with data.",
+      "impact": [],
+      "links": []
+    }
+  ]
+}

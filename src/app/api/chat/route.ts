@@ -113,7 +113,7 @@ CRITICAL TOOL USAGE INSTRUCTIONS:
 When the user provides ANYTHING related to job descriptions or URLs to job postings, you MUST call the analyzeJob tool immediately.`;
 
     const response = await anthropic.messages.create({
-      model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
+      model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6',
       max_tokens: 2048,
       system: effectiveSystemPrompt,
       messages: messages.map((msg: any) => ({
@@ -184,7 +184,7 @@ When the user provides ANYTHING related to job descriptions or URLs to job posti
         }
 
         const narrationResponse = await anthropic.messages.create({
-          model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
+          model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6',
           max_tokens: 2400,
           system: customSystem || systemPrompt,
           messages: [{

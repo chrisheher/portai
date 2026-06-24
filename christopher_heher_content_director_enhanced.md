@@ -36,7 +36,7 @@ content systems |
 - **DroneDeploy Safety AI**: Full-funnel campaign from awareness → decision, 3k landing page visits across TOFU content
 
 
-Working on a project basis, I've added value in all aspects of the content marketing ecosystem: process (creative briefs/zero drafts), insight (brand strategy/content roadmaps), execution (copy development), and optimization (metrics)
+Working on a project basis, I've added value in all aspects of the product marketing ecosystem: process (creative briefs/zero drafts), insight (brand strategy/content roadmaps), execution (copy development), and optimization (metrics)
 
 **DroneDeploy Safety AI launch** | tagline, full-funnel content campaign | $450k/quarter influence on ~10M sales pipeline, 140k views across assets, 20% email open rate
 

@@ -1,59 +1,28 @@
-// src/app/api/chat/tools/analyzeJob.ts - PRODUCTION VERSION (FIXED)
+// src/app/api/chat/tools/analyzeJob.ts
 import { tool } from "ai";
 import { z } from "zod";
 import Anthropic from '@anthropic-ai/sdk';
-import portfolioConfig from './portfolio-config-slim.json';
-import { storeAnalysis } from '@/lib/db/shareableResults';
+import portfolioConfig from '@/lib/portfolio-config.json';
+
+function loadLinkedInProfile(): string {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const fs = require('fs') as typeof import('fs');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const path = require('path') as typeof import('path');
+    return fs.readFileSync(
+      path.join(process.cwd(), 'christopher_heher_linkedin.md'),
+      'utf-8'
+    );
+  } catch {
+    console.error('⚠️  christopher_heher_linkedin.md not found');
+    return '';
+  }
+}
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
-
-interface RubricScores {
-  role_alignment: number;
-  domain_coverage: number;
-  skill_match: number;
-  impact_alignment: number;
-  gap_risk: number;
-  reasoning: string;
-}
-
-interface JobAnalysisResult {
-  matchScore: number;
-  rubricScores?: RubricScores;
-  strengths: Array<{
-    category: string;
-    match: string;
-    evidence: string;
-    confidence: 'high' | 'medium' | 'low';
-    priorityNumber?: 1 | 2 | 3;
-  }>;
-  gaps: Array<{
-    requirement: string;
-    severity: 'critical' | 'moderate' | 'minor';
-    suggestion: string;
-  }>;
-  standoutQualities: string[];
-  atsKeywords?: {
-    critical: string[];
-    recommended: string[];
-    phrasingsToUse: string[];
-    jobKeywords?: string[];
-    missingKeywords?: string[];
-    atsOptimizationTips?: string[];
-  };
-  recommendations: {
-    coverLetterFocus: string[];
-    skillsToHighlight: string[];
-    projectsToFeature: Array<string | { name: string; links?: Array<{ name: string; url: string }> }>;
-    narrativeStrategy?: string;
-    links?: Array<{ name: string; url: string }>;
-    applicationPriority?: 'high' | 'medium' | 'low';
-  };
-  summary: string;
-  shareableLink?: string;
-  resume?: string;
-}
 
 interface KeywordMatches {
   critical: string[];
@@ -80,47 +49,31 @@ function isURL(text: string): boolean {
 }
 
 function extractMatchingKeywords(
-  jobText: string, 
+  jobText: string,
   portfolioKeywords: typeof portfolioConfig.ATSKeywords
 ): KeywordMatches {
   const matches: KeywordMatches = {
     critical: [],
     recommended: [],
-    categories: {
-      core: [],
-      technical: [],
-      marketing: [],
-      soft: [],
-      industry: [],
-      tools: []
-    },
+    categories: { core: [], technical: [], marketing: [], soft: [], industry: [], tools: [] },
     jobKeywords: [],
     synonymMatches: []
   };
-   
-  // Extract raw keywords FROM the job description
+
   const jobKeywordPatterns = [
-    // Technical terms
     /\b(api|sdk|saas|b2b|ai|ml|devops|cloud|react|python|javascript|typescript|cms|automation)\b/gi,
-    // Role terms
     /\b(content\s+(?:strategy|marketing|writer|engineer)|technical\s+writing|developer\s+relations|product\s+marketing|brand\s+voice|thought\s+leadership)\b/gi,
-    // Soft skills
     /\b(leadership|collaboration|cross-functional|stakeholder|strategic|communication|storytelling)\b/gi,
-    // Marketing terms
     /\b(pipeline|campaign|launch|demand\s+generation|lead\s+generation|conversion|inbound)\b/gi,
   ];
 
   jobKeywordPatterns.forEach(pattern => {
-    const found = jobText.match(pattern) || [];
-    found.forEach(kw => {
+    (jobText.match(pattern) || []).forEach(kw => {
       const normalized = kw.toLowerCase().trim();
-      if (!matches.jobKeywords.includes(normalized)) {
-        matches.jobKeywords.push(normalized);
-      }
+      if (!matches.jobKeywords.includes(normalized)) matches.jobKeywords.push(normalized);
     });
   });
 
-  // Synonym mapping for better ATS matching
   const synonymMap: Record<string, string[]> = {
     'content strategy': ['content planning', 'content development', 'editorial strategy'],
     'technical writing': ['technical documentation', 'technical communication', 'tech writing'],
@@ -132,54 +85,28 @@ function extractMatchingKeywords(
     'social media': ['social', 'social content', 'social marketing']
   };
 
-  // Match against portfolio keywords
   Object.entries(portfolioKeywords).forEach(([category, keywords]) => {
     if (!Array.isArray(keywords)) return;
-
     keywords.forEach((keyword: string) => {
       const keywordLower = keyword.toLowerCase();
+      const escaped = keywordLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`\\b${escaped}\\b`, 'i');
 
-      // Create regex pattern that handles word boundaries and special chars
-      const escapedKeyword = keywordLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const regex = new RegExp(`\\b${escapedKeyword}\\b`, 'i');
-
-      // Direct match
       if (regex.test(jobText)) {
-        const categoryKey = category as keyof typeof matches.categories;
-
-        // Only push if the category array exists
-        if (matches.categories[categoryKey]) {
-          if (!matches.categories[categoryKey].includes(keyword)) {
-            matches.categories[categoryKey].push(keyword);
-          }
+        const key = category as keyof typeof matches.categories;
+        if (matches.categories[key] && !matches.categories[key].includes(keyword)) {
+          matches.categories[key].push(keyword);
         }
-
-        // Determine criticality based on category and tools
-        if (category === 'core' || category === 'technical' || category === 'tools') {
-          if (!matches.critical.includes(keyword)) {
-            matches.critical.push(keyword);
-          }
-        } else {
-          if (!matches.recommended.includes(keyword)) {
-            matches.recommended.push(keyword);
-          }
-        }
+        const bucket = (category === 'core' || category === 'technical' || category === 'tools')
+          ? 'critical' : 'recommended';
+        if (!matches[bucket].includes(keyword)) matches[bucket].push(keyword);
       }
 
-      // Check for synonym matches
-      const synonyms = synonymMap[keywordLower] || [];
-      synonyms.forEach(synonym => {
-        const synonymRegex = new RegExp(`\\b${synonym.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-        if (synonymRegex.test(jobText)) {
-          matches.synonymMatches.push({
-            jobTerm: synonym,
-            portfolioTerm: keyword
-          });
-
-          // Add to recommended if synonym matched
-          if (!matches.recommended.includes(keyword)) {
-            matches.recommended.push(keyword);
-          }
+      (synonymMap[keywordLower] || []).forEach(synonym => {
+        const sr = new RegExp(`\\b${synonym.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+        if (sr.test(jobText)) {
+          matches.synonymMatches.push({ jobTerm: synonym, portfolioTerm: keyword });
+          if (!matches.recommended.includes(keyword)) matches.recommended.push(keyword);
         }
       });
     });
@@ -188,764 +115,228 @@ function extractMatchingKeywords(
   return matches;
 }
 
-function enrichProjectsWithLinks(
-  projectNames: string[]
-): Array<{ name: string; links?: Array<{ name: string; url: string }> }> {
-  // Guard against undefined/null input
-  if (!projectNames || !Array.isArray(projectNames)) {
-    console.error('⚠️ enrichProjectsWithLinks received invalid input:', projectNames);
-    return [];
-  }
-
-  // Use the new projects array from portfolio config
-  const allProjects = (portfolioConfig as any).projects || [];
-
-  if (!allProjects || allProjects.length === 0) {
-    console.error('⚠️ No projects found in portfolio config');
-    return projectNames.map(name => ({ name }));
-  }
-
-  return projectNames.map(projectName => {
-    if (!projectName || typeof projectName !== 'string') {
-      return { name: String(projectName || 'Unknown') };
-    }
-
-    const projectLower = projectName.toLowerCase();
-
-    const matchedProject = allProjects.find((p: any) => {
-      if (!p.title) return false;
-      const title = p.title.toLowerCase();
-      const company = (p.company || '').toLowerCase();
-      const category = (p.category || '').toLowerCase();
-      const tagline = (p.tagline || '').toLowerCase();
-
-      // Match by title, company, category, or tagline
-      return title.includes(projectLower) ||
-             projectLower.includes(title) ||
-             (company && projectLower.includes(company)) ||
-             (category && projectLower.includes(category)) ||
-             (tagline && projectLower.includes(tagline));
-    });
-
-    console.error(`🔍 "${projectName}" → matched:`, matchedProject?.title || 'NONE');
-
-    return {
-      name: projectName,
-      links: matchedProject?.links || undefined
-    };
-  });
-}
-
-/**
- * Calculate match score using Claude as a 5-dimension rubric judge (Haiku for speed)
- */
-async function calculateMatchScore(
-  keywordMatches: KeywordMatches,
-  jobContent: string
-): Promise<{ score: number; rubric?: RubricScores }> {
-  const scoreStart = Date.now();
-
-  const portfolioSummary = {
-    roles: [
-      'Technical Content Strategist — Sentry (2020–2022)',
-      'Senior Content Strategist — DroneDeploy (2022–2023)',
-      'Content Strategist — Ceros, Airbnb, HP, agencies (2014–2020)'
-    ],
-    keyProjects: ((portfolioConfig as any).projects || []).slice(0, 10).map((p: any) => ({
-      title: p.title,
-      company: p.company,
-      category: p.category,
-      impact: Array.isArray(p.impact) ? p.impact[0] : (p.impact || '')
-    })),
-    matchedKeywords: keywordMatches.critical.slice(0, 15)
-  };
-
-  let rawRubricText = '';
-  try {
-    const response = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 500,
-      temperature: 0.2,
-      messages: [{
-        role: 'user',
-        content: `Score this candidate-job match on 5 dimensions (0–20 each). Return only valid JSON, no commentary.
-
-CANDIDATE PORTFOLIO:
-${JSON.stringify(portfolioSummary, null, 2)}
-
-JOB DESCRIPTION (first 1800 chars):
-${jobContent.slice(0, 1800)}
-
-Score each dimension 0–20:
-1. role_alignment — Does seniority, scope, and title match the candidate's level?
-2. domain_coverage — How well does the candidate's industry background overlap with this role's domain?
-3. skill_match — How completely do the candidate's demonstrated skills cover the required skills?
-4. impact_alignment — Do the candidate's portfolio metrics match what this role values (pipeline, growth, engagement, etc.)?
-5. gap_risk — How likely are gaps to disqualify the candidate? (20 = no meaningful gaps, 0 = deal-breaker gaps)
-
-Return exactly this JSON shape:
-{"role_alignment":0,"domain_coverage":0,"skill_match":0,"impact_alignment":0,"gap_risk":0,"reasoning":"one sentence explaining the overall fit"}`
-      }]
-    });
-
-    const textContent = response.content.find(c => c.type === 'text');
-    if (!textContent || textContent.type !== 'text') throw new Error('No text in rubric response');
-
-    rawRubricText = textContent.text.trim();
-    console.error(`🤖 Haiku raw response: ${rawRubricText}`);
-
-    const scores = JSON.parse(fixMalformedJSON(rawRubricText));
-    const total =
-      (scores.role_alignment   || 0) +
-      (scores.domain_coverage  || 0) +
-      (scores.skill_match      || 0) +
-      (scores.impact_alignment || 0) +
-      (scores.gap_risk         || 0);
-
-    console.error(`📊 Rubric scores (Claude-as-Judge):
-    Role Alignment:   ${scores.role_alignment}/20
-    Domain Coverage:  ${scores.domain_coverage}/20
-    Skill Match:      ${scores.skill_match}/20
-    Impact Alignment: ${scores.impact_alignment}/20
-    Gap Risk:         ${scores.gap_risk}/20
-    Reasoning: ${scores.reasoning}
-    TOTAL: ${total}/100`);
-    console.error(`⏱️  Rubric scoring: ${Date.now() - scoreStart}ms`);
-
-    return { score: Math.max(15, Math.min(97, total + 10)), rubric: scores as RubricScores };
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    console.error(`⚠️  Rubric scoring failed: ${msg}`);
-    if (rawRubricText) console.error(`⚠️  Raw text that failed: ${rawRubricText}`);
-    // Fallback: simple keyword count heuristic
-    const fallback = Math.min(95, 40 + keywordMatches.critical.length * 3 + keywordMatches.recommended.length);
-    console.error(`⚠️  Fallback score: ${fallback}`);
-    return { score: fallback };
-  }
-}
-
-/**
- * Apply score bonuses based on job attributes.
- * Gap penalties are intentionally omitted — gap_risk is already
- * one of Haiku's five rubric dimensions, so penalizing again here
- * would double-count the same signal.
- */
-function applyScoreModifiers(blendedScore: number, jobContent: string): number {
-  let score = blendedScore;
-
-  const jobLower = jobContent.toLowerCase();
-  if (jobLower.includes('remote')) score += 5;
-  if (jobLower.includes('flexible')) score += 3;
-  if (jobLower.includes('startup') && jobLower.includes('series')) score += 5;
-
-  const final = Math.max(15, Math.min(97, score));
-  console.error(`🎯 Score modifiers → final: ${final}`);
-  return final;
-}
-
-/**
- * Attempts to fix common JSON issues before parsing
- */
 function fixMalformedJSON(jsonText: string): string {
-  let fixed = jsonText;
-  
-  // Remove markdown code blocks
-  fixed = fixed.replace(/```json\n?/gi, '').replace(/```\n?/g, '');
-  
-  // Trim whitespace
-  fixed = fixed.trim();
-  
-  // Extract JSON if wrapped in text
+  let fixed = jsonText.replace(/```json\n?/gi, '').replace(/```\n?/g, '').trim();
   if (!fixed.startsWith('{')) {
-    const jsonMatch = fixed.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      fixed = jsonMatch[0];
-    }
+    const m = fixed.match(/\{[\s\S]*\}/);
+    if (m) fixed = m[0];
   }
-  
-  // Try to fix truncated JSON by adding closing brackets
-  if (fixed.endsWith(',')) {
-    fixed = fixed.slice(0, -1) + ']}';
-  }
+  if (fixed.endsWith(',')) fixed = fixed.slice(0, -1) + ']}';
   if (!fixed.endsWith('}')) {
-    const openBraces = (fixed.match(/\{/g) || []).length;
-    const closeBraces = (fixed.match(/\}/g) || []).length;
-    fixed += '}'.repeat(Math.max(0, openBraces - closeBraces));
+    const open = (fixed.match(/\{/g) || []).length;
+    const close = (fixed.match(/\}/g) || []).length;
+    fixed += '}'.repeat(Math.max(0, open - close));
   }
-  
   return fixed;
 }
 
-/**
- * Generate a shareable link with database storage
- */
-async function generateShareableLink(analysis: JobAnalysisResult): Promise<string> {
-  try {
-    const { shareableLink, ...cleanAnalysis } = analysis;
-    
-    // Store in database and get short ID
-    const shortId = await storeAnalysis(cleanAnalysis);
-    
-    const baseUrl = process.env.NEXT_PUBLIC_URL || '';
-    const link = `${baseUrl}/results/${shortId}`;
-    
-    console.error(`🔗 Generated SHORT link: ${link} (ID: ${shortId})`);
-    return link;
-  } catch (error) {
-    console.error('❌ Error generating shareable link:', error);
-    // Fallback to base64 if storage fails
-    const { shareableLink, ...cleanAnalysis } = analysis;
-    const analysisId = Buffer.from(
-      JSON.stringify(cleanAnalysis)
-    ).toString('base64url');
-    return `${process.env.NEXT_PUBLIC_URL || ''}/results/${analysisId}`;
-  }
-}
-
-/**
- * Generate a tailored resume from job analysis + portfolio data
- */
-async function generateResume(
-  analysis: JobAnalysisResult,
+async function calculateMatchScore(
+  keywordMatches: KeywordMatches,
   jobContent: string
-): Promise<string> {
-  try {
-    const resumeStart = Date.now();
-
-    const projectSummaries = (portfolioConfig as any).projects?.map((p: any) => ({
+): Promise<number> {
+  const portfolioSummary = {
+    roles: ((portfolioConfig as any).experience || []).map((e: any) => `${e.title} — ${e.company} (${e.duration})`),
+    unique_strengths: portfolioConfig.unique_strengths,
+    tools_and_platforms: (portfolioConfig as any).tools_and_platforms,
+    devrel_expertise: (portfolioConfig as any).devrel_expertise?.overview,
+    freelance_clients: ((portfolioConfig as any).experience?.[0]?.clients || []).map((c: any) => `${c.name}: ${c.deliverable}`),
+    keyProjects: ((portfolioConfig as any).projects || []).slice(0, 12).map((p: any) => ({
       title: p.title,
       company: p.company,
       category: p.category,
-      impact: Array.isArray(p.impact) ? p.impact.join('; ') : ''
-    })) || [];
+      skill_tags: Array.isArray(p.skill_tags) ? p.skill_tags.slice(0, 6) : [],
+      topImpact: Array.isArray(p.impact) ? p.impact[0] : ''
+    })),
+    matchedKeywords: keywordMatches.critical.slice(0, 20)
+  };
 
+  try {
     const response = await anthropic.messages.create({
-      model: 'claude-opus-4-5-20251101',
-      max_tokens: 1600,
-      temperature: 0.7,
+      model: 'claude-sonnet-4-6',
+      max_tokens: 400,
       messages: [{
         role: 'user',
-        content: `Generate a tailored resume for Chris Heher targeting this specific job.
+        content: `Score this candidate-job match on 5 dimensions (0–20 each). Return ONLY valid JSON, no commentary.
 
-JOB DESCRIPTION (first 2000 chars):
-${jobContent.slice(0, 2000)}
+CANDIDATE: ${JSON.stringify(portfolioSummary)}
+JOB (first 1500 chars): ${jobContent.slice(0, 1500)}
 
-ANALYSIS OUTPUT:
-- Match Score: ${analysis.matchScore}%
-- Priority Strengths:
-${analysis.strengths.map(s => `  Priority ${s.priorityNumber ?? '?'}: "${s.match}" — ${s.evidence}`).join('\n')}
-- ATS Keywords Matched: ${analysis.atsKeywords?.critical?.join(', ') || 'none'}
-- Exact Phrases from Job to Weave In: ${analysis.atsKeywords?.phrasingsToUse?.join(' | ') || 'none'}
+CALIBRATION: This is a senior candidate (15+ years) with a strong B2B tech content and DevRel track record. Score on a curve where 82–92 = strong fit worth advancing, 70–81 = reasonable fit with questions, below 70 = clear mismatch. Do not anchor to a theoretical perfect candidate. Do not penalize for gaps unless they are genuinely disqualifying — adjacent experience and transferable portfolio work count as coverage.
 
-PORTFOLIO PROJECTS:
-${JSON.stringify(projectSummaries, null, 2)}
+Score each dimension 0–20:
 
-RULES — follow every one:
-1. Extract the exact job title from the job description. Use it verbatim in the headline (e.g. "Senior Content Strategist" not "Content Expert").
-2. Weave 5-7 exact phrases from the job description into experience bullets. Do not paraphrase them — use them word-for-word.
-3. Put ATS keywords from the analysis into the headline skills, bullets, and Skills section.
-4. Skills section: 15–25 hard skills only, comma-separated. No soft skills (no "communication", "collaboration", "leadership").
-5. Match the three "Strongest Matches" sections to the three priority strengths from the analysis.
+1. role_alignment — Does the candidate's title history, seniority, and scope match this role?
+   20=strong match on title and scope | 17=adjacent title, same seniority | 13=transferable function, similar scope | 7=meaningful stretch | 0=clear mismatch
 
-OUTPUT FORMAT — use this structure exactly, no preamble:
+2. domain_coverage — Does the candidate's industry/domain background overlap with this role's domain?
+   20=same or overlapping industry | 17=related tech/B2B space | 12=partial overlap | 5=tangential | 0=unrelated
 
-[Exact Job Title from Posting]
-[ATS Skill 1] | [ATS Skill 2] | [ATS Skill 3] | [ATS Skill 4]
-chrisheher@gmail.com  |  Jersey City, NJ  |  portai.app
+3. skill_match — How completely do the candidate's demonstrated skills cover the required skills?
+   20=all key skills demonstrated | 17=most covered, minor gaps | 12=core covered, 1–2 specialty gaps | 5=partial | 0=missing critical skills
+   NOTE: only score below 12 if a required skill is genuinely absent with no transferable proxy.
+
+4. impact_alignment — Do the candidate's proof points (pipeline, growth, engagement) match what this role values?
+   20=metrics align directly | 17=similar KPI types and scale | 12=related outcomes, different framing | 5=soft evidence only | 0=no evidence
+
+5. narrative_fit — How compellingly does the candidate's overall story, trajectory, and positioning match what this role is hiring for?
+   20=the career arc leads directly here, story is obvious | 17=clear through-line with minor repositioning needed | 13=coherent case requires some framing work | 7=requires significant reframing | 0=no plausible narrative
+
+Return exactly: {"role_alignment":<n>,"domain_coverage":<n>,"skill_match":<n>,"impact_alignment":<n>,"narrative_fit":<n>,"reasoning":"<one sentence on biggest strength and biggest gap>"}`
+      }]
+    });
+
+    const text = response.content.find(c => c.type === 'text');
+    if (!text || text.type !== 'text') throw new Error('No text');
+    const parsed = JSON.parse(fixMalformedJSON(text.text.trim()));
+    const total = (parsed.role_alignment || 0) + (parsed.domain_coverage || 0) +
+      (parsed.skill_match || 0) + (parsed.impact_alignment || 0) + (parsed.narrative_fit || 0);
+    // Apply remote/startup bonus before capping
+    let adjusted = total;
+    const jobLower = jobContent.toLowerCase();
+    if (jobLower.includes('remote')) adjusted += 5;
+    if (jobLower.includes('startup') && jobLower.includes('series')) adjusted += 5;
+    const score = Math.max(15, Math.min(97, adjusted));
+    console.error(`📊 Rubric: role=${parsed.role_alignment} domain=${parsed.domain_coverage} skill=${parsed.skill_match} impact=${parsed.impact_alignment} narrative=${parsed.narrative_fit} → ${score}% | ${parsed.reasoning}`);
+    return score;
+  } catch (err) {
+    console.error('⚠️  Score failed:', err instanceof Error ? err.message : err);
+    return Math.min(95, 40 + keywordMatches.critical.length * 3 + keywordMatches.recommended.length);
+  }
+}
+
+async function analyzeJobDescription(jobContent: string): Promise<{ matchScore: number; resume: string; jobPhrases: string[]; matchSummary: string }> {
+  console.error('\n🔥 === JOB ANALYSIS START ===');
+  const start = Date.now();
+
+  const keywordMatches = extractMatchingKeywords(jobContent, portfolioConfig.ATSKeywords);
+  console.error(`   Keywords: ${keywordMatches.critical.length} critical, ${keywordMatches.recommended.length} recommended`);
+
+  const matchScore = await calculateMatchScore(keywordMatches, jobContent);
+
+  const portfolioForPrompt = {
+    personal: portfolioConfig.personal,
+    experience: (portfolioConfig as any).experience,
+    unique_strengths: portfolioConfig.unique_strengths,
+    projects: portfolioConfig.projects
+  };
+
+  const linkedIn = loadLinkedInProfile().slice(0, 3000);
+  const truncatedJob = jobContent.slice(0, 2500);
+
+  const response = await anthropic.messages.create({
+    model: 'claude-opus-4-8',
+    max_tokens: 1800,
+    messages: [{
+      role: 'user',
+      content: `Generate a tailored resume for Chris Heher for this job.
+
+JOB DESCRIPTION:
+${truncatedJob}
+
+PORTFOLIO:
+${JSON.stringify(portfolioForPrompt)}
+
+LINKEDIN CONTEXT:
+${linkedIn}
+
+MATCHED KEYWORDS: ${keywordMatches.critical.slice(0, 20).join(', ')}
+
+CALCULATED MATCH SCORE: ${matchScore}% — your MATCH: line must reference this exact number.
+
+RULES:
+1. Use the exact job title from the posting verbatim in the headline.
+2. Weave 5–7 exact phrases from the job description into bullets word-for-word.
+3. Include ATS keywords in the headline skills, bullets, and Skills section.
+4. Skills: 15–25 hard skills only, comma-separated. No soft skills.
+5. Every bullet ends with a metric (e.g. — $1.8M pipeline, 72% increase).
+
+START your response with exactly these two lines, then a blank line:
+PHRASES: [phrase 1] || [phrase 2] || [phrase 3] || [phrase 4] || [phrase 5] || [phrase 6] || [phrase 7] || [phrase 8]
+MATCH: [Start with "${matchScore}% match." then 50–100 words explaining why — name the 2–3 strongest alignment points and any meaningful gaps, using specific evidence from the portfolio and specific requirements from the job. Be direct, not promotional.]
+
+FORMAT:
+
+PHRASES: [phrase 1] || [phrase 2] || ...
+MATCH: [50–100 word match explanation]
+
+
+[Exact Job Title]
+[Skill 1] | [Skill 2] | [Skill 3] | [Skill 4]
+chrisheher@gmail.com | Jersey City, NJ | portai.app
 
 ---
 
-STRONGEST MATCHES FOR THIS ROLE
-
-Priority 1 → [strength.match]
-[One sentence evidence using metric from portfolio. Weave in exact phrase from job.]
-
-Priority 2 → [strength.match]
-[One sentence evidence using metric from portfolio. Weave in exact phrase from job.]
-
-Priority 3 → [strength.match]
-[One sentence evidence using metric from portfolio. Weave in exact phrase from job.]
+SUMMARY
+I am what AI ain't. [Then 2–3 sentences making the logical case for why Chris is the right fit for this specific role — use exact phrases from the job description, ground every claim in a real project and metric, and speak directly to what the hiring manager actually needs. Do not hedge. Do not list skills. Make the argument.]
 
 ---
 
 EXPERIENCE
 
-Technical Content Strategist  |  Sentry  |  2020–2022
-•  [Bullet weaving in exact phrase from job] — [metric]
-•  [Bullet weaving in exact phrase from job] — [metric]
-•  [Bullet] — [metric]
+Freelance Content Marketer | Independent | 01/2025–Present
+• [bullet with exact phrase from job] — [metric]
+• [bullet] — [metric]
 
-Senior Content Strategist  |  DroneDeploy  |  2022–2023
-•  [Bullet weaving in exact phrase from job] — [metric]
-•  [Bullet] — [metric]
+Technical Content Strategist | Sentry | 2020–2022
+• [bullet with exact phrase from job] — [metric]
+• [bullet] — [metric]
+• [bullet] — [metric]
 
-[Add 1–2 more roles if relevant: Ceros, Airbnb, HP, TBWA, Momentum, 360i, Razorfish]
+Senior Content Strategist | DroneDeploy | 2022–2023
+• [bullet with exact phrase from job] — [metric]
+• [bullet] — [metric]
+
+[Add 1–2 earlier roles if relevant: Ceros, Airbnb, HP, TBWA, Momentum, 360i, Razorfish]
 
 ---
 
-SKILLS AND TOOLS
-[15–25 hard skills, comma-separated, no soft skills]
+SKILLS
+[15–25 hard skills, comma-separated]
 
----
+No other commentary.`
+    }]
+  });
 
-KEYWORDS
-${analysis.atsKeywords?.critical?.join(', ') || ''}
+  const textContent = response.content.find(c => c.type === 'text');
+  const raw = textContent?.type === 'text' ? textContent.text.trim() : '';
 
-Return only the resume. No commentary before or after.`
-      }]
-    });
+  // Parse PHRASES and MATCH header lines, strip both from resume body
+  const phrasesMatch = raw.match(/^PHRASES:\s*(.+)$/m);
+  const jobPhrases = phrasesMatch
+    ? phrasesMatch[1].split('||').map((s: string) => s.trim()).filter(Boolean)
+    : [];
 
-    const textContent = response.content.find(c => c.type === 'text');
-    const resumeText = textContent?.type === 'text' ? textContent.text.trim() : '';
-    console.error(`⏱️  Resume generation: ${Date.now() - resumeStart}ms`);
-    return resumeText;
-  } catch (err) {
-    console.error('❌ Resume generation failed:', err);
-    return '';
-  }
-}
+  const matchMatch = raw.match(/^MATCH:\s*(.+)$/m);
+  const matchSummary = matchMatch ? matchMatch[1].trim() : '';
 
-async function analyzeJobDescription(jobContent: string): Promise<JobAnalysisResult> {
-  try {
-    console.error('\n🔥 === JOB ANALYSIS START ===');
-    const totalStart = Date.now();
-    
-    // Step 1: Extract keywords
-    const extractStart = Date.now();
-    const keywordMatches = extractMatchingKeywords(jobContent, portfolioConfig.ATSKeywords);
+  const resume = raw
+    .replace(/^PHRASES:.*$/m, '')
+    .replace(/^MATCH:.*$/m, '')
+    .replace(/^\n+/, '')
+    .trim();
 
-    console.error(`⏱️  Keyword extraction: ${Date.now() - extractStart}ms`);
-    console.error(`   Found: ${keywordMatches.critical.length} critical, ${keywordMatches.recommended.length} recommended`);
-    console.error(`   Job keywords extracted: ${keywordMatches.jobKeywords.join(', ') || 'none'}`);
-    console.error(`   Synonym matches: ${keywordMatches.synonymMatches.length}`);
-
-    // Log the actual keywords
-    console.error(`   Critical keywords: ${keywordMatches.critical.join(', ') || 'none'}`);
-    console.error(`   Recommended keywords: ${keywordMatches.recommended.join(', ') || 'none'}`);
-    console.error(`   By category:`);
-    console.error(`     - Core: ${keywordMatches.categories.core.join(', ') || 'none'}`);
-    console.error(`     - Technical: ${keywordMatches.categories.technical.join(', ') || 'none'}`);
-    console.error(`     - Marketing: ${keywordMatches.categories.marketing.join(', ') || 'none'}`);
-    console.error(`     - Soft: ${keywordMatches.categories.soft.join(', ') || 'none'}`);
-    console.error(`     - Industry: ${keywordMatches.categories.industry.join(', ') || 'none'}`);
-    console.error(`     - Tools: ${keywordMatches.categories.tools.join(', ') || 'none'}`);
-
-    if (keywordMatches.synonymMatches.length > 0) {
-      console.error(`   Synonym mappings:`);
-      keywordMatches.synonymMatches.forEach(({ jobTerm, portfolioTerm }) => {
-        console.error(`     "${jobTerm}" → "${portfolioTerm}"`);
-      });
-    }
-
-    // Step 2: Calculate base match score (Claude-as-Judge rubric)
-    const { score: baseScore, rubric: rubricScores } = await calculateMatchScore(keywordMatches, jobContent);
-    
-    // Step 3: Truncate job description
-    const maxJobLength = 3000;
-    const truncatedJob = jobContent.length > maxJobLength
-      ? jobContent.slice(0, maxJobLength) + '\n\n[truncated]'
-      : jobContent;
-    
-    console.error(`📄 Job length: ${jobContent.length} chars (${truncatedJob.length} sent)`);
-    
-    // Step 4: Call API with calculated score
-    const apiStart = Date.now();
-    console.error('📤 Calling Claude API...');
-    
-    const response = await anthropic.messages.create({
-      model: 'claude-opus-4-5-20251101',
-      max_tokens: 2600,
-      temperature: .9,
-      system: [
-        {
-          type: "text",
-      text: `Analyze jobs against this portfolio. IMPORTANT: Address the hiring manager/recruiter -- not the candidate/Chris -- frame blurbs by answering this question: what business problem did I solve and what measurable outcome came from it?
-
-Portfolio:
-${JSON.stringify(portfolioConfig, null, 2)}
-
-TOP PRIORITIES IDENTIFICATION:
-Before analyzing, identify the top 3 priorities/requirements from the job description by looking for:
-1. Responsibilities mentioned first or emphasized in the job posting
-2. Required qualifications vs. preferred qualifications (prioritize required)
-3. Repeated themes or requirements mentioned multiple times
-4. Key phrases like "primary focus," "core responsibility," "must have"
-
-The first sentence of the "summary" field MUST state these three priorities clearly.
-Example: "This position prioritizes: (1) GTM content strategy for SaaS products, (2) technical writing for developer audiences, and (3) cross-functional collaboration with product teams."
-
-PROJECT-FOCUSED ANALYSIS:
-The portfolio contains ${(portfolioConfig as any).projects?.length || 0} projects spanning GTM launches, developer content, employer branding, and technical writing. When making recommendations:
-
-1. ALWAYS reference specific projects by name (e.g., "Sentry Performance GTM campaign", "DroneDeploy Safety AI", "Airbnb Career website")
-2. For "projectsToFeature", select 2-4 projects that most closely align with the job requirements
-3. Match projects based on:
-   - Category alignment (GTM Launch, Developer Relations, Brand Voice, etc.)
-   - Company type (SaaS, B2B, fintech, employer brand)
-   - Technical domain (AI/ML, DevOps, cloud, etc.)
-   - Impact metrics similar to job KPIs
-
-Available projects with skill tags and impact metrics:
-${(portfolioConfig as any).projects?.map((p: any) => {
-  const impacts = Array.isArray(p.impact) ? p.impact.join('; ') : '';
-  const tags = Array.isArray(p.skill_tags) ? p.skill_tags.join(', ') : '';
-  return `- ${p.title} (${p.company}) [${p.category}]\n  Skill tags: ${tags}\n  Impact: ${impacts}`;
-}).join('\n') || 'None'}
-
-PROJECT SELECTION RULE: For each of the 3 priorities, find the project whose skill_tags most directly match the language of that priority. Prefer exact or near-exact tag matches over category-level matches. If two projects tie, choose the one with the stronger metric.
-
-STRENGTHS SECTION - PRIORITY MAPPING:
-The "strengths" array MUST map to the top 3 priorities identified from the job description. For each strength:
-1. The "priorityNumber" MUST be 1, 2, or 3 — matching the exact priority number from your summary sentence
-2. The "category" should reflect which priority it addresses
-3. The "match" should quote the specific job requirement
-4. The "evidence" MUST include:
-   - Specific project name from portfolio
-   - Quantified impact/metric from that project
-   - Direct connection to how this addresses the job priority
-
-Example strength entry:
-{
-  "category": "GTM Launch",
-  "match": "drive product launch content strategy",
-  "evidence": "Led Sentry Performance GTM campaign ('See Slow Faster') — $1.8M in attributed pipeline, 1.2k content-sourced leads, 3.5k visits (2.3x site average).",
-  "confidence": "high"
-}
-
-EVIDENCE QUALITY RULES:
-✅ GOOD evidence is:
-- Project-specific: Names the actual portfolio project
-- Quantified: Includes metrics from portfolio (e.g., "$1.8M pipeline," "72% increase," "45k visits")
-- Outcome-focused: Shows business impact, not just activity
-- Ends on the result: the metric IS the conclusion — no explanatory tail needed
-
-❌ BAD evidence is:
-- Generic: "Has content strategy experience"
-- Vague: "Worked on marketing campaigns"
-- Skill-listing: "Knows React and TypeScript"
-- Resume-speak: "Excellent communication skills"
-- Missing metrics: No quantifiable outcomes
-- Concluding with "demonstrating...": NEVER end evidence with "demonstrating [ability/experience/etc]" — let the numbers speak`,
-          cache_control: { type: "ephemeral" }
-        }
-      ],
-      messages: [{
-        role: 'user',
-        content: `Matched keywords: ${keywordMatches.critical.join(', ') || 'none'}
-Base calculated score: ${baseScore}
-
-Job:
-${truncatedJob}
-
-AVAILABLE CATEGORIES (use ONLY these for "category" field - pick the one that best matches the job requirement):
-- GTM Launch
-- Technical Writing
-- Developer Content
-- Brand Voice
-- Thought Leadership
-- Fintech
-- Employer Brand
-- SaaS / B2B
-- AI / ML
-- Content Strategy
-
-ROLE-SPECIFIC OVERRIDES (apply before general analysis):
-- If the job mentions cybersecurity, security, compliance, SOC 2, HIPAA, GDPR, FedRAMP, or similar: the "Sentry developer content" project includes direct SOC 2 Type II certification content strategy. Treat this as a STRENGTH (not a gap). Include "Sentry developer content" in projectsToFeature. Do NOT list security/compliance as a gap.
-- If the job mentions global, distributed, remote, international, or cross-timezone: the "Sentry developer content" project includes cross-timezone coordination with US + Vienna (Austria) engineering teams. Feature this project.
-
-CRITICAL INSTRUCTIONS:
-- FIRST, identify the top 3 priorities/requirements from this job description
-- The "summary" field MUST start with: "This position prioritizes: (1) [priority 1], (2) [priority 2], and (3) [priority 3]."
-- Each of the 3 "strengths" should directly address one of these priorities with:
-  * Specific project name from the portfolio
-  * Quantified metrics/impact from that project
-  * Clear connection between the project outcome and the job priority
-- For "match", extract a DIRECT QUOTE (10 words or fewer) directly from the job description
-- For "projectsToFeature", use ACTUAL project titles from the portfolio (e.g., "Sentry Performance GTM campaign", "DroneDeploy Safety AI", "Airbnb Career website")
-- Select 2-4 projects that best match the job requirements based on category, industry, and required skills
-
-ATS OPTIMIZATION INSTRUCTIONS:
-- Identify keywords from job description that are NOT in the portfolio - add to "missingKeywords"
-- Provide 3-5 specific "atsOptimizationTips" for maximizing ATS score:
-  * Suggest exact phrases from job description to mirror in resume/cover letter
-  * Identify required vs. preferred qualifications
-  * Recommend keyword density improvements
-  * Suggest how to reframe existing experience using job's terminology
-  * Highlight tools/platforms mentioned in job description
-- For "phrasingsToUse", extract 3-5 key phrases directly from the job posting (exact quotes)
-
-Return valid JSON (exactly 3 strengths mapping to top 3 priorities, max 3 gaps):
-{
-  "matchScore": <number between 15-95>,
-  "strengths": [
-    {
-      "priorityNumber": 1,
-      "category":"GTM Launch",
-      "match":"lead product launch content strategy",
-      "evidence":"Led Sentry Performance GTM campaign ('See Slow Faster') — $1.8M in attributed pipeline, 1.2k content-sourced leads, 3.5k visits (2.3x site average).",
-      "confidence":"high"
-    },
-    {
-      "priorityNumber": 2,
-      "category":"Technical Writing",
-      "match":"create technical content for developer audiences",
-      "evidence":"Sentry Dogfooding Chronicles — 25+ posts, 45k site visits (40% organic), $100K-$150K annual SEO value, 480 SQL conversions (9.5% attributed to ARR growth from $45M to $90M).",
-      "confidence":"high"
-    },
-    {
-      "priorityNumber": 3,
-      "category":"Content Strategy",
-      "match":"cross-functional collaboration with product teams",
-      "evidence":"Built GitHub-based editorial workflow at Sentry cutting production time 50% (3-4 weeks → 1-2 weeks). DroneDeploy sales enablement: ~$850K influence on $10M pipeline.",
-      "confidence":"high"
-    }
-  ],
-  "gaps": [{"requirement":"Python","severity":"moderate","suggestion":"Emphasize JS skills"}],
-  "standoutQualities": ["Full-stack"],
-  "atsKeywords": {
-    "critical":${JSON.stringify(keywordMatches.critical)},
-    "recommended":[],
-    "phrasingsToUse":["drive go-to-market strategy","collaborate with cross-functional teams"],
-    "missingKeywords":["Specific skills from job not in portfolio"],
-    "atsOptimizationTips":["Mirror exact job title in resume header","Use phrase 'developer-focused content' from job description","Quantify impact using metrics format from job posting"]
-  },
-  "recommendations": {"coverLetterFocus":["React"],"skillsToHighlight":["TypeScript"],"projectsToFeature":["Sentry Performance GTM campaign", "DroneDeploy Safety AI"]},
-  "summary": "This position prioritizes: (1) GTM content strategy for SaaS product launches, (2) technical writing for developer audiences, and (3) cross-functional collaboration with product and engineering teams. Chris demonstrates strong alignment across all three priorities with quantified proof points from Sentry, DroneDeploy, and Airbnb projects showing consistent ability to drive pipeline ($1.8M+), engage technical audiences (45k+ visits), and build scalable content systems (50% efficiency gains)."
-}`
-      }]
-    });
-
-    const apiTime = Date.now() - apiStart;
-    console.error(`⏱️  API call: ${apiTime}ms`);
-    console.error(`📊 Tokens: ${response.usage.input_tokens} in, ${response.usage.output_tokens} out`);
-    
-    if (response.usage && 'cache_read_input_tokens' in response.usage) {
-      const cacheCreated = (response.usage as any).cache_creation_input_tokens || 0;
-      const cacheRead = (response.usage as any).cache_read_input_tokens || 0;
-      console.error(`💾 Cache: ${cacheCreated} created, ${cacheRead} read`);
-    }
-
-    // Step 5: Parse response with error recovery
-    const parseStart = Date.now();
-    const textContent = response.content.find(c => c.type === 'text');
-    if (!textContent || textContent.type !== 'text') {
-      throw new Error('No text content in response');
-    }
-
-    let responseText = textContent.text;
-    
-    // Try to fix malformed JSON
-    responseText = fixMalformedJSON(responseText);
-    
-    let parsed: JobAnalysisResult;
-    try {
-      parsed = JSON.parse(responseText);
-    } catch (parseError) {
-      console.error('❌ JSON Parse Error:', parseError);
-      console.error('📄 Response preview:', responseText.substring(0, 500));
-      
-      // Fallback: return basic analysis from keywords and calculated score
-      console.error('⚠️  Using fallback basic analysis');
-      const fallbackAnalysis: JobAnalysisResult = {
-        matchScore: baseScore,
-        strengths: keywordMatches.critical.slice(0, 3).map(kw => ({
-          category: 'Technical',
-          match: kw,
-          evidence: `Has ${kw} experience`,
-          confidence: 'high' as const
-        })),
-        gaps: [{
-          requirement: 'Unable to complete full analysis',
-          severity: 'moderate' as const,
-          suggestion: 'Try again with shorter job description'
-        }],
-        standoutQualities: keywordMatches.critical.slice(0, 2),
-        atsKeywords: {
-          critical: keywordMatches.critical,
-          recommended: keywordMatches.recommended,
-          phrasingsToUse: [],
-          jobKeywords: keywordMatches.jobKeywords
-        },
-        recommendations: {
-          coverLetterFocus: [`Highlight ${keywordMatches.critical[0] || 'skills'}`],
-          skillsToHighlight: keywordMatches.critical.slice(0, 3),
-          projectsToFeature: ['Top relevant project']
-        },
-        summary: `Keyword match: ${keywordMatches.critical.length} critical skills matched. Base score: ${baseScore}%.`
-      };
-      
-      fallbackAnalysis.shareableLink = await generateShareableLink(fallbackAnalysis);
-      
-      return fallbackAnalysis;
-    }
-
-    console.error(`⏱️  JSON parsing: ${Date.now() - parseStart}ms`);
-
-    // Step 6: Merge keywords and add jobKeywords
-    if (!parsed.atsKeywords) {
-      parsed.atsKeywords = {
-        critical: keywordMatches.critical,
-        recommended: keywordMatches.recommended,
-        phrasingsToUse: [],
-        jobKeywords: keywordMatches.jobKeywords
-      };
-    } else {
-      parsed.atsKeywords.critical = [...new Set([
-        ...keywordMatches.critical,
-        ...(parsed.atsKeywords.critical || [])
-      ])];
-      
-      parsed.atsKeywords.recommended = [...new Set([
-        ...keywordMatches.recommended,
-        ...(parsed.atsKeywords.recommended || [])
-      ])];
-      
-      // Add job keywords
-      parsed.atsKeywords.jobKeywords = keywordMatches.jobKeywords;
-    }
-
-    // Step 7: Blend Haiku rubric (70%) with Opus judgment (30%), then apply bonuses.
-    // Opus sees the full job + portfolio context so its score is a useful signal,
-    // but the rubric is more consistent — weight it higher.
-    const opusScore = typeof parsed.matchScore === 'number' ? parsed.matchScore : baseScore;
-    const blended = Math.round(baseScore * 0.7 + opusScore * 0.3);
-    console.error(`🔀 Score blend: Haiku ${baseScore} × 0.7 + Opus ${opusScore} × 0.3 = ${blended}`);
-    parsed.matchScore = applyScoreModifiers(blended, jobContent);
-
-    // Attach rubric breakdown for display
-    if (rubricScores) parsed.rubricScores = rubricScores;
-
-    // Validate
-    if (typeof parsed.matchScore !== 'number') parsed.matchScore = baseScore;
-    if (!Array.isArray(parsed.strengths)) parsed.strengths = [];
-    if (!Array.isArray(parsed.gaps)) parsed.gaps = [];
-    if (!parsed.summary) parsed.summary = 'Analysis complete';
-
-    // Enrich security/compliance gaps with relevant portfolio evidence
-    const securityTerms = [
-      'legal', 'compliance', 'regulatory', 'gdpr', 'soc', 'hipaa', 'privacy', 'audit', 'risk', 'governance',
-      'cybersecurity', 'cyber security', 'security', 'infosec', 'information security',
-      'vulnerability', 'threat', 'zero trust', 'penetration', 'pen test', 'data protection',
-      'iso 27001', 'fedramp', 'ccpa', 'pci', 'nist'
-    ];
-    const isSecurityRole = securityTerms.some(term => jobContent.toLowerCase().includes(term));
-
-    // For security roles: remove security gaps (we have direct SOC2 evidence) + inject project
-    if (isSecurityRole) {
-      parsed.gaps = parsed.gaps.filter((gap) => {
-        const isSecurityGap = securityTerms.some(term =>
-          gap.requirement?.toLowerCase().includes(term) ||
-          gap.suggestion?.toLowerCase().includes(term)
-        );
-        return !isSecurityGap;
-      });
-
-      // Ensure Sentry developer content is featured
-      if (!parsed.recommendations) parsed.recommendations = { coverLetterFocus: [], skillsToHighlight: [], projectsToFeature: [] };
-      if (!Array.isArray(parsed.recommendations.projectsToFeature)) parsed.recommendations.projectsToFeature = [];
-      const alreadyFeatured = (parsed.recommendations.projectsToFeature as any[]).some((p: any) =>
-        (typeof p === 'string' ? p : p.name || '').toLowerCase().includes('sentry developer')
-      );
-      if (!alreadyFeatured) {
-        (parsed.recommendations.projectsToFeature as any[]).push('Sentry developer content');
-      }
-    }
-
-    if (parsed.recommendations?.projectsToFeature && Array.isArray(parsed.recommendations.projectsToFeature)) {
-      const projectNames = parsed.recommendations.projectsToFeature as unknown as string[];
-      if (projectNames.length > 0) {
-        parsed.recommendations.projectsToFeature = enrichProjectsWithLinks(projectNames);
-      }
-    }
-
-    // Step 8: Generate shareable link (always) + resume (local only)
-    const isLocal = !process.env.VERCEL;
-    console.error(`📄 Generating shareable link${isLocal ? ' + tailored resume' : ''} (env: ${isLocal ? 'local' : 'vercel'})...`);
-    const tasks: [Promise<string>, Promise<string>] = [
-      generateShareableLink(parsed),
-      isLocal ? generateResume(parsed, jobContent) : Promise.resolve('')
-    ];
-    const [shareableLink, resume] = await Promise.all(tasks);
-    parsed.shareableLink = shareableLink;
-    if (resume) parsed.resume = resume;
-
-    const totalTime = Date.now() - totalStart;
-    console.error(`✅ COMPLETE: ${totalTime}ms`);
-    console.error(`   Match: ${parsed.matchScore}%, Strengths: ${parsed.strengths.length}, Gaps: ${parsed.gaps.length}`);
-    console.error(`   Job Keywords: ${keywordMatches.jobKeywords.length}`);
-    if (parsed.atsKeywords?.atsOptimizationTips) {
-      console.error(`   ATS Optimization Tips: ${parsed.atsKeywords.atsOptimizationTips.length}`);
-    }
-    if (parsed.atsKeywords?.missingKeywords && parsed.atsKeywords.missingKeywords.length > 0) {
-      console.error(`   ⚠️  Missing Keywords: ${parsed.atsKeywords.missingKeywords.join(', ')}`);
-    }
-    
-    console.error('🔥 === END ===\n');
-
-    return parsed;
-
-  } catch (error) {
-    console.error('❌ Error:', error instanceof Error ? error.message : 'Unknown');
-    throw error;
-  }
+  console.error(`✅ COMPLETE: ${Date.now() - start}ms | score: ${matchScore} | phrases: ${jobPhrases.length}`);
+  return { matchScore, resume, jobPhrases, matchSummary };
 }
 
 export const analyzeJob = tool({
-  description: 'Analyze a job description to help the employer evaluate a candidate',
+  description: 'Analyze a job description and generate a tailored resume for Chris Heher',
   inputSchema: z.object({
-    jobDescription: z.string().describe('The job description text or URL'),
+    jobDescription: z.string().describe('The job description text'),
   }),
   execute: async ({ jobDescription }) => {
-    console.error('\n🚀 === ANALYZE JOB TOOL ===');
-    const toolStart = Date.now();
-    
     try {
-      if (!jobDescription?.trim()) {
-        throw new Error('Job description required');
-      }
-
+      if (!jobDescription?.trim()) throw new Error('Job description required');
       const jobContent = jobDescription.trim();
-      
+
       if (isURL(jobContent)) {
-        return {
-          matchScore: 0,
-          strengths: [],
-          gaps: [],
-          standoutQualities: [],
-          recommendations: {
-            coverLetterFocus: [],
-            skillsToHighlight: [],
-            projectsToFeature: []
-          },
-          summary: `Can't access URLs. Please paste the job description text.`
-        };
+        return { matchScore: 0, resume: "Can't access URLs — please paste the job description text.", jobPhrases: [], matchSummary: '' };
       }
 
-      const analysis = await analyzeJobDescription(jobContent);
-
-      console.error(`✅ TOOL COMPLETE: ${Date.now() - toolStart}ms`);
-
-      return analysis;
-
+      return await analyzeJobDescription(jobContent);
     } catch (error) {
-      console.error('❌ Tool error:', error instanceof Error ? error.message : 'Unknown');
-      
-      return {
-        matchScore: 0,
-        strengths: [],
-        gaps: [{
-          requirement: 'Analysis Failed',
-          severity: 'critical' as const,
-          suggestion: 'Please try again with a shorter job description'
-        }],
-        standoutQualities: [],
-        recommendations: {
-          coverLetterFocus: [],
-          skillsToHighlight: [],
-          projectsToFeature: []
-        },
-        summary: 'Analysis failed. Try rephrasing or shortening the job description.'
-      };
+      console.error('❌ Tool error:', error instanceof Error ? error.message : error);
+      return { matchScore: 0, resume: 'Analysis failed — please try again.', jobPhrases: [], matchSummary: '' };
     }
   }
 });

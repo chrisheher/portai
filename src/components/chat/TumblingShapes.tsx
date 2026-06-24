@@ -742,7 +742,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           const iStemW = 66 * deviceScale;
           const iStemH = 250 * deviceScale;
           const iGap = 28 * deviceScale;
-          const iDotR = 55 * deviceScale;
+          const iDotR = 44 * deviceScale;
           const iStemPart = Bodies.rectangle(x, y, iStemW, iStemH, {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 }
           });
@@ -892,7 +892,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         }
         case 'drone': {
           const isSafetyAiDrone = (project as any).campaignTitle === 'DroneDeploy | Safety AI';
-          body = Bodies.rectangle(x, y, (isSafetyAiDrone ? 288 : 320) * deviceScale, 160 * deviceScale, {
+          body = Bodies.rectangle(x, y, (isSafetyAiDrone ? 331 : 368) * deviceScale, 160 * deviceScale, {
             render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
             restitution: 0.15, friction: 0.5, density: 0.001
           });
@@ -1046,7 +1046,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         const isSentryPerformance = campaignTitle === 'Sentry | Performance GTM campaign';
         const isSentryPages = campaignTitle === 'Sentry | Product pages';
         const isHpPresence = campaignTitle === 'HP Presence | thought leadership';
-        const fontSize = mode === 'links' ? (isSentryDev ? '13px' : isSafetyAi ? '21px' : isSentryPerformance ? '21px' : isSentryPages ? '28px' : isHpPresence ? '22px' : isSmallCampaign ? '10px' : '14px') : '17px';
+        const fontSize = mode === 'links' ? (isSentryDev ? '16px' : isSafetyAi ? '25px' : isSentryPerformance ? '25px' : isSentryPages ? '34px' : isHpPresence ? '26px' : isSmallCampaign ? '12px' : '17px') : '20px';
         context.font = `${fontSize} "kcgangster", Arial`;
         const { position, angle } = body;
         
@@ -1484,7 +1484,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.lineCap = 'round';
 
             context.save();
-            const droneXScale = (project as any).campaignTitle === 'DroneDeploy | Safety AI' ? 2 * deviceScale * 0.67 * 0.9 : 2 * deviceScale * 0.67;
+            const droneXScale = (project as any).campaignTitle === 'DroneDeploy | Safety AI' ? 2 * deviceScale * 0.67 * 0.9 * 1.15 : 2 * deviceScale * 0.67 * 1.15;
             context.scale(droneXScale, 2 * deviceScale * 0.67);
 
             // Central hexagonal body
@@ -1495,9 +1495,9 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.closePath();
             context.fill();
 
-            // Arms (four diagonal struts)
-            const arms = [[-42, -10, -90, -38], [42, -10, 90, -38], [-42, 10, -90, 38], [42, 10, 90, 38]];
-            context.lineWidth = 14;
+            // Arms (four diagonal struts) — endpoints 10% shorter
+            const arms = [[-42, -10, -81, -34], [42, -10, 81, -34], [-42, 10, -81, 34], [42, 10, 81, 34]];
+            context.lineWidth = 13;
             arms.forEach(([x1, y1, x2, y2]) => {
               context.beginPath();
               context.moveTo(x1, y1); context.lineTo(x2, y2);
@@ -1505,17 +1505,17 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             });
 
             // Rotor mounts (small circles at arm ends)
-            [[-90, -38], [90, -38], [-90, 38], [90, 38]].forEach(([mx, my]) => {
+            [[-81, -34], [81, -34], [-81, 34], [81, 34]].forEach(([mx, my]) => {
               context.beginPath();
-              context.arc(mx, my, 9, 0, Math.PI * 2);
+              context.arc(mx, my, 8, 0, Math.PI * 2);
               context.fill();
             });
 
-            // Propeller blades (horizontal capsules above/below mounts)
-            context.lineWidth = 7;
-            [[-90, -38], [90, -38], [-90, 38], [90, 38]].forEach(([mx, my]) => {
+            // Propeller blades — 10% shorter span
+            context.lineWidth = 6;
+            [[-81, -34], [81, -34], [-81, 34], [81, 34]].forEach(([mx, my]) => {
               context.beginPath();
-              context.moveTo(mx - 21, my); context.lineTo(mx + 21, my);
+              context.moveTo(mx - 19, my); context.lineTo(mx + 19, my);
               context.stroke();
             });
 
@@ -1625,7 +1625,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           if (shapeType && rotateShapes.includes(shapeType)) {
             context.save();
             if (shapeType === 'dollarSign') {
-              context.font = `17px "kcgangster", Arial`;
+              context.font = `20px "kcgangster", Arial`;
             }
             const angle = shapeType === 'letterC' ? Math.PI / 2
               : shapeType === 'letterS' ? -Math.PI / 2
@@ -1645,7 +1645,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.restore();
           } else {
             if (shapeType === 'dogBowl') {
-              const baseSize = mode === 'links' ? 14 : 17;
+              const baseSize = mode === 'links' ? 17 : 20;
               const dfTextScale = (project as any).campaignTitle === 'Sentry Dogfooding Chronicles' ? 0.85 : 1;
               context.font = `${baseSize * 1.25 * dfTextScale}px "kcgangster", Arial`;
             }

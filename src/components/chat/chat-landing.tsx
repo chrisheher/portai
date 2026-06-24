@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { track } from '@vercel/analytics';
 import TumblingShapes from './TumblingShapes';
 
 // Inline Carousel Component - SPLIT SCREEN LAYOUT
@@ -650,6 +651,7 @@ useEffect(() => {
   
   if (showParam) {
     console.log('🔗 Deep link detected:', showParam);
+    track('page_view', { page: showParam });
     
     // Check if it's a campaign route
     if (campaignData[showParam as keyof typeof campaignData]) {

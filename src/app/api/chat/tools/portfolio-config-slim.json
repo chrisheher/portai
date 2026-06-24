@@ -232,8 +232,7 @@
         "impact": [
           "Reduced content production time from months to weeks",
           "Enabled 25+ blog series posts with consistent quality and voice",
-          "Created reusable content templates",
-          "Established review process with engineering SMEs ensuring technical accuracy"
+          "Established github-style review process with engineering SMEs ensuring technical accuracy"
         ],
         "tools_processes": [
           "installed editorial workflow for technical reviews, including creative briefs and zero drafts",

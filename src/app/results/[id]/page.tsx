@@ -2,7 +2,7 @@
 import { notFound } from 'next/navigation';
 import { getAnalysis } from '@/lib/db/shareableResults';
 import { MessageSquare } from 'lucide-react';
-import portfolioConfig from '@/components/chat/portconfig.json';
+import portfolioConfig from '@/lib/portfolio-config.json';
 import ResumeSection from './ResumeSection';
 
 interface PageProps {

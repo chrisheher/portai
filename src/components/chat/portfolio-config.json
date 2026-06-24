@@ -18,7 +18,7 @@
       "keywords": ["technical writing", "documentation", "technical content", "developer docs", "api"],
       "links": [
         {"name": "Sentry developer content", "url": "/?show=sentry-dev"},
-                {"name": "GE Aviation turbopro", "url": "/?show=ge"},
+                {"name": "GE Aviation turboprop", "url": "/?show=ge"},
 
          {"name": "DroneDeploy tech content", "url": "/?show=dronedep"}
       ]
