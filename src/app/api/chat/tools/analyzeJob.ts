@@ -223,12 +223,7 @@ async function analyzeJobDescription(jobContent: string): Promise<{ matchScore: 
   const linkedIn = loadLinkedInProfile().slice(0, 3000);
   const truncatedJob = jobContent.slice(0, 2500);
 
-  const response = await anthropic.messages.create({
-    model: 'claude-opus-4-8',
-    max_tokens: 1800,
-    messages: [{
-      role: 'user',
-      content: `Generate a tailored resume for Chris Heher for this job.
+  const resumePrompt = `Generate a tailored resume for Chris Heher for this job.
 
 JOB DESCRIPTION:
 ${truncatedJob}
@@ -293,14 +288,33 @@ Senior Content Strategist | DroneDeploy | 2022–2023
 SKILLS
 [15–25 hard skills, comma-separated]
 
-No other commentary.`
-    }]
-  });
+No other commentary.`;
 
-  const textContent = response.content.find(c => c.type === 'text');
+  let apiResponse;
+  try {
+    apiResponse = await anthropic.messages.create({
+      model: 'claude-opus-4-8',
+      max_tokens: 1800,
+      messages: [{ role: 'user', content: resumePrompt }]
+    });
+    console.error('📝 Resume model: opus');
+  } catch (err: any) {
+    if (err?.status === 529 || err?.status === 503) {
+      console.error('⚠️ Opus overloaded, falling back to sonnet...');
+      apiResponse = await anthropic.messages.create({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1800,
+        messages: [{ role: 'user', content: resumePrompt }]
+      });
+      console.error('📝 Resume model: sonnet (fallback)');
+    } else {
+      throw err;
+    }
+  }
+
+  const textContent = apiResponse.content.find(c => c.type === 'text');
   const raw = textContent?.type === 'text' ? textContent.text.trim() : '';
 
-  // Parse PHRASES and MATCH header lines, strip both from resume body
   const phrasesMatch = raw.match(/^PHRASES:\s*(.+)$/m);
   const jobPhrases = phrasesMatch
     ? phrasesMatch[1].split('||').map((s: string) => s.trim()).filter(Boolean)

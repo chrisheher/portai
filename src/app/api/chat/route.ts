@@ -15,53 +15,6 @@ const toolFunctions: Record<string, any> = {
 const presetReplies = importedPresetReplies || {};
 console.log('📋 Preset replies loaded:', Object.keys(presetReplies).length);
 
-// Helper function to track keywords (non-blocking)
-async function trackJobKeywords(jobDescription: string, analysis: any) {
-  try {
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}`
-      : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    
-    console.log('📊 Tracking keywords for job analysis...');
-    
-    fetch(`${baseUrl}/api/keywords/track`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jobDescription,
-        analysis
-      })
-    }).catch(err => {
-      console.warn('⚠️ Keyword tracking failed (non-critical):', err.message);
-    });
-    
-    console.log('✅ Keyword tracking initiated');
-  } catch (error: any) {
-    console.warn('⚠️ Failed to initiate keyword tracking:', error.message);
-  }
-}
-
-function extractKeyRequirements(jobDescription: string): string {
-  const lines = jobDescription.split('\n');
-  
-  // Look for requirements section
-  const reqStart = lines.findIndex(line => 
-    /requirements?|qualifications?|skills?|must have/i.test(line)
-  );
-    if (reqStart === -1) {
-    // No clear section, take first 500 chars
-    return jobDescription.substring(0, 500);
-  }
-  
-  // Take 10 lines after "Requirements"
-  return lines.slice(reqStart, reqStart + 10).join('\n').substring(0, 500);
-}
-
-function extractKeyQualifications(resume: string): string {
-  // For now, return first 600 chars of resume
-  // TODO: Parse actual resume structure when available
-  return resume.substring(0, 600);
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -167,10 +120,6 @@ When the user provides ANYTHING related to job descriptions or URLs to job posti
 
         console.log('✅ Tool executed successfully');
 
-     if (toolName === 'analyzeJob' && typeof toolInput === 'object' && toolInput !== null && 'jobDescription' in toolInput) {
-  console.log('📊 Job analysis detected - initiating keyword tracking');
-  trackJobKeywords((toolInput as { jobDescription: string }).jobDescription, toolData);
-}
 
         if (toolName === 'analyzeJob') {
           return NextResponse.json([
