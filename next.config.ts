@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const RAGLIB_URL = process.env.RAGLIB_URL ?? 'http://localhost:5000';
+
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -12,7 +14,18 @@ const nextConfig = {
     ],
   },
 
- 
+  async rewrites() {
+    return [
+      {
+        source: '/raglib',
+        destination: `${RAGLIB_URL}/`,
+      },
+      {
+        source: '/raglib/:path*',
+        destination: `${RAGLIB_URL}/:path*`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
