@@ -386,7 +386,6 @@ function ChatLanding({
       links: [
         { name: 'Go-Getting Lazy loading', url: 'https://blog.sentry.io/go-getting-lazy-loading/', shape: 'dogBowl' as const },
         { name: 'Using Sentry Performance to get Sentry Performant', url: 'https://blog.sentry.io/using-sentry-performance-to-make-sentry-performant', shape: 'dogBowl' as const },
-        { name: 'Verifying large refactors', url: 'https://blog.sentry.io/verifying-large-refactors-in-production-with-sentry/?original_referrer=https%3A%2F%2Fwww.google.com%2F', shape: 'dogBowl' as const },
         { name: 'Thinking backward, moving forward', url: 'https://blog.sentry.io/dogfooding-chronicles-thinking-backward-moving-forward', shape: 'dogBowl' as const },
         { name: 'Patching a flood of 404s', url: 'https://blog.sentry.io/patching-a-flood-of-404s/', shape: 'dogBowl' as const }
       ],
@@ -542,9 +541,9 @@ function ChatLanding({
       title: 'Sentry developer content',
       type: 'campaign' as const,
       links: [
-        { name: 'Why debugging Javascript sucks', url: 'https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/', shape: 'slash' as const },
-        { name: 'How slow is slow?', url: 'https://blog.sentry.io/how-slow-is-slow/', shape: 'bracketOpen' as const },
-        { name: 'Python 3 compatibility', url: 'https://blog.sentry.io/python-3-compatibility-what-to-know/', shape: 'parenOpen' as const },
+        { name: 'How slow is slow?', url: 'https://blog.sentry.io/how-slow-is-slow/', shape: 'slash' as const },
+        { name: 'Why debugging Javascript sucks', url: 'https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/', shape: 'bracketClose' as const },
+        { name: 'Python 3 compatibility', url: 'https://blog.sentry.io/python-3-compatibility-what-to-know/', shape: 'parenClose' as const },
         { name: 'Great moments in application monitoring', url: 'https://blog.sentry.io/great-moments-in-application-monitoring/', shape: 'parenClose' as const }
       ],
 
@@ -628,13 +627,12 @@ function ChatLanding({
       impact: []
     },
     'cloud': {
-      title: 'Chronosphere',
+      title: 'Cloud content',
       type: 'campaign' as const,
       links: [
-        { name: 'the future of observability', url: 'https://chronosphere.io/learn/the-future-of-observability-the-rise-of-cloud-native/', shape: 'slash' as const },
-        { name: 'observability today', url: 'https://chronosphere.io/learn/observability-today-better-data-lower-costs/', shape: 'bracketClose' as const },
-        { name: 'The Future of observability', url: 'https://chronosphere.io/learn/the-future-of-observability-prometheus-conformance-program/', shape: 'bracketOpen' as const },
-        { name: 'Year in review', url: 'https://chronosphere.io/learn/12-months-in-review-chronospheres-top-highlights/', shape: 'parenClose' as const }
+        { name: 'Are the three pillars of observability still relevant?', url: 'https://chronosphere.io/learn/are-the-three-pillars-of-observability-still-relevant/', shape: 'slash' as const },
+        { name: 'NetApp | Azure migration', url: 'https://www.netapp.com/pdf.html?item=/media/16141-wp-azure-migration.pdf', shape: 'bracketOpen' as const },
+        { name: 'Pendo | Product Cloud', url: 'https://www.ceros.com/inspire/project/theproductcloud', shape: 'bracketClose' as const }
       ],
       campaignListDescription: '',
       impact: []
@@ -986,7 +984,7 @@ useEffect(() => {
       setPageDescription([
         "Sentry Developer content | In co-writing pieces with developers and product leadership, I simplified technical concepts, amplified brand insights, and aligned content with strategic goals.",
         "DroneDeploy construction content | Many see drones as fun, not functional. My role with these pieces was to articulate the end benefit that integrated drone software provides teams at construction sites – improved collaboration, inch-perfect measurements, and a better way of tracking progress.",
-        "Cloud content | Lead writer across three separate functions of cloud computing: observability (Chronosphere), migration (NetApp/Azure), and best practices (Pendo).",
+        "Cloud content | Lead writer across three separate functions of cloud computing: observability (chronosphere), migration (NetApp/Azure), and best practices (Pendo).",
       ]);
       const links = [
         { title: 'Sentry Developer content', url: '/?show=sentry-dev', shape: 'letterC' as const },
@@ -1008,7 +1006,7 @@ useEffect(() => {
       ]);
       const links = [
         { title: 'The Floating Studio',  url: '/tfsjune.pdf',  shape: 'letterC' as const },
-        { title: 'Librag',  url: 'https://onlychr.is/librag',  shape: 'letterH' as const },
+        { title: 'Librag',  url: 'https://onlychr.is/raglib',  shape: 'letterH' as const },
         { title: 'Get Chris Home',  url: '#',  shape: 'letterR' as const },
       ].map(l => ({ ...l, type: 'link' as const }));
       setDisplayedItems(links);

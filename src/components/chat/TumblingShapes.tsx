@@ -333,7 +333,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         { x: 68,  y: 219 },  // stem right edge
         { x: 100, y: 183 },  // upper arm tip
         { x: 100, y: 221 },  // upper arm bottom
-        { x: 84,  y: 224 },  // waist junction
+        { x: 84,  y: 204 },  // waist junction
         { x: 100, y: 228 },  // lower leg top
         { x: 100, y: 300 },  // lower leg bottom
         { x: 68,  y: 277 },  // stem inner edge
@@ -717,12 +717,17 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
       const totalLanes = mode === 'initial' ? 5 : itemsToRender.length;
       const laneIndex = laneMap[project.title] ?? index;
       const spacing = window.innerWidth / (totalLanes + 1);
-      const xOffsets: Record<string, number> = { 'keystone content': 10, 'awareness | use case': -40, 'consideration | blog post': 40, 'decision | product page': 40, 'Using Sentry Performance to get Sentry Performant': 35 };
+      const xOffsets: Record<string, number> = { 'keystone content': 10, 'awareness | use case': -40, 'consideration | blog post': 40, 'decision | product page': 40, 'Using Sentry Performance to get Sentry Performant': 35, 'Thinking backward, moving forward': 50, 'Patching a flood of 404s': 50 };
 
-      const x = spacing * (laneIndex + 1) + (xOffsets[project.title] ?? 0);
+      const xBase = spacing * (laneIndex + 1) + (xOffsets[project.title] ?? 0);
+      const isDogfoodingShape = (project as any).campaignTitle === 'Sentry Dogfooding Chronicles';
+      const x = isDogfoodingShape
+        ? (window.innerWidth / 2) + (xBase - window.innerWidth / 2) * 1.1 - 40
+        : xBase;
       const isTree = (project as any).shape === 'tree';
       const isDrone = shapeType === 'drone';
-      const yStagger = isTree ? 600 : isDrone ? 500 : 800;
+      const isDdConstructionDroneStagger = isDrone && (project as any).campaignTitle === 'DroneDeploy | Construction site content';
+      const yStagger = isTree ? 600 : isDdConstructionDroneStagger ? 250 : isDrone ? 500 : 800;
       const y = mode === 'links' ? -200 - (index * yStagger) : -200;
 
       
@@ -927,7 +932,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           const isWideBowl = project.title === 'Using Sentry Performance to get Sentry Performant';
           const isDogfoodingBowl = (project as any).campaignTitle === 'Sentry Dogfooding Chronicles';
           const dfScale = isDogfoodingBowl ? 0.85 : 1;
-          body = Bodies.rectangle(x, y, (isWideBowl ? 295 * 1.5 : 295) * dfScale * deviceScale, 125 * dfScale * deviceScale, {
+          body = Bodies.rectangle(x, y, (isWideBowl ? 295 * 1.5 * 1.15 : 295) * dfScale * deviceScale, 125 * dfScale * deviceScale, {
             render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
             restitution: 0.1, friction: 1, density: 0.003
           });
@@ -936,8 +941,9 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         case 'drone': {
           const isSafetyAiDrone = (project as any).campaignTitle === 'DroneDeploy | Safety AI';
           const isDdPagesDrone = (project as any).campaignTitle === 'DroneDeploy | Product pages';
-          const droneW = isSafetyAiDrone ? 265 : isDdPagesDrone ? 280 : 368;
-          const droneH = isSafetyAiDrone ? 128 : isDdPagesDrone ? 113 : 160;
+          const isDdConstructionDrone = (project as any).campaignTitle === 'DroneDeploy | Construction site content';
+          const droneW = isSafetyAiDrone ? 265 : isDdPagesDrone ? 234 : isDdConstructionDrone ? 235 : 368;
+          const droneH = isSafetyAiDrone ? 128 : isDdPagesDrone ? 113 : isDdConstructionDrone ? 170 : 160;
           body = Bodies.rectangle(x, y, droneW * deviceScale, droneH * deviceScale, {
             render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
             restitution: 0.15, friction: 0.5, density: 0.001
@@ -1063,7 +1069,9 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
 
       // First drone: 2-second head start (pre-position + initial velocity)
       const firstDrone = allDroneBodies[0];
-      Body.setPosition(firstDrone, { x: firstDrone.position.x, y: firstDrone.position.y + 300 });
+      const firstDroneIsConstruction = (droneEntries[0].project as any).campaignTitle === 'DroneDeploy | Construction site content';
+      const firstDroneXOffset = firstDroneIsConstruction ? -50 : 0;
+      Body.setPosition(firstDrone, { x: firstDrone.position.x + firstDroneXOffset, y: firstDrone.position.y + 300 });
       Body.setVelocity(firstDrone, { x: 0, y: 8 });
     }
 
@@ -1108,9 +1116,11 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         const isSentryPerformance = campaignTitle === 'Sentry | Performance GTM campaign';
         const isSentryPages = campaignTitle === 'Sentry | Product pages';
         const isHpPresence = campaignTitle === 'HP Presence | thought leadership';
+        const isDdConstruction = campaignTitle === 'DroneDeploy | Construction site content';
+        const lineHMultiplier = isDdConstruction ? 1.04 : 1.3;
         const isWideBowlTitle = project.title === 'Using Sentry Performance to get Sentry Performant';
-        const baseFontSize = mode === 'links' ? (isSentryDev ? 14 : isSafetyAi ? 23 : isSentryPerformance ? 23 : isSentryPages ? 32 : isHpPresence ? 16 : isWideBowlTitle ? 6 : isSmallCampaign ? 10 : 15) : 18;
-        const fontSize = `${shapeType === 'drone' ? baseFontSize - 6 : baseFontSize}px`;
+        const baseFontSize = mode === 'links' ? (isSentryDev ? 14 : isSafetyAi ? 23 : isSentryPerformance ? 23 : isSentryPages ? 32 : isHpPresence ? 16 : isDdConstruction ? 20 : isWideBowlTitle ? 6 : isSmallCampaign ? 6 : 15) : 18;
+        const fontSize = `${shapeType === 'drone' ? baseFontSize - 0 : baseFontSize}px`;
         context.font = `${fontSize} "kcgangster", Arial`;
         const { position, angle } = body;
         
@@ -1562,8 +1572,10 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
 
             context.save();
             const isSafetyAiDrone = (project as any).campaignTitle === 'DroneDeploy | Safety AI';
-            const droneXScale = isSafetyAiDrone ? 2 * deviceScale * 0.67 * 0.9 * 1.15 * 0.8 : 2 * deviceScale * 0.67 * 1.15;
-            const droneYScale = isSafetyAiDrone ? 2 * deviceScale * 0.67 * 0.8 : 2 * deviceScale * 0.67;
+            const isDdConstructionDroneRender = (project as any).campaignTitle === 'DroneDeploy | Construction site content';
+            const isDdPagesDroneRender = (project as any).campaignTitle === 'DroneDeploy | Product pages';
+            const droneXScale = isSafetyAiDrone ? 2 * deviceScale * 0.67 * 0.9 * 1.15 * 0.8 : isDdConstructionDroneRender ? 2 * deviceScale * 0.67 * 1.15 * 0.8 * 1.15 : isDdPagesDroneRender ? 2 * deviceScale * 0.67 * 1.15 * 0.9 : 2 * deviceScale * 0.67 * 1.15;
+            const droneYScale = isSafetyAiDrone ? 2 * deviceScale * 0.67 * 0.8 : isDdConstructionDroneRender ? 2 * deviceScale * 0.67 * 1.5 : 2 * deviceScale * 0.67;
             context.scale(droneXScale, droneYScale);
 
             // Central hexagonal body
@@ -1592,7 +1604,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
 
             // Propeller blades
             context.lineWidth = 6;
-            const propSpan = (project as any).campaignTitle === 'DroneDeploy | Product pages' ? 10 : 19;
+            const propSpan = (project as any).campaignTitle === 'DroneDeploy | Product pages' ? 5 : 10;
             [[-81, -34], [81, -34], [-81, 34], [81, 34]].forEach(([mx, my]) => {
               context.beginPath();
               context.moveTo(mx - propSpan, my); context.lineTo(mx + propSpan, my);
@@ -1613,7 +1625,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.save();
             const isSentryDogfoodingBowl = (project as any).campaignTitle === 'Sentry Dogfooding Chronicles';
             const bowlDfScale = isSentryDogfoodingBowl ? 0.85 : 1;
-            const bowlXScale = project.title === 'Using Sentry Performance to get Sentry Performant' ? 0.84375 * 1.5 * deviceScale * bowlDfScale : 0.84375 * deviceScale * bowlDfScale;
+            const bowlXScale = project.title === 'Using Sentry Performance to get Sentry Performant' ? 0.84375 * 1.5 * 1.15 * deviceScale * bowlDfScale : 0.84375 * deviceScale * bowlDfScale;
             context.scale(bowlXScale, 0.5625 * deviceScale * bowlDfScale);
 
             const rimY = 5, rimW = 149, kibbleR = 9;
@@ -1725,6 +1737,10 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
               const lineH = parseFloat(fontSize) * 1.3;
               context.fillText('The new office for', textX, textYRotated - lineH / 2);
               context.fillText('the way people want to work', textX, textYRotated + lineH / 2);
+            } else if (project.title === "Get ready today to do tomorrow's work") {
+              const lineH = parseFloat(fontSize) * 1.3;
+              context.fillText('Get ready today', textX, textYRotated - lineH / 2);
+              context.fillText("to do tomorrow's work", textX, textYRotated + lineH / 2);
             } else {
               context.fillText(project.title, textX, textYRotated);
             }
@@ -1739,7 +1755,23 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
               const baseSize = parseFloat(fontSize);
               context.font = `${baseSize * 0.8}px "kcgangster", Arial`;
             }
-            if (project.title === 'The new office for the way people want to work') {
+            if (project.title === 'Within Striking Distance: Dangers of Underground Utilities') {
+              const lineH = parseFloat(fontSize) * lineHMultiplier;
+              context.fillText('Within Striking Distance:', textXOffset, textYOffset - lineH / 2);
+              context.fillText('The Dangers of Underground Utilities', textXOffset, textYOffset + lineH / 2);
+            } else if (project.title === 'The ultimate Guide to Facade Inspections') {
+              const lineH = parseFloat(fontSize) * lineHMultiplier;
+              context.fillText('The ultimate Guide to', textXOffset, textYOffset - lineH / 2);
+              context.fillText('Facade Inspections', textXOffset, textYOffset + lineH / 2);
+            } else if (project.title === 'Closing The Gap in Stockpile Quantification') {
+              const lineH = parseFloat(fontSize) * lineHMultiplier;
+              context.fillText('Closing The Gap in', textXOffset, textYOffset - lineH / 2);
+              context.fillText('Stockpile Quantification', textXOffset, textYOffset + lineH / 2);
+            } else if (project.title === 'Flying beyond line of sight') {
+              const lineH = parseFloat(fontSize) * lineHMultiplier;
+              context.fillText('Flying beyond', textXOffset, textYOffset - lineH / 2);
+              context.fillText('line of sight', textXOffset, textYOffset + lineH / 2);
+            } else if (project.title === 'The new office for the way people want to work') {
               const lineH = parseFloat(fontSize) * 1.3;
               context.fillText('The new office for', textXOffset, textYOffset - lineH / 2);
               context.fillText('the way people want to work', textXOffset, textYOffset + lineH / 2);
