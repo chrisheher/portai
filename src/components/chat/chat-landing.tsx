@@ -295,7 +295,7 @@ function ChatLanding({
     { name: "Sentry | performance monitoring", url: "https://www.sentry.dev/solutions/application-performance-monitoring/" },
     { name: "Sentry | full stack monitoring", url: "https://sentry.io/for/full-stack/" },
     { name: "Airbnb | career site", url: "https://careers.airbnb.com" },
-    { name: "DroneDeploy | Ground robotics", url: "https://example.com/link5" },
+    { name: "Ground robotics", url: "https://example.com/link5" },
     { name: "DroneDeploy | Safety AI", url: "https://www.dronedeploy.com/product/safety-ai" },
     { name: "DroneDeploy | Data on Demand ", url: "https://www.dronedeploy.com/data-on-demand" },
     { name: "DroneDeploy | industrial inspection", url: "https://www.dronedeploy.com/product/robotic-industrial-inspection" }
@@ -404,7 +404,7 @@ function ChatLanding({
         { name: 'The new era of work', url: 'https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf', shape: 'letterH' as const },
         { name: 'A new blueprint for an uncertain world', url: 'https://getstarted.hbs.net/hubfs/2025%20Partner%20Campaigns/HP_Services_Hybrid_A-New-Blueprint-for-an-Uncertain-World_Consideration_ebook_2022.pdf.pdf?hsLang=en', shape: 'letterR' as const },
         { name: 'Get ready today to do tomorrow\'s work', url: 'https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf', shape: 'letterI' as const },
-        { name: 'HP Presence | video conferencing suite', url: 'https://www.hp.com/us-en/solutions/presence.html', shape: 'letterS' as const }
+        { name: 'Hp Presence Product page', url: 'https://www.hp.com/us-en/solutions/presence.html', shape: 'letterS' as const }
       ],
       campaignListDescription: 'The pandemic altered the fabric of society. And nowhere was this more evident than in the office. As HP\'s content strategist, I helped position their Presence videoconferencing suite to be the connective tissue for distributed workforces.',
       impact: [
@@ -438,7 +438,7 @@ function ChatLanding({
       title: 'DroneDeploy | Ground Robotics',
       type: 'campaign' as const,
       links: [
-        { name: 'DroneDeploy | Ground Robotics', url: 'https://www.dronedeploy.com/product/robotics' },
+        { name: 'Ground Robotics', url: 'https://www.dronedeploy.com/product/robotics' },
         { name: 'DroneDeploy | Industrial Inspection', url: 'https://www.dronedeploy.com/product/robotic-industrial-inspection' },
         { name: 'DroneDeploy | Dock Automation', url: 'https://www.dronedeploy.com/product/dock-automation' }
       ],
@@ -456,10 +456,10 @@ function ChatLanding({
       title: 'DroneDeploy | Product pages',
       type: 'campaign' as const,
       links: [
-        { name: 'DroneDeploy | Ground Robotics', url: 'https://www.dronedeploy.com/product/robotics', shape: 'drone' as const },
-        { name: 'DroneDeploy | Dock Automation', url: 'https://www.dronedeploy.com/product/dock-automation', shape: 'drone' as const },
-        { name: 'DroneDeploy | Data on Demand', url: 'https://www.dronedeploy.com/data-on-demand', shape: 'drone' as const },
-        { name: 'DroneDeploy | Industrial Inspection', url: 'https://www.dronedeploy.com/product/robotic-industrial-inspection', shape: 'drone' as const }
+        { name: 'Ground Robotics', url: 'https://www.dronedeploy.com/product/robotics', shape: 'drone' as const },
+        { name: 'Dock Automation', url: 'https://www.dronedeploy.com/product/dock-automation', shape: 'drone' as const },
+        { name: 'Data on Demand', url: 'https://www.dronedeploy.com/data-on-demand', shape: 'drone' as const },
+        { name: 'Industrial Inspection', url: 'https://www.dronedeploy.com/product/robotic-industrial-inspection', shape: 'drone' as const }
       ],
       campaignListDescription: 'Collaborating with product and sales teams, I piqued curiosity, ensured technical accuracy, and optimized each page by adding cross-links to related solutions and guides for mid- and bottom-funnel engagement.',
       impact: [

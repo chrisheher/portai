@@ -1117,9 +1117,10 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         const isSentryPages = campaignTitle === 'Sentry | Product pages';
         const isHpPresence = campaignTitle === 'HP Presence | thought leadership';
         const isDdConstruction = campaignTitle === 'DroneDeploy | Construction site content';
+        const isDdPages = campaignTitle === 'DroneDeploy | Product pages';
         const lineHMultiplier = isDdConstruction ? 1.04 : 1.3;
         const isWideBowlTitle = project.title === 'Using Sentry Performance to get Sentry Performant';
-        const baseFontSize = mode === 'links' ? (isSentryDev ? 14 : isSafetyAi ? 23 : isSentryPerformance ? 23 : isSentryPages ? 32 : isHpPresence ? 16 : isDdConstruction ? 20 : isWideBowlTitle ? 6 : isSmallCampaign ? 6 : 15) : 18;
+        const baseFontSize = mode === 'links' ? (isSentryDev ? 14 : isSafetyAi ? 23 : isSentryPerformance ? 23 : isSentryPages ? 32 : isHpPresence ? 16 : isDdConstruction ? 20 : isDdPages ? 23 : isWideBowlTitle ? 6 : isSmallCampaign ? 6 : 15) : 18;
         const fontSize = `${shapeType === 'drone' ? baseFontSize - 0 : baseFontSize}px`;
         context.font = `${fontSize} "kcgangster", Arial`;
         const { position, angle } = body;
