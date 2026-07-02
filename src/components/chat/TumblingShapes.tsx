@@ -19,7 +19,7 @@ interface Project {
   content?: React.ReactNode;
 type?: 'project' | 'link' | 'campaign' | 'image' | 'question';
   prompt?: string;
-  shape?: 'letterH' | 'letterC' | 'letterR' | 'letterI' | 'letterS' | 'letterE' | 'letterU' | 'letterK' | 'letterA' | 'dollarSign' | 'slash' | 'bracketOpen' | 'bracketClose' | 'parenOpen' | 'parenClose' | 'pill' | 'rect' | 'diamond' | 'parallelogram' | 'arrowRight' | 'tree' | 'keystone' | 'chatBubble' | 'videoCamera' | 'telephone' | 'drone' | 'dogBowl' | 'curlyOpen' | 'curlyClose' | 'speaker' | 'microphone' | 'videoConference';
+  shape?: 'letterH' | 'letterC' | 'letterR' | 'letterI' | 'letterS' | 'letterE' | 'letterU' | 'letterK' | 'letterA' | 'letterD' | 'dollarSign' | 'slash' | 'bracketOpen' | 'bracketClose' | 'parenOpen' | 'parenClose' | 'pill' | 'rect' | 'diamond' | 'parallelogram' | 'arrowRight' | 'tree' | 'keystone' | 'chatBubble' | 'videoCamera' | 'telephone' | 'drone' | 'dogBowl' | 'curlyOpen' | 'curlyClose' | 'speaker' | 'microphone' | 'videoConference';
   imageSrc?: string;
   url?: string;
 }
@@ -390,6 +390,41 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
       return verts.map(v => ({ x: v.x * 0.9775 * 0.8, y: v.y * 1.15 }));
     }
 
+    // ===== LOWERCASE 'd' =====
+    function getDVertices() {
+      // Same bowl as 'a' but stem extends UP as ascender instead of arching back.
+      const cx = 90;
+      const cy = 155;   // lower than 'a' to leave room for ascender above
+      const R  = 88;
+      const N  = 24;
+
+      const openFrac  = 0.50;
+      const openAngle = Math.acos(openFrac);
+      const juncX     = Math.round(cx + R * openFrac);
+      const juncYTop  = Math.round(cy - R * Math.sin(openAngle));
+      const juncYBot  = Math.round(cy + R * Math.sin(openAngle));
+
+      const stemR   = 180;
+      const stemTop = -75;  // ascender
+
+      const verts: { x: number; y: number }[] = [];
+
+      // Right edge: ascender top → bowl bottom junction
+      verts.push({ x: stemR, y: stemTop });
+      verts.push({ x: stemR, y: juncYBot });
+
+      // Bowl arc: lower junction CW around left to upper junction (identical to 'a')
+      for (let i = 0; i <= N; i++) {
+        const angle = openAngle + (i / N) * (2 * Math.PI - 2 * openAngle);
+        verts.push({ x: Math.round(cx + R * Math.cos(angle)), y: Math.round(cy + R * Math.sin(angle)) });
+      }
+
+      // Left edge: bowl top junction straight up to ascender top-left
+      verts.push({ x: juncX, y: stemTop });
+
+      return verts.map(v => ({ x: v.x * 0.9775 * 0.8, y: v.y * 1.15 }));
+    }
+
     // ===== PENNSYLVANIA KEYSTONE =====
     function getKeystoneVertices() {
       // Wide top with trapezoidal notch cut from center, sides taper to narrower bottom.
@@ -593,7 +628,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
     }
 
     // Create shapes based on mode
-    const letterShapes = ['letterC', 'letterH', 'letterR', 'letterI', 'letterS', 'letterE', 'letterU', 'letterK', 'letterA'];
+    const letterShapes = ['letterC', 'letterH', 'letterR', 'letterI', 'letterS', 'letterE', 'letterU', 'letterK', 'letterA', 'letterD'];
     const projectBodies: Matter.Body[] = [];
     bodiesRef.current = [];
 
@@ -790,6 +825,14 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             slop: .02
           }, true);
           break;
+        case 'letterD':
+          body = Bodies.fromVertices(x, y, [scaleVerts(getDVertices())], {
+            render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
+            restitution: 0.1,
+            friction: 1,
+            slop: .02
+          }, true);
+          break;
         case 'keystone':
           body = Bodies.fromVertices(x, y, [scaleVerts(getKeystoneVertices())], {
             render: { fillStyle: fillColor, strokeStyle: strokeColor, lineWidth: 1 },
@@ -892,7 +935,10 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         }
         case 'drone': {
           const isSafetyAiDrone = (project as any).campaignTitle === 'DroneDeploy | Safety AI';
-          body = Bodies.rectangle(x, y, (isSafetyAiDrone ? 331 : 368) * deviceScale, 160 * deviceScale, {
+          const isDdPagesDrone = (project as any).campaignTitle === 'DroneDeploy | Product pages';
+          const droneW = isSafetyAiDrone ? 265 : isDdPagesDrone ? 280 : 368;
+          const droneH = isSafetyAiDrone ? 128 : isDdPagesDrone ? 113 : 160;
+          body = Bodies.rectangle(x, y, droneW * deviceScale, droneH * deviceScale, {
             render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
             restitution: 0.15, friction: 0.5, density: 0.001
           });
@@ -1005,6 +1051,22 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
     const hasDrones = bodiesRef.current.some(({ shapeType }) => shapeType === 'drone');
     if (hasDrones) engine.gravity.y = 0.16;
 
+    // Drones fall 1.5x faster via continuous extra downward force
+    const droneEntries = bodiesRef.current.filter(({ shapeType }) => shapeType === 'drone');
+    if (droneEntries.length > 0) {
+      const allDroneBodies = droneEntries.map(({ body }) => body);
+      Events.on(engine, 'beforeUpdate', () => {
+        allDroneBodies.forEach(b => {
+          Body.applyForce(b, b.position, { x: 0, y: b.mass * engine.gravity.y * 0.001 * 0.5 });
+        });
+      });
+
+      // First drone: 2-second head start (pre-position + initial velocity)
+      const firstDrone = allDroneBodies[0];
+      Body.setPosition(firstDrone, { x: firstDrone.position.x, y: firstDrone.position.y + 300 });
+      Body.setVelocity(firstDrone, { x: 0, y: 8 });
+    }
+
     Render.run(render);
     const runner = Runner.create();
     Runner.run(runner, engine);
@@ -1046,7 +1108,9 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         const isSentryPerformance = campaignTitle === 'Sentry | Performance GTM campaign';
         const isSentryPages = campaignTitle === 'Sentry | Product pages';
         const isHpPresence = campaignTitle === 'HP Presence | thought leadership';
-        const fontSize = mode === 'links' ? (isSentryDev ? '16px' : isSafetyAi ? '25px' : isSentryPerformance ? '25px' : isSentryPages ? '34px' : isHpPresence ? '26px' : isSmallCampaign ? '12px' : '17px') : '20px';
+        const isWideBowlTitle = project.title === 'Using Sentry Performance to get Sentry Performant';
+        const baseFontSize = mode === 'links' ? (isSentryDev ? 14 : isSafetyAi ? 23 : isSentryPerformance ? 23 : isSentryPages ? 32 : isHpPresence ? 16 : isWideBowlTitle ? 6 : isSmallCampaign ? 10 : 15) : 18;
+        const fontSize = `${shapeType === 'drone' ? baseFontSize - 6 : baseFontSize}px`;
         context.font = `${fontSize} "kcgangster", Arial`;
         const { position, angle } = body;
         
@@ -1080,7 +1144,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           context.rotate(angle);
 
           // Rotation needed for semicircle overlay positioning
-          if (shapeType === 'letterH' || shapeType === 'letterR' || shapeType === 'letterK' || shapeType === 'letterA') {
+          if (shapeType === 'letterH' || shapeType === 'letterR' || shapeType === 'letterK' || shapeType === 'letterA' || shapeType === 'letterD') {
             context.rotate(-Math.PI / 2);
           }
 
@@ -1116,6 +1180,19 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.moveTo(hcx - hr, hcy);
             context.arc(hcx, hcy, hr, Math.PI, 0, false); // dome up
             context.closePath();
+            context.fill();
+            context.restore();
+          }
+
+          if (shapeType === 'letterD') {
+            const hcx = -39;
+            const hcy = -27;
+            const hr  = 19;
+            context.save();
+            context.globalCompositeOperation = 'destination-out';
+            context.fillStyle = 'rgba(0,0,0,1)';
+            context.beginPath();
+            context.arc(hcx, hcy, hr, 0, 2 * Math.PI);
             context.fill();
             context.restore();
           }
@@ -1484,8 +1561,10 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.lineCap = 'round';
 
             context.save();
-            const droneXScale = (project as any).campaignTitle === 'DroneDeploy | Safety AI' ? 2 * deviceScale * 0.67 * 0.9 * 1.15 : 2 * deviceScale * 0.67 * 1.15;
-            context.scale(droneXScale, 2 * deviceScale * 0.67);
+            const isSafetyAiDrone = (project as any).campaignTitle === 'DroneDeploy | Safety AI';
+            const droneXScale = isSafetyAiDrone ? 2 * deviceScale * 0.67 * 0.9 * 1.15 * 0.8 : 2 * deviceScale * 0.67 * 1.15;
+            const droneYScale = isSafetyAiDrone ? 2 * deviceScale * 0.67 * 0.8 : 2 * deviceScale * 0.67;
+            context.scale(droneXScale, droneYScale);
 
             // Central hexagonal body
             context.beginPath();
@@ -1511,11 +1590,12 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
               context.fill();
             });
 
-            // Propeller blades — 10% shorter span
+            // Propeller blades
             context.lineWidth = 6;
+            const propSpan = (project as any).campaignTitle === 'DroneDeploy | Product pages' ? 10 : 19;
             [[-81, -34], [81, -34], [-81, 34], [81, 34]].forEach(([mx, my]) => {
               context.beginPath();
-              context.moveTo(mx - 19, my); context.lineTo(mx + 19, my);
+              context.moveTo(mx - propSpan, my); context.lineTo(mx + propSpan, my);
               context.stroke();
             });
 
@@ -1538,11 +1618,11 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
 
             const rimY = 5, rimW = 149, kibbleR = 9;
             const rows = [
-              { cy: rimY -  9, xs: [-117, -72, -24, 24,  72, 117] },
-              { cy: rimY - 31, xs: [ -96, -48,   0, 48,  96] },
-              { cy: rimY - 51, xs: [ -74, -27,  21, 69] },
-              { cy: rimY - 69, xs: [ -51,  -5,  40] },
-              { cy: rimY - 84, xs: [ -24,  21] },
+              { cy: rimY -  9, xs: [-82, -50, -17, 17,  50, 82] },
+              { cy: rimY - 31, xs: [-67, -34,   0, 34,  67] },
+              { cy: rimY - 51, xs: [-52, -19,  15, 48] },
+              { cy: rimY - 69, xs: [-36,  -4,  28] },
+              { cy: rimY - 84, xs: [-17,  15] },
             ];
 
             // 1. Kibble circles (solid, no highlights)
@@ -1552,13 +1632,13 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
               context.fill();
             }));
 
-            // 2. Bowl body — flared sides, curved base
+            // 2. Bowl body — heavier walls, wider settled base
             context.beginPath();
             context.moveTo(-rimW, rimY);
             context.lineTo(rimW, rimY);
-            context.bezierCurveTo(rimW + 20, rimY + 38, rimW + 24, rimY + 72, rimW * 0.9, rimY + 108);
-            context.bezierCurveTo(rimW * 0.55, rimY + 125, -rimW * 0.55, rimY + 125, -rimW * 0.9, rimY + 108);
-            context.bezierCurveTo(-rimW - 24, rimY + 72, -rimW - 20, rimY + 38, -rimW, rimY);
+            context.bezierCurveTo(rimW + 12, rimY + 38, rimW + 16, rimY + 78, rimW * 0.96, rimY + 115);
+            context.bezierCurveTo(rimW * 0.58, rimY + 133, -rimW * 0.58, rimY + 133, -rimW * 0.96, rimY + 115);
+            context.bezierCurveTo(-rimW - 16, rimY + 78, -rimW - 12, rimY + 38, -rimW, rimY);
             context.closePath();
             context.fill();
 
@@ -1569,7 +1649,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
 
             context.fillRect(-rimW + 2, rimY - 3, (rimW - 2) * 2, 6);
 
-            const pawX = 0, pawY = rimY + 102;
+            const pawX = 0, pawY = rimY + 109;
             context.beginPath();
             context.ellipse(pawX, pawY, 8, 6.5, 0, 0, Math.PI * 2);
             context.fill();
@@ -1619,13 +1699,13 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             ? (isHovered ? '#dcd3c3' : '#312113')
             : (isHovered ? '#312113' : '#dcd3c3');
           context.fillStyle = textColor;
-          const textYOffset = shapeType === 'letterA' ? 30 : shapeType === 'letterE' ? -15 : shapeType === 'letterR' ? -25 : shapeType === 'letterH' ? -25 : shapeType === 'dogBowl' ? 25 : 0;
+          const textYOffset = shapeType === 'letterA' ? 30 : shapeType === 'letterD' ? 30 : shapeType === 'letterE' ? -15 : shapeType === 'letterR' ? -25 : shapeType === 'letterH' ? -25 : shapeType === 'dogBowl' ? 25 : 0;
           const textXOffset = shapeType === 'letterR' ? -15 : 0;
           const rotateShapes = ['letterC', 'letterI', 'letterS', 'tree', 'slash', 'bracketOpen', 'bracketClose', 'parenOpen', 'parenClose', 'dollarSign', 'curlyOpen', 'curlyClose'];
           if (shapeType && rotateShapes.includes(shapeType)) {
             context.save();
             if (shapeType === 'dollarSign') {
-              context.font = `20px "kcgangster", Arial`;
+              context.font = `18px "kcgangster", Arial`;
             }
             const angle = shapeType === 'letterC' ? Math.PI / 2
               : shapeType === 'letterS' ? -Math.PI / 2
@@ -1641,11 +1721,17 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             context.rotate(angle);
             const textX = shapeType === 'tree' ? -110 : shapeType === 'letterI' ? -50 : shapeType === 'curlyOpen' ? -10 : shapeType === 'curlyClose' ? 25 : 0;
             const textYRotated = shapeType === 'letterI' ? -5 : shapeType === 'curlyOpen' ? 15 : shapeType === 'curlyClose' ? -10 : 0;
-            context.fillText(project.title, textX, textYRotated);
+            if (project.title === 'The new office for the way people want to work') {
+              const lineH = parseFloat(fontSize) * 1.3;
+              context.fillText('The new office for', textX, textYRotated - lineH / 2);
+              context.fillText('the way people want to work', textX, textYRotated + lineH / 2);
+            } else {
+              context.fillText(project.title, textX, textYRotated);
+            }
             context.restore();
           } else {
             if (shapeType === 'dogBowl') {
-              const baseSize = mode === 'links' ? 17 : 20;
+              const baseSize = mode === 'links' ? 15 : 18;
               const dfTextScale = (project as any).campaignTitle === 'Sentry Dogfooding Chronicles' ? 0.85 : 1;
               context.font = `${baseSize * 1.25 * dfTextScale}px "kcgangster", Arial`;
             }
@@ -1653,7 +1739,11 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
               const baseSize = parseFloat(fontSize);
               context.font = `${baseSize * 0.8}px "kcgangster", Arial`;
             }
-            if (project.title === 'A new blueprint for an uncertain world') {
+            if (project.title === 'The new office for the way people want to work') {
+              const lineH = parseFloat(fontSize) * 1.3;
+              context.fillText('The new office for', textXOffset, textYOffset - lineH / 2);
+              context.fillText('the way people want to work', textXOffset, textYOffset + lineH / 2);
+            } else if (project.title === 'A new blueprint for an uncertain world') {
               const lineH = parseFloat(fontSize) * 1.3;
               context.fillText('A new blueprint for', textXOffset, textYOffset - lineH / 2);
               context.fillText('an uncertain world', textXOffset, textYOffset + lineH / 2);

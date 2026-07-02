@@ -892,8 +892,7 @@ setUploadedPdf(null);    // ← ADD THIS
 
   return (
     <>
-      <ChatLanding 
-        config={{ projects: [] }}
+      <ChatLanding
         onChatCenter={handleChatCenter}
         onSkillsClick={handleSkillsClick}
         onDevinModeClick={handleDevinModeClick}

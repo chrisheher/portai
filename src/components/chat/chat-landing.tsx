@@ -156,7 +156,7 @@ function CarouselContent({ carouselData }: {
 interface Link {
   name: string;
   url: string;
-  shape?: 'letterC' | 'letterH' | 'letterR' | 'letterI' | 'letterS' | 'letterE' | 'letterU' | 'letterK' | 'letterA' | 'dollarSign' | 'slash' | 'bracketOpen' | 'bracketClose' | 'parenOpen' | 'parenClose' | 'pill' | 'rect' | 'diamond' | 'parallelogram' | 'arrowRight' | 'tree' | 'keystone' | 'chatBubble' | 'videoCamera' | 'telephone' | 'drone' | 'dogBowl' | 'curlyOpen' | 'curlyClose' | 'speaker' | 'microphone' | 'videoConference';
+  shape?: 'letterC' | 'letterH' | 'letterR' | 'letterI' | 'letterS' | 'letterE' | 'letterU' | 'letterK' | 'letterA' | 'letterD' | 'dollarSign' | 'slash' | 'bracketOpen' | 'bracketClose' | 'parenOpen' | 'parenClose' | 'pill' | 'rect' | 'diamond' | 'parallelogram' | 'arrowRight' | 'tree' | 'keystone' | 'chatBubble' | 'videoCamera' | 'telephone' | 'drone' | 'dogBowl' | 'curlyOpen' | 'curlyClose' | 'speaker' | 'microphone' | 'videoConference';
 }
 
 interface Project {
@@ -178,9 +178,6 @@ interface Project {
 }
 
 interface ChatLandingProps {
-  config: {
-    projects: Project[];
-  };
   onChatCenter?: (centered: boolean) => void;
   onSkillsClick?: () => void;
   onDevinModeClick?: () => void;
@@ -194,8 +191,7 @@ interface ChatLandingProps {
   activePromptDescription?: React.ReactNode; // ← Change from string | undefined
 }
 
-function ChatLanding({ 
-  config, 
+function ChatLanding({
   onChatCenter, 
   onSkillsClick, 
   onDevinModeClick,
@@ -210,10 +206,10 @@ function ChatLanding({
 }: ChatLandingProps) {
   const [displayedItems, setDisplayedItems] = useState<Project[]>([]);
   const [mode, setMode] = useState<'initial' | 'links'>('initial');
-  const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
   const [chatCentered, setChatCentered] = useState(false);
   const [promptModeActive, setPromptModeActive] = useState(false);
-  const [localDescription, setLocalDescription] = useState<string | null>(null);  
+  const [localDescription, setLocalDescription] = useState<string | null>(null);
+  const [pageDescription, setPageDescription] = useState<string[] | null>(null);  
   const [carouselData, setCarouselData] = useState<{
     images: { src: string; alt: string; url?: string }[];
     title: string;
@@ -234,6 +230,7 @@ function ChatLanding({
     localDescription: string | null;
     chatCentered: boolean;
     promptModeActive: boolean;
+    pageDescription: string[] | null;
   };
   const navHistory = useRef<NavSnapshot[]>([]);
 
@@ -273,11 +270,11 @@ function ChatLanding({
 
   // HEUREKA letters
   const initialProjects = useMemo(() => [
-    { title: 'copywriting', hoverTitle: 'GTM content — campaigns that moved pipeline', type: 'project' as const },
+    { title: 'content leadership', hoverTitle: 'GTM content — campaigns that moved pipeline', type: 'project' as const },
     { title: 'heureka creative process', hoverTitle: 'why the h matters',                           type: 'project' as const },
-    { title: 'relatable developer content', hoverTitle: 'developer content written by poser coder equal parts fugazi and cunning', type: 'project' as const },
-    { title: 'interactive content', hoverTitle: 'interactive & UX writing',                    type: 'project' as const },
-    { title: 'simple, direct, technical', hoverTitle: 'technical & AI content',                      type: 'project' as const },
+    { title: 'revenue-generating content', hoverTitle: 'developer content written by poser coder equal parts fugazi and cunning', type: 'project' as const },
+    { title: 'Intricate technical content', hoverTitle: 'interactive & UX writing',                    type: 'project' as const },
+    { title: 'selfish creativity', hoverTitle: 'technical & AI content',                      type: 'project' as const },
   ], []);
 
   // S-related links (simplified technical content - formerly R)
@@ -370,10 +367,10 @@ function ChatLanding({
       title: 'DroneDeploy | Safety AI',
       type: 'campaign' as const,
       links: [
-        { name: 'awareness | use case', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections', shape: 'drone' as const },
-        { name: 'awareness | white paper', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf', shape: 'drone' as const },
-        { name: 'consideration | blog post', url: 'https://www.dronedeploy.com/blog/safety-smarter-artificial-intelligence-and-your-work-site', shape: 'drone' as const },
-        { name: 'decision | product page', url: 'https://www.dronedeploy.com/product/safety-ai', shape: 'drone' as const }
+        { name: 'elevating your project with autonomous facade inspections', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections', shape: 'drone' as const },
+        { name: 'the pain points of point solutions', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf', shape: 'drone' as const },
+        { name: 'safety, smarter: AI and your work site', url: 'https://www.dronedeploy.com/blog/safety-smarter-artificial-intelligence-and-your-work-site', shape: 'drone' as const },
+        { name: 'Safety AI product page', url: 'https://www.dronedeploy.com/product/safety-ai', shape: 'drone' as const }
       ],
       description: 'GTM content campaign',
       campaignListDescription: 'Worksite injuries cost the construction industry $5 billion annually. DroneDeploy\'s Safety AI uses computer vision to identify safety violations in real-time, turning reactive incident reports into proactive prevention.',
@@ -404,11 +401,11 @@ function ChatLanding({
       title: 'HP Presence | thought leadership',
       type: 'campaign' as const,
       links: [
-        { name: 'The new office for the way people want to work', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf', shape: 'telephone' as const },
-        { name: 'The new era of work', url: 'https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf', shape: 'videoCamera' as const },
-        { name: 'A new blueprint for an uncertain world', url: 'https://getstarted.hbs.net/hubfs/2025%20Partner%20Campaigns/HP_Services_Hybrid_A-New-Blueprint-for-an-Uncertain-World_Consideration_ebook_2022.pdf.pdf?hsLang=en', shape: 'microphone' as const },
-        { name: 'Get ready today to do tomorrow\'s work', url: 'https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf', shape: 'speaker' as const },
-        { name: 'HP Presence | video conferencing suite', url: 'https://www.hp.com/us-en/solutions/presence.html', shape: 'videoConference' as const }
+        { name: 'The new office for the way people want to work', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf', shape: 'letterC' as const },
+        { name: 'The new era of work', url: 'https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf', shape: 'letterH' as const },
+        { name: 'A new blueprint for an uncertain world', url: 'https://getstarted.hbs.net/hubfs/2025%20Partner%20Campaigns/HP_Services_Hybrid_A-New-Blueprint-for-an-Uncertain-World_Consideration_ebook_2022.pdf.pdf?hsLang=en', shape: 'letterR' as const },
+        { name: 'Get ready today to do tomorrow\'s work', url: 'https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf', shape: 'letterI' as const },
+        { name: 'HP Presence | video conferencing suite', url: 'https://www.hp.com/us-en/solutions/presence.html', shape: 'letterS' as const }
       ],
       campaignListDescription: 'The pandemic altered the fabric of society. And nowhere was this more evident than in the office. As HP\'s content strategist, I helped position their Presence videoconferencing suite to be the connective tissue for distributed workforces.',
       impact: [
@@ -494,7 +491,8 @@ function ChatLanding({
         { name: 'Sentry | Enterprise page', url: 'https://www.sentry.dev/for/enterprise/', shape: 'slash' as const },
         { name: 'Sentry | Full stack', url: 'https://sentry.io/for/full-stack/', shape: 'bracketOpen' as const },
         { name: 'Sentry | Performance monitoring', url: 'https://www.sentry.dev/solutions/application-performance-monitoring/', shape: 'bracketClose' as const },
-        { name: 'Sentry | Mobile development', url: 'https://sentry.io/solutions/mobile-developers/', shape: 'parenClose' as const }
+        { name: 'Sentry | Mobile development', url: 'https://sentry.io/solutions/mobile-developers/', shape: 'parenClose' as const },
+        { name: 'Asking the Right Query With Discover', url: 'https://blog.sentry.io/asking-the-right-query-with-discover/', shape: 'letterD' as const }
       ],
 
       campaignListDescription: 'Partnered with software engineers to co-produce content that articualted value propositions and while moving users into trial.',
@@ -629,7 +627,7 @@ function ChatLanding({
       campaignListDescription: '',
       impact: []
     },
-    'chronosphere': {
+    'cloud': {
       title: 'Chronosphere',
       type: 'campaign' as const,
       links: [
@@ -698,6 +696,7 @@ useEffect(() => {
           title: link.name,
           url: link.url,
           type: 'link' as const,
+          shape: link.shape,
           description: ('description' in item ? item.description : undefined) as string | undefined,
           campaignListDescription: item.campaignListDescription,
           impact: item.impact,
@@ -708,17 +707,18 @@ useEffect(() => {
         return;
       }
     }
-    
+
     // Check interactiveData
     else if (interactiveData[showParam as keyof typeof interactiveData]) {
       const item = interactiveData[showParam as keyof typeof interactiveData];
-      console.log('🎮 Loading interactive content:', item.title);
-      
+      console.log('🎮 Loading Intricate technical content:', item.title);
+
       if ('links' in item && item.links.length > 0) {
         const linkShapes = item.links.map((link: Link) => ({
           title: link.name,
           url: link.url,
           type: 'link' as const,
+          shape: link.shape,
           description: ('description' in item ? item.description : undefined) as string | undefined,
           campaignListDescription: item.campaignListDescription,
           impact: item.impact,
@@ -781,8 +781,9 @@ useEffect(() => {
       localDescription,
       chatCentered,
       promptModeActive,
+      pageDescription,
     });
-  }, [displayedItems, mode, activeSection, carouselData, localDescription, chatCentered, promptModeActive]);
+  }, [displayedItems, mode, activeSection, carouselData, localDescription, chatCentered, promptModeActive, pageDescription]);
 
   const handleShapeClick = useCallback((item: Project) => {
     console.log('📍 Shape clicked:', item.title, item);
@@ -884,6 +885,7 @@ useEffect(() => {
                   impact: campaign.impact, campaignTitle: campaign.title
                 }));
                 setDisplayedItems(linkShapes);
+                setPageDescription(null);
                 setMode('links');
                 window.history.pushState({}, '', item.url);
                 return;
@@ -899,6 +901,7 @@ useEffect(() => {
                   impact: td.impact, campaignTitle: td.title
                 }));
                 setDisplayedItems(linkShapes);
+                setPageDescription(null);
                 setMode('links');
                 window.history.pushState({}, '', item.url);
                 return;
@@ -914,6 +917,7 @@ useEffect(() => {
                   impact: id.impact, campaignTitle: id.title
                 }));
                 setDisplayedItems(linkShapes);
+                setPageDescription(null);
                 setMode('links');
                 window.history.pushState({}, '', item.url);
                 return;
@@ -930,15 +934,20 @@ useEffect(() => {
     
     // HANDLE INITIAL MODE - C H R I S
 
-    // C CLICK → GTM campaigns
-    if (item.title === 'copywriting') {
+    // C CLICK → content leadership
+    if (item.title === 'content leadership') {
       pushHistory();
+      setPageDescription([
+        "Cincoro Tequila | Brand manifesto, social media calendar, and website copy that unveiled Michael Jordan's tequila. Social following grew to 73K+, company went from 0 → 1.5M bottles sold annually.",
+        "Sentry Dogfooding Chronicles | Thought leadership series turning a dev team's internal hiccups into external thought leadership. 25+ blog posts. $100K–$150K SEO value from dev.to + Hacker News coverage.",
+        "Airbnb career website | Lead writer for Airbnb's talent website coming out of the great resignation. Responsible for employer brand proposition, layering site copy, and articulating Airbnb's Live and Work Anywhere policy. 72% increase in applications, 170% from underrepresented groups.",
+        "DroneDeploy Safety AI launch | Full-funnel campaign for DroneDeploy's first AI product. Pipeline grew from zero to $458K over 7 weeks; 87% increase in trial adoption compared to previous launches.",
+      ]);
       const links = [
-        { title: 'cincoro tequila | brand launch', url: '/?show=cincoro', shape: 'letterC' as const },
-        { title: 'Sentry | Performance GTM campaign', url: '/?show=sentry-performance', shape: 'letterH' as const },
-        { title: 'HP | Presence white papers', url: '/?show=hp-presence', shape: 'letterR' as const },
-        { title: 'DroneDeploy | Safety AI ', url: '/?show=safety-ai', shape: 'letterI' as const },
-        { title: 'social media potpourri',             url: '/public/social.pdf',        shape: 'letterS' as const },
+        { title: 'Cincoro Tequila', url: '/?show=cincoro', shape: 'letterC' as const },
+        { title: 'Sentry Dogfooding Chronicles', url: '/?show=sentry-dogfooding', shape: 'letterS' as const },
+        { title: 'Airbnb career website', url: '/?show=airbnb', shape: 'letterA' as const },
+        { title: 'DroneDeploy Safety AI launch', url: '/?show=safety-ai', shape: 'letterD' as const },
       ].map(l => ({ ...l, type: 'link' as const }));
       setDisplayedItems(links);
       setMode('links');
@@ -952,29 +961,37 @@ useEffect(() => {
     }
 
     // R CLICK → revenue / writing samples
-    if (item.title === 'relatable developer content') {
+    if (item.title === 'revenue-generating content') {
       pushHistory();
+      setPageDescription([
+        "HP Presence | Content strategist for a series of white papers defining the role of the office coming out of the pandemic. $680K closed-won revenue resulting from content-generated leads.",
+        "Sentry GTM | Lead writer + strategist for integrated content campaign that took Sentry's Performance to market: tagline (\"See Slow Faster\"), social calendar, blog posts, web pages, webinars. $1.8M in attributed pipeline.",
+        "DroneDeploy × Boston Dynamics | Lead writer for key machine learning partnership. 1.7% engagement rate, 28% increase in SQLs QoQ.",
+        "GPay instrumentation videos | Storyboards + scripts for Google's GPay rollout at I/O. $1.5M in attributed ARR.",
+      ]);
       const links = [
-        { title: 'sentry | dogfooding chronicles', url: '/?show=sentry-dogfooding', shape: 'slash' as const },
-        { title: 'google | gpay instrumentation videos', url: '/?show=gpay', shape: 'bracketOpen' as const },
-        { title: 'sentry | thought leadership',        url: '/?show=sentry-dev',        shape: 'curlyOpen' as const },
-        { title: 'NetApp | Azure migration guide', url: 'https://www.netapp.com/media/16141-wp-azure-migration.pdf', shape: 'curlyClose' as const },
-        { title: 'chronosphere | data cardinality content',       url: '/?show=chronosphere',      shape: 'bracketClose' as const },
+        { title: 'HP Presence', url: '/?show=hp-presence', shape: 'letterC' as const },
+        { title: 'Sentry GTM', url: '/?show=sentry-performance', shape: 'letterH' as const },
+        { title: 'DroneDeploy × Boston Dynamics', url: '/?show=dd-pages', shape: 'letterR' as const },
+        { title: 'GPay instrumentation videos', url: '/?show=gpay', shape: 'letterI' as const },
       ].map(l => ({ ...l, type: 'link' as const }));
       setDisplayedItems(links);
       setMode('links');
       return;
     }
 
-    // I CLICK → interactive / UX writing
-    if (item.title === 'interactive content') {
+    // I CLICK → developer / construction / cloud content
+    if (item.title === 'Intricate technical content') {
       pushHistory();
+      setPageDescription([
+        "Sentry Developer content | In co-writing pieces with developers and product leadership, I simplified technical concepts, amplified brand insights, and aligned content with strategic goals.",
+        "DroneDeploy construction content | Many see drones as fun, not functional. My role with these pieces was to articulate the end benefit that integrated drone software provides teams at construction sites – improved collaboration, inch-perfect measurements, and a better way of tracking progress.",
+        "Cloud content | Lead writer across three separate functions of cloud computing: observability (Chronosphere), migration (NetApp/Azure), and best practices (Pendo).",
+      ]);
       const links = [
-        { title: 'sentry | product pages', url: '/?show=sentry-pages', shape: 'letterC' as const },
-        { title: 'DroneDeploy | product pages',     url: '/?show=dd-pages',     shape: 'letterH' as const },
-        { title: 'airbnb | career site',       url: '/?show=airbnb',       shape: 'letterR' as const },
-        { title: 'ceros | fintech clients',      url: '/?show=fintech',      shape: 'letterI' as const },
-        { title: 'ux webinar',   url: '#',                   shape: 'letterS' as const },
+        { title: 'Sentry Developer content', url: '/?show=sentry-dev', shape: 'letterC' as const },
+        { title: 'DroneDeploy construction content', url: '/?show=dd-construction', shape: 'letterH' as const },
+        { title: 'Cloud content', url: '/?show=cloud', shape: 'letterR' as const },
       ].map(l => ({ ...l, type: 'link' as const }));
       setDisplayedItems(links);
       setMode('links');
@@ -982,16 +999,18 @@ useEffect(() => {
     }
 
     // S CLICK → technical / AI content
-    if (item.title === 'simple, direct, technical') {
+    if (item.title === 'selfish creativity') {
       pushHistory();
-      const sDescription = 'Technical content runs the risk of getting bogged down in its own jargon. To counter this, I approach with professional ignorance, do the required reading, and work authentically with subject matter experts.';
+      setPageDescription([
+        "The Floating Studio | A novel about two millennials taking the American Dream on a deep water story voyage",
+        "Librag | A Literary RAG engine with graph-based retrieval, reranking, and Claude integration.",
+        "Get Chris Home | Chronicled my voyage on a 42 foot sportfisher from NYC to LA (marooned in Key West due to Cuban fuel embargo + Covid-19 pandemic)",
+      ]);
       const links = [
-        { title: 'DroneDeploy | construction site content',  url: '/?show=dd-construction',  shape: 'letterC' as const },
-        { title: 'reality capture white paper',  url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf',                shape: 'letterH' as const },
-        { title: 'GE | aviation pages',  url: '/?show=ge',  shape: 'letterR' as const },
-        { title: 'sentry | instrumentation blog posts',  url: 'https://blog.sentry.io/jamstack-next-js-netlify-and-sentry-how-the-pieces-fit/?original_referrer=https%3A%2F%2Fwww.google.com%2F',                shape: 'letterI' as const },
-        { title: 'coming soon',  url: '#',                shape: 'letterS' as const },
-      ].map(l => ({ ...l, type: 'link' as const, campaignListDescription: sDescription }));
+        { title: 'The Floating Studio',  url: '/tfsjune.pdf',  shape: 'letterC' as const },
+        { title: 'Librag',  url: 'https://onlychr.is/librag',  shape: 'letterH' as const },
+        { title: 'Get Chris Home',  url: '#',  shape: 'letterR' as const },
+      ].map(l => ({ ...l, type: 'link' as const }));
       setDisplayedItems(links);
       setMode('links');
       return;
@@ -1010,6 +1029,7 @@ useEffect(() => {
       setLocalDescription(prev.localDescription);
       setChatCentered(prev.chatCentered);
       setPromptModeActive(prev.promptModeActive);
+      setPageDescription(prev.pageDescription ?? null);
       if (!prev.chatCentered) onChatCenter?.(false);
       window.history.replaceState({}, '', window.location.pathname);
       return;
@@ -1020,6 +1040,7 @@ useEffect(() => {
     setMode('initial');
     setChatCentered(false);
     setPromptModeActive(false);
+    setPageDescription(null);
     setCarouselData(null);
     setLocalDescription(null);
     setActiveSection(null);
@@ -1201,30 +1222,37 @@ maxWidth: '100%',
         </button>
       )}
       
-      {/* Initial mode text */}
-      {mode === 'initial' && (
+      {/* Description text — initial and links mode */}
+      {(mode === 'initial' || (mode === 'links' && pageDescription !== null)) && (
         <div style={{
           position: 'absolute',
           top: '11%',
-          left: '45%',
+          left: '43%',
           transform: 'translateX(-50%)',
-          maxWidth: '700px',
-          height: '140px',
+          maxWidth: '800px',
+          maxHeight: '55vh',
+          overflowY: 'auto',
           display: 'flex',
-          alignItems: 'center',
-          color: '#f5ebd9ff',
-          fontSize: '20px',
-          lineHeight: '1.4',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          color: mode === 'links' ? '#151515' : '#f5ebd9ff',
+          fontSize: mode === 'links' ? '15px' : '20px',
+          lineHeight: '1.6',
           textAlign: 'left',
           zIndex: '700'
         }}>
-          {hoveredProject?.hoverTitle ?? (
-            <>
-     Chris creates content with the belief that AI is the fire, not the chef.
-
-
-            </>
-          )}
+          {mode === 'links' && pageDescription
+            ? pageDescription.map((line, i) => {
+                const [label, ...rest] = line.split('|');
+                return (
+                  <p key={i} style={{ margin: '0 0 0.85em 0' }}>
+                    <strong>{label.trim()}</strong>
+                    {rest.length > 0 && ` | ${rest.join('|').trim()}`}
+                  </p>
+                );
+              })
+            : 'Chris creates content with the belief that AI is the fire, not the chef.'
+          }
         </div>
       )}
       
@@ -1233,7 +1261,7 @@ maxWidth: '100%',
         <TumblingShapes
           projects={mode === 'initial' ? initialProjects : displayedItems}
           onShapeClick={handleShapeClick}
-          onShapeHover={mode === 'initial' ? setHoveredProject : undefined}
+          onShapeHover={undefined}
           mode={mode}
         />
       )}
