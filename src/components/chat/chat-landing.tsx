@@ -1083,7 +1083,7 @@ useEffect(() => {
       ]);
       const links = [
         { title: 'The Floating Studio',  url: '/tfsjune.pdf',  shape: 'letterF' as const },
-        { title: 'Spotify audiobook',  url: '#',  shape: 'letterS' as const },
+        { title: 'Spotify audiobook',  url: 'https://open.spotify.com/show/1ypvv6o17z6aEt3HODd1xt',  shape: 'letterS' as const },
         { title: 'raglib',  url: 'https://onlychr.is/raglib',  shape: 'letterR' as const },
         { title: 'Captain Elbow Grease',  url: '#',  shape: 'letterC' as const },
       ].map(l => ({ ...l, type: 'link' as const }));
