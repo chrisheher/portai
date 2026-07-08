@@ -655,8 +655,8 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         // stem right going down
         { x: 50,  y: 85  },
         // crossbar extends right
-        { x: 145, y: 85  },
-        { x: 145, y: 135 },
+        { x: 114, y: 85  },
+        { x: 114, y: 135 },
         { x: 50,  y: 135 },
         // stem below crossbar
         { x: 50,  y: 260 },
@@ -1117,7 +1117,18 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
       render: { fillStyle: '#1a0e04' }
     });
 
-    Composite.add(world, [...projectBodies, ground, leftWall, rightWall]);
+    // Raised invisible platform under The Floating Studio so it settles 20px higher
+    const floatingStudioEntry = bodiesRef.current.find(e => e.project.title === 'The Floating Studio');
+    const raisedPlatforms: Matter.Body[] = [];
+    if (floatingStudioEntry) {
+      const fsX = floatingStudioEntry.body.position.x;
+      raisedPlatforms.push(Bodies.rectangle(fsX, window.innerHeight - 40, 220, 20, {
+        isStatic: true,
+        render: { fillStyle: '#dcd3c3', strokeStyle: '#dcd3c3', lineWidth: 0 }
+      }));
+    }
+
+    Composite.add(world, [...projectBodies, ground, leftWall, rightWall, ...raisedPlatforms]);
 
     const hasDrones = bodiesRef.current.some(({ shapeType }) => shapeType === 'drone');
     if (hasDrones) engine.gravity.y = 0.16;
@@ -1779,8 +1790,8 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
             ? (isHovered ? '#dcd3c3' : '#312113')
             : (isHovered ? '#312113' : '#dcd3c3');
           context.fillStyle = textColor;
-          const textYOffset = shapeType === 'letterA' ? 30 : shapeType === 'letterD' ? 30 : shapeType === 'letterE' ? -15 : shapeType === 'letterR' ? -25 : shapeType === 'letterH' ? -25 : shapeType === 'dogBowl' ? 25 : 0;
-          const textXOffset = shapeType === 'letterR' ? -15 : 0;
+          const textYOffset = shapeType === 'letterA' ? 30 : shapeType === 'letterD' ? 30 : shapeType === 'letterE' ? -15 : shapeType === 'letterR' ? -25 : shapeType === 'letterH' ? -25 :  shapeType === 'dogBowl' ? 25 : 0;
+          const textXOffset = shapeType === 'letterR' ? -15  : shapeType === 'letterF' ? -125 : 0;
           const rotateShapes = ['letterC', 'letterI', 'letterS', 'letterF', 'tree', 'slash', 'bracketOpen', 'bracketClose', 'parenOpen', 'parenClose', 'dollarSign', 'curlyOpen', 'curlyClose'];
           if (shapeType && rotateShapes.includes(shapeType)) {
             context.save();
@@ -1800,8 +1811,8 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
               : shapeType === 'curlyClose' ? Math.PI / 2
               : Math.PI / 2;
             context.rotate(angle);
-            const textX = shapeType === 'tree' ? -110 : shapeType === 'letterI' ? -50 : shapeType === 'curlyOpen' ? -10 : shapeType === 'curlyClose' ? 25 : 0;
-            const textYRotated = shapeType === 'letterI' ? -5 : shapeType === 'curlyOpen' ? 15 : shapeType === 'curlyClose' ? -10 : 0;
+            const textX = shapeType === 'tree' ? -110 : shapeType === 'letterF' ? -10 : shapeType === 'letterI' ? -50 : shapeType === 'curlyOpen' ? -10 : shapeType === 'curlyClose' ? 25 : 0;
+            const textYRotated = shapeType === 'letterI' ? -5 : shapeType === 'letterF' ? -28 : shapeType === 'curlyOpen' ? 15 : shapeType === 'curlyClose' ? -10 : 0;
             if (project.title === 'The new office for the way people want to work') {
               const lineH = parseFloat(fontSize) * 1.3;
               context.fillText('The new office for', textX, textYRotated - lineH / 2);

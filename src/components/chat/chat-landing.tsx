@@ -155,14 +155,9 @@ const ELBOW_GREASE_MEDIA = [
   { src: '/dream.gif',              mime: null },
   { src: '/floor.gif',              mime: null },
   { src: '/crimpy.gif',             mime: null },
-  { src: '/batt4.mp4',              mime: 'video/mp4' },
-  { src: '/bleed.mp4',              mime: 'video/mp4' },
   { src: '/crimp.gif',              mime: null },
   { src: '/dd.gif',                 mime: null },
-  { src: '/ffuel.jpg',              mime: null },
-  { src: '/golf.MOV',               mime: 'video/quicktime' },
-  { src: '/head.mov',               mime: 'video/quicktime' },
-  { src: '/IMG_1036%20(1).MOV',     mime: 'video/quicktime' },
+  { src: '/ffff.gif',               mime: null},
   { src: '/one.gif',                mime: null },
 ];
 
