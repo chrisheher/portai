@@ -38,7 +38,7 @@ function CarouselContent({ carouselData }: {
     <div className="fixed inset-0 z-[601] bg-[#dcd3c3] flex">
       {/* LEFT HALF - Description & Impact */}
       <div className="w-1/2 h-full overflow-y-hidden p-12 flex flex-col justify-center">
-        <div className="max-w-xl mx-auto" style={{ margin: '-9px -20px 0px 0px' }}>
+        <div className="max-w-xl mx-auto" style={{ margin: '-1px 21px 7px 79px' }}>
           {/* Title */}
           <h2 className="text-[#331b03] text-3xl font-bold mb-6">
             Cincoro Tequila | brand launch
@@ -46,9 +46,7 @@ function CarouselContent({ carouselData }: {
 
           {/* Campaign List Description */}
           {carouselData.campaignListDescription && (
-            <p className="text-[#331b03] leading-relaxed mb-8" style={{ fontSize: '17px' }}>
-              {carouselData.campaignListDescription}
-            </p>
+            <p className="text-[#331b03] leading-relaxed mb-8" style={{ fontSize: '15px' }} dangerouslySetInnerHTML={{ __html: carouselData.campaignListDescription }} />
           )}
 
           {/* Description */}
@@ -153,10 +151,80 @@ function CarouselContent({ carouselData }: {
   );
 }
 
+const ELBOW_GREASE_MEDIA = [
+  { src: '/dream.gif',              mime: null },
+  { src: '/floor.gif',              mime: null },
+  { src: '/crimpy.gif',             mime: null },
+  { src: '/batt4.mp4',              mime: 'video/mp4' },
+  { src: '/bleed.mp4',              mime: 'video/mp4' },
+  { src: '/crimp.gif',              mime: null },
+  { src: '/dd.gif',                 mime: null },
+  { src: '/ffuel.jpg',              mime: null },
+  { src: '/golf.MOV',               mime: 'video/quicktime' },
+  { src: '/head.mov',               mime: 'video/quicktime' },
+  { src: '/IMG_1036%20(1).MOV',     mime: 'video/quicktime' },
+  { src: '/one.gif',                mime: null },
+];
+
+function ElbowGreaseSlideshow({ onClose }: { onClose: () => void }) {
+  const [index, setIndex] = React.useState(0);
+  const item = ELBOW_GREASE_MEDIA[index];
+  const prev = () => setIndex(i => (i - 1 + ELBOW_GREASE_MEDIA.length) % ELBOW_GREASE_MEDIA.length);
+  const next = () => setIndex(i => (i + 1) % ELBOW_GREASE_MEDIA.length);
+
+  return (
+    <div className="fixed inset-0 z-[601] bg-[#120b05] flex flex-col items-center justify-center">
+      <button onClick={onClose} className="absolute top-6 right-8 text-[#dcd3c3] text-3xl leading-none hover:opacity-70">✕</button>
+
+      <div className="text-[#dcd3c3] text-sm mb-4 tracking-widest uppercase opacity-60">
+        Captain Elbow Grease &nbsp;·&nbsp; {index + 1} / {ELBOW_GREASE_MEDIA.length}
+      </div>
+
+      <div className="relative flex items-center justify-center w-full max-w-4xl px-16">
+        <button onClick={prev} className="absolute left-4 text-[#dcd3c3] text-4xl hover:opacity-70">‹</button>
+
+        <div className="w-full flex items-center justify-center" style={{ maxHeight: '75vh' }}>
+          {item.mime ? (
+            <video
+              key={item.src}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="max-w-full max-h-[75vh] rounded-xl object-contain"
+            >
+              <source src={item.src} type={item.mime} />
+            </video>
+          ) : (
+            <img
+              key={item.src}
+              src={item.src}
+              className="max-w-full max-h-[75vh] rounded-xl object-contain"
+            />
+          )}
+        </div>
+
+        <button onClick={next} className="absolute right-4 text-[#dcd3c3] text-4xl hover:opacity-70">›</button>
+      </div>
+
+      <div className="flex gap-2 mt-6 flex-wrap justify-center px-8">
+        {ELBOW_GREASE_MEDIA.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIndex(i)}
+            className="w-2 h-2 rounded-full transition-all"
+            style={{ backgroundColor: i === index ? '#dcd3c3' : 'rgba(220,211,195,0.3)' }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 interface Link {
   name: string;
   url: string;
-  shape?: 'letterC' | 'letterH' | 'letterR' | 'letterI' | 'letterS' | 'letterE' | 'letterU' | 'letterK' | 'letterA' | 'letterD' | 'dollarSign' | 'slash' | 'bracketOpen' | 'bracketClose' | 'parenOpen' | 'parenClose' | 'pill' | 'rect' | 'diamond' | 'parallelogram' | 'arrowRight' | 'tree' | 'keystone' | 'chatBubble' | 'videoCamera' | 'telephone' | 'drone' | 'dogBowl' | 'curlyOpen' | 'curlyClose' | 'speaker' | 'microphone' | 'videoConference';
+  shape?: 'letterC' | 'letterH' | 'letterR' | 'letterI' | 'letterS' | 'letterE' | 'letterU' | 'letterK' | 'letterA' | 'letterD' | 'letterF' | 'dollarSign' | 'slash' | 'bracketOpen' | 'bracketClose' | 'parenOpen' | 'parenClose' | 'pill' | 'rect' | 'diamond' | 'parallelogram' | 'arrowRight' | 'tree' | 'keystone' | 'chatBubble' | 'videoCamera' | 'telephone' | 'drone' | 'dogBowl' | 'curlyOpen' | 'curlyClose' | 'speaker' | 'microphone' | 'videoConference';
 }
 
 interface Project {
@@ -217,6 +285,7 @@ function ChatLanding({
     campaignListDescription?: string;
     impact?: { stat: string }[];
   } | null>(null);
+  const [elbowGreaseOpen, setElbowGreaseOpen] = useState(false);
   
   // Track which top-level section is active (for description display)
   const [activeSection, setActiveSection] = useState<'H' | 'U' | 'E2' | null>(null);
@@ -270,11 +339,11 @@ function ChatLanding({
 
   // HEUREKA letters
   const initialProjects = useMemo(() => [
-    { title: 'content leadership', hoverTitle: 'GTM content — campaigns that moved pipeline', type: 'project' as const },
+    { title: 'content leadership', hoverTitle: ' ', type: 'project' as const },
     { title: 'heureka creative process', hoverTitle: 'why the h matters',                           type: 'project' as const },
-    { title: 'revenue-generating content', hoverTitle: 'developer content written by poser coder equal parts fugazi and cunning', type: 'project' as const },
-    { title: 'Intricate technical content', hoverTitle: 'interactive & UX writing',                    type: 'project' as const },
-    { title: 'selfish creativity', hoverTitle: 'technical & AI content',                      type: 'project' as const },
+    { title: 'revenue-generating content', hoverTitle: '', type: 'project' as const },
+    { title: 'Intricate technical content', hoverTitle: ' ',                    type: 'project' as const },
+    { title: 'selfish creativity', hoverTitle: 'novels,GraphRag libraries, and audiobook recordings ',                      type: 'project' as const },
   ], []);
 
   // S-related links (simplified technical content - formerly R)
@@ -401,10 +470,10 @@ function ChatLanding({
       type: 'campaign' as const,
       links: [
         { name: 'The new office for the way people want to work', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf', shape: 'letterC' as const },
-        { name: 'The new era of work', url: 'https://dandh.com/media/pdf/pages/focusedlanding/devicerefresh/2024/An_essential_guide_The_new_era_of_work.pdf', shape: 'letterH' as const },
+        { name: 'The new era of work', url: '/hp_guide.pdf', shape: 'letterH' as const },
         { name: 'A new blueprint for an uncertain world', url: 'https://getstarted.hbs.net/hubfs/2025%20Partner%20Campaigns/HP_Services_Hybrid_A-New-Blueprint-for-an-Uncertain-World_Consideration_ebook_2022.pdf.pdf?hsLang=en', shape: 'letterR' as const },
         { name: 'Get ready today to do tomorrow\'s work', url: 'https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf', shape: 'letterI' as const },
-        { name: 'Hp Presence Product page', url: 'https://www.hp.com/us-en/solutions/presence.html', shape: 'letterS' as const }
+        { name: 'HP Presence Product page', url: 'https://www.hp.com/us-en/solutions/presence.html', shape: 'letterS' as const }
       ],
       campaignListDescription: 'The pandemic altered the fabric of society. And nowhere was this more evident than in the office. As HP\'s content strategist, I helped position their Presence videoconferencing suite to be the connective tissue for distributed workforces.',
       impact: [
@@ -472,9 +541,9 @@ function ChatLanding({
       title: 'Airbnb | Career website',
       type: 'campaign' as const,
       links: [
-        { name: 'Airbnb | career home page', url: 'https://careers.airbnb.com/' },
-        { name: 'Airbnb | Life at airbnb', url: 'https://careers.airbnb.com/life-at-airbnb/' },
-        { name: 'Airbnb | Apprentice page', url: 'https://careers.airbnb.com/connect-engineering-apprenticeship/' }
+        { name: 'Career home page', url: 'https://careers.airbnb.com/' },
+        { name: 'Life at airbnb', url: 'https://careers.airbnb.com/life-at-airbnb/' },
+        { name: 'Apprentice page', url: 'https://careers.airbnb.com/connect-engineering-apprenticeship/' }
       ],
       campaignListDescription: 'As lead writer for Airbnb\'s career website, I developed their employer value proposition coming out of their Live and Work Anywhere policy, then executed on that strategy with compelling content.',
       impact: [
@@ -523,7 +592,7 @@ function ChatLanding({
   // ========== SIMPLIFIED TECHNICAL CONTENT DUMMY DATA ==========
   const technicalData = useMemo(() => ({
     'gpay': {
-      title: 'Google | gpay instrumentation',
+      title: 'Google | gpay instrumentation videos',
       type: 'campaign' as const,
       links: [
         { name: 'API demo (web)', url: 'https://www.youtube.com/watch?v=pZyGYUMZAeg' },
@@ -621,7 +690,7 @@ function ChatLanding({
         { name: 'The ultimate Guide to Facade Inspections', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections', shape: 'drone' as const },
         { name: 'Closing The Gap in Stockpile Quantification', url: 'https://dronedeploy.com/blog/closing-the-gap-how-archer-western-and-dronedeploy-observed-a-1-1-difference-in-stockpile-quantities-compared-to-traditional-survey-methods', shape: 'drone' as const },
         { name: 'Within Striking Distance: The Dangers of Underground Utilities', url: 'https://www.dronedeploy.com/blog/within-striking-distance-risks-and-consequences-of-manual-utility-mapping', shape: 'drone' as const },
-        { name: 'Flying beyond line of sight', url: 'https://www.dronedeploy.com/blog/flying-beyond-visual-line-of-sight-the-complete-guide-to-bvlos-waivers-and-docked-drones', shape: 'drone' as const }
+        { name: 'Flying beyond line of sight', url: 'https://www.dronedeploy.com/blog/flying-beyond-visual-line-of-sight-the-complete-guide-to-bvlos-waivers-and-docked-drones', shape: 'drone' as const },
       ],
       campaignListDescription: '',
       impact: []
@@ -634,7 +703,7 @@ function ChatLanding({
         { name: 'NetApp | Azure migration', url: 'https://www.netapp.com/pdf.html?item=/media/16141-wp-azure-migration.pdf', shape: 'bracketOpen' as const },
         { name: 'Pendo | Product Cloud', url: 'https://www.ceros.com/inspire/project/theproductcloud', shape: 'bracketClose' as const }
       ],
-      campaignListDescription: '',
+      campaignListDescription: 'Lead writer across three separate functions of cloud computing: observability (chronosphere), migration (NetApp/Azure), and best practices (Pendo)',
       impact: []
     }
   }), []);
@@ -860,6 +929,10 @@ useEffect(() => {
       
       // Regular link click - internal links in same tab, external in new tab
       if (item.type === 'link' || item.type === 'image') {
+        if (item.title === 'Captain Elbow Grease') {
+          setElbowGreaseOpen(true);
+          return;
+        }
         if (item.url) {
           console.log('🔗 Opening link:', item.url);
           const isExternal = item.url.startsWith('http://') || item.url.startsWith('https://');
@@ -885,6 +958,7 @@ useEffect(() => {
                 setDisplayedItems(linkShapes);
                 setPageDescription(null);
                 setMode('links');
+                track('campaign_view', { campaign: showParam, title: campaign.title });
                 window.history.pushState({}, '', item.url);
                 return;
               }
@@ -901,6 +975,7 @@ useEffect(() => {
                 setDisplayedItems(linkShapes);
                 setPageDescription(null);
                 setMode('links');
+                track('campaign_view', { campaign: showParam, title: td.title });
                 window.history.pushState({}, '', item.url);
                 return;
               }
@@ -917,6 +992,7 @@ useEffect(() => {
                 setDisplayedItems(linkShapes);
                 setPageDescription(null);
                 setMode('links');
+                track('campaign_view', { campaign: showParam, title: id.title });
                 window.history.pushState({}, '', item.url);
                 return;
               }
@@ -969,7 +1045,7 @@ useEffect(() => {
       ]);
       const links = [
         { title: 'HP Presence', url: '/?show=hp-presence', shape: 'letterC' as const },
-        { title: 'Sentry GTM', url: '/?show=sentry-performance', shape: 'letterH' as const },
+        { title: 'Sentry Performance GTM', url: '/?show=sentry-performance', shape: 'letterH' as const },
         { title: 'DroneDeploy × Boston Dynamics', url: '/?show=dd-pages', shape: 'letterR' as const },
         { title: 'GPay instrumentation videos', url: '/?show=gpay', shape: 'letterI' as const },
       ].map(l => ({ ...l, type: 'link' as const }));
@@ -1001,13 +1077,15 @@ useEffect(() => {
       pushHistory();
       setPageDescription([
         "The Floating Studio | A novel about two millennials taking the American Dream on a deep water story voyage",
-        "Librag | A Literary RAG engine with graph-based retrieval, reranking, and Claude integration.",
-        "Get Chris Home | Chronicled my voyage on a 42 foot sportfisher from NYC to LA (marooned in Key West due to Cuban fuel embargo + Covid-19 pandemic)",
+        "For those who prefer to read with their ears, I recorded **an audiobook** using fugazi voices from Sopranos characters",
+        "raglib | A Literary RAG engine with graph-based retrieval, reranking, and Claude integration.",
+        "Captain Elbow Grease | A collection of media documenting my restoration of a 1979 sportfishing yacht"
       ]);
       const links = [
-        { title: 'The Floating Studio',  url: '/tfsjune.pdf',  shape: 'letterC' as const },
-        { title: 'Librag',  url: 'https://onlychr.is/raglib',  shape: 'letterH' as const },
-        { title: 'Get Chris Home',  url: '#',  shape: 'letterR' as const },
+        { title: 'The Floating Studio',  url: '/tfsjune.pdf',  shape: 'letterF' as const },
+        { title: 'Spotify audiobook',  url: '#',  shape: 'letterS' as const },
+        { title: 'raglib',  url: 'https://onlychr.is/raglib',  shape: 'letterR' as const },
+        { title: 'Captain Elbow Grease',  url: '#',  shape: 'letterC' as const },
       ].map(l => ({ ...l, type: 'link' as const }));
       setDisplayedItems(links);
       setMode('links');
@@ -1049,12 +1127,13 @@ useEffect(() => {
   };
 
   return (
-    <div style={{ 
-      position: 'relative', 
-      width: '100%', 
+    <div style={{
+      position: 'relative',
+      width: '100%',
       height: '100vh',
       backgroundColor: mode === 'initial' ? '#35281cff' : '#dcd3c3'
     }}>
+      {elbowGreaseOpen && <ElbowGreaseSlideshow onClose={() => setElbowGreaseOpen(false)} />}
       {/* Background overlay */}
       {(mode === 'links' || chatCentered) && (
         <div style={{
@@ -1092,7 +1171,7 @@ useEffect(() => {
       )}
       
       {/* Description box */}
-      {!hideDescriptionBox && mode === 'links' && ((displayedItems.length > 0 && (displayedItems[0].description || displayedItems[0].campaignListDescription || displayedItems[0].impact || carouselData)) || promptModeActive || activeSection) && (
+      {!hideDescriptionBox && !elbowGreaseOpen && mode === 'links' && ((displayedItems.length > 0 && (displayedItems[0].description || displayedItems[0].campaignListDescription || displayedItems[0].impact || carouselData)) || promptModeActive || activeSection) && (
         <div 
           style={{
             position: 'absolute',
@@ -1148,7 +1227,7 @@ maxWidth: '100%',
       )}
 
       {displayedItems[0]?.campaignListDescription && (
-        <div style={{ margin: '0px 35px -1px 0px' }}>
+        <div style={{ margin: '0px -35px -1px 0px' }}>
           {displayedItems[0].campaignListDescription}
         </div>
       )}
@@ -1158,14 +1237,14 @@ maxWidth: '100%',
 {displayedItems[0]?.impact && displayedItems[0].impact.length > 0 && (
     <div style={{
       flex: displayedItems[0]?.campaignTitle === 'Sentry Dogfooding Chronicles' ? 0.75 : 1,
-      paddingLeft: '100px',
+      paddingLeft: '70px',
       marginTop: '-60px',
       height: '300px'
 
     }}>
       <div style={{ 
         fontWeight: 'bold',  
-        width: '375px',
+        width: '425px',
         padding: '15px 15px 15px 15px',
         fontSize: '18px',
         borderRadius: '18px',
@@ -1178,7 +1257,7 @@ maxWidth: '100%',
           lineHeight: '1', 
           fontSize: '16px', 
           listStyle: 'disc', 
-          width: '340px',
+          width: '410px',
           paddingLeft: '20px',
           fontWeight: 'normal'
         }}>
@@ -1221,7 +1300,7 @@ maxWidth: '100%',
       )}
       
       {/* Description text — initial and links mode */}
-      {(mode === 'initial' || (mode === 'links' && pageDescription !== null)) && (
+      {!elbowGreaseOpen && (mode === 'initial' || (mode === 'links' && pageDescription !== null)) && (
         <div style={{
           position: 'absolute',
           top: '11%',
@@ -1241,6 +1320,18 @@ maxWidth: '100%',
         }}>
           {mode === 'links' && pageDescription
             ? pageDescription.map((line, i) => {
+                if (line.includes('**')) {
+                  const parts = line.split(/(\*\*[^*]+\*\*)/g);
+                  return (
+                    <p key={i} style={{ margin: '0 0 0.85em 0' }}>
+                      {parts.map((part, j) =>
+                        part.startsWith('**') && part.endsWith('**')
+                          ? <strong key={j}>{part.slice(2, -2)}</strong>
+                          : part
+                      )}
+                    </p>
+                  );
+                }
                 const [label, ...rest] = line.split('|');
                 return (
                   <p key={i} style={{ margin: '0 0 0.85em 0' }}>
