@@ -156,8 +156,8 @@ const ELBOW_GREASE_MEDIA = [
   { src: '/floor.gif',              mime: null },
   { src: '/crimpy.gif',             mime: null },
   { src: '/crimp.gif',              mime: null },
+ { src: '/ffff.gif',               mime: null},
   { src: '/dd.gif',                 mime: null },
-  { src: '/ffff.gif',               mime: null},
   { src: '/one.gif',                mime: null },
 ];
 
