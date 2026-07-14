@@ -1092,7 +1092,7 @@ useEffect(() => {
         "Captain Elbow Grease | A collection of media documenting my restoration of a 1979 sportfishing yacht"
       ]);
       const links = [
-        { title: 'The Floating Studio',  url: '/tfsjuly.pdf',  shape: 'letterF' as const },
+        { title: 'The Floating Studio',  url: '/tfs_july.pdf',  shape: 'letterF' as const },
         { title: 'Spotify audiobook',  url: 'https://open.spotify.com/show/1ypvv6o17z6aEt3HODd1xt',  shape: 'letterS' as const },
         { title: 'raglib',  url: 'https://onlychr.is/raglib',  shape: 'letterR' as const },
         { title: 'Captain Elbow Grease',  url: '#',  shape: 'letterC' as const },
