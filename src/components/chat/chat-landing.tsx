@@ -391,10 +391,10 @@ function ChatLanding({
       title: 'Sentry | Performance GTM campaign',
       type: 'campaign' as const,
       links: [
-        { name: 'thought leadership ', url: 'https://blog.sentry.io/how-slow-is-slow/', shape: 'slash' as const },
-        { name: 'release blog', url: 'https://blog.sentry.io/see-slow-faster-with-performance-monitoring/', shape: 'bracketOpen' as const },
-        { name: 'product page', url: 'https://sentry.io/solutions/application-performance-monitoring/', shape: 'parenOpen' as const },
-        { name: 'sales enablement', url: 'https://sentry.io/customers/atlassian-jira/', shape: 'parenClose' as const },
+        { name: 'awareness | how slow is slow? ', url: 'https://blog.sentry.io/how-slow-is-slow/', shape: 'slash' as const },
+        { name: 'consideration | release blog', url: 'https://blog.sentry.io/see-slow-faster-with-performance-monitoring/', shape: 'bracketOpen' as const },
+        { name: 'evaluation| product page', url: 'https://sentry.io/solutions/application-performance-monitoring/', shape: 'parenOpen' as const },
+        { name: 'see slow faster customer story', url: 'https://sentry.io/customers/atlassian-jira/', shape: 'parenClose' as const },
         { name: 'webinar', url: 'https://www.youtube.com/watch?v=J0tAK6dKY3Y/', shape: 'bracketClose' as const }
       ],
       images: [],
@@ -458,10 +458,10 @@ function ChatLanding({
         { stat: 'Performance product grew 240% largely through product-led channels' },
         { stat: '25+ blog posts generated a total of ~45k site visits -- 40% of which were organic' }
       ],
-      campaignListDescription: 'Dogfooding is the process in which a company uses its own product as a quality control mechanism. This concept was a perfect fit for Sentry to showcase how its software engineers were using Sentry\'s own platform to track errors in the codebase. Creating stories out of these mundane coding hiccups established Sentry as a thought leader across key industry blogs without sounding preachy or pedantic.'
+      campaignListDescription: 'Dogfooding is the process in which a company uses its own product as a quality control mechanism. This concept was a perfect fit for Sentry to showcase how its software engineers were using Sentry\'s own platform to track errors in the codebase. Creating stories out of mundane coding hiccups established Sentry as a thought leader across key industry blogs without sounding preachy or pedantic.'
     },
     'hp-presence': {
-      title: 'HP Presence | thought leadership',
+      title: 'HP Presence | white paper series',
       type: 'campaign' as const,
       links: [
         { name: 'The new office for the way people want to work', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf', shape: 'letterC' as const },
@@ -482,7 +482,7 @@ function ChatLanding({
       title: 'Cincoro tequila | brand launch',
       type: 'campaign' as const,
       impact: [
-        { stat: 'Created content processes and calendar delivering 2-3x higher engagement rates due to consistent posting schedules' },
+        { stat: 'Delivered 2-3x higher engagement rates due to consistent posting schedules' },
         { stat: 'Built social audience to 110K+ followers across platforms, exceeding brands with decades of history (Don Julio had ~97K Instagram in 2021)' },
         { stat: 'brand grew from zero to 1.5M bottles sold' }
       ],
@@ -525,7 +525,7 @@ function ChatLanding({
         { name: 'Data on Demand', url: 'https://www.dronedeploy.com/data-on-demand', shape: 'drone' as const },
         { name: 'Industrial Inspection', url: 'https://www.dronedeploy.com/product/robotic-industrial-inspection', shape: 'drone' as const }
       ],
-      campaignListDescription: 'Collaborating with product and sales teams, I piqued curiosity, ensured technical accuracy, and optimized each page by adding cross-links to related solutions and guides for mid- and bottom-funnel engagement.',
+      campaignListDescription: 'Collaborating with product and sales teams at Boston Dynamics, my content piqued curiosity, ensured technical accuracy, and optimized each page by adding cross-links to related content for mid-funnel engagement.',
       impact: [
         { stat: '$2.5m content share for ground robotics' },
         { stat: '1.7% engagement rate to take meaningful action' },
@@ -608,7 +608,8 @@ function ChatLanding({
         { name: 'How slow is slow?', url: 'https://blog.sentry.io/how-slow-is-slow/', shape: 'slash' as const },
         { name: 'Why debugging Javascript sucks', url: 'https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/', shape: 'bracketClose' as const },
         { name: 'Python 3 compatibility', url: 'https://blog.sentry.io/python-3-compatibility-what-to-know/', shape: 'parenClose' as const },
-        { name: 'Great moments in application monitoring', url: 'https://blog.sentry.io/great-moments-in-application-monitoring/', shape: 'parenClose' as const }
+        { name: 'Great moments in application monitoring', url: 'https://blog.sentry.io/great-moments-in-application-monitoring/', shape: 'parenClose' as const },
+        { name: 'Asking the Right Query With Discover', url: 'https://blog.sentry.io/asking-the-right-query-with-discover/', shape: 'letterD' as const }
       ],
 
       campaignListDescription: 'Sentry is an application monitoring platform that tracks various metrics and logs to optimize code health. My role involved creating developer-focused content to make code health -- and hygiene -- engaging for software engineers.',
@@ -931,7 +932,8 @@ useEffect(() => {
         if (item.url) {
           console.log('🔗 Opening link:', item.url);
           const isExternal = item.url.startsWith('http://') || item.url.startsWith('https://');
-          if (isExternal) {
+          const isPdf = item.url.endsWith('.pdf');
+          if (isExternal || isPdf) {
             window.open(item.url, '_blank');
             return;
           }
@@ -942,8 +944,8 @@ useEffect(() => {
           if (showParam) {
             if (campaignData[showParam as keyof typeof campaignData]) {
               const campaign = campaignData[showParam as keyof typeof campaignData];
-              pushHistory();
               if ('links' in campaign && campaign.links.length > 0) {
+                pushHistory();
                 const linkShapes = campaign.links.map((link: Link) => ({
                   title: link.name, url: link.url, type: 'link' as const,
                   shape: link.shape,
@@ -957,10 +959,23 @@ useEffect(() => {
                 window.history.pushState({}, '', item.url);
                 return;
               }
+              // Image-only campaign (e.g. Cincoro) — show carousel in-state
+              if ('images' in campaign && (campaign as any).images?.length > 0) {
+                pushHistory();
+                setCarouselData({
+                  images: (campaign as any).images,
+                  title: campaign.title,
+                  campaignListDescription: campaign.campaignListDescription,
+                  impact: campaign.impact
+                });
+                setDisplayedItems([{ title: campaign.title, type: 'campaign' as const }]);
+                track('campaign_view', { campaign: showParam, title: campaign.title });
+                return;
+              }
             } else if (technicalData[showParam as keyof typeof technicalData]) {
               const td = technicalData[showParam as keyof typeof technicalData];
-              pushHistory();
               if ('links' in td && td.links.length > 0) {
+                pushHistory();
                 const linkShapes = td.links.map((link: Link) => ({
                   title: link.name, url: link.url, type: 'link' as const,
                   shape: link.shape,
@@ -976,8 +991,8 @@ useEffect(() => {
               }
             } else if (interactiveData[showParam as keyof typeof interactiveData]) {
               const id = interactiveData[showParam as keyof typeof interactiveData];
-              pushHistory();
               if ('links' in id && id.links.length > 0) {
+                pushHistory();
                 const linkShapes = id.links.map((link: Link) => ({
                   title: link.name, url: link.url, type: 'link' as const,
                   shape: link.shape,
@@ -1039,9 +1054,9 @@ useEffect(() => {
         "GPay instrumentation videos | Storyboards + scripts for Google's GPay rollout at I/O. $1.5M in attributed ARR.",
       ]);
       const links = [
-        { title: 'HP Presence', url: '/?show=hp-presence', shape: 'letterC' as const },
-        { title: 'Sentry Performance GTM', url: '/?show=sentry-performance', shape: 'letterH' as const },
-        { title: 'DroneDeploy × Boston Dynamics', url: '/?show=dd-pages', shape: 'letterR' as const },
+        { title: 'HP Presence', url: '/?show=hp-presence', shape: 'letterH' as const },
+        { title: 'Sentry Performance GTM', url: '/?show=sentry-performance', shape: 'letterS' as const },
+        { title: 'DroneDeploy × Boston Dynamics', url: '/?show=dd-pages', shape: 'letterD' as const },
         { title: 'GPay instrumentation videos', url: '/?show=gpay', shape: 'letterI' as const },
       ].map(l => ({ ...l, type: 'link' as const }));
       setDisplayedItems(links);
@@ -1058,9 +1073,9 @@ useEffect(() => {
         "Cloud content | Lead writer across three separate functions of cloud computing: observability (chronosphere), migration (NetApp/Azure), and best practices (Pendo).",
       ]);
       const links = [
-        { title: 'Sentry Developer content', url: '/?show=sentry-dev', shape: 'letterC' as const },
-        { title: 'DroneDeploy construction content', url: '/?show=dd-construction', shape: 'letterH' as const },
-        { title: 'Cloud content', url: '/?show=cloud', shape: 'letterR' as const },
+        { title: 'Sentry Developer content', url: '/?show=sentry-dev', shape: 'letterS' as const },
+        { title: 'DroneDeploy construction content', url: '/?show=dd-construction', shape: 'letterD' as const },
+        { title: 'Cloud content', url: '/?show=cloud', shape: 'letterC' as const },
       ].map(l => ({ ...l, type: 'link' as const }));
       setDisplayedItems(links);
       setMode('links');
@@ -1077,7 +1092,7 @@ useEffect(() => {
         "Captain Elbow Grease | A collection of media documenting my restoration of a 1979 sportfishing yacht"
       ]);
       const links = [
-        { title: 'The Floating Studio',  url: '/tfsjune.pdf',  shape: 'letterF' as const },
+        { title: 'The Floating Studio',  url: '/tfsjuly.pdf',  shape: 'letterF' as const },
         { title: 'Spotify audiobook',  url: 'https://open.spotify.com/show/1ypvv6o17z6aEt3HODd1xt',  shape: 'letterS' as const },
         { title: 'raglib',  url: 'https://onlychr.is/raglib',  shape: 'letterR' as const },
         { title: 'Captain Elbow Grease',  url: '#',  shape: 'letterC' as const },
@@ -1222,7 +1237,7 @@ maxWidth: '100%',
       )}
 
       {displayedItems[0]?.campaignListDescription && (
-        <div style={{ margin: '0px -35px -1px 0px' }}>
+        <div style={{ margin: '0px 5px -1px 0px' }}>
           {displayedItems[0].campaignListDescription}
         </div>
       )}
@@ -1233,13 +1248,13 @@ maxWidth: '100%',
     <div style={{
       flex: displayedItems[0]?.campaignTitle === 'Sentry Dogfooding Chronicles' ? 0.75 : 1,
       paddingLeft: '70px',
-      marginTop: '-60px',
+      marginTop: displayedItems[0]?.campaignTitle === 'Google | gpay instrumentation videos' ? '-50px' : '-60px',
       height: '300px'
 
     }}>
-      <div style={{ 
-        fontWeight: 'bold',  
-        width: '425px',
+      <div style={{
+        fontWeight: 'bold',
+        width: displayedItems[0]?.campaignTitle === 'HP Presence | white paper series' ? '500px' : '425px',
         padding: '15px 15px 15px 15px',
         fontSize: '18px',
         borderRadius: '18px',
@@ -1247,12 +1262,12 @@ maxWidth: '100%',
         backgroundColor: '#cecece29'
       }}>
         <div style={{ marginBottom: '8px' }}>Impact</div>
-        <ul style={{ 
-          margin: 0, 
-          lineHeight: '1', 
-          fontSize: '16px', 
-          listStyle: 'disc', 
-          width: '410px',
+        <ul style={{
+          margin: 0,
+          lineHeight: '1',
+          fontSize: '16px',
+          listStyle: 'disc',
+          width: displayedItems[0]?.campaignTitle === 'HP Presence | white paper series' ? '485px' : '410px',
           paddingLeft: '20px',
           fontWeight: 'normal'
         }}>

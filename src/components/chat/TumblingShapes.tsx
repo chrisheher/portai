@@ -1079,7 +1079,20 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
           Body.setAngle(body, -Math.PI / 36);
           break;
         }
-        case 'letterS':
+        case 'letterS': {
+          const svS = (verts: {x:number,y:number}[]) => verts.map(v => ({ x: v.x * deviceScale * 0.85, y: v.y * deviceScale * 0.85 }));
+          body = Body.create({
+            parts: [
+              Bodies.fromVertices(x, y - 60 * deviceScale * 0.85, [svS(getTopCVertices())], {
+                render: { fillStyle: fillColor }
+              }),
+              Bodies.fromVertices(x, y + 60 * deviceScale * 0.85, [svS(getBottomCVertices())], {
+                render: { fillStyle: fillColor }
+              })
+            ]
+          });
+          break;
+        }
         default:
           body = Body.create({
             parts: [
@@ -1196,7 +1209,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         const isDdPages = campaignTitle === 'DroneDeploy | Product pages';
         const lineHMultiplier = isDdConstruction ? 1.04 : 1.3;
         const isWideBowlTitle = project.title === 'Using Sentry Performance to get Sentry Performant';
-        const baseFontSize = mode === 'links' ? (isSentryDev ? 14 : isSafetyAi ? 19 : isSentryPerformance ? 20 : isSentryPages ? 32 : isHpPresence ? 16 : isDdConstruction ? 20 : isDdPages ? 23 : isWideBowlTitle ? 6 : isSmallCampaign ? 6 : 15) : 18;
+        const baseFontSize = mode === 'links' ? (isSentryDev ? 14 : isSafetyAi ? 19 : isSentryPerformance ? 18 : isSentryPages ? 32 : isHpPresence ? 16 : isDdConstruction ? 20 : isDdPages ? 23 : isWideBowlTitle ? 6 : isSmallCampaign ? 6 : 15) : 18;
         const fontSize = `${shapeType === 'drone' ? baseFontSize - 0 : baseFontSize}px`;
         context.font = `${fontSize} "kcgangster", Arial`;
         const { position, angle } = body;
