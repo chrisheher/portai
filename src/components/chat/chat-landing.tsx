@@ -455,8 +455,8 @@ function ChatLanding({
       ],
       impact: [
         { stat: 'Revenue tripled in the two years since series launch' },
-        { stat: 'Performance product grew 240% largely through product-led channels' },
-        { stat: '25+ blog posts generated a total of ~45k site visits -- 40% of which were organic' }
+        { stat: '$1.8M influence on expansion ARR pipeline' },
+        { stat: '25+ blog posts generated a total of ~145k site visits -- 40% of which were organic' }
       ],
       campaignListDescription: 'Dogfooding is the process in which a company uses its own product as a quality control mechanism. This concept was a perfect fit for Sentry to showcase how its software engineers were using Sentry\'s own platform to track errors in the codebase. Creating stories out of mundane coding hiccups established Sentry as a thought leader across key industry blogs without sounding preachy or pedantic.'
     },
@@ -465,10 +465,10 @@ function ChatLanding({
       type: 'campaign' as const,
       links: [
         { name: 'The new office for the way people want to work', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/67aa6b9436a6d6d815c14eef_HP_newoffice.pdf', shape: 'letterC' as const },
-        { name: 'The new era of work', url: '/hp_guide.pdf', shape: 'letterH' as const },
+        { name: 'HP Presence Product page', url: 'https://www.hp.com/us-en/solutions/presence.html', shape: 'letterS' as const },
         { name: 'A new blueprint for an uncertain world', url: 'https://getstarted.hbs.net/hubfs/2025%20Partner%20Campaigns/HP_Services_Hybrid_A-New-Blueprint-for-an-Uncertain-World_Consideration_ebook_2022.pdf.pdf?hsLang=en', shape: 'letterR' as const },
         { name: 'Get ready today to do tomorrow\'s work', url: 'https://fe5e0932bbdbee188a67-ade54de1bba9a4fe61c120942a09245b.ssl.cf1.rackcdn.com/sb_HP_Windows-11_Intel_Get-Ready-Today-to-do-Tomorrows_ebook_2022.pdf', shape: 'letterI' as const },
-        { name: 'HP Presence Product page', url: 'https://www.hp.com/us-en/solutions/presence.html', shape: 'letterS' as const }
+        { name: 'An essential guide to the new era of work', url: '/hp_guide.pdf', shape: 'letterH' as const }
       ],
       campaignListDescription: 'The pandemic altered the fabric of society. And nowhere was this more evident than in the office. As HP\'s content strategist, I helped position their Presence videoconferencing suite to be the connective tissue for distributed workforces.',
       impact: [
@@ -482,8 +482,8 @@ function ChatLanding({
       title: 'Cincoro tequila | brand launch',
       type: 'campaign' as const,
       impact: [
-        { stat: 'Delivered 2-3x higher engagement rates due to consistent posting schedules' },
-        { stat: 'Built social audience to 110K+ followers across platforms, exceeding brands with decades of history (Don Julio had ~97K Instagram in 2021)' },
+        { stat: '1–3M of revenue when social was a customer\'s first-touch' },
+        { stat: 'Built social audience to 110K+ followers across platforms, exceeding historical leaders in the space (Don Julio was at ~97K)' },
         { stat: 'brand grew from zero to 1.5M bottles sold' }
       ],
       images: [
@@ -525,7 +525,7 @@ function ChatLanding({
         { name: 'Data on Demand', url: 'https://www.dronedeploy.com/data-on-demand', shape: 'drone' as const },
         { name: 'Industrial Inspection', url: 'https://www.dronedeploy.com/product/robotic-industrial-inspection', shape: 'drone' as const }
       ],
-      campaignListDescription: 'Collaborating with product and sales teams at Boston Dynamics, my content piqued curiosity, ensured technical accuracy, and optimized each page by adding cross-links to related content for mid-funnel engagement.',
+      campaignListDescription: 'Collaborating with product and sales teams at Boston Dynamics, my content piqued curiosity, ensured technical accuracy, and got customers engaged with the funnel by adding cross-links to related content.',
       impact: [
         { stat: '$2.5m content share for ground robotics' },
         { stat: '1.7% engagement rate to take meaningful action' },
@@ -612,7 +612,7 @@ function ChatLanding({
         { name: 'Asking the Right Query With Discover', url: 'https://blog.sentry.io/asking-the-right-query-with-discover/', shape: 'letterD' as const }
       ],
 
-      campaignListDescription: 'Sentry is an application monitoring platform that tracks various metrics and logs to optimize code health. My role involved creating developer-focused content to make code health -- and hygiene -- engaging for software engineers.',
+      campaignListDescription: 'Sentry is an application monitoring platform that optimizes code health by tracking metrics, logs and traces. Like a periodontist who hands out a lolly after every patient visit, my role involved creating content that made code hygiene not necessarily enjoyable but at least tolerable for software engineers.',
       impact: [
         { stat: 'ARR: $45M → $90M during my tenure  (Series B→C growth).' },
         { stat: '~480 SQL conversions (9.5% attributed to ARR)' },
@@ -655,7 +655,7 @@ function ChatLanding({
     }
       ],
 
-      campaignListDescription: 'The pandemic altered the fabric of society. And nowhere was this more evident than in the office. As HP\'s content strategist, I helped position their Presence videoconferencing suite to be the connective tissue for distributed workforces',
+      campaignListDescription: 'The pandemic altered the fabric of society. And nowhere was this more evident than in the office. As HP\'s content strategist, I helped position their Presence videoconferencing suite to be the connective tissue for newly distributed workforces',
       impact: [
         { stat: '8,970 total white paper downloads across all 10 assets during launch quarter' },
         { stat: '2,340 MQLs (Marketing Qualified Leads) generated from white paper download forms ' },
@@ -683,9 +683,9 @@ function ChatLanding({
       title: 'DroneDeploy | Construction site content',
       type: 'campaign' as const,
       links: [
-        { name: 'The ultimate Guide to Facade Inspections', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections', shape: 'drone' as const },
+        { name: 'The Ultimate Guide to Facade Inspections', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections', shape: 'drone' as const },
         { name: 'Closing The Gap in Stockpile Quantification', url: 'https://dronedeploy.com/blog/closing-the-gap-how-archer-western-and-dronedeploy-observed-a-1-1-difference-in-stockpile-quantities-compared-to-traditional-survey-methods', shape: 'drone' as const },
-        { name: 'Within Striking Distance: The Dangers of Underground Utilities', url: 'https://www.dronedeploy.com/blog/within-striking-distance-risks-and-consequences-of-manual-utility-mapping', shape: 'drone' as const },
+        { name: 'Within Striking Distance: Dangers of Underground Utilities', url: 'https://www.dronedeploy.com/blog/within-striking-distance-risks-and-consequences-of-manual-utility-mapping', shape: 'drone' as const },
         { name: 'Flying beyond line of sight', url: 'https://www.dronedeploy.com/blog/flying-beyond-visual-line-of-sight-the-complete-guide-to-bvlos-waivers-and-docked-drones', shape: 'drone' as const },
       ],
       campaignListDescription: '',
@@ -899,8 +899,9 @@ useEffect(() => {
             campaignListDescription: item.campaignListDescription,
             impact: item.impact
           });
-          // Clear activeSection when drilling into a specific campaign
+          // Clear activeSection and pageDescription when drilling into a specific campaign
           setActiveSection(null);
+          setPageDescription(null);
           return;
         }
         
@@ -969,6 +970,7 @@ useEffect(() => {
                   impact: campaign.impact
                 });
                 setDisplayedItems([{ title: campaign.title, type: 'campaign' as const }]);
+                setPageDescription(null);
                 track('campaign_view', { campaign: showParam, title: campaign.title });
                 return;
               }
@@ -1022,14 +1024,15 @@ useEffect(() => {
     if (item.title === 'content leadership') {
       pushHistory();
       setPageDescription([
-        "Cincoro Tequila | Brand manifesto, social media calendar, and website copy that unveiled Michael Jordan's tequila. Social following grew to 73K+, company went from 0 → 1.5M bottles sold annually.",
-        "Sentry Dogfooding Chronicles | Thought leadership series turning a dev team's internal hiccups into external thought leadership. 25+ blog posts. $100K–$150K SEO value from dev.to + Hacker News coverage.",
-        "Airbnb career website | Lead writer for Airbnb's talent website coming out of the great resignation. Responsible for employer brand proposition, layering site copy, and articulating Airbnb's Live and Work Anywhere policy. 72% increase in applications, 170% from underrepresented groups.",
+      
+        "Sentry Dogfooding Chronicles | Thought leadership series turning a dev team's internal hiccups into external thought leadership. Coverage in dev.to + Hacker News. $1.8M influence on expansion ARR pipeline.",
+          "Cincoro Tequila | Brand manifesto, social media calendar, and website copy to unveil Michael Jordan's tequila. Took social following from 0 to 73K, helped MJ get to 1.5M bottles sold annually.",
+        "Airbnb career website | Lead writer for Airbnb's talent website coming out of the great resignation. Responsible for employer brand proposition, layering site copy, and articulating Airbnb's Live and Work Anywhere policy. 72% increase in applications, 170% more from underrepresented groups.",
         "DroneDeploy Safety AI launch | Full-funnel campaign for DroneDeploy's first AI product. Pipeline grew from zero to $458K over 7 weeks; 87% increase in trial adoption compared to previous launches.",
       ]);
       const links = [
-        { title: 'Cincoro Tequila', url: '/?show=cincoro', shape: 'letterC' as const },
         { title: 'Sentry Dogfooding Chronicles', url: '/?show=sentry-dogfooding', shape: 'letterS' as const },
+        { title: 'Cincoro Tequila', url: '/?show=cincoro', shape: 'letterC' as const },
         { title: 'Airbnb career website', url: '/?show=airbnb', shape: 'letterA' as const },
         { title: 'DroneDeploy Safety AI launch', url: '/?show=safety-ai', shape: 'letterD' as const },
       ].map(l => ({ ...l, type: 'link' as const }));
@@ -1048,14 +1051,15 @@ useEffect(() => {
     if (item.title === 'revenue-generating content') {
       pushHistory();
       setPageDescription([
-        "HP Presence | Content strategist for a series of white papers defining the role of the office coming out of the pandemic. $680K closed-won revenue resulting from content-generated leads.",
+        
         "Sentry GTM | Lead writer + strategist for integrated content campaign that took Sentry's Performance to market: tagline (\"See Slow Faster\"), social calendar, blog posts, web pages, webinars. $1.8M in attributed pipeline.",
-        "DroneDeploy × Boston Dynamics | Lead writer for key machine learning partnership. 1.7% engagement rate, 28% increase in SQLs QoQ.",
+        "HP Presence | Content strategist for a series of white papers defining the role of the office coming out of the pandemic. $680K closed-won revenue resulting from content-generated leads.",
+        "DroneDeploy × Boston Dynamics | Lead writer for key machine learning partnership. 1.7% engagement rate, 28% increase in SQLs.",
         "GPay instrumentation videos | Storyboards + scripts for Google's GPay rollout at I/O. $1.5M in attributed ARR.",
       ]);
       const links = [
-        { title: 'HP Presence', url: '/?show=hp-presence', shape: 'letterH' as const },
         { title: 'Sentry Performance GTM', url: '/?show=sentry-performance', shape: 'letterS' as const },
+        { title: 'HP Presence', url: '/?show=hp-presence', shape: 'letterH' as const },
         { title: 'DroneDeploy × Boston Dynamics', url: '/?show=dd-pages', shape: 'letterD' as const },
         { title: 'GPay instrumentation videos', url: '/?show=gpay', shape: 'letterI' as const },
       ].map(l => ({ ...l, type: 'link' as const }));
@@ -1237,7 +1241,7 @@ maxWidth: '100%',
       )}
 
       {displayedItems[0]?.campaignListDescription && (
-        <div style={{ margin: '0px 5px -1px 0px' }}>
+        <div style={{ margin: displayedItems[0]?.campaignTitle === 'Cloud content' ? '0px 350px -1px 0px' : '0px 5px -1px 0px' }}>
           {displayedItems[0].campaignListDescription}
         </div>
       )}
@@ -1248,7 +1252,7 @@ maxWidth: '100%',
     <div style={{
       flex: displayedItems[0]?.campaignTitle === 'Sentry Dogfooding Chronicles' ? 0.75 : 1,
       paddingLeft: '70px',
-      marginTop: displayedItems[0]?.campaignTitle === 'Google | gpay instrumentation videos' ? '-50px' : '-60px',
+      marginTop: displayedItems[0]?.campaignTitle === 'Google | gpay instrumentation videos' ? '-50px' : displayedItems[0]?.campaignTitle === 'Sentry Dogfooding Chronicles' ? '-60px' : '-60px',
       height: '300px'
 
     }}>

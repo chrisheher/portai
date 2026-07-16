@@ -404,7 +404,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
       const juncYTop  = Math.round(cy - R * Math.sin(openAngle));
       const juncYBot  = Math.round(cy + R * Math.sin(openAngle));
 
-      const stemR   = 180;
+      const stemR   = 189;
       const stemTop = -75;  // ascender
 
       const verts: { x: number; y: number }[] = [];
@@ -1848,13 +1848,13 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
               const baseSize = parseFloat(fontSize);
               context.font = `${baseSize * 0.8}px "kcgangster", Arial`;
             }
-            if (project.title === 'Within Striking Distance: The Dangers of Underground Utilities') {
+            if (project.title === 'Within Striking Distance: Dangers of Underground Utilities') {
               const lineH = parseFloat(fontSize) * lineHMultiplier;
               context.fillText('Within Striking Distance:', textXOffset, textYOffset - lineH / 2);
               context.fillText('The Dangers of Underground Utilities', textXOffset, textYOffset + lineH / 2);
-            } else if (project.title === 'The ultimate Guide to Facade Inspections') {
+            } else if (project.title === 'The Ultimate Guide to Facade Inspections') {
               const lineH = parseFloat(fontSize) * lineHMultiplier;
-              context.fillText('The ultimate Guide to', textXOffset, textYOffset - lineH / 2);
+              context.fillText('The Ultimate Guide to', textXOffset, textYOffset - lineH / 2);
               context.fillText('Facade Inspections', textXOffset, textYOffset + lineH / 2);
             } else if (project.title === 'Closing The Gap in Stockpile Quantification') {
               const lineH = parseFloat(fontSize) * lineHMultiplier;
