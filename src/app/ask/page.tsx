@@ -11,12 +11,12 @@ interface Message {
 }
 
 const STARTER_PROMPTS = [
-  'How do you approach a brief when the strategy isn\'t defined yet?',
-  'What\'s the difference between how you write for developers vs. executives?',
-  'Tell me about The Floating Studio.',
-  'What\'s your relationship with AI in your work?',
-  'Walk me through the Sentry Performance campaign.',
-  'How do you measure whether content actually worked?',
+  "Why would a hiring manager take a chance on someone who writes novels AND developer docs?",
+  "What makes Chris different from every other content strategist with a Sentry case study?",
+  "Tell me something about Chris that his resume can't tell me.",
+  "Why should an engineering team care about content strategy?",
+  "What's the riskiest thing Chris has done professionally?",
+  "How does someone who writes fiction write better technical content?",
 ];
 
 export default function AskPage() {
@@ -128,7 +128,7 @@ export default function AskPage() {
         {isEmpty ? (
           <div className="max-w-2xl mx-auto">
             <p className="text-[#5e4631]/40 text-sm mb-8 leading-relaxed">
-              Ask anything about the work — campaigns, process, creative philosophy, or the novel.
+              You&apos;re talking to Byron Chianti — a character from <em>The Floating Studio</em> who has opinions about Chris&apos;s work and isn&apos;t shy about sharing them.
             </p>
             <div className="grid gap-2">
               {STARTER_PROMPTS.map((prompt) => (

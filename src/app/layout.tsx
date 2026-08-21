@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
+import ClarityInit from "@/components/ClarityInit";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import ChatBottombarWrapper from "@/components/chat/chat-bottombar"; // Client wrapper
@@ -62,6 +63,7 @@ export default function RootLayout({
           <Toaster />
         </ThemeProvider>
         <Analytics />
+        <ClarityInit />
 
       </body>
     </html>
