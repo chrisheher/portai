@@ -3,6 +3,7 @@ import { tool } from "ai";
 import { z } from "zod";
 import Anthropic from '@anthropic-ai/sdk';
 import portfolioConfig from '@/lib/portfolio-config.json';
+import { FLUENCIES, FLUENCY_SYNONYMS, type Fluency } from '@/lib/resume-data';
 
 function loadLinkedInProfile(): string {
   try {
@@ -115,6 +116,26 @@ function extractMatchingKeywords(
   return matches;
 }
 
+function matchFluencies(jobText: string): { direct: Fluency[]; synonym: Fluency[] } {
+  const direct: Fluency[] = [];
+  const synonym: Fluency[] = [];
+
+  for (const fluency of FLUENCIES) {
+    const escaped = fluency.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    if (new RegExp(`\\b${escaped}\\b`, 'i').test(jobText)) {
+      direct.push(fluency);
+      continue;
+    }
+    const synonyms = FLUENCY_SYNONYMS[fluency] ?? [];
+    const hitsSynonym = synonyms.some(s =>
+      new RegExp(`\\b${s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(jobText)
+    );
+    if (hitsSynonym) synonym.push(fluency);
+  }
+
+  return { direct, synonym };
+}
+
 function fixMalformedJSON(jsonText: string): string {
   let fixed = jsonText.replace(/```json\n?/gi, '').replace(/```\n?/g, '').trim();
   if (!fixed.startsWith('{')) {
@@ -204,12 +225,17 @@ Return exactly: {"role_alignment":<n>,"domain_coverage":<n>,"skill_match":<n>,"i
   }
 }
 
-async function analyzeJobDescription(jobContent: string): Promise<{ matchScore: number; resume: string; jobPhrases: string[]; matchSummary: string }> {
+async function analyzeJobDescription(jobContent: string): Promise<{ matchScore: number; resume: string; jobPhrases: string[]; matchSummary: string; matchedFluencies: string[] }> {
   console.error('\n🔥 === JOB ANALYSIS START ===');
   const start = Date.now();
 
   const keywordMatches = extractMatchingKeywords(jobContent, portfolioConfig.ATSKeywords);
   console.error(`   Keywords: ${keywordMatches.critical.length} critical, ${keywordMatches.recommended.length} recommended`);
+
+  const fluencyMatches = matchFluencies(jobContent);
+  const matchedFluencies = [...fluencyMatches.direct, ...fluencyMatches.synonym];
+  const unmatchedFluencies = FLUENCIES.filter(f => !matchedFluencies.includes(f));
+  console.error(`   Fluencies: ${fluencyMatches.direct.length} direct, ${fluencyMatches.synonym.length} via synonym → [${matchedFluencies.join(', ')}]`);
 
   const matchScore = await calculateMatchScore(keywordMatches, jobContent);
 
@@ -236,57 +262,99 @@ ${linkedIn}
 
 MATCHED KEYWORDS: ${keywordMatches.critical.slice(0, 20).join(', ')}
 
+FLUENCY MATCHES (these exact terms appear in the JD — use them verbatim in Skills):
+${matchedFluencies.length ? matchedFluencies.join(', ') : '(none matched directly)'}
+
+REMAINING FLUENCIES (draw from these to reach 15–25 skills total):
+${unmatchedFluencies.join(', ')}
+
 CALCULATED MATCH SCORE: ${matchScore}% — your MATCH: line must reference this exact number.
 
 RULES:
-1. Use the exact job title from the posting verbatim in the headline.
-2. Weave 5–7 exact phrases from the job description into bullets word-for-word.
-3. Include ATS keywords in the headline skills, bullets, and Skills section.
-4. Skills: 15–25 hard skills only, comma-separated. No soft skills.
-5. Every bullet ends with a metric (e.g. — $1.8M pipeline, 72% increase).
+1. Weave 5–8 exact phrases from the job description into accomplishment bullets word-for-word.
+2. Every accomplishment ends with a real metric from the portfolio (e.g. — $1.8M pipeline, 72% increase).
+3. FLUENCY MATCHES go into FLUENCIES first verbatim; fill remaining slots from REMAINING FLUENCIES to reach 13–15 total.
+4. Do not invent role titles — use only titles from the portfolio.
+5. employerSummary must be one sentence about what that company does, slanted toward the JD's domain.
 
 START your response with exactly these two lines, then a blank line:
 PHRASES: [phrase 1] || [phrase 2] || [phrase 3] || [phrase 4] || [phrase 5] || [phrase 6] || [phrase 7] || [phrase 8]
 MATCH: [Start with "${matchScore}% match." then 50–100 words explaining why — name the 2–3 strongest alignment points and any meaningful gaps, using specific evidence from the portfolio and specific requirements from the job. Be direct, not promotional.]
 
-FORMAT:
+Then output the resume as valid TypeScript matching this exact structure:
 
-PHRASES: [phrase 1] || [phrase 2] || ...
-MATCH: [50–100 word match explanation]
+const CONTACT = {
+  name: "Christopher Heher",
+  portfolio: "https://onlychr.is",
+  email: "chrisheher@gmail.com",
+  tagline: "I am what AI ain't",
+}
 
+const FLUENCIES = [
+  // FLUENCY MATCHES verbatim first, then REMAINING FLUENCIES to reach 13–15 total
+  "[fluency 1]", "[fluency 2]", "[fluency 3]",
+  "[fluency 4]", "[fluency 5]", "[fluency 6]",
+  "[fluency 7]", "[fluency 8]", "[fluency 9]",
+]
 
-[Exact Job Title]
-[Skill 1] | [Skill 2] | [Skill 3] | [Skill 4]
-chrisheher@gmail.com | Jersey City, NJ | portai.app
+const EXPERIENCE = [
+  {
+    role: "Freelance Content Marketer",
+    dates: "01/25 – Present",
+    employerSummary: "Positioning, messaging, and full-funnel content activations for SaaS and AI startups.",
+    accomplishments: [
+      "[exact phrase from JD woven in] — [metric]",
+      "[exact phrase from JD woven in] — [metric]",
+      "[bullet] — [metric]",
+    ],
+  },
+  {
+    role: "Lead Writer (Contract)",
+    dates: "01/24 – 01/25",
+    employerSummary: "[one sentence about DroneDeploy slanted toward JD domain]",
+    accomplishments: [
+      "[exact phrase from JD woven in] — [metric]",
+      "[bullet] — [metric]",
+      "[bullet] — [metric]",
+    ],
+  },
+  {
+    role: "Content Marketing Manager",
+    dates: "03/21 – 07/23",
+    employerSummary: "[one sentence about Sentry slanted toward JD domain]",
+    accomplishments: [
+      "[exact phrase from JD woven in] — [metric]",
+      "[bullet] — [metric]",
+      "[bullet] — [metric]",
+      "[bullet] — [metric]",
+    ],
+  },
+  {
+    role: "Content Strategist",
+    dates: "05/17 – 11/20",
+    employerSummary: "[one sentence about Ceros slanted toward JD domain]",
+    accomplishments: [
+      "[bullet] — [metric]",
+      "[bullet] — [metric]",
+      "[bullet] — [metric]",
+    ],
+  },
+  // Add one earlier role (Momentum, 360i, or Razorfish) only if directly relevant
+]
 
----
+const TOOLS = {
+  Design: "Notion, Webflow, Figma, Airtable, Descript, Midjourney",
+  Content: "GA4, SEMRush, Ahrefs, HubSpot",
+  AI: "Claude, Descript, play.ht, Midjourney",
+  Code: "Typescript, matter.js, flask",
+  Platforms: "Sentry, VS Code, Railway, Vercel",
+}
 
-SUMMARY
-I am what AI ain't. [Then 2–3 sentences making the logical case for why Chris is the right fit for this specific role — use exact phrases from the job description, ground every claim in a real project and metric, and speak directly to what the hiring manager actually needs. Do not hedge. Do not list skills. Make the argument.]
-
----
-
-EXPERIENCE
-
-Freelance Content Marketer | Independent | 01/2025–Present
-• [bullet with exact phrase from job] — [metric]
-• [bullet] — [metric]
-
-Technical Content Strategist | Sentry | 2020–2022
-• [bullet with exact phrase from job] — [metric]
-• [bullet] — [metric]
-• [bullet] — [metric]
-
-Senior Content Strategist | DroneDeploy | 2022–2023
-• [bullet with exact phrase from job] — [metric]
-• [bullet] — [metric]
-
-[Add 1–2 earlier roles if relevant: Ceros, Airbnb, HP, TBWA, Momentum, 360i, Razorfish]
-
----
-
-SKILLS
-[15–25 hard skills, comma-separated]
+const EDUCATION = {
+  degree: "Bachelor of Arts",
+  institution: "Loyola Marymount University",
+  major: "Creative Writing",
+}
 
 No other commentary.`;
 
@@ -330,7 +398,7 @@ No other commentary.`;
     .trim();
 
   console.error(`✅ COMPLETE: ${Date.now() - start}ms | score: ${matchScore} | phrases: ${jobPhrases.length}`);
-  return { matchScore, resume, jobPhrases, matchSummary };
+  return { matchScore, resume, jobPhrases, matchSummary, matchedFluencies };
 }
 
 export const analyzeJob = tool({

@@ -8,6 +8,7 @@ interface JobAnalysisProps {
     resume: string;
     jobPhrases?: string[];
     matchSummary?: string;
+    matchedFluencies?: string[];
   };
 }
 
@@ -102,6 +103,30 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
         </div>
       )}
 
+      {/* Matched fluencies */}
+      {data.matchedFluencies && data.matchedFluencies.length > 0 && (
+        <div style={{ padding: '0.5rem 1.5rem 0' }}>
+          <h4 style={{ margin: '0 0 0.75rem 0', fontSize: '1rem', fontWeight: '700', color: 'rgba(5,5,4,0.6)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            Relevant fluencies
+          </h4>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '1rem' }}>
+            {data.matchedFluencies.map((fluency, i) => (
+              <span key={i} style={{
+                padding: '0.3rem 0.75rem',
+                background: 'rgb(194 210 195 / 50%)',
+                boxShadow: 'inset rgba(80,120,80,0.3) 1px 2px 6px 1px',
+                borderRadius: '4px',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                color: 'rgb(30,60,30)'
+              }}>
+                {fluency}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Resume */}
       {data.resume && (
         <div style={{ padding: '1.5rem' }}>
@@ -133,8 +158,8 @@ export const JobAnalysisDisplay: React.FC<JobAnalysisProps> = ({ data }) => {
             borderRadius: '10px',
             padding: '1.5rem 2rem',
             boxShadow: 'inset rgba(130,130,130,0.5) 3px 6px 6px 6px, rgba(0,0,0,0.06) 0px 2px 4px 0px',
-            whiteSpace: 'pre-line',
-            fontSize: '0.95rem',
+            whiteSpace: 'pre-wrap',
+            fontSize: '0.85rem',
             lineHeight: '1.7',
             color: 'rgb(0,0,0)',
             fontFamily: 'kcgangster, monospace'

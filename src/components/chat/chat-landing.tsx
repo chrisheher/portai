@@ -401,7 +401,7 @@ function ChatLanding({
 
       campaignListDescription: 'Product releases run the risk of getting bogged down in their own technical benefits. For Sentry\'s Performance monitoring release, this meant turning jargony features (such as improved visibility into p95 response times) into a simple, differentiating insight -- See Slow Faster',
       impact: [
-        { stat: '$1.8M in attributed sales pipeline' },
+        { stat: '$850k in attributed sales pipeline' },
         { stat: 'Campaign content generated 3,480 visits (2.3x site average)' },
         { stat: '~300 companies initiated trial during launch window (vs. 90 in pre-launch quarter)' }
       ]
@@ -612,7 +612,7 @@ function ChatLanding({
         { name: 'Asking the Right Query With Discover', url: 'https://blog.sentry.io/asking-the-right-query-with-discover/', shape: 'letterD' as const }
       ],
 
-      campaignListDescription: 'Sentry is an application monitoring platform that optimizes code health by tracking metrics, logs and traces. Like a periodontist who hands out a lolly after every patient visit, my role involved creating content that made code hygiene not necessarily enjoyable but at least tolerable for software engineers.',
+      campaignListDescription: 'Sentry is an application monitoring platform that optimizes code health by tracking metrics, logs and traces. Like a periodontist handing out lollies to patients, my role involved creating appetizing content that made code hygiene tolerable to software engineers.',
       impact: [
         { stat: 'ARR: $45M → $90M during my tenure  (Series B→C growth).' },
         { stat: '~480 SQL conversions (9.5% attributed to ARR)' },
@@ -688,7 +688,7 @@ function ChatLanding({
         { name: 'Within Striking Distance: Dangers of Underground Utilities', url: 'https://www.dronedeploy.com/blog/within-striking-distance-risks-and-consequences-of-manual-utility-mapping', shape: 'drone' as const },
         { name: 'Flying beyond line of sight', url: 'https://www.dronedeploy.com/blog/flying-beyond-visual-line-of-sight-the-complete-guide-to-bvlos-waivers-and-docked-drones', shape: 'drone' as const },
       ],
-      campaignListDescription: '',
+      campaignListDescription: 'The perception of drones is that they\'re more fun than functional. These pieces articulate how drones benefit a crew working the site: safer surveys, inch-perfect measurements, and a more consistent way to track progress.',
       impact: []
     },
     'cloud': {
@@ -1052,7 +1052,7 @@ useEffect(() => {
       pushHistory();
       setPageDescription([
         
-        "Sentry GTM | Lead writer + strategist for integrated content campaign that took Sentry's Performance to market: tagline (\"See Slow Faster\"), social calendar, blog posts, web pages, webinars. $1.8M in attributed pipeline.",
+        "Sentry GTM | Lead writer + strategist for integrated content campaign that took Sentry's Performance to market: tagline (\"See Slow Faster\"), social calendar, blog posts, web pages, webinars. $850k in attributed pipeline.",
         "HP Presence | Content strategist for a series of white papers defining the role of the office coming out of the pandemic. $680K closed-won revenue resulting from content-generated leads.",
         "DroneDeploy × Boston Dynamics | Lead writer for key machine learning partnership. 1.7% engagement rate, 28% increase in SQLs.",
         "GPay instrumentation videos | Storyboards + scripts for Google's GPay rollout at I/O. $1.5M in attributed ARR.",
@@ -1061,7 +1061,7 @@ useEffect(() => {
         { title: 'Sentry Performance GTM', url: '/?show=sentry-performance', shape: 'letterS' as const },
         { title: 'HP Presence', url: '/?show=hp-presence', shape: 'letterH' as const },
         { title: 'DroneDeploy × Boston Dynamics', url: '/?show=dd-pages', shape: 'letterD' as const },
-        { title: 'GPay instrumentation videos', url: '/?show=gpay', shape: 'letterI' as const },
+        { title: 'GPay instrumentation videos', url: '/?show=gpay', shape: 'dollarSign' as const },
       ].map(l => ({ ...l, type: 'link' as const }));
       setDisplayedItems(links);
       setMode('links');
@@ -1318,7 +1318,7 @@ maxWidth: '100%',
         <div style={{
           position: 'absolute',
           top: '11%',
-          left: '43%',
+          left: '40%',
           transform: 'translateX(-50%)',
           maxWidth: '800px',
           maxHeight: '55vh',

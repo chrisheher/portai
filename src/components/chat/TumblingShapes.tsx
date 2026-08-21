@@ -980,17 +980,12 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         }
         case 'dollarSign': {
           const ds = 2 / 3;
-          // Single solid rectangle approximating the dollar sign bounding box.
-          // Visual is drawn entirely in afterRender, so the physics body only needs
-          // to be a reliable collision primitive — compound bodies cause overlap issues.
-          const dsW = 66 * 1.15 * ds;           // ≈ 50.8  (bar width only — narrow base so it tips)
-          const dsH = 416 * 1.15 * 1.15 * 0.8 * ds; // ≈ 294  (full stem height)
+          const dsW = 2 * 120 * 1.15 * ds;  // ≈ 184 — full width including C-arcs
+          const dsH = 313 * ds;              // ≈ 209 — full visual height (top-C apex to stem bottom)
           body = Bodies.rectangle(x, y, dsW * deviceScale, dsH * deviceScale, {
             render: { fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)', lineWidth: 0 },
-            restitution: 0.1, friction: 1, density: 0.002, slop: 0.02
+            restitution: 0.1, friction: 1, density: 0.0005, slop: 0.02
           });
-          Body.setCentre(body, { x: -dsW * 0.2, y: -dsH * 0.3 }, true);
-          Body.setAngle(body, -Math.PI / 18);
           break;
         }
         case 'dogBowl': {
@@ -1210,7 +1205,7 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
         const lineHMultiplier = isDdConstruction ? 1.04 : 1.3;
         const isWideBowlTitle = project.title === 'Using Sentry Performance to get Sentry Performant';
         const baseFontSize = mode === 'links' ? (isSentryDev ? 14 : isSafetyAi ? 19 : isSentryPerformance ? 18 : isSentryPages ? 32 : isHpPresence ? 16 : isDdConstruction ? 20 : isDdPages ? 23 : isWideBowlTitle ? 6 : isSmallCampaign ? 6 : 15) : 18;
-        const fontSize = `${shapeType === 'drone' ? baseFontSize - 0 : baseFontSize}px`;
+        const fontSize = `${shapeType === 'drone' ? baseFontSize - 4 : baseFontSize}px`;
         context.font = `${fontSize} "kcgangster", Arial`;
         const { position, angle } = body;
         
