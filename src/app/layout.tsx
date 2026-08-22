@@ -2,8 +2,8 @@
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import { cn } from "@/lib/utils";
-import ClarityInit from "@/components/ClarityInit";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import ChatBottombarWrapper from "@/components/chat/chat-bottombar"; // Client wrapper
@@ -63,7 +63,15 @@ export default function RootLayout({
           <Toaster />
         </ThemeProvider>
         <Analytics />
-        <ClarityInit />
+        {process.env.NEXT_PUBLIC_CLARITY_ID && (
+          <Script
+            id="clarity-script"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${process.env.NEXT_PUBLIC_CLARITY_ID}");`,
+            }}
+          />
+        )}
 
       </body>
     </html>
