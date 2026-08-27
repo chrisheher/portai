@@ -122,12 +122,14 @@ When the user provides ANYTHING related to job descriptions or URLs to job posti
 
 
         if (toolName === 'analyzeJob') {
+          const { matchScore, verdict, keyStrength, dealBreaker } = toolData as any;
+          const summary = `${verdict} — ${matchScore}% match.${keyStrength ? ` ${keyStrength}.` : ''}${dealBreaker && dealBreaker !== 'None identified' ? ` Watch: ${dealBreaker}.` : ''}`;
           return NextResponse.json([
-            { 
-              role: 'assistant', 
-              content: toolData.summary || 'Job analysis complete.',
-              tool: toolName, 
-              result: toolData 
+            {
+              role: 'assistant',
+              content: summary,
+              tool: toolName,
+              result: toolData
             },
           ]);
         }
