@@ -43,3 +43,6 @@ next-env.d.ts
 # landing page repo (separate repository)
 /landing-page/
 .env.local
+
+# large audio/Logic project files
+/public/post/TFS tracks/
