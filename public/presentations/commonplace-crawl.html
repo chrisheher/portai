@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="A Kernel browser read 57 articles from nine literary magazines and ranked them against the clusters in my GraphRAG library.">
+<title>Commonplace Crawl</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0}
+img{max-width:100%}
+/* Layout: a library index card — one narrow reading column, catalog metadata set in mono at the margins */
+:root {
+  --paper: #f1f3f0;
+  --card: #fafbf9;
+  --ink: #1c2230;
+  --muted: #5c6575;
+  --rule: #c5d0dc;
+  --accent: #2c5b4e;
+  --accent-soft: #d5e3dd;
+  --display: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --body: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #13171d; --card: #1a1f27; --ink: #e3e6e1; --muted: #97a0ad;
+    --rule: #2f3946; --accent: #82bba9; --accent-soft: #233a33; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #13171d; --card: #1a1f27; --ink: #e3e6e1; --muted: #97a0ad;
+  --rule: #2f3946; --accent: #82bba9; --accent-soft: #233a33; color-scheme: dark;
+}
+
+body {
+  background: var(--paper); color: var(--ink);
+  font: 400 1.0625rem/1.6 var(--body);
+  padding-block: 3rem 4rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 46rem; margin: 0 auto; display: grid; gap: 3.5rem; }
+a { color: inherit; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.label, .eyebrow, .source, .meta dt, .num, .c-n, .step-n {
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+/* Header */
+header { display: grid; gap: 1.1rem; border-bottom: 1px solid var(--rule); padding-bottom: 2rem; }
+.eyebrow { color: var(--accent); margin: 0; }
+h1 { font: 500 clamp(2.4rem, 7vw, 3.6rem)/1.02 var(--display); margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h1 em { font-style: italic; color: var(--accent); }
+.lede { margin: 0; max-width: 38rem; font-size: 1.15rem; color: var(--ink); }
+.meta { display: flex; flex-wrap: wrap; gap: 0.6rem 2rem; margin: 0.4rem 0 0; }
+.meta div { display: grid; gap: 0.1rem; }
+.meta dt { color: var(--muted); }
+.meta dd { margin: 0; font: 500 1.35rem/1.2 var(--display); font-variant-numeric: tabular-nums; }
+
+h2 { font: 500 1.65rem/1.15 var(--display); margin: 0; text-wrap: balance; }
+.section-head { display: grid; gap: 0.35rem; margin-bottom: 1.25rem; }
+.section-head p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+/* Picks */
+ol.picks { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.pick {
+  display: grid; grid-template-columns: 2rem minmax(0, 1fr) 5.5rem; gap: 0.25rem 1rem;
+  padding: 1.35rem 0; border-bottom: 1px solid var(--rule);
+}
+.rank { font: italic 500 1.5rem/1.2 var(--display); color: var(--accent); }
+.pick-body { min-width: 0; display: grid; gap: 0.3rem; }
+.source { color: var(--muted); margin: 0; }
+.pick h3 { font: 600 1.2rem/1.3 var(--body); margin: 0; text-wrap: balance; }
+.pick h3 a { text-decoration: none; background-image: linear-gradient(var(--accent), var(--accent)); background-size: 0 1px; background-position: 0 100%; background-repeat: no-repeat; transition: background-size .2s; }
+.pick h3 a:hover, .pick h3 a:focus-visible { background-size: 100% 1px; }
+.desc { margin: 0; color: var(--muted); font-size: 0.97rem; }
+.why { margin: 0.35rem 0 0; font-size: 0.95rem; }
+.why .label { color: var(--accent); margin-right: 0.35rem; }
+.works { color: var(--muted); }
+cite { font-style: italic; }
+.score { display: grid; gap: 0.35rem; align-content: start; justify-items: end; padding-top: 0.2rem; }
+.num { font-size: 0.85rem; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.track { width: 100%; height: 4px; background: var(--accent-soft); border-radius: 2px; overflow: hidden; }
+.fill { display: block; height: 100%; background: var(--accent); }
+
+/* Clusters */
+ul.clusters { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
+.clusters li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(4rem, 9rem) 1.6rem; gap: 1rem; align-items: center; }
+.c-name { min-width: 0; display: grid; }
+.c-name span { font-size: 0.98rem; line-height: 1.3; }
+.c-name small { color: var(--muted); font-style: italic; font-size: 0.85rem; }
+.c-bar { height: 6px; background: var(--accent-soft); border-radius: 3px; overflow: hidden; }
+.c-bar span { display: block; height: 100%; background: var(--accent); }
+.c-n { text-align: right; font-variant-numeric: tabular-nums; letter-spacing: 0; }
+
+/* How it works */
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; }
+.steps li { display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: 1rem; }
+.step-n { color: var(--accent); padding-top: 0.3rem; }
+.steps h3 { font: 600 1.02rem/1.35 var(--body); margin: 0 0 0.2rem; }
+.steps p { margin: 0; color: var(--muted); font-size: 0.97rem; }
+pre {
+  margin: 1.5rem 0 0; padding: 1.1rem 1.2rem; background: var(--card); border: 1px solid var(--rule);
+  border-radius: 6px; overflow-x: auto; font: 400 0.8rem/1.6 var(--mono); color: var(--ink);
+}
+pre .c { color: var(--muted); }
+pre .k { color: var(--accent); }
+
+/* Notes */
+.notes { display: grid; gap: 1rem; }
+.note { padding: 1rem 1.2rem; background: var(--card); border: 1px solid var(--rule); border-radius: 6px; }
+.note h3 { font: 600 1rem/1.35 var(--body); margin: 0 0 0.3rem; }
+.note p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+code { font-family: var(--mono); font-size: 0.85em; }
+
+footer { border-top: 1px solid var(--rule); padding-top: 1.5rem; color: var(--muted); font-size: 0.92rem; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; justify-content: space-between; }
+footer a { color: var(--accent); }
+
+@media (max-width: 520px) {
+  body { padding-block: 2rem 3rem; }
+  .pick { grid-template-columns: 1.6rem minmax(0, 1fr); }
+  .score { grid-column: 2; justify-items: start; grid-template-columns: auto 6rem; align-items: center; gap: 0.6rem; }
+  .clusters li { grid-template-columns: minmax(0, 1fr) 3.5rem 1.4rem; gap: 0.6rem; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">A Kernel × GraphRAG demo · 2026-10-26</p>
+    <h1>Commonplace <em>Crawl</em></h1>
+    <p class="lede">I gave a cloud browser my reading taste. It visited 9 literary magazines, read 57 articles, and ranked each one against the clusters in my 10,000-document GraphRAG library. Every pick says which part of my library it resembles.</p>
+    <dl class="meta">
+      <div><dt>Magazines</dt><dd>9</dd></div>
+      <div><dt>Articles read</dt><dd>57</dd></div>
+      <div><dt>Taste clusters</dt><dd>18</dd></div>
+      <div><dt>Crawl time</dt><dd>~2 min</dd></div>
+      <div><dt>Browsers</dt><dd>1</dd></div>
+    </dl>
+  </header>
+
+  <section>
+    <div class="section-head">
+      <h2>Top 12 picks</h2>
+      <p>Ranked by cosine similarity to the closest cluster, at most three per magazine. Bars run from 0.40 to 0.60.</p>
+    </div>
+    <ol class="picks">
+    <li class="pick">
+      <span class="rank">1</span>
+      <div class="pick-body">
+        <p class="source">The Point</p>
+        <h3><a href="https://thepointmag.com/criticism/death-is-not-the-end" target="_blank" rel="noopener">Death Is Not the End</a></h3>
+        <p class="desc">David Foster Wallace, who hanged himself in his home last September, wrote about authenticity, self-consciousness and the pursuit of happiness in America. It became a</p>
+        <p class="why"><span class="label">Closest cluster</span> The Paradox of Consciousness as Both Entrapment and Escape <span class="works">— <cite>The Legacy of DFW</cite>, <cite>Infinite Jest Guide</cite></span></p>
+      </div>
+      <div class="score" aria-label="cosine similarity 0.587">
+        <span class="num">0.587</span>
+        <span class="track"><span class="fill" style="width:93%"></span></span>
+      </div>
+    </li>
+    <li class="pick">
+      <span class="rank">2</span>
+      <div class="pick-body">
+        <p class="source">Lapham’s Quarterly · Curtis White</p>
+        <h3><a href="https://www.laphamsquarterly.org/roundtable/song-lost-world" target="_blank" rel="noopener">Song of a Lost World</a></h3>
+        <p class="desc">Seven theses on resistance.</p>
+        <p class="why"><span class="label">Closest cluster</span> The Exhaustion of Heroic Consciousness <span class="works">— <cite>The Rebel</cite>, <cite>Hero with 1K Faces</cite>, <cite>The Uncensored Picture of Dorian Gray</cite></span></p>
+      </div>
+      <div class="score" aria-label="cosine similarity 0.544">
+        <span class="num">0.544</span>
+        <span class="track"><span class="fill" style="width:72%"></span></span>
+      </div>
+    </li>
+    <li class="pick">
+      <span class="rank">3</span>
+      <div class="pick-body">
+        <p class="source">The Point</p>
+        <h3><a href="https://thepointmag.com/dialogue/rejecting-enlightenment" target="_blank" rel="noopener">Rejecting Enlightenment</a></h3>
+        <p class="desc">“I felt the need to tell my story, and to do so in public, where I’m held accountable by the moral gaze of another person—but at the same time not to reduce it, or simplify it.”</p>
+        <p class="why"><span class="label">Closest cluster</span> The Paradox of Consciousness as Both Entrapment and Escape <span class="works">— <cite>The Legacy of DFW</cite>, <cite>Infinite Jest Guide</cite></span></p>
+      </div>
+      <div class="score" aria-label="cosine similarity 0.502">
+        <span class="num">0.502</span>
+        <span class="track"><span class="fill" style="width:51%"></span></span>
+      </div>
+    </li>
+    <li class="pick">
+      <span class="rank">4</span>
+      <div class="pick-body">
+        <p class="source">The Point</p>
+        <h3><a href="https://thepointmag.com/letter/on-radical-preservation" target="_blank" rel="noopener">On Radical Preservation</a></h3>
+        <p class="desc">Our contention is that, if we fail to think through and delimit the role of AI in our lives, we risk undermining the intelligibility of our own guiding cultural concepts, and thus initiating a period in our own society of which…</p>
+        <p class="why"><span class="label">Closest cluster</span> The Impossibility of Original Utterance <span class="works">— <cite>A Fans Notes</cite>, <cite>The Recognitions</cite>, <cite>Letters of William Gaddis</cite></span></p>
+      </div>
+      <div class="score" aria-label="cosine similarity 0.499">
+        <span class="num">0.499</span>
+        <span class="track"><span class="fill" style="width:50%"></span></span>
+      </div>
+    </li>
+    <li class="pick">
+      <span class="rank">5</span>
+      <div class="pick-body">
+        <p class="source">n+1 · Grace Glass</p>
+        <h3><a href="https://www.nplusonemag.com/online-only/online-only/the-freedom-of-the-weasel" target="_blank" rel="noopener">The Freedom of the Weasel</a></h3>
+        <p class="desc">Her great themes were timeless, the stuff of the ancients’ ancients: perception, eternity, travel, the problem of evil. She repudiated Aristotle, denied the primordial split between myth and natural philosophy: Anything could,…</p>
+        <p class="why"><span class="label">Closest cluster</span> The Generative Limits of Human Will <span class="works">— <cite>Conversations of Goethe</cite></span></p>
+      </div>
+      <div class="score" aria-label="cosine similarity 0.476">
+        <span class="num">0.476</span>
+        <span class="track"><span class="fill" style="width:38%"></span></span>
+      </div>
+    </li>
+    <li class="pick">
+      <span class="rank">6</span>
+      <div class="pick-body">
+        <p class="source">The Marginalian</p>
+        <h3><a href="https://www.themarginalian.org/2024/04/12/dictionary-of-obscure-sorrows" target="_blank" rel="noopener">The Dictionary of Obscure Sorrows: Uncommonly Lovely Invented Words for What We Feel but Cannot Name</a></h3>
+        <p class="desc">“Despite what dictionaries would have us believe, this world is still mostly undefined.”</p>
+        <p class="why"><span class="label">Closest cluster</span> The Duplicity of Language&#x27;s Clarifying Power <span class="works">— <cite>How Children Fail</cite>, <cite>The Rustle of Language</cite>, <cite>The Advertising Concept Book</cite></span></p>
+      </div>
+      <div class="score" aria-label="cosine similarity 0.467">
+        <span class="num">0.467</span>
+        <span class="track"><span class="fill" style="width:33%"></span></span>
+      </div>
+    </li>
+    <li class="pick">
+      <span class="rank">7</span>
+      <div class="pick-body">
+        <p class="source">The Paris Review · Alessandro Tersigni</p>
+        <h3><a href="https://www.theparisreview.org/blog/2026/10/23/turner-brooks-spatial-memories" target="_blank" rel="noopener">Turner Brooks’s Spatial Memories</a></h3>
+        <p class="desc">October 23, 2026 – Brooks examines buildings less as ends in themselves than as prisms for the human dramas they contain.</p>
+        <p class="why"><span class="label">Closest cluster</span> The Impossibility of Original Utterance <span class="works">— <cite>A Fans Notes</cite>, <cite>The Recognitions</cite>, <cite>Letters of William Gaddis</cite></span></p>
+      </div>
+      <div class="score" aria-label="cosine similarity 0.451">
+        <span class="num">0.451</span>
+        <span class="track"><span class="fill" style="width:26%"></span></span>
+      </div>
+    </li>
+    <li class="pick">
+      <span class="rank">8</span>
+      <div class="pick-body">
+        <p class="source">Aeon</p>
+        <h3><a href="https://aeon.co/essays/the-century-long-search-for-the-limits-to-knowledge" target="_blank" rel="noopener">The century-long search for the limits to knowledge</a></h3>
+        <p class="desc">What we claim as ‘true’ is not a ceiling we are forever failing to reach but something that changes as we climb toward it</p>
+        <p class="why"><span class="label">Closest cluster</span> The Paradox of Consciousness as Both Entrapment and Escape <span class="works">— <cite>The Legacy of DFW</cite>, <cite>Infinite Jest Guide</cite></span></p>
+      </div>
+      <div class="score" aria-label="cosine similarity 0.446">
+        <span class="num">0.446</span>
+        <span class="track"><span class="fill" style="width:23%"></span></span>
+      </div>
+    </li>
+    <li class="pick">
+      <span class="rank">9</span>
+      <div class="pick-body">
+        <p class="source">The Marginalian</p>
+        <h3><a href="https://www.themarginalian.org/2024/10/22/marginalian-18" target="_blank" rel="noopener">18 Life-Learnings from 18 Years of The Marginalian</a></h3>
+        <p class="desc">UPDATE 2025: Here is something special to mark 19 years. Somewhere along the way, you realize that no one will teach you how to live your own life — not your parents or your idols, not the ph</p>
+        <p class="why"><span class="label">Closest cluster</span> The Untraversable Gap Between Knowing and Becoming <span class="works">— <cite>Knowledge Painfully Acquired</cite>, <cite>Win Without Pitching</cite>, <cite>Positioning for Professionals</cite></span></p>
+      </div>
+      <div class="score" aria-label="cosine similarity 0.440">
+        <span class="num">0.440</span>
+        <span class="track"><span class="fill" style="width:20%"></span></span>
+      </div>
+    </li>
+    <li class="pick">
+      <span class="rank">10</span>
+      <div class="pick-body">
+        <p class="source">Aeon</p>
+        <h3><a href="https://aeon.co/essays/living-in-community-is-where-self-illusions-go-to-die" target="_blank" rel="noopener">Living in community is where self-illusions go to die</a></h3>
+        <p class="desc">Disconnection is at the heart of today’s crises. So my husband and I chose a radical and revealing remedy: living communally</p>
+        <p class="why"><span class="label">Closest cluster</span> The Dialectics of Wholeness and Fragmentation <span class="works">— <cite>The Dancing Wu Li Masters</cite>, <cite>Growth of the Soil</cite>, <cite>Aion</cite></span></p>
+      </div>
+      <div class="score" aria-label="cosine similarity 0.437">
+        <span class="num">0.437</span>
+        <span class="track"><span class="fill" style="width:18%"></span></span>
+      </div>
+    </li>
+    <li class="pick">
+      <span class="rank">11</span>
+      <div class="pick-body">
+        <p class="source">Electric Literature</p>
+        <h3><a href="https://electricliterature.com/10-books-exploring-estrangement-as-the-only-route-for-survival" target="_blank" rel="noopener">10 Books Exploring Estrangement as the Only Route for Survival</a></h3>
+        <p class="desc">When familial reconciliation isn’t feasible or even wanted, these authors reveal how estrangement can be a life saving act</p>
+        <p class="why"><span class="label">Closest cluster</span> The Paradox of Withdrawal and Engagement <span class="works">— <cite>Philokalia</cite>, <cite>Global Hesychasm</cite></span></p>
+      </div>
+      <div class="score" aria-label="cosine similarity 0.430">
+        <span class="num">0.430</span>
+        <span class="track"><span class="fill" style="width:15%"></span></span>
+      </div>
+    </li>
+    <li class="pick">
+      <span class="rank">12</span>
+      <div class="pick-body">
+        <p class="source">The Marginalian</p>
+        <h3><a href="https://www.themarginalian.org/2019/02/25/love-and-saint-augustine-hannah-arendt" target="_blank" rel="noopener">Hannah Arendt on Love and How to Live with the Fundamental Fear of Loss</a></h3>
+        <p class="desc">“Fearlessness is what love seeks… Such fearlessness exists only in the complete calm that can no longer be shaken by events expected of the future… Hence the only valid tense is the present, the No</p>
+        <p class="why"><span class="label">Closest cluster</span> The Problem of Disciplined Interiority <span class="works">— <cite>The Mystical Theology of Saint Bernard</cite>, <cite>Navarre Bible confession</cite>, <cite>Navarre Bible suffering</cite></span></p>
+      </div>
+      <div class="score" aria-label="cosine similarity 0.428">
+        <span class="num">0.428</span>
+        <span class="track"><span class="fill" style="width:14%"></span></span>
+      </div>
+    </li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>The taste profile</h2>
+      <p>Each cluster is a Leiden community from the library’s knowledge graph, with its summary embedded as one vector. The count is how many of the 57 articles matched it best. Nautical manuals and code clusters are left out.</p>
+    </div>
+    <ul class="clusters">
+      <li>
+        <div class="c-name"><span>The Exhaustion of Heroic Consciousness</span><small>The Rebel, Hero with 1K Faces</small></div>
+        <span class="c-bar"><span style="width:100%"></span></span>
+        <span class="c-n">13</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Paradox of Consciousness as Both Entrapment and Escape</span><small>The Legacy of DFW, Infinite Jest Guide</small></div>
+        <span class="c-bar"><span style="width:54%"></span></span>
+        <span class="c-n">7</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Impossibility of Original Utterance</span><small>A Fans Notes, The Recognitions</small></div>
+        <span class="c-bar"><span style="width:46%"></span></span>
+        <span class="c-n">6</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Paradox of Productive Struggle in Van Gogh&#x27;s Correspondence</span><small>The Letters of Vincent Van Gogh</small></div>
+        <span class="c-bar"><span style="width:46%"></span></span>
+        <span class="c-n">6</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Sacred Interior and Its Cultivation</span><small>Natural Depth In Man, The Heart of God</small></div>
+        <span class="c-bar"><span style="width:31%"></span></span>
+        <span class="c-n">4</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Dialectic of Narrative Control and Surrender</span><small>Making Shapely Fiction action, This is Story of Happy Marriage lapd</small></div>
+        <span class="c-bar"><span style="width:31%"></span></span>
+        <span class="c-n">4</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Craft of Constraint</span><small>Writers Art writersart cliche, Writers Art alliteration</small></div>
+        <span class="c-bar"><span style="width:23%"></span></span>
+        <span class="c-n">3</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Generative Limits of Human Will</span><small>Conversations of Goethe</small></div>
+        <span class="c-bar"><span style="width:23%"></span></span>
+        <span class="c-n">3</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Dialectics of Wholeness and Fragmentation</span><small>The Dancing Wu Li Masters, Growth of the Soil</small></div>
+        <span class="c-bar"><span style="width:15%"></span></span>
+        <span class="c-n">2</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Untraversable Gap Between Knowing and Becoming</span><small>Knowledge Painfully Acquired, Win Without Pitching</small></div>
+        <span class="c-bar"><span style="width:15%"></span></span>
+        <span class="c-n">2</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Paradox of Withdrawal and Engagement</span><small>Philokalia, Global Hesychasm</small></div>
+        <span class="c-bar"><span style="width:15%"></span></span>
+        <span class="c-n">2</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Systematization of What Resists System</span><small>Writing Fiction, Theory of Prose</small></div>
+        <span class="c-bar"><span style="width:8%"></span></span>
+        <span class="c-n">1</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Impossibility of Authentic Selfhood</span><small>Story, Examples</small></div>
+        <span class="c-bar"><span style="width:8%"></span></span>
+        <span class="c-n">1</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Duplicity of Language&#x27;s Clarifying Power</span><small>How Children Fail, The Rustle of Language</small></div>
+        <span class="c-bar"><span style="width:8%"></span></span>
+        <span class="c-n">1</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Unlocatable Origins of Creative Consciousness</span><small>Genius, Origin of Inspiration</small></div>
+        <span class="c-bar"><span style="width:8%"></span></span>
+        <span class="c-n">1</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Problem of Disciplined Interiority</span><small>The Mystical Theology of Saint Bernard, Navarre Bible confession</small></div>
+        <span class="c-bar"><span style="width:8%"></span></span>
+        <span class="c-n">1</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Paradox of Mastery and Surrender</span><small>The Magic Synthesis, Lost Art of Walking on Water</small></div>
+        <span class="c-bar"><span style="width:0%"></span></span>
+        <span class="c-n">0</span>
+      </li>
+      <li>
+        <div class="c-name"><span>The Uncanny Autonomy of Symbolic Inheritance</span><small>The Golden Bough, Myth and Reality</small></div>
+        <span class="c-bar"><span style="width:0%"></span></span>
+        <span class="c-n">0</span>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>How it works</h2>
+    </div>
+    <ol class="steps">
+      <li><span class="step-n">01</span><div><h3>Build the taste profile</h3><p>Pull the community summaries from the library’s ChromaDB store. Claude names the clusters whose summaries had generic headings, once, and the names are cached.</p></div></li>
+      <li><span class="step-n">02</span><div><h3>Crawl with one Kernel browser</h3><p>A stealth-mode Kernel browser opens each magazine’s index, keeps links that look like articles, then reads them four tabs at a time. It checks robots.txt first and waits out any crawl delay, like Lapham’s ten seconds.</p></div></li>
+      <li><span class="step-n">03</span><div><h3>Embed and match</h3><p>Each article’s title, description and opening paragraphs are embedded with the same model as the library, then compared with every cluster.</p></div></li>
+      <li><span class="step-n">04</span><div><h3>Explain the pick</h3><p>The closest cluster becomes the reason, with the books that anchor it. Only links and short descriptions are kept, never full articles.</p></div></li>
+    </ol>
+<pre><span class="c"># The Kernel part is small: create a browser, attach Playwright over CDP.</span>
+<span class="k">kb</span> = kernel.browsers.create(stealth=True)
+browser = <span class="k">await</span> p.chromium.connect_over_cdp(kb.cdp_ws_url)
+page = browser.contexts[0].pages[0]
+<span class="k">await</span> page.goto(site, wait_until="domcontentloaded")
+...
+kernel.browsers.delete_by_id(kb.session_id)</pre>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>What broke along the way</h2>
+      <p>Both bugs looked like bot detection. Neither was.</p>
+    </div>
+    <div class="notes">
+      <div class="note"><h3>The Paris Review came back nearly empty</h3><p>245 characters from a page with 13 articles. My cleaner deleted every <code>&lt;header&gt;</code> to remove site navigation, but the magazine puts each article’s title inside one. Removing only headers outside <code>&lt;main&gt;</code> and <code>&lt;article&gt;</code> brought back the full page.</p></div>
+      <div class="note"><h3>Four magazines returned zero links</h3><p>Python’s robots.txt parser treats a 403 as “disallow everything,” and these sites return 403 to Python’s default user agent. Their actual robots.txt files allow crawling. Fetching the file with a normal client fixed it.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Built by Chris Heher for a conversation with the Kernel team.</span>
+    <a href="https://onlychr.is" target="_blank" rel="noopener">onlychr.is</a>
+  </footer>
+</div>
+
+</body>
+</html>
