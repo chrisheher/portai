@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const RAGLIB_URL = process.env.RAGLIB_URL ?? 'http://localhost:5000';
+const NEWS_ORACLE_URL = 'https://kernel-news-oracle.vercel.app';
 
 const nextConfig = {
   images: {
@@ -23,6 +24,14 @@ const nextConfig = {
       {
         source: '/raglib/:path*',
         destination: `${RAGLIB_URL}/:path*`,
+      },
+      {
+        source: '/kernel-news-oracle',
+        destination: `${NEWS_ORACLE_URL}/`,
+      },
+      {
+        source: '/kernel-news-oracle/:path*',
+        destination: `${NEWS_ORACLE_URL}/:path*`,
       },
     ];
   },
