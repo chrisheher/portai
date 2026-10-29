@@ -2,6 +2,7 @@
 const RAGLIB_URL = process.env.RAGLIB_URL ?? 'http://localhost:5000';
 const NEWS_ORACLE_URL = 'https://kernel-news-oracle.vercel.app';
 const PARTS_DESK_URL = 'https://parts-desk-two.vercel.app';
+const SENT_DEMO_URL = 'https://sent-demo.vercel.app';
 
 const nextConfig = {
   images: {
@@ -42,6 +43,15 @@ const nextConfig = {
       {
         source: '/kernel-news-oracle/:path*',
         destination: `${NEWS_ORACLE_URL}/:path*`,
+      },
+      // "Text dead authors about live news": the page, and its API under /sent-demo/
+      {
+        source: '/sent-demo.html',
+        destination: `${SENT_DEMO_URL}/`,
+      },
+      {
+        source: '/sent-demo/:path*',
+        destination: `${SENT_DEMO_URL}/:path*`,
       },
     ];
   },
