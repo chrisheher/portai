@@ -17,8 +17,31 @@ const nextConfig = {
     ],
   },
 
+  // The Blacksmith-tailored résumé, shared only by link: keep it out of search results,
+  // and give it a sensible name when saved.
+  async headers() {
+    return [
+      {
+        source: '/blacksmith/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+      {
+        source: '/blacksmith',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+          { key: 'Content-Disposition', value: 'inline; filename="Chris-Heher-Resume-Blacksmith.pdf"' },
+        ],
+      },
+    ];
+  },
+
   async rewrites() {
     return [
+      // onlychr.is/blacksmith opens the résumé tailored for Blacksmith's Developer Marketer role.
+      {
+        source: '/blacksmith',
+        destination: '/blacksmith/chris-heher-resume.pdf',
+      },
       // Before /raglib/:path* so the parts desk wins over the raglib server.
       {
         source: '/raglib/parts',

@@ -527,7 +527,7 @@ function ChatLanding({
       ],
       campaignListDescription: 'Collaborating with product and sales teams at Boston Dynamics, my content piqued curiosity, ensured technical accuracy, and got customers engaged with the funnel by adding cross-links to related content.',
       impact: [
-        { stat: '$2.5m content share for ground robotics' },
+        { stat: 'content influenced 8.5% of ground robotics pipeline deals' },
         { stat: '1.7% engagement rate to take meaningful action' },
         { stat: '28% increase in handraisers' }
       ]
@@ -596,7 +596,7 @@ function ChatLanding({
       ],
       campaignListDescription: ' Google\'s GPay API was designed to be simple. Which meant the content for its tutorial video needed to act likewise. So instead of a smug, stemwinding video that wastes a developer\'s time with phony rapport, I articulated the simplest path to instrumentation.',
       impact: [
-        { stat: '35k views during i/o launch event' },
+        { stat: '900k+ combined youtube views on google\'s developer channels' },
         { stat: '1.5m ARR impact' },
         { stat: '~500 new integrations from live merchants' }
       ]

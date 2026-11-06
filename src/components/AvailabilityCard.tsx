@@ -139,26 +139,12 @@ const AvailabilityCard = ({ data }: AvailabilityCardProps) => {
               <ul className="decoration-none list-disc pl-4">
                 {data?.skills.technical.slice(0, 4).map((skill, index) => (
                   <li key={index}>{skill}</li>
-                )) || (
-                  <>
-                    <li>Python, SQL</li>
-                    <li>FastAPI, Flask, Django</li>
-                    <li>Scikit-learn, XGBoost, TensorFlow, OpenCV</li>
-                    <li>OpenAI API, LangChain, LangGraph</li>
-                  </>
-                )}
+                ))}
               </ul>
               <ul className="list-disc pl-4">
                 {data?.skills.technical.slice(4, 8).map((skill, index) => (
                   <li key={index}>{skill}</li>
-                )) || (
-                  <>
-                    <li>Docker, AWS</li>
-                    <li>Firebase, Heroku, ESP32, IoT</li>
-                    <li>Machine Learning, AI Agents</li>
-                    <li>Web Scraping, Automation</li>
-                  </>
-                )}
+                ))}
                 <li>
                   <a
                     href="/?query=What%20are%20your%20skills%3F%20Give%20me%20a%20list%20of%20your%20soft%20and%20hard%20skills."
@@ -179,9 +165,9 @@ const AvailabilityCard = ({ data }: AvailabilityCardProps) => {
           What I bring
         </p>
         <p className="text-foreground text-sm">
-          {data?.experience.internshipCompleted || "Real-world ML experience from MookMati (Genre classification, FastAPI deployment, AWS)."} <br /> 
-          {data?.achievements[0] || "2nd position in Smart India Hackathon 2025 among 88,221 teams with hideFlare cybersecurity tool."} <br /> 
-          {data?.experience.freelanceWork || "25+ freelance automation projects delivered on Fiverr, cutting manual work by 60%."}
+          {data?.experience.internshipCompleted} <br />
+          {data?.achievements[0]} <br />
+          {data?.experience.freelanceWork}
         </p>
       </div>
 

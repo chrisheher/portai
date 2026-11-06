@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width initial-scale=1 user-scalable=no" />
+    <title>Christopher Heher + Transmit Security</title>
+  <style>
+
+    @font-face {
+    font-family: arizona;
+    src: url(../ABC/ABCArizonaFlare-Thin-Trial.otf) format("opentype");
+}
+      @font-face {
+    font-family: arizona;
+    src: url(../ABC/ABCArizonaFlare-Bold-Trial.otf) format("opentype");
+    font-weight: bold;
+}
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/prop-types@15/prop-types.js"></script>
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.js"></script>
+    <script src="https://unpkg.com/spectacle@^4/dist/spectacle.js"></script>
+    <script src="https://unpkg.com/spectacle@^4/lib/one-page.js"></script>
+    <script type="text/spectacle">
+      () => {
+        // Customize the default theme.
+        const { themes: { defaultTheme } } = Spectacle;
+        const theme = defaultTheme({
+          primary: "#13235B",
+            fonts: {
+          header: '"arizona", Helvetica, Arial, sans-serif',
+          text: '"Open Sans Condensed", Helvetica, Arial, sans-serif'
+        }
+        });
+
+        // --------------------------------------------------------------------
+        // The presentation!
+        // --------------------------------------------------------------------
+        return (
+          <Deck transition={["zoom", "slide"]} theme={theme} transitionDuration={500}>
+            <Slide transition={["zoom"]} bgColor="#13235B">
+             <Heading></Heading><Text  textFont="arizona" textColor="white" size={6} textAlign="right" margin="0px -39px 0px 400px">
+Christopher Heher + Transmit Security
+</Text>
+<Text textFont="arizona" textColor="white" textSize="28px" textAlign="right" margin="20px -39px 0px 400px">
+BindID content audit
+</Text>
+            </Slide>
+
+    <Slide transition={["slide"]} bgColor="white">
+<Heading margin="-10px 0px 0px -100px"> </Heading>
+<Text textColor="black" textFont="arizona" textSize="40px" margin="-60px 280px 0px -100px" textAlign="left">
+The brief
+</Text>
+<Text textColor="black" textFont="arizona" textSize="24px" margin="10px 280px 0px -100px" textAlign="left">
+Review BindID's proposition and content to understand not just what it does, but the value it creates for business and IT security leaders.<br/><br/>
+A good story has tension. Our job: find where that tension lives, and turn it into an ownable anchor for BindID's stories.
+</Text>
+            </Slide>
+
+<Slide transition={["slide"]} bgColor="#13235B">
+<Heading size={6} textFont="arizona" margin="-10px 0px 0px -50px" textAlign="left" textColor="white"> </Heading>
+<Text textFont="arizona" textColor="white" textAlign="left" margin="-30px 0px 0px -50px" textSize="40px">
+On the same page
+</Text>
+<List style={{listStyleType: "none"}}>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>What |</b> BindID is the next-generation digital identity solution for your customers: authentication across every browser, app, and device, without ever typing a password.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>Who |</b> CISOs and heads of identity management who hear the buzz around passwordless, but lack knowledge of the category and its technical nuances.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>How |</b> Show how BindID's approach to passwordless differs, with benefits framed as real business outcomes.
+    </Text></ListItem></Appear>
+</List>
+</Slide>
+
+<Slide transition={["slide"]} bgColor="#13235B">
+<Heading size={6} textFont="arizona" margin="-10px 0px 0px -50px" textAlign="left" textColor="white"> </Heading>
+<Text textFont="arizona" textColor="white" textAlign="left" margin="-30px 0px 0px -50px" textSize="40px">
+What the content needs to do
+</Text>
+<Text textFont="arizona" textColor="white" textAlign="left" margin="10px 120px 0px -50px" textSize="24px">
+Get CISOs and heads of identity management to consider passwordless now, not someday, by making the business case for the revenue lost to login friction.
+</Text>
+<List style={{listStyleType: "none"}}>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="20px 80px 20px -50px" textSize="24px">
+      <b>1 | Awareness</b> From a small audience base, raise awareness and start building a differentiated BindID brand.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>2 | Education</b> Where audience knowledge is thin, drive engagement toward deeper education on passwordless and BindID.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>3 | Leadership</b> In a crowded market, assert leadership and own "passwordless."
+    </Text></ListItem></Appear>
+</List>
+</Slide>
+
+<Slide transition={["slide"]} bgColor="#13235B">
+  <Heading size={6} textFont="arizona" margin="-10px 0px 0px -50px" textAlign="left" textColor="white"> </Heading>
+  <Text textFont="arizona" textColor="white" textAlign="left" margin="-30px 0px 30px -50px" textSize="40px">
+    By the numbers: 34 pieces audited
+  </Text>
+  <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", width: "100%", margin: "0px 0px 0px -50px" }}>
+    <div style={{ flex: 1 }}>
+      <Text textColor="white" textFont="arizona" textSize="28px" textAlign="left" margin="0px 0px 20px 0px"><b>By funnel stage</b></Text>
+      <Text textColor="white" textFont="arizona" textSize="24px" textAlign="left" margin="0px 0px 12px 0px">Awareness | 15</Text>
+      <Text textColor="white" textFont="arizona" textSize="24px" textAlign="left" margin="0px 0px 12px 0px">Consideration | 11</Text>
+      <Text textColor="white" textFont="arizona" textSize="24px" textAlign="left" margin="0px 0px 12px 0px">Evaluation + purchase | 8</Text>
+    </div>
+    <div style={{ flex: 1 }}>
+      <Text textColor="white" textFont="arizona" textSize="28px" textAlign="left" margin="0px 0px 20px 0px"><b>By format</b></Text>
+      <Text textColor="white" textFont="arizona" textSize="24px" textAlign="left" margin="0px 0px 12px 0px">Blog posts | 15</Text>
+      <Text textColor="white" textFont="arizona" textSize="24px" textAlign="left" margin="0px 0px 12px 0px">Sales sheets | 7</Text>
+      <Text textColor="white" textFont="arizona" textSize="24px" textAlign="left" margin="0px 0px 12px 0px">eBooks + white papers | 5</Text>
+      <Text textColor="white" textFont="arizona" textSize="24px" textAlign="left" margin="0px 0px 12px 0px">Video + webinars | 4</Text>
+      <Text textColor="white" textFont="arizona" textSize="24px" textAlign="left" margin="0px 0px 12px 0px">Infographics | 2</Text>
+    </div>
+  </div>
+</Slide>
+
+    <Slide transition={["slide"]} bgColor="white">
+<Heading margin="-10px 0px 0px -100px"> </Heading>
+<Text textColor="black" textFont="arizona" textSize="40px" margin="-60px 280px 0px -100px" textAlign="left">
+The good news
+</Text>
+<Text textColor="black" textFont="arizona" textSize="24px" margin="10px 280px 0px -100px" textAlign="left">
+By and large, the content works. It doesn't need rebuilding, just reinforcing in three places: <b>pain points</b>, <b>proof points</b>, and <b>third-party credibility</b>.
+</Text>
+            </Slide>
+
+<Slide transition={["slide"]} bgColor="#13235B">
+<Heading size={6} textFont="arizona" margin="-10px 0px 0px -50px" textAlign="left" textColor="white"> </Heading>
+<Text textFont="arizona" textColor="white" textAlign="left" margin="-30px 0px 0px -50px" textSize="40px">
+Gap 1: Content lacks context
+</Text>
+<Text textFont="arizona" textColor="white" textAlign="left" margin="10px 120px 0px -50px" textSize="24px">
+Passwordless authentication is a new space. To lead a new category, you have to give more context than you would for an established technology.
+</Text>
+<List style={{listStyleType: "none"}}>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="20px 80px 20px -50px" textSize="24px">
+      <b>Fix: add pain points |</b> Lead with the problem BindID solves, then the product.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>Sales sheets |</b> Above-the-fold copy names the pain point directly.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>Blog posts |</b> Open on the pain point, not a generic product statement.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>The funnel |</b> More awareness content to build the category before selling the product.
+    </Text></ListItem></Appear>
+</List>
+</Slide>
+
+<Slide transition={["slide"]} bgColor="#13235B">
+<Heading size={6} textFont="arizona" margin="-10px 0px 0px -50px" textAlign="left" textColor="white"> </Heading>
+<Text textFont="arizona" textColor="white" textAlign="left" margin="-60px 0px 0px -50px" textSize="40px">
+Gap 2: Content lacks evidence
+</Text>
+<Text textFont="arizona" textColor="white" textAlign="left" margin="10px 120px 0px -50px" textSize="24px">
+Numbers speak louder than words, and faster. The proof already exists, scattered across BindID's own content. Let's move it to the front.
+</Text>
+<List style={{listStyleType: "none"}}>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="20px 60px 14px -50px" textSize="22px">
+      <b>80%</b> of hacking is related to passwords
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 60px 14px -50px" textSize="22px">
+      <b>1 in 3</b> consumers abandon checkout because of a forgotten password
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 60px 14px -50px" textSize="22px">
+      <b>92%</b> would rather leave a website than recover their login credentials
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 60px 14px -50px" textSize="22px">
+      <b>40%</b> of support calls are password resets
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 60px 14px -50px" textSize="22px">
+      <b>89%</b> of users trust biometrics
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 60px 14px -50px" textSize="22px">
+      <b>20%+</b> of customer authentications will be passwordless by 2025
+    </Text></ListItem></Appear>
+</List>
+</Slide>
+
+<Slide transition={["slide"]} bgColor="#13235B">
+<Heading size={6} textFont="arizona" margin="-10px 0px 0px -50px" textAlign="left" textColor="white"> </Heading>
+<Text textFont="arizona" textColor="white" textAlign="left" margin="-30px 0px 0px -50px" textSize="40px">
+Gap 3: Content lacks credibility
+</Text>
+<Text textFont="arizona" textColor="white" textAlign="left" margin="10px 120px 0px -50px" textSize="24px">
+Every wrestler needs a hype person. Transmit has plenty to brag about that isn't yet doing any work in its content.
+</Text>
+<List style={{listStyleType: "none"}}>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="20px 80px 20px -50px" textSize="24px">
+      <b>Use what you've earned |</b> The largest Series A in history, trust from major banks, and 115 million end users belong in the content, not just the press page.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>Own the CIAM conversation |</b> Use the Gartner relationship to push for recognition of customer identity and access management (CIAM) as its own category, and use other Gartner and Forrester reports as third-party proof.
+    </Text></ListItem></Appear>
+</List>
+</Slide>
+
+<Slide transition={["slide"]} bgColor="#13235B">
+<Heading size={6} textFont="arizona" margin="-10px 0px 0px -50px" textAlign="left" textColor="white"> </Heading>
+<Text textFont="arizona" textColor="white" textAlign="left" margin="-30px 0px 0px -50px" textSize="40px">
+All roads lead to sign-in
+</Text>
+<Text textFont="arizona" textColor="white" textAlign="left" margin="10px 120px 0px -50px" textSize="24px">
+Every path ends at a product demo or a sign-in form, which is ironic for a company eliminating logins. Prospects who aren't ready to talk have nowhere to go.
+</Text>
+<List style={{listStyleType: "none"}}>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="20px 80px 20px -50px" textSize="24px">
+      <b>Build off-ramps |</b> Link to more technical content, such as the BindID web quick start guide and Concepts 101, for developers and identity teams.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>Infographics that explain |</b> Favor descriptive over decorative.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>Feature the UBS interview |</b> The UBS CTO conversation shows over-the-air updates, integration with existing assets, and security changes without changing applications. It deserves a home in evaluation-stage content.
+    </Text></ListItem></Appear>
+</List>
+</Slide>
+
+<Slide transition={["slide"]} bgColor="#13235B">
+<Heading size={6} textFont="arizona" margin="-10px 0px 0px -50px" textAlign="left" textColor="white"> </Heading>
+<Text textFont="arizona" textColor="white" textAlign="left" margin="-30px 0px 0px -50px" textSize="40px">
+Recommendations by stage
+</Text>
+<List style={{listStyleType: "none"}}>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="10px 80px 20px -50px" textSize="24px">
+      <b>Awareness |</b> Punch the problems with passwords, and tee up device identity and biometrics as the better way.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>Consideration |</b> Push further into the CIAM conversation with third-party validation.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>Evaluation |</b> Solution briefs by vertical, product webinars, and short high-level demos.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>Decision |</b> Data and sales sheets, plus deep-dive demos, preferably clickable.
+    </Text></ListItem></Appear>
+</List>
+</Slide>
+
+<Slide transition={["slide"]} bgColor="#13235B">
+<Heading size={6} textFont="arizona" margin="-10px 0px 0px -50px" textAlign="left" textColor="white"> </Heading>
+<Text textFont="arizona" textColor="white" textAlign="left" margin="-30px 0px 0px -50px" textSize="40px">
+Where the tension lives
+</Text>
+<Text textFont="arizona" textColor="white" textAlign="left" margin="10px 120px 0px -50px" textSize="24px">
+Passwords are fraudulent, frustrating, and finicky. The story moves the buyer from one era to the next:
+</Text>
+<List style={{listStyleType: "none"}}>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="20px 80px 20px -50px" textSize="24px">
+      <b>Goodbye passwords |</b> Awareness and consideration: the cost of the status quo.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>Hello identity |</b> Evaluation and purchase: what BindID makes possible.
+    </Text></ListItem></Appear>
+    <Appear><ListItem><Text textColor="white" textFont="arizona" margin="0px 80px 20px -50px" textSize="24px">
+      <b>The false choice |</b> Security leaders have been told to pick between security and a smooth customer experience. BindID ends that trade-off.
+    </Text></ListItem></Appear>
+</List>
+</Slide>
+
+            <Slide transition={["zoom"]} bgColor="#13235B">
+             <Heading textFont="arizona" textColor="white" size={6} bold textAlign="right" margin="126px -39px -100px 400px">
+Thank you for your attention.
+</Heading>
+            </Slide>
+          </Deck>
+        );
+      }
+    </script>
+</body>
+</html>
