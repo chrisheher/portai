@@ -36,6 +36,15 @@ const nextConfig = {
         source: '/raglib/:path*',
         destination: `${RAGLIB_URL}/:path*`,
       },
+      // "The old books saw it coming", at /old-books (the old /kernel-news-oracle paths still work)
+      {
+        source: '/old-books',
+        destination: `${NEWS_ORACLE_URL}/`,
+      },
+      {
+        source: '/old-books/:path*',
+        destination: `${NEWS_ORACLE_URL}/:path*`,
+      },
       {
         source: '/kernel-news-oracle',
         destination: `${NEWS_ORACLE_URL}/`,
@@ -44,7 +53,16 @@ const nextConfig = {
         source: '/kernel-news-oracle/:path*',
         destination: `${NEWS_ORACLE_URL}/:path*`,
       },
-      // "Text dead authors about live news": the page, and its API under /sent-demo/
+      // "Text dead authors about live news": the page, and its API under /dead-authors/
+      // (the old /sent-demo paths still work)
+      {
+        source: '/dead-authors.html',
+        destination: `${SENT_DEMO_URL}/`,
+      },
+      {
+        source: '/dead-authors/:path*',
+        destination: `${SENT_DEMO_URL}/:path*`,
+      },
       {
         source: '/sent-demo.html',
         destination: `${SENT_DEMO_URL}/`,
