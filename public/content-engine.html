@@ -142,7 +142,9 @@
   .detail h2 { font-family: Georgia, 'Times New Roman', serif; font-weight: 500; font-size: 1.3rem; margin-bottom: 2px; }
   .detail .part-name { font-size: 0.75rem; color: var(--muted); margin-bottom: 14px; }
   .intro { font-size: 2rem; line-height: 1.2; color: var(--muted); margin: 50px 0 44px; }
-  .about { font-size: 1.05rem; line-height: 1.4; color: var(--muted); margin-bottom: 18px; }
+  .about { font-size: 1.05rem; line-height: 1.4; color: var(--muted); margin-bottom: 10px; }
+  .cite { font-family: Georgia, serif; font-style: italic; font-size: 0.78rem; line-height: 1.45; color: var(--muted); border-left: 2px solid var(--accent); padding-left: 10px; margin-bottom: 18px; }
+  .cite a { color: var(--accent); }
 
   .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
   .chip { font-size: 0.7rem; padding: 3px 8px; border: 1px solid var(--border); color: var(--text); }
@@ -228,7 +230,8 @@
   // Each skill sits on one engine part: hotspot polygon and badge position in the photo's 910×558 space.
   const PARTS = [
     { id: 'writing', name: 'Writing', part: 'Fuel injectors', hot: '262,110 562,110 562,138 262,138', badge: [441, 130],
-      about: 'Injectors meter the exact amount of fuel at the exact moment. Nothing else in the engine makes power.',
+      about: 'Shortly before the piston reaches its highest position, the required amount of fuel is sprayed into the combustion space. Writing is the unit fuel injector: the required amount, at the required moment. Too much floods the cylinder; too little and nothing fires.',
+      cite: { text: 'Shortly before the piston reaches its highest position, the required amount of fuel is sprayed into the combustion space by the unit fuel injector.', src: 'Series 71 Service Manual', page: 6, pdf: null },
       quotes: [
         ['nametag', "This role leans content: you should be, first and foremost, an excellent writer who's comfortable in a technical B2B space."],
         ['traversal', 'We expect you to experiment with AI tools and use them to expand what you can do, but we believe original ideas, good taste, and strong writing matter more than ever in a world full of AI slop.'],
@@ -246,7 +249,8 @@
         ['Google GPay instrumentation videos', PORT('gpay'), 'The simplest path to integration, without phony rapport.', '<b>900K+</b> YouTube views on Google’s developer channels'],
       ] },
     { id: 'editorial', name: 'Editorial judgment', part: 'Thermostat housing', hot: '212,140 252,140 252,178 212,178', badge: [236, 172],
-      about: 'The thermostat stays shut until the engine is ready. Editorial judgment decides what ships, what gets cut, and what needs another pass.',
+      about: 'Control of engine temperature is accomplished by means of a thermostat directing the flow within a sealed system. Editorial judgment directs the flow: nothing circulates until it’s at operating temperature, and nothing ships cold.',
+      cite: { text: 'Control of engine temperature is accomplished by means of a thermostat directing the flow of cooling liquid within a sealed cooling system.', src: 'Series 71 Service Manual', page: 93, pdf: 'Detroit_Diesel_Engine_Series_71_Service_Manual-p93' },
       quotes: [
         ['interfere', 'You ask good questions and have editorial judgment.'],
         ['spektrix', 'This role combines excellent writing and editorial judgment with strong marketing instincts.'],
@@ -262,7 +266,8 @@
         ['Airbnb career website', PORT('airbnb'), 'Lead writer: built the employer value proposition, then wrote to it.', '<b>50+ job families</b> on pre-approved, brand-consistent copy blocks'],
       ] },
     { id: 'technical', name: 'Technical depth', part: 'Cylinder liners', hot: '285,222 512,222 512,298 285,298', badge: [401, 247],
-      about: 'Everything runs against the liner. When it’s thin, the wear shows fast, and engineers notice first.',
+      about: 'Wear on a cylinder liner is directly related to the amount of abrasive dust and dirt introduced via the air intake. In technical content the dust is the unchecked claim and the borrowed explanation. Keep the intake clean and the liner runs true.',
+      cite: { text: 'Wear on a cylinder liner and piston is directly related to the amount of abrasive dust and dirt introduced into the engine combustion chambers via air intake.', src: 'Series 71 Service Manual', page: 17, pdf: 'Detroit_Diesel_Engine_Series_71_Service_Manual-p17' },
       quotes: [
         ['interfere', 'You can read code and documentation, try unfamiliar tools, and hold credible conversations with engineers.'],
         ['kernel', "As a Technical Content Engineer at [company], you're a builder first: someone who ships code, then writes, records, or talks about what you built."],
@@ -278,7 +283,8 @@
         ['My GraphRAG library', '/raglib', 'A retrieval graph I built over books I’ve read.', '<b>~1,600 passages</b> from ~230 works, organized by theme'],
       ] },
     { id: 'research', name: 'Research', part: 'Lubricating oil filter', hot: '205,235 268,235 268,362 205,362', badge: [225, 305],
-      about: 'The filter keeps grit out of everything downstream. Research is what stops a draft from needing a rewrite.',
+      about: 'Research incorporates a filtering element through which only a metered portion of the circulated material passes. It is imperative that regular intervals be established and the element be changed regularly: stale sources clog the whole engine.',
+      cite: { text: 'The oil filters incorporate a replaceable, non-cleanable filtering element through which only a metered portion of the circulated oil passes.', src: 'Series 71 Service Manual', page: 83, pdf: 'Detroit_Diesel_Engine_Series_71_Service_Manual-p83' },
       quotes: [
         ['interfere', "Identify what's worth writing about, research the gaps, and produce strong drafts independently."],
         ['perforce', 'Identify content gaps, audience needs, and market opportunities through customer insights, competitive research, and performance analytics.'],
@@ -291,7 +297,8 @@
         ['My GraphRAG library', '/raglib', 'Passages I chose and curated myself, matched to themes.', '<b>~230 works</b> read and indexed'],
       ] },
     { id: 'collab', name: 'Collaboration with experts', part: 'Heat exchanger', hot: '135,160 205,160 205,215 135,215', badge: [154, 179],
-      about: 'A heat exchanger moves heat from one system to another without mixing them: what an engineer knows, into a reader’s hands.',
+      about: 'Feel the inlet and outlet pipes: if the exchanger is doing its job, there should be a noticeable fall in the temperature of what leaves it. Collaboration passes an engineer’s raw knowledge through without mixing the two systems, and what comes out is cool enough for a reader to handle.',
+      cite: { text: 'Feel the freshwater inlet and outlet pipes to the heat exchanger; if it is doing its job, there should be a noticeable fall in the temperature of the water leaving the heat exchanger.', src: 'Engine troubleshooting (marine manual, same library)', page: 16, pdf: 'engine_troubleshooting-p16' },
       quotes: [
         ['interfere', 'Interview engineers, review product developments, and understand customer investigations.'],
         ['cogent', 'Build repeatable systems to capture raw material: leader interviews, Slack mining, call notes, research briefs.'],
@@ -310,7 +317,8 @@
         ['DroneDeploy product pages', PORT('dd-pages'), 'Built with product and sales teams at Boston Dynamics.', '<b>Technically accurate</b>, cross-linked into the funnel'],
       ] },
     { id: 'seo', name: 'SEO / AEO / GEO', part: 'Cylinder head', hot: '265,198 520,198 520,222 265,222', badge: [497, 218],
-      about: 'The valves in the head decide what gets in. Search, and now the models, decide what gets found.',
+      about: 'Located in the head are the exhaust valves, a fuel injector, and the valve and injector operating mechanisms for each cylinder. Search and answer engines are the valves: they decide what gets in and what gets out. A piece that’s never found never fires.',
+      cite: { text: 'Located in the head are two or four exhaust valves, (fig. 69), a fuel injector, and three drop-forged rocker arms, also valve and injector operating mechanisms for each cylinder.', src: 'Series 71 Service Manual', page: 56, pdf: 'Detroit_Diesel_Engine_Series_71_Service_Manual-p56' },
       quotes: [
         ['cogent', 'Own SEO and AEO so the work gets found by the buyers and by the models that now shape how people discover it.'],
         ['vts', 'Drive SEO and AEO strategy across our website, landing pages, and content, ensuring [company] shows up in both traditional search and AI-driven answer engines.'],
@@ -323,7 +331,8 @@
         ['DroneDeploy Safety AI', PORT('safety-ai'), 'Product page, video, email, social and blog.', '<b>70%</b> increase in organic traffic'],
       ] },
     { id: 'distribution', name: 'Distribution and social', part: 'Generator', hot: '505,228 606,228 606,312 505,312', badge: [558, 273],
-      about: 'The generator keeps the batteries charged once the engine is running. Distribution keeps a piece working after it ships.',
+      about: 'Most boats rely almost entirely on the engine-driven alternator to keep the batteries up to snuff. A piece runs once at launch; distribution keeps it charging on every channel, so the next start doesn’t depend on a dead battery.',
+      cite: { text: 'However, the vast majority of us weekend powerboaters with small to medium-sized powerboats rely almost entirely on the engine-driven alternator and shore-powered battery chargers to keep our boat’s batteries up to snuff.', src: 'Alternator maintenance (marine manual, same library)', page: 3, pdf: null },
       quotes: [
         ['interfere', 'Adapt your work into social posts, newsletters, and other formats, and get it in front of relevant developers and engineering leaders.'],
         ['vts', 'A point of view on content distribution — how the right piece reaches the right audience through the right channel.'],
@@ -341,7 +350,8 @@
         ['DroneDeploy Safety AI', PORT('safety-ai'), 'One launch, cut for every channel.', '<b>~140K</b> views; 20% click-to-open on email'],
       ] },
     { id: 'measurement', name: 'Measurement and pipeline', part: 'Rocker arm cover', hot: '515,140 600,140 600,190 515,190', badge: [585, 165],
-      about: 'Under the cover, the rockers time every valve. Measurement is how you know which pieces are pulling and which are dead weight.',
+      about: 'The top of each cylinder head is completely enclosed by a removable valve rocker cover; under it, the rocker arms bear directly on the end of every valve stem. Measurement means lifting the cover to see what’s actually moving, not guessing from the sound.',
+      cite: { text: 'The top of each cylinder head is completely enclosed by a removable pressed steel valve rocker cover.', src: 'Series 71 Service Manual', page: 57, pdf: 'Detroit_Diesel_Engine_Series_71_Service_Manual-p57' },
       quotes: [
         ['sent', 'Drive growth and measure it honestly'],
         ['nametag', 'Track content performance: engagement, email metrics, content-influenced pipeline, in partnership with Growth Marketing, and use it to prioritize what to write next.'],
@@ -357,7 +367,8 @@
         ['HP Presence white papers', PORT('hp-presence'), 'Downloads traced through the buyer journey.', '<b>$680K</b> closed-won influenced; ~2.3K leads'],
       ] },
     { id: 'ownership', name: 'Ownership', part: 'Starting motor', hot: '398,332 562,332 562,398 398,398', badge: [459, 356],
-      about: 'Nothing runs until something turns it over. Every one of these roles asks for a self-starter.',
+      about: 'The ring gear teeth are chamfered to permit a smooth, silent, and positive engagement of the starter when the engine is being started. Ownership is the starter: it engages without a push and turns the engine over until it fires on its own.',
+      cite: { text: 'The ends of the ring gear teeth are chamfered to permit a smooth, silent, and positive engagement of starter gear when engine is being started.', src: 'Series 71 Service Manual', page: 28, pdf: null },
       quotes: [
         ['interfere', "You'll be our first dedicated content hire, with ownership over what we write, how we produce it, and how we get it in front of developers and engineering leaders."],
         ['rillet', 'The people who thrive at [company] do not wait for assignments.'],
@@ -375,7 +386,8 @@
         ['Airbnb career website', PORT('airbnb'), 'Strategy through execution, as lead writer.', '<b>72%</b> more applications in the first quarter after launch'],
       ] },
     { id: 'process', name: 'Publishing process', part: 'Crankshaft pulley', hot: '95,385 150,385 150,445 95,445', badge: [118, 412],
-      about: 'The pulley turns everything else in time. A publishing process is what makes the fifth piece as good as the first.',
+      about: 'When the pulley is drawn up tight by the bolt in the end of the crankshaft, every part is held rigidly in its correct location. At regular intervals, inspect the bolt to be sure it is tight. A publishing calendar loosens the same way.',
+      cite: { text: 'At regular intervals inspect fan hub or pulley bolt in end of crankshaft to be sure it is tight.', src: 'Series 71 Service Manual', page: 33, pdf: null },
       quotes: [
         ['interfere', 'Build a consistent publishing process.'],
         ['nametag', 'Own and maintain the marketing content calendar, coordinating inputs from Growth Marketing, Product Marketing, Design, and Sales so nothing ships late, off-voice, or duplicated.'],
@@ -390,7 +402,8 @@
         ['DroneDeploy content system', PORT('dd-pages'), 'Quarterly content planning tied to product releases.', 'Sales content turnaround cut from <b>2 weeks to 3 days</b>'],
       ] },
     { id: 'ai', name: 'AI and automation', part: 'Oil cooler', hot: '132,215 202,215 202,300 132,300', badge: [146, 236],
-      about: 'The oil cooler lets the engine run harder without seizing. AI should raise output without it showing in the work.',
+      about: 'The oil cooler not only cools the hot engine but provides a means of rapidly raising the temperature during the warm-up period. AI should do both. The cooler also has a spring-loaded by-pass valve that assures continual lubrication if it fails: the work can’t depend on the tool.',
+      cite: { text: 'OIL COOLER Engines are equipped with an oil cooler which not only cools the hot engine, but, by means of the cooling water temperature control, provides a means of rapidly raising the oil temperature during the warm-up period.', src: 'Series 71 Service Manual', page: 83, pdf: 'Detroit_Diesel_Engine_Series_71_Service_Manual-p83' },
       quotes: [
         ['kernel', "You're fast, hands-on, plugged into what's new in the agentic stack, and comfortable using AI tools to move quickly without it showing in the final product."],
         ['vts', 'Fluent with AI tools (e.g., Claude) as part of your everyday workflow, using them to scale output and move faster, not as an occasional aid.'],
@@ -455,6 +468,9 @@
       <h2>${esc(p.name)}</h2>
       <p class="part-name">Part ${p.n} · ${esc(p.part)}</p>
       <p class="about">${esc(p.about)}</p>
+      <p class="cite">From the manual: “${esc(p.cite.text)}”<br>${p.cite.pdf
+        ? `<a href="/raglib/parts/pdfs/${p.cite.pdf}.pdf" target="_blank" rel="noopener">${esc(p.cite.src)}, p.${p.cite.page} ↗</a>`
+        : `${esc(p.cite.src)}, p.${p.cite.page}`}</p>
       <div class="chips">
         <span class="chip hi">Asked for in ${p.count} of ${TOTAL} job descriptions</span>
         <span class="chip">${p.proof.length} things I’ve built</span>
