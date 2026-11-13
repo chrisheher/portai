@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interfere's SDK 13 explained by a 6-71 Detroit Diesel</title>
+<meta name="description" content="Nine changes in Interfere's SDK 13.0, each explained by the part of a GM 6-71 marine diesel that does the same job. Quoted from the 13.0.0 changelog and the Series 71 service manual.">
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+  /* Same desk as the 6-71 Parts Desk (onlychr.is/raglib/parts) and the Content Engine page. */
+  :root {
+    --paper: #f6f6f5;
+    --panel: #ffffff;
+    --line-dim: rgba(20,20,30,0.35);
+    --text: #1d1d22;
+    --muted: #5c5c66;
+    --accent: #8a5a00;
+    --highlight: #f3d38a;
+    --hover: #5B9E68;
+    --border: rgba(20,20,30,0.14);
+    --code-bg: #ebebe8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Courier Prime', ui-monospace, monospace;
+    background: var(--paper);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* Desktop: headline and comparisons in a left gutter, the detail in the middle,
+     and the figure on a portrait manual page pinned in a right gutter. */
+  :root { --gutter: max(25vw, 330px); --plate: 33.333vw; }
+  body { display: grid; grid-template-columns: var(--gutter) minmax(0, 1fr) var(--plate); align-items: start; }
+  header {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 28px 24px 64px 32px;
+    background: var(--paper);
+    border-right: 1px solid var(--border);
+  }
+  header h1 { max-width: 12em; font-weight: 600; font-size: 2rem; line-height: 1.2; }
+  main { padding: 28px 40px 64px; min-width: 0; }
+  main > * { min-width: 0; }
+  .plate-col { position: sticky; top: 0; padding: 28px 32px 56px 0; min-width: 0; }
+  /* The full engine gets two-thirds of the screen; the notes sit under it. Part drawings use the right third. */
+  @media (min-width: 961px) {
+    body.engine { grid-template-columns: var(--gutter) minmax(0, 1fr); }
+    body.engine header { grid-row: 1 / span 2; }
+    body.engine .plate-col { grid-column: 2; grid-row: 1; position: static; padding: 28px 40px 0; }
+    body.engine .plate-col .sheet { max-width: 66.667vw; }
+    body.engine main { grid-column: 2; grid-row: 2; }
+  }
+
+  @media (max-width: 960px) {
+    body { display: flex; flex-direction: column; }
+    body > * { min-width: 0; max-width: 100%; }
+    header { order: 0; } .plate-col { order: 1; } main { order: 2; }
+    .plate-col { position: static; height: auto; padding: 16px 16px 0; }
+    header { position: static; height: auto; overflow: visible; gap: 12px; padding: 14px 16px 0; border-right: 0; border-bottom: 1px solid var(--border); }
+    header h1 { max-width: none; }
+    main { padding: 20px 16px 64px; }
+  }
+
+  .label { font-size: 0.78rem; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 8px; }
+
+  /* The torn manual page */
+  .sheet {
+    --ink: #222;
+    --paper: #f6f6f5;
+    position: relative;
+    padding: 18px 22px 30px;
+    color: var(--ink);
+    background-color: var(--paper);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06);
+    transform: rotate(-0.5deg);
+  }
+  .sheet-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    font-family: 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 900;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    padding-bottom: 4px;
+    border-bottom: 3px double var(--ink);
+    margin-bottom: 14px;
+  }
+  /* The figure area is a size container; the frame takes the image's own ratio and the
+     largest size that fits, so the engine's hotspots stay locked to the drawing. */
+  .figure { display: flex; justify-content: center; }
+  .frame { position: relative; aspect-ratio: var(--r, 1.7); width: min(100%, calc((100vh - 170px) * var(--r, 1.7))); }
+  @media (max-width: 960px) {
+    .figure { container-type: normal; display: block; }
+    .frame { width: 100%; }
+  }
+  .frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    filter: grayscale(1) sepia(0.18) contrast(1.06) brightness(1.02);
+    mix-blend-mode: multiply;
+  }
+  .frame .overlay { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .figure.is-part .overlay { display: none; }
+  .back { margin-left: auto; font-family: 'Courier Prime', ui-monospace, monospace; font-weight: 700; font-size: 0.68rem; letter-spacing: 0.08em; color: var(--ink); background: transparent; border: 1px solid var(--ink); padding: 3px 9px; cursor: pointer; }
+  .back:hover { color: var(--hover); border-color: var(--hover); }
+  .back:focus-visible { outline: 2px solid var(--hover); outline-offset: 2px; }
+  .figure svg * { vector-effect: non-scaling-stroke; }
+
+  svg .part { cursor: pointer; }
+  svg .hot { fill: transparent; stroke: transparent; stroke-width: 3.5; transition: fill 0.15s, stroke 0.15s; }
+  svg .part:hover .hot, svg .part:focus-visible .hot { fill: rgba(91,158,104,0.35); stroke: var(--hover); }
+  svg .part.active .hot { fill: rgba(243,211,138,0.38); stroke: #a06e14; stroke-dasharray: none; }
+  svg .part:focus { outline: none; }
+  svg .badge circle { fill: #222; stroke: #ece6d6; stroke-width: 1.5; }
+  svg .badge text { fill: #ece6d6; font: bold 12px Helvetica, Arial, sans-serif; text-anchor: middle; dominant-baseline: central; }
+  svg .part.active .badge circle { fill: var(--highlight); stroke: #222; }
+  svg .part.active .badge text { fill: #222; }
+
+  /* Subheader: every comparison in one line, "change as part | change as part" */
+  .subnav { min-width: 0; }
+  @media (min-width: 961px) {
+    .parts-list { flex-direction: column; align-items: stretch; row-gap: 14px; }
+    .parts-list li::after { content: none !important; }
+    .parts-list button { white-space: normal !important; }
+  }
+  .parts-list { list-style: none; display: flex; flex-wrap: wrap; align-items: baseline; row-gap: 4px; }
+  .parts-list li { display: flex; align-items: baseline; }
+  .parts-list li:not(:last-child)::after { content: '|'; color: var(--line-dim); padding: 0 10px; }
+  .parts-list li.eol::after { content: none; }
+  .parts-list li.eol { margin-right: 10px; margin-bottom: 8px; }
+  .parts-list button { white-space: nowrap; }
+  /* Phones: one row you swipe, instead of six wrapped lines */
+  @media (max-width: 960px) {
+    .subnav { margin: 0 -16px; }
+    .parts-list { flex-wrap: nowrap; overflow-x: auto; padding: 10px 16px; scrollbar-width: none; scroll-padding: 0 16px; }
+    .parts-list::-webkit-scrollbar { display: none; }
+  }
+  .parts-list button {
+    background: none;
+    border: 0;
+    padding: 2px 0;
+    font: inherit;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    color: var(--muted);
+    text-align: left;
+    cursor: pointer;
+  }
+  .parts-list .ch { color: var(--text); font-weight: 700; font-size: calc(1em + 4px); }
+  .parts-list button:hover .ch, .parts-list button.hover .ch,
+  .parts-list button:hover .pt, .parts-list button.hover .pt { color: var(--hover); text-decoration: underline; text-underline-offset: 3px; }
+  .parts-list button.active .ch { color: var(--hover); font-weight: 700; }
+  .parts-list button.active .pt { color: var(--text); }
+  .parts-list button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  svg .part.hover .hot { fill: rgba(91,158,104,0.35); stroke: var(--hover); }
+  .detail { scroll-margin-top: 16px; }
+
+
+  /* Detail */
+  .detail { padding: 0 4px; }
+  @media (max-width: 960px) { .detail { padding: 4px 0 0; } }
+  .detail h2 { font-weight: 500; font-size: 1.35rem; line-height: 1.25; margin-bottom: 4px; overflow-wrap: anywhere; }
+  .detail h2 { margin-bottom: 16px; color: var(--muted); }
+  .detail h2 .ch, .detail h2 .pt { color: var(--text); }
+  .detail h2 .ch { font-size: calc(1em + 2px); }
+  .intro-note { font-size: 0.85rem; line-height: 1.5; color: var(--muted); }
+  .intro-note + .intro-note { margin-top: 10px; }
+  .intro-note a { color: var(--accent); }
+  .intro-note a:hover { color: var(--hover); }
+  .maps { font-size: 1.02rem; line-height: 1.45; margin-bottom: 50px; }
+
+  section + section { margin-top: 20px; }
+
+  .quote {
+    padding: 10px 12px;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
+  }
+  .quote .x { font-size: 0.84rem; line-height: 1.5; overflow-wrap: anywhere; }
+  .quote .t { font-size: 0.7rem; color: var(--muted); margin-top: 6px; }
+  .quote .t a { color: var(--accent); }
+  .detail code, .intro-note code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.92em; color: var(--accent); }
+
+  .code { display: grid; gap: 6px; }
+  .code pre {
+    margin: 0;
+    padding: 8px 10px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.74rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .code .v { font-size: 0.66rem; color: var(--muted); letter-spacing: 0.08em; }
+
+
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Interfere’s SDK 13 explained by a 6-71 Detroit Diesel</h1>
+  <nav class="subnav" aria-label="SDK 13 changes and the 6-71 parts they're like">
+    <ul class="parts-list" id="partsList"></ul>
+  </nav>
+</header>
+
+<main>
+  <aside class="detail" id="detail" aria-live="polite">
+    <p class="intro-note">SDK content pulled from <code>@interfere/*</code> 13.0.0 changelog or README; engine content pulled from ocr’d manuals in my <a href="https://onlychr.is/raglib" target="_blank" rel="noopener">GraphRAG corpus</a>.</p>
+    <p class="intro-note">Written without product access.</p>
+  </aside>
+</main>
+
+<div class="plate-col">
+  <div class="sheet">
+    <div class="sheet-head"><button type="button" class="back" id="backBtn" hidden>← BACK TO ENGINE</button></div>
+    <div class="figure">
+      <div class="frame" id="frame">
+        <img id="figImg" src="" alt="">
+        <svg class="overlay" preserveAspectRatio="none" id="overlay" role="group" aria-label="Engine parts, each tied to an SDK 13 change"></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // Sources. SDK lines are verbatim from the npm packages published 2026-11-12;
+  // manual lines are verbatim from the OCR'd pages (hyphenation at line ends rejoined). Linked Series 71
+  // pages use the PDF's page index; unlinked excerpts from modern books cite the printed page.
+  const NEXT_CL  = ['@interfere/next 13.0.0 changelog', 'https://www.npmjs.com/package/@interfere/next'];
+  const NEXT_RM  = ['@interfere/next 13.0.0 README', 'https://www.npmjs.com/package/@interfere/next'];
+  const REACT_RM = ['@interfere/react 13.0.0 README', 'https://www.npmjs.com/package/@interfere/react'];
+  const SM  = 'Detroit Diesel Series 71 Service Manual';
+  const SMP = p => `/raglib/parts/pdfs/Detroit_Diesel_Engine_Series_71_Service_Manual-p${p}.pdf`;
+  const CUT = n => `/sdk-13/cutaways/${n}.png`;
+  const SMX = p => `/sdk-13/pdfs/Detroit_Diesel_Engine_Series_71_Service_Manual-p${p}.pdf`;
+
+  // Each change sits on the part that does the same job. hot/badge are in the photo's 910×558
+  // space; parts without them are off the photo.
+  const PARTS = [
+    { id: 'retry', short: 'no CORS retries', change: 'no CORS retries', part: 'Starting motor',
+      spots: { side: { hot: '505,374 620,374 620,481 505,481', badge: [588, 431] }, xsec: { hot: '799,266 885,266 885,647 799,647', badge: [842, 285], label: 'Flywheel, which the starter turns' } },
+      maps: [
+        "A starter motor provides a short burst that rotates the engine’s flywheel until its attached pistons can consistently combust fuel. It’s why repeatedly cranking a starter motor won’t tell you why the engine won’t fire; what it will do is fry the starter and drain your battery so that now you have three problems instead of one.",
+        "The same is true for failed cross-origin requests which, like a held ignition on a thunking starter motor, are sent a second time and whose retry not only doubled the request but hid the real fault (such as a CORS policy) and add unintended load to your observability stack.  SDK 13 was built for you to turn the observability key once so that if a request fails, that failure’s logged and stamped  only once. One call, one request."],
+      sdk: { text: 'Removed. One application call produces one request. A suspected CORS failure logs once per origin and stamps `interfere.propagation.suspect_cors` on the request observation; no header is stripped and nothing is retried.', src: NEXT_CL },
+      also: { text: 'The SDK never resends an application request: a failed call stays failed for your code to handle.', src: REACT_RM },
+      cut: { src: CUT('starter'), alt: 'Cutaway of an inertia-type starter motor: field coil and armature on the left, Bendix drive and pinion in the drive housing on the right', cap: 'Fig. 4-3, inertia-type starter motor (courtesy Detroit Diesel Corp.) · Boat-maintenance manual, “Failure to Start”, p.43' },
+      manual: { text: 'Never crank a starter motor continuously for more than 15 seconds when performing any of the following tests. Because starter motors are designed for only brief and infrequent use, they generally have no fans or cooling devices. Continuous cranking will burn them up.', src: 'Boat-maintenance manual, “Electric Motors”', page: 317 } },
+
+    { id: 'capture', short: 'captureRenderErrors', change: 'captureRenderErrors', part: 'Fuel filter',
+      spots: { side: { hot: '272,197 320,197 320,283 272,283', badge: [294, 241] }, xsec: { hot: '266,57 761,57 761,181 266,181', badge: [495, 95], label: 'Injectors, where the filtered fuel ends up' } },
+      maps: ["Before fuel is injected into a piston’s combustion chamber, it must pass through a filter that catches debris that could clog narrow fuel injector lines. SDK 13’s CaptureBoundary works with your browser’s React components in the same way, catching every error that passes through then rethrow it to your host error boundary so your reset logic stays in place."],
+      sdk: { text: '`InterfereProvider` captures render errors by default and rethrows them so your host error boundary keeps control of the fallback. Set `captureRenderErrors={false}` to disable this capture.', src: REACT_RM },
+      code: [['12.x', '<InterfereProvider errorBoundary={false}>'], ['13.x', '<InterfereProvider captureRenderErrors={false}>']],
+      cut: { src: CUT('fuel_filter'), alt: 'Cutaway of a primary fuel filter: fuel enters at the side, drops water into a clear bowl, rises through the replaceable element and leaves at the outlet', cap: 'Fig. 9-8A, a primary fuel filter with a replaceable element · Boat-maintenance manual, “Diesel Engines”, p.370' },
+      manual: { text: 'Fuel is drawn from vehicle fuel tank, through primary filter by the fuel pump which is driven from rear end of blower lower rotor shaft. From the pump, fuel is forced through secondary filter and to fuel intake manifold which supplies the injectors. Surplus fuel, flowing through injectors, is returned through fuel outlet manifold to vehicle fuel tank.', src: SM, page: 119, href: SMX(119) } },
+
+    { id: 'auto', short: 'tracing: "auto"', change: 'tracing: "auto"', part: 'Governor',
+      spots: { side: { hot: '300,327 358,327 358,415 300,415', badge: [331, 375] } },
+      maps: ["An engine’s governor dictates how much fuel flows through its injectors. Which is why having two governors on one engine is more than redundant — it’s dangerous. SDK 13 automatically checks if you’ve already registered a trace propagator so that if you already have an observability layer in place, Interfere’s application mode runs atop it to organize mission critical-context — errors, replay, navigation, vitals and requests —  without touching your trace headers or OpenTelemetry globals. And if you don’t have an observability layer, Interfere’s Managed mode owns your trace headers and becomes your single source of observability."],
+      sdk: { text: 'With no surface owner configured, the default is `tracing: "auto"`: register your application’s provider first and Interfere adopts its active spans without a warning; with no registered provider, Interfere uses managed tracing.', src: NEXT_RM },
+      also: { text: '`register({ tracing: "application" })` writes no OpenTelemetry global and installs no instrumentation. Every server error reaches Interfere through Interfere’s own exporter …', src: NEXT_RM },
+      code: [['Interfere owns tracing', 'register()'], ['Your provider owns it', 'register({ tracing: "application" })']],
+      cut: { src: CUT('governor'), alt: 'Sectional drawing of the limiting speed governor weight housing: weight shaft, high and low speed weights, bearings, with a numbered parts key', cap: `Fig. 55, governor weight and lower housing assembly · ${SM}, p.157` },
+      manual: { text: 'Immediately after starting, the governor moves the injector racks out to the position required for idling. Engine speed may then be manually controlled, within the governed limits, by the operator.', src: SM, page: 157, href: SMP(157) } },
+
+    { id: 'mixed', short: '12.x + 13.x deployments', change: 'Mixed 12.x and 13.x deployments', part: 'Cylinder liners',
+      spots: { side: { hot: '352,197 539,197 539,309 352,309', badge: [523, 281] }, xsec: { hot: '152,181 761,181 761,376 152,376', badge: [252, 285], label: 'Cylinder liners, with pistons' } },
+      maps: ["Pistons fit in replaceable liners that themselves fit into an irreplaceable engine block. Think of the SDK 13.0 SDK as the replaceable liner inside Interfere’s larger observability engine so that things likelike storage keys, device identities and ingest protocols remain unchanged whether you’re running the 13 SDK on a server beside browsers running SDK 12 — and vice versa."],
+      sdk: { text: 'Mixed deployments of 12.x browsers with 13.x servers, or the reverse, keep working: storage keys, session and device identity and the ingest protocol are unchanged, and the 12.x line receives compatibility and security fixes for twelve months after 13.0 is published.', src: NEXT_CL },
+      cut: { src: CUT('liner'), alt: 'Exploded parts drawing of a cylinder kit: piston rings, piston, piston pin and retaining ring, the cylinder liner, and the liner seal rings', cap: 'Cylinder kit, exploded · parts catalog drawing supplied by the author (source to be cited)' },
+      manual: { text: 'When a cylinder liner change is necessary, due to either wear or scoring, the old liner may be removed from the cylinder block and a new liner installed, or the old liner may be honed oversize and reinstalled.', src: SM, page: 17, href: SMP(17) } },
+
+    { id: 'separate', short: 'correlationSpanProcessor', change: 'correlationSpanProcessor', part: 'Heat exchanger',
+      spots: { side: { hot: '352,67 641,67 641,195 352,195', badge: [566, 146] } },
+      maps: [
+        "Marine engines are designed to pump seawater through its block to keep from overheating; problem is, salty seawater can corrode as much as it cools.  Enter the heat exchanger, which splits cooling into two circuits: a freshwater loop running through engine and a saltwater loop that touches the heat exchanger but never enters the block. Because fresh and saltwater flows never mix,  each can be checked independently.",
+        "While Interfere’s SDK 12 was  raw-water cooled so that ID generators and propagators ran through the same OpenTelemetry pipe, SDK 13 has a built-in heat exchanger that not only separates always-running recorders  ( such as errors, replay, and vitals) from raw trace data but then can correlate across these flows so you can join a browser record and a server span while still keeping their pipes separate."],
+      sdk: { text: 'SDK 13.0 separates browser recording, request correlation and OpenTelemetry tracing, and retires the public server OTel kit in favour of two supported setups: Interfere-managed tracing (`register()` / `init()` with no options) and application-owned tracing (`register({ tracing: "application" })` / `init({ tracing: "application" })`, with your provider exporting to Interfere over standard OTLP).', src: NEXT_CL },
+      also: { text: '`correlationSpanProcessor()` returns a fresh standard OpenTelemetry span processor for your provider. Install it when constructing the provider to copy Interfere session and device baggage onto request and child spans; unrelated vendor baggage stays unchanged.', src: NEXT_RM },
+      code: [['Your provider, with Interfere’s correlation', 'registerOTel({\n  serviceName: "my-app",\n  spanProcessors: [correlationSpanProcessor(), "auto"],\n});\nawait registerInterfere({ tracing: "application" });']],
+      cut: { src: CUT('heat_exchanger'), alt: 'Detroit Diesel drawing of the heat exchanger cooling system, with arrows tracing coolant through the water manifolds, pump and housings', cap: 'Fig. 1, cooling system · Detroit Diesel service manual, “Heat Exchanger Cooling System”' },
+      manual: { text: 'If the raw-water circuit is functioning as normal and the engine is freshwater cooled, check the level in the coolant recovery bottle (if fitted) or expansion tank.', src: 'Boat-maintenance manual, “Operating Problems”', page: 399 } },
+
+    { id: 'fresh', short: 'stamped SSR trace meta', change: 'Stamped SSR trace meta', part: 'Thermostat housing',
+      spots: { side: { hot: '245,85 297,85 297,143 245,143', badge: [264, 106] } },
+      maps: ["A thermostat is designed to open the coolant tank once it reaches a certain temperature; it then shuts once the temperatures falls back to normal. SDK 13 does likewise with the browser reading  tracestate stamps like a thermostat reads temperature so that recent stamps “opens the valve” and links to its server trace; a stamp older than that, or missing, stays shut. And since closed is the tracestate stamp’s default state, cached HTML is unable to link visitors together."],
+      sdk: { text: 'it rejects SSR trace meta whose `interfere` tracestate stamp is missing or older than two minutes, so cached HTML cannot link visitors together.', src: NEXT_CL },
+      also: { text: '`withInterfere()` injects stamped trace meta through Next’s `clientTraceMetadata`; an unstamped `traceparent` meta tag no longer links.', src: NEXT_RM },
+      code: [['12.x', '<TraceMeta />  // from @interfere/next/server'], ['13.x', 'Remove it. withInterfere(config) injects the stamped meta.']],
+      cut: { src: CUT('thermostat'), alt: 'Exploded drawing of a thermostat housing: cover, seal, thermostat, gasket and housing, top to bottom', cap: 'Fig. 1, typical thermostat housing and relative location of parts · Detroit Diesel service manual' },
+      manual: { text: 'As engine reaches normal operating temperature, thermostat valve opens gradually, allowing cooling liquid to flow through radiator, thus maintaining an efficient operating temperature.', src: SM, page: 93, href: SMP(93) } },
+  ];
+  PARTS.forEach((p, i) => { p.n = i + 1; });
+
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  // Backticks in quoted docs become <code>, as on the source pages.
+  const md = s => esc(s).replace(/`([^`]+)`/g, '<code>$1</code>');
+  // "a fuel filter", but "cylinder liners" (plural takes no article)
+  const likeA = part => {
+    const name = part.charAt(0).toLowerCase() + part.slice(1);
+    return `${/s$/.test(name) ? '' : (/^[aeiou]/.test(name) ? 'an ' : 'a ')}<span class="pt">${esc(name)}</span>`;
+  };
+
+  // Two views of the engine. Hotspot coordinates are in each view's viewBox (both 910 wide).
+  // Fig. 2 is the Series 71 Service Manual, Fig. 3, p.75 (PDF index 79), turned upright.
+  const VIEWS = {
+    side: { w: 910, h: 535,
+      img: '/sdk-13/dd671_fig.png',
+      alt: 'Line illustration of an in-line marine diesel with the thermostat housing, fuel filter, governor, heat exchanger, pistons and starter motor labeled and numbered' },
+    xsec: { w: 910, h: 664,
+      img: '/sdk-13/engine_xsection.png',
+      alt: 'Manual cutaway of the 6-71 along its length: six pistons in their liners above the crankshaft, injectors and rocker arms along the top, flywheel housing at the right' },
+  };
+  const ROT = (p, v) => p.spots && p.spots[v];
+  // Size the frame to whatever image is showing.
+  const figImg = document.getElementById('figImg');
+  figImg.addEventListener('load', () => {
+    if (figImg.naturalWidth) document.getElementById('frame').style.setProperty('--r', figImg.naturalWidth / figImg.naturalHeight);
+  });
+  const overlay = document.getElementById('overlay');
+  let view = 'side';
+
+  function showView(v) {
+    view = v;
+    const V = VIEWS[v];
+    const img = document.getElementById('figImg');
+    img.src = V.img; img.alt = V.alt;
+    img.closest('.figure').classList.remove('is-part');
+    document.body.classList.add('engine');
+    document.getElementById('backBtn').hidden = true;
+    overlay.setAttribute('viewBox', `0 0 ${V.w} ${V.h}`);
+    overlay.innerHTML = PARTS.filter(p => ROT(p, v)).map(p => {
+      const s = ROT(p, v);
+      const label = s.label || p.part;
+      return `<g class="part${p.id === current ? ' active' : ''}" data-part="${p.id}" tabindex="0" role="button" aria-label="${p.n}. ${esc(p.change)}: ${esc(label)}">
+        <title>${p.n}  ${esc(label)}</title>
+        <polygon class="hot" points="${s.hot}"/>
+        <g class="badge"><circle cx="${s.badge[0]}" cy="${s.badge[1]}" r="11"/><text x="${s.badge[0]}" y="${s.badge[1]}">${p.n}</text></g>
+      </g>`;
+    }).join('');
+    overlay.querySelectorAll('.part').forEach(g => {
+      g.addEventListener('click', () => select(g.dataset.part));
+      g.addEventListener('mouseenter', () => linkHover(g.dataset.part, true));
+      g.addEventListener('mouseleave', () => linkHover(g.dataset.part, false));
+      g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(g.dataset.part); } });
+    });
+  }
+  let current = null;
+
+  // A chosen part replaces the engine with its own cutaway.
+  function showPart(p) {
+    const img = document.getElementById('figImg');
+    img.src = p.cut.src; img.alt = p.cut.alt;
+    img.closest('.figure').classList.add('is-part');
+    document.body.classList.remove('engine');
+    document.getElementById('backBtn').hidden = false;
+  }
+  // Back to the complete engine; the chosen part stays selected and highlighted on it.
+  document.getElementById('backBtn').addEventListener('click', () => {
+    showView('side');
+    const hot = current && overlay.querySelector(`[data-part="${current}"]`);
+    if (hot) hot.focus({ preventScroll: true });
+  });
+  // Load the cutaways ahead so the swap is instant.
+  window.addEventListener('load', () => PARTS.forEach(p => { if (p.cut) new Image().src = p.cut.src; }));
+  showView('side');
+
+  // Parts list
+  const list = document.getElementById('partsList');
+  const lower = t => t.charAt(0).toLowerCase() + t.slice(1);
+  PARTS.forEach(p => {
+    const li = document.createElement('li');
+    li.innerHTML = `<button type="button" data-part="${p.id}" aria-label="${esc(p.change)}: ${esc(lower(p.part))}"><span class="ch">${esc(p.short || p.change)}</span> as <span class="pt">${esc(lower(p.part))}</span></button>`;
+    const btn = li.querySelector('button');
+    btn.addEventListener('click', () => select(p.id));
+    btn.addEventListener('mouseenter', () => linkHover(p.id, true));
+    btn.addEventListener('mouseleave', () => linkHover(p.id, false));
+    list.appendChild(li);
+  });
+  // Arrow keys move through the comparisons and open each part.
+  list.addEventListener('keydown', e => {
+    const fwd = e.key === 'ArrowRight' || e.key === 'ArrowDown', back = e.key === 'ArrowLeft' || e.key === 'ArrowUp';
+    if (!fwd && !back) return;
+    const btns = [...list.querySelectorAll('button')];
+    const i = btns.indexOf(document.activeElement);
+    if (i < 0) return;
+    e.preventDefault();
+    const next = btns[(i + (fwd ? 1 : -1) + btns.length) % btns.length];
+    next.focus();
+    select(next.dataset.part, { scroll: false });
+  });
+
+  // No bar at the end of a wrapped line: mark each item whose successor starts a new line.
+  function markLineEnds() {
+    const items = [...list.children];
+    items.forEach(li => li.classList.remove('eol'));
+    items.forEach((li, i) => { const n = items[i + 1]; if (n && n.offsetTop > li.offsetTop + 2) li.classList.add('eol'); });
+  }
+  new ResizeObserver(markLineEnds).observe(list);
+  if (document.fonts) document.fonts.ready.then(markLineEnds);
+
+  // A row and its hotspot light up together.
+  function linkHover(id, on) {
+    document.querySelectorAll(`[data-part="${id}"]`).forEach(el => el.classList.toggle('hover', on));
+  }
+
+  const srcLink = ([label, href]) => `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(label)} ↗</a>`;
+
+  // On narrow screens the detail sits below the list, so bring it into view after a tap.
+  const stacked = matchMedia('(max-width: 960px)');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
+
+  function select(id, { scroll = true } = {}) {
+    const p = PARTS.find(x => x.id === id);
+    if (!p) return;
+    current = id;
+    if (p.cut) showPart(p);
+    // Without a cutaway, fall back to whichever engine view draws the part.
+    else if (!ROT(p, view)) { const other = Object.keys(VIEWS).find(v => ROT(p, v)); if (other) showView(other); }
+    history.replaceState(null, '', '#' + id);
+    document.querySelectorAll('svg .part, .parts-list button').forEach(el => {
+      const on = el.dataset.part === id;
+      el.classList.toggle('active', on);
+      if (el.tagName === 'BUTTON') {
+        el.setAttribute('aria-pressed', on);
+        if (on && stacked.matches) el.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      }
+    });
+
+    const m = p.manual;
+
+    const d = document.getElementById('detail');
+    d.innerHTML = `
+      <h2>How <span class="ch">${esc(p.change)}</span> is like ${likeA(p.part)}</h2>
+      ${p.maps.map(t => `<p class="maps">${esc(t)}</p>`).join('')}
+      <section>
+        <div class="label">WHAT INTERFERE’S CHANGELOG SAYS</div>
+        <div class="quote"><div class="x">“${md(p.sdk.text)}”</div><div class="t">${srcLink(p.sdk.src)}</div></div>
+        ${p.also ? `<div class="quote" style="margin-top:6px"><div class="x">“${md(p.also.text)}”</div><div class="t">${srcLink(p.also.src)}</div></div>` : ''}
+      </section>
+      ${p.code ? `<section><div class="label">IN CODE</div><div class="code">${p.code.map(([v, c]) =>
+        `<div><div class="v">${esc(v)}</div><pre>${esc(c)}</pre></div>`).join('')}</div></section>` : ''}
+      <section>
+        <div class="label">WHAT THE 6-71’S MANUAL SAYS</div>
+        <div class="quote"><div class="x">“${esc(m.text)}”</div>
+          <div class="t">${m.href ? `<a href="${esc(m.href)}" target="_blank" rel="noopener">${esc(m.src)}, p.${m.page} ↗</a>` : `${esc(m.src)}, p.${m.page}`}</div></div>
+      </section>`;
+    // The detail sits below the figure: bring its top into view if it's off screen.
+    const top = d.getBoundingClientRect().top;
+    if (scroll && (stacked.matches || top < 0 || top > innerHeight * 0.6)) d.scrollIntoView({ behavior: calm.matches ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  const fromHash = location.hash.slice(1);
+  if (PARTS.some(p => p.id === fromHash)) select(fromHash, { scroll: false });
+</script>
+</body>
+</html>
