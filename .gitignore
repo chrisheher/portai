@@ -46,3 +46,9 @@ next-env.d.ts
 
 # large audio/Logic project files
 /public/post/TFS tracks/
+
+# Novel manuscripts: keep local, never publish
+public/tfsaugg.txt
+public/tfsaugg.pages
+public/tfs_july.pdf
+tfsaugg.txt
