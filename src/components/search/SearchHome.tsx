@@ -4,16 +4,31 @@
 // hand-picked pieces fall into view as cards (Matter.js): title, blurb, impact, and
 // bracketed links to the published work. The pieces live in src/lib/home-prompts.ts.
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Matter from 'matter-js';
 import localFont from 'next/font/local';
-import { HOME_PROMPTS, type HomePrompt } from '@/lib/home-prompts';
+import { HOME_PROMPTS, type HomePrompt, type PieceImage, type PieceLink } from '@/lib/home-prompts';
 
-const alyona = localFont({ src: '../../../public/fonts/AlyonaDemo-Regular.otf', display: 'swap' });
+// Ioskeley Mono (an Iosevka build styled after Berkeley Mono; SIL Open Font License), cut
+// down to Latin characters as WOFF2, about 30 KB per weight.
+const ioskeley = localFont({
+  src: [
+    { path: '../../../public/fonts/ioskeley/IoskeleyMono-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../../../public/fonts/ioskeley/IoskeleyMono-Bold.woff2', weight: '700', style: 'normal' },
+    { path: '../../../public/fonts/ioskeley/IoskeleyMono-ExtraBold.woff2', weight: '800', style: 'normal' },
+  ],
+  display: 'swap',
+  fallback: ['ui-monospace', 'Menlo', 'Consolas', 'monospace'],
+});
 
+
+// Height of the area the cards fall into.
+const STAGE_H = 600;
 
 export default function SearchHome() {
   const [active, setActive] = useState<HomePrompt | null>(null);
+  const [lightbox, setLightbox] = useState<{ title: string; images: PieceImage[]; opener: HTMLElement } | null>(null);
+  const closeLightbox = useCallback(() => setLightbox(null), []);
   const stageRef = useRef<HTMLDivElement>(null);
   const [staticLayout, setStaticLayout] = useState(false);
   const pillsRef = useRef<HTMLDivElement>(null);
@@ -34,8 +49,10 @@ export default function SearchHome() {
     const cols = Math.max(1, Math.min(3, Math.floor(W / (Math.max(...sizes.map(s => s.w)) + 16))));
     // Each card collides as a box shorter than the card, centred on it, so cards overlap
     // and the pile fits the stage. Hovering a card lifts it to the front.
-    // At most 2/3 of the card is solid; less when that's what it takes to fit MAX_H.
-    const MAX_H = 600;
+    // The stage is a fixed STAGE_H tall, at the very top of the page; cards overlap as much as
+    // it takes to fit, but never more than SOLID_MIN allows.
+    const SOLID_MIN = 0.15;
+    const MAX_H = STAGE_H;
     const maxCard = Math.max(...sizes.map(s => s.h));
     const raw = Array(cols).fill(0), gaps = Array(cols).fill(0);
     sizes.forEach((s, i) => { s.col = i % cols; raw[s.col] += s.h; gaps[s.col] += 8; });
@@ -44,11 +61,9 @@ export default function SearchHome() {
     // the top body: SOLID * raw + gaps + maxCard * (1 - SOLID) + 24 <= MAX_H.
     const spare = raw[tallest] - maxCard;
     const fit = spare > 0 ? (MAX_H - 24 - gaps[tallest] - maxCard) / spare : 1;
-    // Overlap is then cut by OVERLAP_CUT (0.6 = 60% less), so the stage grows past MAX_H as needed.
-    const OVERLAP_CUT = 0.6;
-    const SOLID = 1 - (1 - Math.max(0.2, Math.min(0.67, fit))) * (1 - OVERLAP_CUT);
+    const SOLID = Math.max(SOLID_MIN, Math.min(1, fit));
     const overhang = maxCard * (1 - SOLID) / 2;
-    const H = Math.max(260, Math.round(raw[tallest] * SOLID + gaps[tallest] + 2 * overhang + 24));
+    const H = STAGE_H;
     box.style.height = `${H}px`;
 
     const engine = Engine.create({ gravity: { x: 0, y: 0.45 }, enableSleeping: true });
@@ -153,14 +168,20 @@ export default function SearchHome() {
   }, [started]);
 
   return (
-    <main className={`${alyona.className} min-h-screen w-full bg-[#faf9f5] text-[#1f1e1d] tracking-[0.1rem] [&_.w-full]:[font-family:inherit] md:flex md:items-start`} style={alyona.style}>
+    <main className={`${ioskeley.className} min-h-screen w-full bg-[#faf9f5] text-[#1f1e1d] [&_.w-full]:[font-family:inherit] md:flex md:items-start`} style={ioskeley.style}>
       {/* The headline gets its own gutter on the far left; on phones it sits above everything. */}
       <header className={`px-4 transition-[padding] duration-500 md:sticky md:top-0 md:w-[15vw] md:max-w-[220px] md:shrink-0 md:pl-4 md:pr-4 ${started ? 'pt-16' : 'pt-[16vh]'}`}>
-        <h1 className="mb-8 text-left text-[1.2rem] font-extrabold leading-[1.4] md:mb-0">
-          <span className="mt-[20px] block">Content is what nourishes your customer until they become satisfied with the thought of adopting your product.</span>
-          <span className="mt-[20px] block">AI is the fire for that content.</span>
-          <span className="mt-[20px] block">Chris is its chef.</span>
-        </h1>
+        {/* The home-page headline shows only on the prompt screen; once a prompt is picked,
+            that prompt's heading takes its place as the page's h1. */}
+        {active ? (
+          <h1 className="text-[1.25rem] font-extrabold leading-[1.4]">{active.heading}</h1>
+        ) : (
+          <h1 className="mb-8 text-left text-base font-extrabold leading-[1.4] md:mb-0">
+            <span className="mt-[20px] block">Content nourishes your user until they are satisfied enough to take action.</span>
+            <span className="mt-[20px] block">AI can be the fire to help create this content.</span>
+            <span className="mt-[20px] block">But only if Chris is its chef.</span>
+          </h1>
+        )}
         {started && (
           <button type="button" onClick={() => setActive(null)}
             className="mb-6 mt-8 rounded-full border border-[#e8e6dc] bg-[#faf9f5] px-2.5 py-1 text-left text-[0.75rem] leading-[1.4] text-[#3d3d3a] transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c96442] md:mb-0">
@@ -169,7 +190,7 @@ export default function SearchHome() {
         )}
       </header>
 
-      <div className={`mx-auto flex w-full min-w-0 max-w-[1140px] flex-col items-center px-4 transition-[padding] duration-500 md:flex-1 ${started ? 'md:pt-0' : 'md:pt-[16vh]'}`}>
+      <div className={`mx-auto flex w-full min-w-0 max-w-[1140px] flex-col items-center px-4 md:flex-1 ${started ? 'md:pt-0' : 'md:pt-[16vh]'}`}>
 
         {!started && (
           <div
@@ -178,7 +199,7 @@ export default function SearchHome() {
           >
             {HOME_PROMPTS.map(p => (
               <button key={p.id} type="button" data-pill onClick={() => setActive(p)}
-                className={`${pillsStatic ? '' : 'absolute left-0 top-0 max-w-[calc(100%-16px)] -translate-y-[999px] will-change-transform'} rounded-full border border-[#e8e6dc] bg-[#faf9f5] px-7 py-3 text-[1.4875rem] leading-[1.4] text-[#3d3d3a] transition-colors hover:bg-white`}>
+                className={`${pillsStatic ? '' : 'absolute left-0 top-0 max-w-[calc(100%-16px)] -translate-y-[999px] will-change-transform'} rounded-full border border-[#e8e6dc] bg-[#faf9f5] px-7 py-3 text-base leading-[1.4] text-[#3d3d3a] transition-colors hover:bg-white`}>
                 {p.prompt}
               </button>
             ))}
@@ -186,41 +207,43 @@ export default function SearchHome() {
         )}
 
         {active && (
-          <section aria-label={active.prompt} className="mt-10 w-full">
+          <section aria-label={active.prompt} className="mt-4 w-full md:mt-0">
             <div
               ref={stageRef}
               className={staticLayout ? 'grid gap-3 sm:grid-cols-2 lg:grid-cols-3' : 'relative w-full overflow-hidden'}
-              style={staticLayout ? undefined : { height: 480 }}
+              style={staticLayout ? undefined : { height: STAGE_H }}
             >
               {active.pieces.map((piece, i) => {
-                const links = piece.links.filter(l => l.url);
+                const links = piece.links.filter(l => l.url || l.images?.length);
                 // A card with a single link ([Read], [Explore], [Listen]) shows it top right,
                 // beside the title; cards with several links list them along the bottom.
                 const corner = links.length === 1 ? links[0] : null;
-                const linkClass = 'text-[#c96442] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c96442]';
+                const linkClass = 'pl-[15px] text-[#c96442] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c96442]';
+                // A link with images opens the lightbox; any other link opens in a new tab.
+                const cardLink = (l: PieceLink, extra = '') => l.images?.length ? (
+                  <button key={l.label} type="button" className={`${extra} ${linkClass}`}
+                    onClick={e => setLightbox({ title: `${piece.title}: ${l.label}`, images: l.images!, opener: e.currentTarget })}>
+                    [{l.label}]
+                  </button>
+                ) : (
+                  <a key={l.label} href={l.url} target="_blank" rel="noopener noreferrer" className={`${extra} ${linkClass}`}>
+                    [{l.label}]
+                  </a>
+                );
                 return (
                   // Cards that land first sit lower in the pile and in front, so the overlap hides
                   // the bottom of the card above rather than this card's title.
                   <div key={piece.title} data-card style={{ '--z': active.pieces.length - i } as React.CSSProperties}
-                    className={`${staticLayout ? '' : 'absolute left-0 top-0 -translate-y-[999px] z-[var(--z)] hover:z-50 focus-within:z-50'} w-[708px] max-w-[calc(100%-24px)] rounded-2xl border border-[#e8e6dc] bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]`}>
+                    className={`${staticLayout ? '' : 'absolute left-0 top-0 -translate-y-[999px] z-[var(--z)] hover:z-50 focus-within:z-50'} w-[942px] max-w-[calc(100%-24px)] rounded-2xl border border-[#e8e6dc] bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]`}>
                     <div className="flex items-baseline justify-between gap-4">
                       <h2 className="text-[1.1rem] font-extrabold leading-snug">{piece.title}</h2>
-                      {corner && (
-                        <a href={corner.url} target="_blank" rel="noopener noreferrer" className={`shrink-0 text-base leading-snug ${linkClass}`}>
-                          [{corner.label}]
-                        </a>
-                      )}
+                      {corner && cardLink(corner, 'shrink-0 text-base leading-snug')}
                     </div>
                     <p className="mt-2 text-base leading-relaxed text-[#5e5d59]">{piece.blurb}</p>
-                    {piece.impact && <p className="mt-2 text-base leading-relaxed text-[#1f1e1d]"><span className="text-[#8f8d86]">Impact: </span>{piece.impact}</p>}
+                    {piece.impact && <p className="mt-2 text-base leading-relaxed text-[#1f1e1d]"><span className="font-bold text-[#1f1e1d]">Impact: </span>{piece.impact}</p>}
                     {links.length > 1 && (
                       <p className="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-base leading-snug">
-                        {links.map(l => (
-                          <a key={l.label} href={l.url} target="_blank" rel="noopener noreferrer"
-                            className={linkClass}>
-                            [{l.label}]
-                          </a>
-                        ))}
+                        {links.map(l => cardLink(l))}
                       </p>
                     )}
                   </div>
@@ -230,6 +253,37 @@ export default function SearchHome() {
           </section>
         )}
       </div>
+      {lightbox && <Lightbox title={lightbox.title} images={lightbox.images} opener={lightbox.opener} onClose={closeLightbox} />}
     </main>
+  );
+}
+
+// Full-screen viewer for a card's images, shown stacked. Closes on Escape, the close
+// button, or a click outside the images; focus returns to the link that opened it.
+function Lightbox({ title, images, opener, onClose }: { title: string; images: PieceImage[]; opener: HTMLElement; onClose: () => void }) {
+  const closeRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    closeRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = overflow; opener.focus(); };
+  }, [onClose, opener]);
+  return (
+    <div role="dialog" aria-modal="true" aria-label={title}
+      className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-[rgba(20,18,15,0.82)] p-6 md:items-center"
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="relative flex w-full max-w-[900px] flex-col gap-4" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+        <button ref={closeRef} type="button" onClick={onClose} aria-label="Close"
+          className="self-end rounded-full bg-white/90 px-3 py-1 text-base text-[#1f1e1d] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c96442]">
+          ✕ Close
+        </button>
+        {images.map(img => (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img key={img.src} src={img.src} alt={img.alt} className="mx-auto block h-auto max-w-full rounded-lg shadow-2xl" />
+        ))}
+      </div>
+    </div>
   );
 }

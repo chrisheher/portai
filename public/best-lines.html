@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chris Heher: Best Lines</title>
+<meta name="description" content="Favorite lines from Chris Heher's published Sentry and DroneDeploy work and from his novel, The Floating Studio. All quoted verbatim.">
+<style>
+  /* Same type and palette as the home page. */
+  @font-face { font-family: 'Ioskeley Mono'; src: url('/fonts/ioskeley/IoskeleyMono-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+  @font-face { font-family: 'Ioskeley Mono'; src: url('/fonts/ioskeley/IoskeleyMono-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+  @font-face { font-family: 'Ioskeley Mono'; src: url('/fonts/ioskeley/IoskeleyMono-ExtraBold.woff2') format('woff2'); font-weight: 800; font-display: swap; }
+  :root { --paper: #faf9f5; --ink: #1f1e1d; --muted: #5e5d59; --faint: #8f8d86; --rule: #e8e6dc; --accent: #c96442; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Ioskeley Mono', ui-monospace, Menlo, Consolas, monospace; background: var(--paper); color: var(--ink); line-height: 1.6; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .page { max-width: 760px; margin: 0 auto; padding: 48px 20px 96px; }
+  .back { font-size: 0.75rem; }
+  h1 { font-size: 1.5rem; font-weight: 800; line-height: 1.3; margin: 28px 0 12px; }
+  .intro { color: var(--muted); }
+  .toc { margin-top: 16px; display: flex; gap: 18px; flex-wrap: wrap; }
+  h2 { font-size: 1.15rem; font-weight: 800; margin: 56px 0 6px; padding-top: 16px; border-top: 1px solid var(--rule); }
+  .section-note { color: var(--muted); font-size: 0.9rem; margin-bottom: 8px; }
+  ol { list-style: none; counter-reset: line; }
+  li { counter-increment: line; position: relative; padding: 22px 0 22px 44px; border-bottom: 1px solid var(--rule); }
+  li::before { content: counter(line, decimal-leading-zero); position: absolute; left: 0; top: 24px; font-size: 0.75rem; color: var(--faint); }
+  .quote { font-weight: 700; }
+  .dialogue p + p { margin-top: 4px; }
+  .src { margin-top: 8px; font-size: 0.85rem; color: var(--muted); }
+  .new { font-size: 0.7rem; color: var(--faint); text-transform: uppercase; letter-spacing: 0.08em; margin-left: 6px; }
+</style>
+</head>
+<body>
+<main class="page">
+  <a class="back" href="/">← Back to prompts</a>
+  <h1>Chris Heher: Best Lines</h1>
+  <p class="intro">Favorite lines, chosen for humor and wordplay: twenty from published Sentry and DroneDeploy work, twenty-six from the manuscript of my novel, The Floating Studio. Every line is quoted verbatim.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#professional">Professional work (20)</a>
+    <a href="#fiction">The Floating Studio (26)</a>
+    <a href="/The_Floating_Studio.pdf" target="_blank" rel="noopener">Read the novel (PDF)</a>
+  </nav>
+
+  <h2 id="professional">Professional work: Sentry and DroneDeploy</h2>
+  <p class="section-note">Sixteen from Sentry (2020–21), four from DroneDeploy (2024), quoted as published.</p>
+  <ol>
+    <li><p class="quote">“See Slow Faster”</p><p class="src">Sentry, Performance Monitoring launch tagline, 2020</p></li>
+    <li><p class="quote">“Lazy-loading is the most ironic term in programming. That’s because, instead of eating its third bowl of cereal on the couch, what lazy-loading actually does is make your User Interface more efficient.”</p><p class="src"><a href="https://blog.sentry.io/go-getting-lazy-loading/" target="_blank" rel="noopener">Go-Getting Lazy-Loading</a>, Sentry, 2020</p></li>
+    <li><p class="quote">“For an error monitoring company, a 404’d page holds a special kind of vocational irony only reserved for shoeless cobblers and vegan butchers.”</p><p class="src"><a href="https://blog.sentry.io/patching-a-flood-of-404s/" target="_blank" rel="noopener">Patching A Flood of 404s</a>, Sentry, 2021, co-authored</p></li>
+    <li><p class="quote">“Like a bratty teenager, traditional monitoring answers your questions, but does so in a terse, unhelpful manner: Why is my page slow? Guess it’s the API call. It’s a 504 thing — you wouldn’t understand. Ok, so why is the API call slow? Ask your DB query. Gosh!”</p><p class="src"><a href="https://web.archive.org/web/20260519183402/https://blog.sentry.io/find-the-root-cause-faster-with-trace-view-and-quick-trace/" target="_blank" rel="noopener">Find the Root Cause Faster with Trace View and Trace Navigator</a>, Sentry, 2021</p></li>
+    <li><p class="quote">“Because if an error occurs in a forest of data with no one to see it, the sound it makes is your users leaving.”</p><p class="src"><a href="https://blog.sentry.io/go-getting-lazy-loading/" target="_blank" rel="noopener">Go-Getting Lazy-Loading</a>, Sentry, 2020</p></li>
+    <li><p class="quote">“Without context, a customer’s spinning pinwheel can quickly turn into a developer’s panic spiral.”</p><p class="src"><a href="https://blog.sentry.io/see-slow-faster-with-performance-monitoring/" target="_blank" rel="noopener">See Slow Faster with Performance Monitoring</a>, Sentry, 2020; also ran as a launch post on X</p></li>
+    <li><p class="quote">“Sentry’s new Metric Alerts is the microwave to the frozen burrito that is your code.”</p><p class="src"><a href="https://web.archive.org/web/20260417124047/https://blog.sentry.io/dont-be-alarmed-by-alerts/" target="_blank" rel="noopener">Don’t Be Alarmed by Alerts</a>, Sentry, 2020, co-authored</p></li>
+    <li><p class="quote">“In the early days of web development, there was one way to measure code: WTFs per minute. It was a metric that could be applied across all languages, as every developer knew what WTF meant (Works That Frustrate, obviously).”</p><p class="src"><a href="https://web.archive.org/web/20260308080443/https://blog.sentry.io/measuring-success-with-sentry/" target="_blank" rel="noopener">Measuring Success with Sentry</a>, Sentry, 2021</p></li>
+    <li><p class="quote">“Reproducing the issue is the equivalent of cooking a poorly received dinner again just to taste what went wrong.”</p><p class="src"><a href="https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/" target="_blank" rel="noopener">Why Debugging JavaScript Sucks — And What You Can Do About It</a>, Sentry, 2021</p></li>
+    <li><p class="quote">“For dog food executives, chowing down on their own kibble is a literal gut-check.”</p><p class="src"><a href="https://blog.sentry.io/dogfooding-chronicles-tracing-the-path-from-its-slow-to-whats-slow/" target="_blank" rel="noopener">Dogfooding Chronicles: Tracing the path from “It’s Slow” to “What’s Slow”</a>, Sentry, 2020</p></li>
+    <li><p class="quote">“And in the longstanding tradition that all demos must troll their presenters, the Releases page was taking more than five seconds to load.”</p><p class="src">Same Dogfooding Chronicles post, Sentry, 2020</p></li>
+    <li><p class="quote">“But before Dave began smiting the Releases team with passive-aggressive Slack messages, he decided to use Sentry’s new tracing features to get some more context into why the page was taking five seconds to load.”</p><p class="src">Same Dogfooding Chronicles post, Sentry, 2020</p></li>
+    <li><p class="quote">“It’s why asking what makes a slow website gets the same shrug from a developer as asking them how long an afternoon is.”</p><p class="src"><a href="https://blog.sentry.io/how-slow-is-slow/" target="_blank" rel="noopener">How Slow is Slow?</a>, Sentry, 2020, co-authored</p></li>
+    <li><p class="quote">“For children, Where’s Waldo is a fun puzzle book. For developers, it’s a cruel reminder of the worst parts of their job.”</p><p class="src">Sentry post on X, 2020</p></li>
+    <li><p class="quote">“Fingerprints: bad for criminals, great for developers who want to group errors.”</p><p class="src">Sentry post on X, 2020</p></li>
+    <li><p class="quote">“For event marketer Eventbrite, their errors were talking over one another, as their team was constantly being distracted by alerts on duplicate issues. So they hired Sentry to emcee their errors.”</p><p class="src"><a href="https://blog.sentry.io/great-moments-in-application-monitoring/" target="_blank" rel="noopener">Great Moments in Application Monitoring</a>, Sentry, 2021</p></li>
+    <li><p class="quote">“If you could reduce the risks and hazards to your people, but only on the condition that you’d have to wear a bowtie to work, you’d no doubt drive to your nearest haberdasher. With the recent advances in artificial intelligence, it’s now possible to have that kind of peace of mind, without cosplaying as a professor.”</p><p class="src"><a href="https://www.dronedeploy.com/blog/safety-smarter-artificial-intelligence-and-your-work-site" target="_blank" rel="noopener">Safety, smarter: A.I. and your work site</a>, DroneDeploy, 2024, ghostwritten</p></li>
+    <li><p class="quote">“With this waiver, pilots can now operate drones remotely, similar to a parent relying on a nanny cam instead of hovering over their child’s crib.”</p><p class="src"><a href="https://www.dronedeploy.com/blog/flying-beyond-visual-line-of-sight-the-complete-guide-to-bvlos-waivers-and-docked-drones" target="_blank" rel="noopener">Flying beyond visual line of sight</a>, DroneDeploy, 2024, ghostwritten</p></li>
+    <li><p class="quote">“Three small steps to onboard. One giant leap in visibility.”</p><p class="src"><a href="https://www.dronedeploy.com/data-on-demand" target="_blank" rel="noopener">Drone data, delivered right to you</a>, DroneDeploy, 2024, ghostwritten</p></li>
+    <li><p class="quote">“No pilots? No hardware? No problem.”</p><p class="src">Same DroneDeploy page, 2024, ghostwritten</p></li>
+  </ol>
+
+  <h2 id="fiction">The Floating Studio</h2>
+  <p class="section-note">From the manuscript, quoted as written, including its dash-led dialogue.</p>
+  <ol>
+    <li class="dialogue"><div class="quote"><p>—Learning experience?! Fuck you mean learning—</p><p>—You know, taking an l on an earning experience. Thought you millennials would know all about that by now.</p></div><p class="src">Chapter 1, Meat-Flavored Ash. Juug, settling a muralist’s bill in likes.<span class="new">new</span></p></li>
+    <li><p class="quote">—No no look I get it. You got your bigshot russian magnet coming into town, and me, well, I’ve been told Captain Jim can be a bit polarizing. So even though the meetin’s gonna be on my sportfisher, I’ll go and voluntarily refuse myself from attending.</p><p class="src">Chapter 1, Meat-Flavored Ash. Captain Jim, on Juug’s Russian investor.<span class="new">new</span></p></li>
+    <li class="dialogue"><div class="quote"><p>—I can't hire flammable people. Last thing I need is the state to start looking into my firing practices.</p><p>—But you haven't really even hired me.</p><p>—That's what makes this so difficult.</p></div><p class="src">Chapter 4, Upmann’s Hands. Juug to a diesel-soaked David.</p></li>
+    <li class="dialogue"><div class="quote"><p>—We're all here waiting... Jim derisively muttered through a snarled upper lip.</p><p>—With bait on our breath.</p></div><p class="src">Chapter 4, Upmann’s Hands.</p></li>
+    <li><p class="quote">—Like ever think that maybe your job is Job?</p><p class="src">Chapter 5, Job as Job. Byron to an unemployed David.</p></li>
+    <li><p class="quote">—Yes quite clever son but we really need to move on from this penny tittypincher of yours. I'm sorry about this sir. All these millennials want to talk about is change.</p><p class="src">Chapter 6, Microfailures. Juug cuts off Byron’s pitch about melted pennies.</p></li>
+    <li class="dialogue"><div class="quote"><p>—Metal, meddle… Kuvetli chuckled deflatedly while holding the torn banner, as if having receiving a gag gift that had already been unwrapped.</p><p>—The way you triple pun, it amuses me. As if Nabokov sold out to the oligarchs.</p></div><p class="src">Chapter 6, Microfailures. The banner read “We’ve got the mettle to meddle with your metal.”</p></li>
+    <li class="dialogue"><div class="quote"><p>—Your future you's on the line David. Will you accept the charge?</p><p>—What? Why the fuck would my future me call me collect? Is he somehow even more destitute than present me and had to resort to pawning off my smartphone?</p></div><p class="src">Chapter 6, Microfailures. Byron offers a bump off his pinky.</p></li>
+    <li><p class="quote">—No I know, but know what you call a lawyer who does what they're told? A paralegal.</p><p class="src">Chapter 7, Apply the High. Glen on his own podcast, ignoring his wife.</p></li>
+    <li><p class="quote">—I practice law in the state of New Jersey kid. That's how I know so much about drugs.</p><p class="src">Chapter 8, Papa Grinnie’s Toot Clear Float Recipe. Glen, toupee in hand.</p></li>
+    <li class="dialogue"><div class="quote"><p>—Yeah ok fine sure but like are my hands supposed to be shaking like this?</p><p>—Not before you take the drugs, no.</p></div><p class="src">Chapter 9, The Starting Line.</p></li>
+    <li><p class="quote">And despite having initially picked the bottle up to search its safety protocols in case of ingestion, his motivation-action response now fully recoupled as a result of the day’s uninhibited dopamine reuptake, David noticed that the Ospho brand lacked a tagline’s professional touch.</p><p class="src">Chapter 10, Portion Controls. David has just sprayed rust remover in his own face.</p></li>
+    <li class="dialogue"><div class="quote"><p>—Here’s the disconnect Cap. Your bro Juug gave me carte blanche creative authority as a condition of my boarded endorsement of his American Dream</p><p>—Think I give a fuck how empty your shopping cart is son?</p></div><p class="src">Chapter 11, Hacked Cabinets. Captain Jim’s malapropisms run through the whole book.</p></li>
+    <li><p class="quote">—Which is why a core belief we have here on Gumption and Focus is that just as all running engines are the same, all broken down engines are broken down in their own unique way.</p><p class="src">Chapter 12, Gumption and Focus. The first line of Anna Karenina, rebuilt for a diesel repair show.</p></li>
+    <li><p class="quote">Good Will Hunting has done for behavioral therapy what Stop Snitching has done for law enforcement.</p><p class="src">Chapter 13, Byron’s Binder. From Joyce’s therapy notes.</p></li>
+    <li><p class="quote">—You saying you can’t approach pretty? Didn’t take you for a brutalist Engram.</p><p class="src">Chapter 14, Margot &amp; Marcie. Byron coaching David at a bar.</p></li>
+    <li class="dialogue"><div class="quote"><p>—And Likecoin lets us swap out our exposure to overcollateralized obligations for example there’s these stale mortgage derivatives we’ve been trying to dump since—</p><p>—Oh, no. No no no. No artist wants to be called derivative.</p></div><p class="src">Chapter 14, Margot &amp; Marcie.</p></li>
+    <li class="dialogue"><div class="quote"><p>—…there’s a reason why you can’t spell gentrification without grift.</p><p>—Ah, but can you spell galvanization…</p></div><p class="src">Chapter 15, Copy of a Copy. David and Byron, pitching their yacht.<span class="new">new</span></p></li>
+    <li><p class="quote">—Only people who don’t get art Margot are those who can afford to own it.</p><p class="src">Chapter 15, Copy of a Copy. Byron.<span class="new">new</span></p></li>
+    <li><p class="quote">—Surely I can’t be the only one here who feels that their late capitalist existence feels like a copy of a copy with the original missing…</p><p class="src">Chapter 15, Copy of a Copy. Byron, mid-bong-rip.<span class="new">new</span></p></li>
+    <li><p class="quote">David’s lips wobbled into a smile like a returning astronaut’s atrophied legs.</p><p class="src">Chapter 16, Finding the Inevitable.<span class="new">new</span></p></li>
+    <li><p class="quote">Like you, I am meta-over postmodernism’s constant reminders that what you’re reading is a constructed text in ways which have all the aesthetic appeal of a carbon monoxide detector testing itself.</p><p class="src">Chapter 17, Byron &amp; the Battery. Byron apologizes to the reader for his own chapter.</p></li>
+    <li class="dialogue"><div class="quote"><p>—David I can’t speak to the exhaust’s intent.</p><p>—Fine is it blue or black? If anything hopefully it’s white.</p><p>—Nor will I profile the smoke by any sort of color bias.</p></div><p class="src">Chapter 18, Do I Dare. David asks his first mate what the engine smoke looks like.</p></li>
+    <li class="dialogue"><div class="quote"><p>And the Atman Projects has the only open floor plan able to fit an industrial-revolution sized jacquard loom that will be weaving every warp and woof of your upstart bellybutton lint knitting venture.</p><p>—Call it perhaps, a loom of one’s own.</p></div><p class="src">Chapter 20. Juug’s real-estate pitch to navel-gazing millennials, capped with Virginia Woolf.</p></li>
+    <li><p class="quote">—On the same patch of Weehawken land where Hamilton and Burr duelled for their vision of the American Dream, America’s two most swashbuckling influencers will be shooting for theirs. That’s right this labor day Gumption and Focus will trade their powdered wigs for powdered noses, and instead of using bullets, they’ll have only their triggers as they duel for their shot at the American Dream.</p><p class="src">Chapter 20. A daytime-TV producer cuts a promo.<span class="new">new</span></p></li>
+    <li><p class="quote">A 1977 GMC Jimmy Casa Grande was thrown in reverse, wobbling its custom C A N C E L M E rear license plate — a license plate which, burdened with additional meaning in America’s latest iteration, now had a screw loose.</p><p class="src">Chapter 21, America’s Latest Iteration.<span class="new">new</span></p></li>
+  </ol>
+</main>
+</body>
+</html>
