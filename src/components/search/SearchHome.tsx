@@ -14,6 +14,7 @@ import { HOME_PROMPTS, type HomePrompt, type PieceImage, type PieceLink } from '
 const ioskeley = localFont({
   src: [
     { path: '../../../public/fonts/ioskeley/IoskeleyMono-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../../../public/fonts/ioskeley/IoskeleyMono-Medium.woff2', weight: '500', style: 'normal' },
     { path: '../../../public/fonts/ioskeley/IoskeleyMono-Bold.woff2', weight: '700', style: 'normal' },
     { path: '../../../public/fonts/ioskeley/IoskeleyMono-ExtraBold.woff2', weight: '800', style: 'normal' },
   ],
@@ -174,12 +175,11 @@ export default function SearchHome() {
         {/* The home-page headline shows only on the prompt screen; once a prompt is picked,
             that prompt's heading takes its place as the page's h1. */}
         {active ? (
-          <h1 className="text-[1.25rem] font-extrabold leading-[1.4]">{active.heading}</h1>
+          <h1 className="text-[1.25rem] font-medium leading-[1.4]">{active.heading}</h1>
         ) : (
-          <h1 className="mb-8 text-left text-base font-extrabold leading-[1.4] md:mb-0">
-            <span className="mt-[20px] block">Content nourishes your user until they are satisfied enough to take action.</span>
-            <span className="mt-[20px] block">AI can be the fire to help create this content.</span>
-            <span className="mt-[20px] block">But only if Chris is its chef.</span>
+          <h1 className="text-left text-[1.3rem] font-medium leading-[1.4] [margin:-80px_-14px_-47px_33px]">
+            <span className="mt-[20px] block">Content nourishes users until they become satisfied customers.</span>
+            <span className="mt-[20px] block">AI supplies the heat so chef Chris can whip up the content your audience hungers for.</span>
           </h1>
         )}
         {started && (
@@ -199,7 +199,7 @@ export default function SearchHome() {
           >
             {HOME_PROMPTS.map(p => (
               <button key={p.id} type="button" data-pill onClick={() => setActive(p)}
-                className={`${pillsStatic ? '' : 'absolute left-0 top-0 max-w-[calc(100%-16px)] -translate-y-[999px] will-change-transform'} rounded-full border border-[#e8e6dc] bg-[#faf9f5] px-7 py-3 text-base leading-[1.4] text-[#3d3d3a] transition-colors hover:bg-white`}>
+                className={`${pillsStatic ? '' : 'absolute left-0 top-0 max-w-[calc(100%-16px)] -translate-y-[999px] will-change-transform'} rounded-full border border-[#e8e6dc] bg-[#faf9f5] px-7 py-3 text-[1.3rem] leading-[1.4] text-[#3d3d3a] transition-colors hover:bg-white`}>
                 {p.prompt}
               </button>
             ))}

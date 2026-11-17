@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Interfere's SDK 13 explained by a 6-71 Detroit Diesel</title>
-<meta name="description" content="Nine changes in Interfere's SDK 13.0, each explained by the part of a GM 6-71 marine diesel that does the same job. Quoted from the 13.0.0 changelog and the Series 71 service manual.">
+<meta name="description" content="Six changes in Interfere's SDK 13.0, each explained by the part of a GM 6-71 marine diesel that does the same job. Quoted from the 13.0.0 changelog and the Series 71 service manual.">
 <style>
   /* Same desk as the 6-71 Parts Desk (onlychr.is/raglib/parts) and the Content Engine page. */
   :root {
@@ -273,8 +273,8 @@
     { id: 'capture', short: 'captureRenderErrors', change: 'captureRenderErrors', part: 'Fuel filter',
       spots: { side: { hot: '272,197 320,197 320,283 272,283', badge: [294, 241] }, xsec: { hot: '266,57 761,57 761,181 266,181', badge: [495, 95], label: 'Injectors, where the filtered fuel ends up' } },
       maps: [
-        "Before fuel is injected into a cylinder, it passes through a filter which catches debris that could clog narrow fuel injector lines. SDK 13’s InterfereProvider works with your React components in a similar way, catching render errors as they pass through then rethrowing them to your host error boundary, all so your reset logic stays in place.",
-        "While this filter isn’t new to Interfere’s platform what is is the name of its shutoff valve, as the errorBoundary prop becomes captureRenderErrors, so turning capture off now reads captureRenderErrors={false}."],
+        "Before fuel is injected into a cylinder, it passes through a filter which catches debris that could clog narrow fuel injector lines. SDK 13’s InterfereProvider works with your React components in a similar way, catching render errors as they pass through, then rethrowing them to your host error boundary, all so your reset logic stays in place.",
+        "While this filter isn’t new to Interfere’s platform, what’s new is the name of its shutoff valve, as the errorBoundary prop becomes captureRenderErrors, so turning capture off now reads captureRenderErrors={false}."],
       sdk: { text: '`InterfereProvider` captures render errors by default and rethrows them so your host error boundary keeps control of the fallback. Set `captureRenderErrors={false}` to disable this capture.', src: REACT_RM },
       code: [['12.x', '<InterfereProvider errorBoundary={false}>'], ['13.x', '<InterfereProvider captureRenderErrors={false}>']],
       cut: { src: CUT('fuel_filter'), alt: 'Cutaway of a primary fuel filter: fuel enters at the side, drops water into a clear bowl, rises through the replaceable element and leaves at the outlet', cap: 'Fig. 9-8A, a primary fuel filter with a replaceable element · Boat-maintenance manual, “Diesel Engines”, p.370' },
@@ -284,7 +284,7 @@
       spots: { side: { hot: '300,327 358,327 358,415 300,415', badge: [331, 375] } },
       maps: [
         "An engine’s governor dictates how much fuel flows through the injectors and into the combustion chamber. Which means having two governors on one engine is more than redundant — it’s dangerous.",
-        "That same logic is why SDK 13 defaults tracing to \"auto\" so that it can look for an existing governor (aka trace propagator) before installing one. So if you’ve already registered an OpenTelemetry provider, Interfere adopts that provider’s active spans. If you haven’t, Interfere becomes the governor itself, registering its own tracer provider to runs managed tracing and propagation as a way to to organize mission-critical DevOps context — errors, replay, navigation, vitals and requests."],
+        "That same logic is why SDK 13 defaults tracing to \"auto\" so that it can look for an existing governor (aka trace propagator) before installing one. So if you’ve already registered an OpenTelemetry provider, Interfere adopts that provider’s active spans. If you haven’t, Interfere becomes the governor itself, registering its own tracer provider to run managed tracing and propagation as a way to organize mission-critical DevOps context — errors, replay, navigation, vitals and requests."],
       sdk: { text: 'With no surface owner configured, the default is `tracing: "auto"`: register your application’s provider first and Interfere adopts its active spans without a warning; with no registered provider, Interfere uses managed tracing.', src: NEXT_RM },
       also: { text: '`register({ tracing: "application" })` writes no OpenTelemetry global and installs no instrumentation. Every server error reaches Interfere through Interfere’s own exporter …', src: NEXT_RM },
       code: [['Interfere owns tracing', 'register()'], ['Your provider owns it', 'register({ tracing: "application" })']],
@@ -293,7 +293,7 @@
 
     { id: 'mixed', short: '12.x + 13.x deployments', change: 'Mixed 12.x and 13.x deployments', part: 'Cylinder liners',
       spots: { side: { hot: '352,197 539,197 539,309 352,309', badge: [523, 281] }, xsec: { hot: '152,181 761,181 761,376 152,376', badge: [252, 285], label: 'Cylinder liners, with pistons' } },
-      maps: ["Pistons fit in replaceable liners that themselves fit into an irreplaceable engine block. Think of SDK 13.0 as the replaceable liner inside Interfere’s larger observability engine so that things like storage keys, session/device identities and ingest protocols remain unchanged whether you’re running the 13 SDK on a server beside browsers running SDK 12 — and vice versa."],
+      maps: ["Pistons fit in replaceable liners that themselves fit into an irreplaceable engine block. Think of SDK 13.0 as the replaceable liner inside Interfere’s larger observability engine so that things like storage keys, session/device identities and ingest protocols remain unchanged whether you’re running SDK 13 on a server beside browsers running SDK 12 — and vice versa."],
       sdk: { text: 'Mixed deployments of 12.x browsers with 13.x servers, or the reverse, keep working: storage keys, session and device identity and the ingest protocol are unchanged, and the 12.x line receives compatibility and security fixes for twelve months after 13.0 is published.', src: NEXT_CL },
       cut: { src: CUT('liner'), alt: 'Exploded parts drawing of a cylinder kit: piston rings, piston, piston pin and retaining ring, the cylinder liner, and the liner seal rings', cap: 'Cylinder kit, exploded · parts catalog drawing supplied by the author (source to be cited)' },
       manual: { text: 'When a cylinder liner change is necessary, due to either wear or scoring, the old liner may be removed from the cylinder block and a new liner installed, or the old liner may be honed oversize and reinstalled.', src: SM, page: 17, href: SMP(17) } },
@@ -301,8 +301,8 @@
     { id: 'separate', short: 'correlationSpanProcessor', change: 'correlationSpanProcessor', part: 'Heat exchanger',
       spots: { side: { hot: '352,67 641,67 641,195 352,195', badge: [566, 146] } },
       maps: [
-        "Marine engines are designed to pump seawater through its block to keep from overheating; problem is, the salt in that seawater can corrode as much as it cools. Enter the heat exchanger, which splits cooling functionality into two circuits: a freshwater loop that runs through engine and a saltwater loop that touches the heat exchanger but never enters the block. And because fresh and saltwater flows never mix, each can be checked independently.",
-        "While Interfere’s SDK 12 was raw-water cooled, as ID generators and propagators ran through the same OpenTelemetry pipe, SDK 13 now has a eat exchanger that not only separates recorder data  (errors, replay, and vitals) from raw trace data but then can also correlate both data flows so you can join a browser record and a server span even while still keeping each pipe separate."],
+        "Marine engines are designed to pump seawater through their blocks to keep from overheating; problem is, the salt in that seawater can corrode as much as it cools. Enter the heat exchanger, which splits cooling functionality into two circuits: a freshwater loop that runs through the engine and a saltwater loop that touches the heat exchanger but never enters the block. And because fresh and saltwater flows never mix, each can be checked independently.",
+        "While Interfere’s SDK 12 was raw-water cooled, as ID generators and propagators ran through the same OpenTelemetry pipe, SDK 13 now has a heat exchanger that not only separates recorder data (errors, replay, and vitals) from raw trace data but then can also correlate both data flows so you can join a browser record and a server span while keeping each pipe separate."],
       sdk: { text: 'SDK 13.0 separates browser recording, request correlation and OpenTelemetry tracing, and retires the public server OTel kit in favour of two supported setups: Interfere-managed tracing (`register()` / `init()` with no options) and application-owned tracing (`register({ tracing: "application" })` / `init({ tracing: "application" })`, with your provider exporting to Interfere over standard OTLP).', src: NEXT_CL },
       also: { text: '`correlationSpanProcessor()` returns a fresh standard OpenTelemetry span processor for your provider. Install it when constructing the provider to copy Interfere session and device baggage onto request and child spans; unrelated vendor baggage stays unchanged.', src: NEXT_RM },
       code: [['Your provider, with Interfere’s correlation', 'registerOTel({\n  serviceName: "my-app",\n  spanProcessors: [correlationSpanProcessor(), "auto"],\n});\nawait registerInterfere({ tracing: "application" });']],
@@ -311,7 +311,7 @@
 
     { id: 'fresh', short: 'stamped SSR trace meta', change: 'Stamped SSR trace meta', part: 'Thermostat housing',
       spots: { side: { hot: '245,85 297,85 297,143 245,143', badge: [264, 106] } },
-      maps: ["A thermostat is designed to access coolant once the engine has reaches a certain temperature; it then removes access once the engine falls back within normal operating temps. SDK 13 does likewise in how the browser reads tracestate stamps; like a thermostat, recent stamps “opens the valve” and link to its server trace whereas older or missing stamps keeps it shut stays shut. And since the tracestate stamp’s default state is “closed”, a cached HTML won’t be able to link visitors together."],
+      maps: ["A thermostat is designed to release coolant once the engine reaches a certain temperature; it then closes coolant intake once the engine falls back within normal operating temps. SDK 13 does likewise in how browsers now read tracestate stamps; recent stamps “open the valve” and link to their server trace like a thermostat, whereas older or missing stamps stay shut. And since a stamp older than two minutes stays shut, cached HTML won’t link visitors together."],
       sdk: { text: 'it rejects SSR trace meta whose `interfere` tracestate stamp is missing or older than two minutes, so cached HTML cannot link visitors together.', src: NEXT_CL },
       also: { text: '`withInterfere()` injects stamped trace meta through Next’s `clientTraceMetadata`; an unstamped `traceparent` meta tag no longer links.', src: NEXT_RM },
       code: [['12.x', '<TraceMeta />  // from @interfere/next/server'], ['13.x', 'Remove it. withInterfere(config) injects the stamped meta.']],

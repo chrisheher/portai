@@ -212,11 +212,6 @@ export const HOME_PROMPTS: HomePrompt[] = [
     prompt: 'Just show me some cool stuff',
     pieces: [
       {
-        title: 'Best lines',
-        blurb: 'Forty-six favorite lines, verbatim: twenty from published Sentry and DroneDeploy work, twenty-six from The Floating Studio.',
-        links: [{ label: 'Read', url: '/best-lines.html' }],
-      },
-      {
         title: 'Groaning Shelves',
         blurb: 'A GraphRAG library spanning fiction, myth, AI research and nautical manuals, featuring Leiden-clustered themes, cross-corpus search functionality, and current events matched to passages.',
         links: [{ label: 'Explore', url: 'https://onlychr.is/raglib' }],
@@ -235,6 +230,11 @@ export const HOME_PROMPTS: HomePrompt[] = [
         title: 'Audiobook',
         blurb: 'Demo audiobook using Sopranos characters and DJ Pauly D as character voices.',
         links: [{ label: 'Listen', url: 'https://open.spotify.com/show/1ypvv6o17z6aEt3HODd1xt' }],
+      },
+      {
+        title: 'Best lines',
+        blurb: 'Forty-six favorite lines, verbatim: twenty from published Sentry and DroneDeploy work, twenty-six from The Floating Studio.',
+        links: [{ label: 'Read', url: '/best-lines.html' }],
       },
     ],
   },
