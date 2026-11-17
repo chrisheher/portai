@@ -42,6 +42,11 @@ const nextConfig = {
         source: '/blacksmith',
         destination: '/blacksmith/chris-heher-resume.pdf',
       },
+      // The dead-authors demo without the messaging API: authors write a front page instead of texting.
+      {
+        source: '/front-page',
+        destination: '/front-page.html',
+      },
       // Before /raglib/:path* so the parts desk wins over the raglib server.
       {
         source: '/raglib/parts',

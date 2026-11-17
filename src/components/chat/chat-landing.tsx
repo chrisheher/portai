@@ -343,26 +343,26 @@ function ChatLanding({
 
   // S-related links (simplified technical content - formerly R)
   const sLinks: Link[] = useMemo(() => [
-    { name: "blog | Why debugging Javascript sucks", url: "https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/", shape: 'letterC' },
-    { name: "white paper | More Tools, More Problems", url: "https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf", shape: 'letterH' },
+    { name: "blog | Why debugging Javascript sucks", url: "https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/", shape: 'slash' },
+    { name: "white paper | More Tools, More Problems", url: "https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf", shape: 'drone' },
     { name: "experiential content | Aviation turboprop", url: "https://www.ceros.com/inspire/project/ge-aviation-1", shape: 'letterS' },
-    { name: "blog | Measuring UX with Web Vitals", url: "https://blog.sentry.io/measuring-user-experience-with-web-vitals/", shape: 'letterI' },
-    { name: "blog | Great moments in application monitoring", url: "https://blog.sentry.io/great-moments-in-application-monitoring/", shape: 'letterS' },
-    { name: "guide | Safety, smarter: AI and your work site", url: "https://www.dronedeploy.com/blog/safety-smarter-artificial-intelligence-and-your-work-site", shape: 'letterH' },
-    { name: "guide | Ultimate guide to facade inspections", url: "https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections", shape: 'letterH' },
-    { name: "blog | Python 3 compatibility", url: "https://blog.sentry.io/python-3-compatibility-what-to-know/", shape: 'letterI' }
+    { name: "blog | Measuring UX with Web Vitals", url: "https://blog.sentry.io/measuring-user-experience-with-web-vitals/", shape: 'bracketOpen' },
+    { name: "blog | Great moments in application monitoring", url: "https://blog.sentry.io/great-moments-in-application-monitoring/", shape: 'curlyOpen' },
+    { name: "guide | Safety, smarter: AI and your work site", url: "https://www.dronedeploy.com/blog/safety-smarter-artificial-intelligence-and-your-work-site", shape: 'drone' },
+    { name: "guide | Ultimate guide to facade inspections", url: "https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections", shape: 'drone' },
+    { name: "blog | Python 3 compatibility", url: "https://blog.sentry.io/python-3-compatibility-what-to-know/", shape: 'bracketClose' }
   ], []);
 
   // I-related links (interactive/ux)
   const iLinks: Link[] = useMemo(() => [
-    { name: "Sentry | Enterprise page", url: "https://www.sentry.dev/for/enterprise/" },
-    { name: "Sentry | performance monitoring", url: "https://www.sentry.dev/solutions/application-performance-monitoring/" },
-    { name: "Sentry | full stack monitoring", url: "https://sentry.io/for/full-stack/" },
+    { name: "Sentry | Enterprise page", url: "https://www.sentry.dev/for/enterprise/", shape: 'slash' as const },
+    { name: "Sentry | performance monitoring", url: "https://www.sentry.dev/solutions/application-performance-monitoring/", shape: 'bracketOpen' as const },
+    { name: "Sentry | full stack monitoring", url: "https://sentry.io/for/full-stack/", shape: 'bracketClose' as const },
     { name: "Airbnb | career site", url: "https://careers.airbnb.com" },
     { name: "Ground robotics", url: "https://example.com/link5" },
-    { name: "DroneDeploy | Safety AI", url: "https://www.dronedeploy.com/product/safety-ai" },
-    { name: "DroneDeploy | Data on Demand ", url: "https://www.dronedeploy.com/data-on-demand" },
-    { name: "DroneDeploy | industrial inspection", url: "https://www.dronedeploy.com/product/robotic-industrial-inspection" }
+    { name: "DroneDeploy | Safety AI", url: "https://www.dronedeploy.com/product/safety-ai", shape: 'drone' as const },
+    { name: "DroneDeploy | Data on Demand ", url: "https://www.dronedeploy.com/data-on-demand", shape: 'drone' as const },
+    { name: "DroneDeploy | industrial inspection", url: "https://www.dronedeploy.com/product/robotic-industrial-inspection", shape: 'drone' as const }
   ], []);
 
   // ========== CAMPAIGN DATA ==========
@@ -371,13 +371,13 @@ function ChatLanding({
       title: 'evergreen content ',
       type: 'campaign' as const,
       links: [
-        { name: 'DroneDeploy | Underground utilities', url: 'https://www.dronedeploy.com/blog/within-striking-distance-risks-and-consequences-of-manual-utility-mapping' },
-        { name: 'DroneDeploy | reality capture white paper', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf' },
-        { name: 'Sentry | why debugging javascript sucks', url: 'https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/' },
-        { name: 'Sentry | how slow is slow?', url: 'https://blog.sentry.io/how-slow-is-slow/' },
-        { name: 'Sentry | measuring UX with Web Vitals', url: 'https://blog.sentry.io/measuring-user-experience-with-web-vitals/' },
-        { name: 'DroneDeploy | facade inspections guide', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections' },
-        { name: 'Sentry | great moments in application monitoring', url: 'https://blog.sentry.io/great-moments-in-application-monitoring/' }
+        { name: 'DroneDeploy | Underground utilities', url: 'https://www.dronedeploy.com/blog/within-striking-distance-risks-and-consequences-of-manual-utility-mapping', shape: 'drone' as const },
+        { name: 'DroneDeploy | reality capture white paper', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf', shape: 'drone' as const },
+        { name: 'Sentry | why debugging javascript sucks', url: 'https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/', shape: 'curlyOpen' as const },
+        { name: 'Sentry | how slow is slow?', url: 'https://blog.sentry.io/how-slow-is-slow/', shape: 'bracketOpen' as const },
+        { name: 'Sentry | measuring UX with Web Vitals', url: 'https://blog.sentry.io/measuring-user-experience-with-web-vitals/', shape: 'bracketClose' as const },
+        { name: 'DroneDeploy | facade inspections guide', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections', shape: 'drone' as const },
+        { name: 'Sentry | great moments in application monitoring', url: 'https://blog.sentry.io/great-moments-in-application-monitoring/', shape: 'curlyClose' as const }
       ],
       description: 'GTM content campaign',
       campaignListDescription: 'Content whose value outlasts its kpi, continnuing to drive traffic and add value long after its launch',
@@ -393,8 +393,8 @@ function ChatLanding({
       links: [
         { name: 'awareness | how slow is slow? ', url: 'https://blog.sentry.io/how-slow-is-slow/', shape: 'slash' as const },
         { name: 'consideration | release blog', url: 'https://blog.sentry.io/see-slow-faster-with-performance-monitoring/', shape: 'bracketOpen' as const },
-        { name: 'evaluation| product page', url: 'https://sentry.io/solutions/application-performance-monitoring/', shape: 'parenOpen' as const },
-        { name: 'see slow faster customer story', url: 'https://sentry.io/customers/atlassian-jira/', shape: 'parenClose' as const },
+        { name: 'evaluation| product page', url: 'https://sentry.io/solutions/application-performance-monitoring/', shape: 'curlyOpen' as const },
+        { name: 'see slow faster customer story', url: 'https://sentry.io/customers/atlassian-jira/', shape: 'curlyClose' as const },
         { name: 'webinar', url: 'https://www.youtube.com/watch?v=J0tAK6dKY3Y/', shape: 'bracketClose' as const }
       ],
       images: [],
@@ -410,13 +410,13 @@ function ChatLanding({
       title: 'Technical content',
       type: 'campaign' as const,
       links: [
-        { name: 'Sentry | how slow is slow', url: 'https://blog.sentry.io/how-slow-is-slow/' },
-           { name: 'asking the right query with discover', url: 'https://blog.sentry.io/asking-the-right-query-with-discover/' },
-{  name: 'DroneDeploy | Stockpile measurement through drone imagery', url: 'https://www.dronedeploy.com/blog/closing-the-gap-how-archer-western-and-dronedeploy-observed-a-1-1-difference-in-stockpile-quantities-compared-to-traditional-survey-methods'},
+        { name: 'Sentry | how slow is slow', url: 'https://blog.sentry.io/how-slow-is-slow/', shape: 'slash' as const },
+           { name: 'asking the right query with discover', url: 'https://blog.sentry.io/asking-the-right-query-with-discover/', shape: 'bracketOpen' as const },
+{  name: 'DroneDeploy | Stockpile measurement through drone imagery', url: 'https://www.dronedeploy.com/blog/closing-the-gap-how-archer-western-and-dronedeploy-observed-a-1-1-difference-in-stockpile-quantities-compared-to-traditional-survey-methods', shape: 'drone' as const },
         { name: 'GE | Aviation', url: 'https://www.ceros.com/inspire/project/ge-aviation-1' },
              { name: 'google | gpay instrumentation video', url: 'https://www.ceros.com/inspire/project/ge-aviation-1' },
      
-        { name: 'Python 3 compatibility: what to know', url: 'https://blog.sentry.io/python-3-compatibility-what-to-know/' }
+        { name: 'Python 3 compatibility: what to know', url: 'https://blog.sentry.io/python-3-compatibility-what-to-know/', shape: 'bracketClose' as const }
       ],
       images: [],
 
@@ -502,9 +502,9 @@ function ChatLanding({
       title: 'DroneDeploy | Ground Robotics',
       type: 'campaign' as const,
       links: [
-        { name: 'Ground Robotics', url: 'https://www.dronedeploy.com/product/robotics' },
-        { name: 'DroneDeploy | Industrial Inspection', url: 'https://www.dronedeploy.com/product/robotic-industrial-inspection' },
-        { name: 'DroneDeploy | Dock Automation', url: 'https://www.dronedeploy.com/product/dock-automation' }
+        { name: 'Ground Robotics', url: 'https://www.dronedeploy.com/product/robotics', shape: 'drone' as const },
+        { name: 'DroneDeploy | Industrial Inspection', url: 'https://www.dronedeploy.com/product/robotic-industrial-inspection', shape: 'drone' as const },
+        { name: 'DroneDeploy | Dock Automation', url: 'https://www.dronedeploy.com/product/dock-automation', shape: 'drone' as const }
       ],
       description: 'Boston Dynamics partnership content',
       campaignListDescription: 'Working in partnership with Boston Dynamics, DroneDeploy\'s industrial inspection platform captures frequent and consistent data on assets that need regular monitoring in ways which scale up site visibility while dialing down man hours.',
@@ -554,8 +554,8 @@ function ChatLanding({
         { name: 'Sentry | Enterprise page', url: 'https://www.sentry.dev/for/enterprise/', shape: 'slash' as const },
         { name: 'Sentry | Full stack', url: 'https://sentry.io/for/full-stack/', shape: 'bracketOpen' as const },
         { name: 'Sentry | Performance monitoring', url: 'https://www.sentry.dev/solutions/application-performance-monitoring/', shape: 'bracketClose' as const },
-        { name: 'Sentry | Mobile development', url: 'https://sentry.io/solutions/mobile-developers/', shape: 'parenClose' as const },
-        { name: 'Asking the Right Query With Discover', url: 'https://blog.sentry.io/asking-the-right-query-with-discover/', shape: 'letterD' as const }
+        { name: 'Sentry | Mobile development', url: 'https://sentry.io/solutions/mobile-developers/', shape: 'curlyClose' as const },
+        { name: 'Asking the Right Query With Discover', url: 'https://blog.sentry.io/asking-the-right-query-with-discover/', shape: 'curlyOpen' as const }
       ],
 
       campaignListDescription: 'Partnered with software engineers to co-produce content that articualted value propositions and while moving users into trial.',
@@ -607,9 +607,9 @@ function ChatLanding({
       links: [
         { name: 'How slow is slow?', url: 'https://blog.sentry.io/how-slow-is-slow/', shape: 'slash' as const },
         { name: 'Why debugging Javascript sucks', url: 'https://blog.sentry.io/why-debugging-javascript-sucks-and-what-you-can-do-about-it/', shape: 'bracketClose' as const },
-        { name: 'Python 3 compatibility', url: 'https://blog.sentry.io/python-3-compatibility-what-to-know/', shape: 'parenClose' as const },
-        { name: 'Great moments in application monitoring', url: 'https://blog.sentry.io/great-moments-in-application-monitoring/', shape: 'parenClose' as const },
-        { name: 'Asking the Right Query With Discover', url: 'https://blog.sentry.io/asking-the-right-query-with-discover/', shape: 'letterD' as const }
+        { name: 'Python 3 compatibility', url: 'https://blog.sentry.io/python-3-compatibility-what-to-know/', shape: 'curlyClose' as const },
+        { name: 'Great moments in application monitoring', url: 'https://blog.sentry.io/great-moments-in-application-monitoring/', shape: 'bracketOpen' as const },
+        { name: 'Asking the Right Query With Discover', url: 'https://blog.sentry.io/asking-the-right-query-with-discover/', shape: 'curlyOpen' as const }
       ],
 
       campaignListDescription: 'Sentry is an application monitoring platform that optimizes code health by tracking metrics, logs and traces. Like a periodontist handing out lollies to patients, my role involved creating appetizing content that made code hygiene tolerable to software engineers.',
@@ -622,8 +622,8 @@ function ChatLanding({
       title: 'DroneDeploy technical content',
       type: 'campaign' as const,
       links: [
-        { name: 'white paper', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf' },
-        { name: 'facade inspections', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections' }
+        { name: 'white paper', url: 'https://cdn.prod.website-files.com/66116a8e721f15266645ab67/66b23acf47c56d2a0b097e5d_ddwhitepaper.pdf', shape: 'drone' as const },
+        { name: 'facade inspections', url: 'https://www.dronedeploy.com/blog/elevating-your-project-with-autonomous-facade-inspections', shape: 'drone' as const }
       
       ],
       campaignListDescription: ' Enterprise-grade drone technology fights the perception that drones are more toy than tool. These blogs and white papers articulate the benefits drone software provides construction teams: improved collaboration, inch-perfect measurements, and a better way of tracking progress.',

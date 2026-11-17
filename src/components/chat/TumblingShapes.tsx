@@ -1819,6 +1819,12 @@ background: mode === 'initial' ? '#1f1409a1' : '#dcd3c3'
               : shapeType === 'curlyClose' ? Math.PI / 2
               : Math.PI / 2;
             context.rotate(angle);
+            // A brace is only so long: shrink a label that would run past its ends.
+            if (shapeType === 'curlyOpen' || shapeType === 'curlyClose') {
+              const maxLabel = 290 * deviceScale;
+              const labelW = context.measureText(project.title).width;
+              if (labelW > maxLabel) context.font = `${parseFloat(fontSize) * maxLabel / labelW}px "kcgangster", Arial`;
+            }
             const textX = shapeType === 'tree' ? -110 : shapeType === 'letterF' ? -10 : shapeType === 'letterI' ? -50 : shapeType === 'curlyOpen' ? -10 : shapeType === 'curlyClose' ? 25 : 0;
             const textYRotated = shapeType === 'letterI' ? -5 : shapeType === 'letterF' ? -28 : shapeType === 'curlyOpen' ? 15 : shapeType === 'curlyClose' ? -10 : 0;
             if (project.title === 'The new office for the way people want to work') {

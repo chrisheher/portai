@@ -1,67 +1,28 @@
 'use client';
 
-// Home-page search: a visitor says what they want most out of the position, and the
-// portfolio pages that best show it fall into view as cards (Matter.js), each
-// linking to its existing page (/?show=<key>).
+// Home page: a visitor picks one of the falling prompts (p1–p5), and that prompt's
+// hand-picked pieces fall into view as cards (Matter.js): title, blurb, impact, and
+// bracketed links to the published work. The pieces live in src/lib/home-prompts.ts.
 
 import { useEffect, useRef, useState } from 'react';
 import Matter from 'matter-js';
-import { Source_Serif_4 } from 'next/font/google';
+import localFont from 'next/font/local';
+import { HOME_PROMPTS, type HomePrompt } from '@/lib/home-prompts';
 
-const serif = Source_Serif_4({ subsets: ['latin'], weight: ['400', '500'] });
+const alyona = localFont({ src: '../../../public/fonts/AlyonaDemo-Regular.otf', display: 'swap' });
 
-type Result = { key: string; title: string; category: string; why: string; url: string };
-
-const SUGGESTIONS = [
-  'Someone who owns the voice end to end',
-  'Content that drives pipeline',
-  'A writer engineers trust',
-  'A brand launch that cuts through',
-  'Content that keeps working for years',
-];
 
 export default function SearchHome() {
-  const [value, setValue] = useState('');
-  const [asked, setAsked] = useState('');
-  const [results, setResults] = useState<Result[] | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [active, setActive] = useState<HomePrompt | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
   const [staticLayout, setStaticLayout] = useState(false);
-
-  async function search(text: string) {
-    const wants = text.trim();
-    if (!wants || loading) return;
-    setAsked(wants);
-    setLoading(true);
-    setError('');
-    setResults(null);
-    try {
-      const r = await fetch('/api/match', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ wants }) });
-      const data = await r.json();
-      if (!r.ok) throw new Error(data.error || 'Search failed');
-      setResults(data.results);
-      if (!data.results.length) setError('Nothing matched that. Try describing the work you need done.');
-    } catch (err: any) {
-      setError(err.message || 'Search failed');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // Grow the textarea with its text, like a chat box.
-  useEffect(() => {
-    const el = inputRef.current;
-    if (!el) return;
-    el.style.height = 'auto';
-    el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
-  }, [value]);
+  const pillsRef = useRef<HTMLDivElement>(null);
+  const [pillsStatic, setPillsStatic] = useState(false);
 
   // Drop the result cards into the stage.
   useEffect(() => {
     const box = stageRef.current;
-    if (!box || !results?.length) return;
+    if (!box || !active) return;
     const cards = [...box.querySelectorAll<HTMLElement>('[data-card]')];
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     setStaticLayout(reduce);
@@ -71,20 +32,35 @@ export default function SearchHome() {
     const W = box.clientWidth;
     const sizes = cards.map(el => ({ w: el.offsetWidth, h: el.offsetHeight, col: 0 }));
     const cols = Math.max(1, Math.min(3, Math.floor(W / (Math.max(...sizes.map(s => s.w)) + 16))));
-    const colH = Array(cols).fill(0);
-    sizes.forEach((s, i) => { s.col = i % cols; colH[s.col] += s.h + 8; });
-    const H = Math.max(260, Math.round(Math.max(...colH) * 1.1 + 40));
+    // Each card collides as a box shorter than the card, centred on it, so cards overlap
+    // and the pile fits the stage. Hovering a card lifts it to the front.
+    // At most 2/3 of the card is solid; less when that's what it takes to fit MAX_H.
+    const MAX_H = 600;
+    const maxCard = Math.max(...sizes.map(s => s.h));
+    const raw = Array(cols).fill(0), gaps = Array(cols).fill(0);
+    sizes.forEach((s, i) => { s.col = i % cols; raw[s.col] += s.h; gaps[s.col] += 8; });
+    const tallest = raw.indexOf(Math.max(...raw));
+    // The pile needs SOLID * raw + gaps, plus one overhang below the bottom body and one above
+    // the top body: SOLID * raw + gaps + maxCard * (1 - SOLID) + 24 <= MAX_H.
+    const spare = raw[tallest] - maxCard;
+    const fit = spare > 0 ? (MAX_H - 24 - gaps[tallest] - maxCard) / spare : 1;
+    // Overlap is then cut by OVERLAP_CUT (0.6 = 60% less), so the stage grows past MAX_H as needed.
+    const OVERLAP_CUT = 0.6;
+    const SOLID = 1 - (1 - Math.max(0.2, Math.min(0.67, fit))) * (1 - OVERLAP_CUT);
+    const overhang = maxCard * (1 - SOLID) / 2;
+    const H = Math.max(260, Math.round(raw[tallest] * SOLID + gaps[tallest] + 2 * overhang + 24));
     box.style.height = `${H}px`;
 
     const engine = Engine.create({ gravity: { x: 0, y: 0.45 }, enableSleeping: true });
     Composite.add(engine.world, [
-      Bodies.rectangle(W / 2, H + 30, W + 200, 60, { isStatic: true }),
+      // The floor sits one overhang up, so the bottom card's lower edge stays in view.
+      Bodies.rectangle(W / 2, H - overhang + 30, W + 200, 60, { isStatic: true }),
       Bodies.rectangle(-30, H / 2, 60, H * 3, { isStatic: true }),
       Bodies.rectangle(W + 30, H / 2, 60, H * 3, { isStatic: true }),
     ]);
     const bodies = sizes.map((s, i) => Bodies.rectangle(
       (s.col + 0.5) * (W / cols) + (Math.random() - 0.5) * Math.max(0, W / cols - s.w - 16),
-      -s.h - i * 90, s.w, s.h,
+      -s.h - i * 90, s.w, s.h * SOLID,
       { restitution: 0.25, friction: 0.2, frictionAir: 0.02, chamfer: { radius: 16 }, inertia: Infinity, angle: (Math.random() - 0.5) * 0.06 },
     ));
     Composite.add(engine.world, bodies);
@@ -97,71 +73,159 @@ export default function SearchHome() {
     const runner = Runner.create();
     Runner.run(runner, engine);
     return () => { Runner.stop(runner); Events.off(engine, 'afterUpdate', sync); Composite.clear(engine.world, false); Engine.clear(engine); };
-  }, [results]);
+  }, [active]);
 
-  const started = loading || results !== null || !!error;
+  const started = active !== null;
+
+  // The suggestion buttons drift down from above and pile up on the bottom of the page,
+  // slow and floaty like the prompts on /raglib. They stay real buttons throughout.
+  useEffect(() => {
+    const box = pillsRef.current;
+    if (!box || started) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setPillsStatic(reduce);
+    if (reduce) return;
+
+    const { Engine, Runner, Bodies, Body, Composite, Events } = Matter;
+    const pills = [...box.querySelectorAll<HTMLElement>('[data-pill]')];
+    let stop = () => {};
+
+    const start = () => {
+      const W = box.clientWidth;
+      // The stage runs from under the search box to the bottom of the window.
+      const H = Math.max(240, Math.round(window.innerHeight - box.getBoundingClientRect().top));
+      box.style.height = `${H}px`;
+      const sizes = pills.map(el => ({ w: el.offsetWidth, h: el.offsetHeight }));
+
+      const engine = Engine.create({ gravity: { x: 0, y: 0.09 } });
+      const FLOOR_LIFT = 100; // the pile rests this far above the bottom of the stage
+      Composite.add(engine.world, [
+        Bodies.rectangle(W / 2, H - FLOOR_LIFT + 30, W + 200, 60, { isStatic: true }),
+        Bodies.rectangle(-30, H / 2, 60, H * 6, { isStatic: true }),
+        Bodies.rectangle(W + 30, H / 2, 60, H * 6, { isStatic: true }),
+      ]);
+      const bodies = sizes.map((s, i) => Bodies.rectangle(
+        s.w / 2 + 8 + Math.random() * Math.max(1, W - s.w - 16),
+        -60 - i * 120, s.w, s.h,
+        { restitution: 0.3, friction: 0.05, frictionAir: 0.002, density: 0.00008, inertia: Infinity },
+      ));
+      Composite.add(engine.world, bodies);
+
+      // Balloon drift: an occasional gentle sideways nudge, so they wander as they fall.
+      const drift = () => bodies.forEach(b => {
+        if (Math.random() < 0.04) {
+          Body.applyForce(b, b.position, { x: (Math.random() - 0.5) * 0.00002 * b.mass, y: (Math.random() - 0.5) * 0.00001 * b.mass });
+        }
+      });
+      const sync = () => bodies.forEach((b, i) => {
+        const t = `translate(${Math.round(b.position.x - sizes[i].w / 2)}px, ${Math.round(b.position.y - sizes[i].h / 2)}px)`;
+        if (pills[i].style.transform !== t) pills[i].style.transform = t;
+      });
+      Events.on(engine, 'beforeUpdate', drift);
+      Events.on(engine, 'afterUpdate', sync);
+      sync();
+      const runner = Runner.create();
+      Runner.run(runner, engine);
+      stop = () => {
+        Runner.stop(runner);
+        Events.off(engine, 'beforeUpdate', drift);
+        Events.off(engine, 'afterUpdate', sync);
+        Composite.clear(engine.world, false);
+        Engine.clear(engine);
+      };
+    };
+    // Measure the buttons only once Alyona has loaded: measured in the fallback font, their
+    // physics boxes come out the wrong size and the pile overlaps when the real font swaps in.
+    let cancelled = false;
+    document.fonts.ready.then(() => { if (!cancelled) start(); });
+
+    // Rebuild when the width changes (not on mobile URL-bar height changes).
+    let lastW = window.innerWidth;
+    let timer: ReturnType<typeof setTimeout>;
+    const onResize = () => {
+      if (window.innerWidth === lastW) return;
+      lastW = window.innerWidth;
+      clearTimeout(timer);
+      timer = setTimeout(() => { stop(); start(); }, 150);
+    };
+    window.addEventListener('resize', onResize);
+    return () => { cancelled = true; window.removeEventListener('resize', onResize); clearTimeout(timer); stop(); };
+  }, [started]);
 
   return (
-    <main className="min-h-screen w-full bg-[#faf9f5] text-[#1f1e1d]">
-      <div className={`mx-auto flex w-full max-w-[880px] flex-col items-center px-4 transition-[padding] duration-500 ${started ? 'pt-16' : 'pt-[24vh]'}`}>
-        <h1 className={`${serif.className} mb-8 text-center text-[2rem] font-normal leading-tight tracking-[-0.01em] sm:text-[2.6rem]`}>
-          What do you want most out of your position?
+    <main className={`${alyona.className} min-h-screen w-full bg-[#faf9f5] text-[#1f1e1d] tracking-[0.1rem] [&_.w-full]:[font-family:inherit] md:flex md:items-start`} style={alyona.style}>
+      {/* The headline gets its own gutter on the far left; on phones it sits above everything. */}
+      <header className={`px-4 transition-[padding] duration-500 md:sticky md:top-0 md:w-[15vw] md:max-w-[220px] md:shrink-0 md:pl-4 md:pr-4 ${started ? 'pt-16' : 'pt-[16vh]'}`}>
+        <h1 className="mb-8 text-left text-[1.2rem] font-extrabold leading-[1.4] md:mb-0">
+          <span className="mt-[20px] block">Content is what nourishes your customer until they become satisfied with the thought of adopting your product.</span>
+          <span className="mt-[20px] block">AI is the fire for that content.</span>
+          <span className="mt-[20px] block">Chris is its chef.</span>
         </h1>
+        {started && (
+          <button type="button" onClick={() => setActive(null)}
+            className="mb-6 mt-8 rounded-full border border-[#e8e6dc] bg-[#faf9f5] px-2.5 py-1 text-left text-[0.75rem] leading-[1.4] text-[#3d3d3a] transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c96442] md:mb-0">
+            ← Back to prompts
+          </button>
+        )}
+      </header>
 
-        <form
-          className="w-full max-w-[680px] rounded-[20px] border border-[#e8e6dc] bg-white p-3 shadow-[0_4px_24px_rgba(0,0,0,0.05)] focus-within:border-[#d6d3c7]"
-          onSubmit={e => { e.preventDefault(); search(value); }}
-        >
-          <label htmlFor="wants" className="sr-only">What do you want most out of your position?</label>
-          <textarea
-            id="wants" ref={inputRef} rows={2} value={value} maxLength={500}
-            onChange={e => setValue(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); search(value); } }}
-            placeholder="Describe the person, the work, or the result you need…"
-            className="block w-full resize-none bg-transparent px-2 pt-1 text-[1.05rem] leading-relaxed outline-none placeholder:text-[#8f8d86]"
-          />
-          <div className="flex items-center justify-between pt-2">
-            <span className="px-2 text-xs text-[#8f8d86]">Matches you to work in Chris Heher’s portfolio</span>
-            <button
-              type="submit" disabled={!value.trim() || loading} aria-label="Search"
-              className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#c96442] text-white transition hover:bg-[#b5573a] disabled:bg-[#e3c2b5]"
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 13V3M8 3L3.5 7.5M8 3l4.5 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </button>
-          </div>
-        </form>
+      <div className={`mx-auto flex w-full min-w-0 max-w-[1140px] flex-col items-center px-4 transition-[padding] duration-500 md:flex-1 ${started ? 'md:pt-0' : 'md:pt-[16vh]'}`}>
 
         {!started && (
-          <div className="mt-5 flex max-w-[680px] flex-wrap justify-center gap-2">
-            {SUGGESTIONS.map(s => (
-              <button key={s} type="button" onClick={() => { setValue(s); search(s); }}
-                className="rounded-full border border-[#e8e6dc] bg-[#faf9f5] px-3.5 py-1.5 text-sm text-[#3d3d3a] transition hover:bg-white">
-                {s}
+          <div
+            ref={pillsRef}
+            className={pillsStatic ? 'mt-5 flex max-w-[680px] flex-wrap justify-center gap-2' : 'relative mt-2 w-full overflow-hidden'}
+          >
+            {HOME_PROMPTS.map(p => (
+              <button key={p.id} type="button" data-pill onClick={() => setActive(p)}
+                className={`${pillsStatic ? '' : 'absolute left-0 top-0 max-w-[calc(100%-16px)] -translate-y-[999px] will-change-transform'} rounded-full border border-[#e8e6dc] bg-[#faf9f5] px-7 py-3 text-[1.4875rem] leading-[1.4] text-[#3d3d3a] transition-colors hover:bg-white`}>
+                {p.prompt}
               </button>
             ))}
           </div>
         )}
 
-        {loading && <p className="mt-10 animate-pulse text-sm text-[#73726c]">Finding the work that shows “{asked}”…</p>}
-        {error && !loading && <p className="mt-10 text-sm text-[#73726c]">{error}</p>}
-
-        {results && results.length > 0 && (
-          <section aria-label={`Work that shows: ${asked}`} className="mt-10 w-full">
-            <p className="mb-3 text-center text-xs uppercase tracking-[0.14em] text-[#8f8d86]">{results.length} pages that show it</p>
+        {active && (
+          <section aria-label={active.prompt} className="mt-10 w-full">
             <div
               ref={stageRef}
-              className={staticLayout ? 'grid gap-3 sm:grid-cols-2 lg:grid-cols-3' : 'relative w-full overflow-hidden rounded-[20px] border border-[#ece9df]'}
+              className={staticLayout ? 'grid gap-3 sm:grid-cols-2 lg:grid-cols-3' : 'relative w-full overflow-hidden'}
               style={staticLayout ? undefined : { height: 480 }}
             >
-              {results.map(r => (
-                <a key={r.key} href={r.url} data-card
-                  className={`${staticLayout ? '' : 'absolute left-0 top-0 -translate-y-[999px]'} block w-[260px] max-w-[calc(100%-24px)] rounded-2xl border border-[#e8e6dc] bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-shadow hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c96442]`}>
-                  <span className="text-[0.66rem] uppercase tracking-[0.14em] text-[#8f8d86]">{r.category}</span>
-                  <span className={`${serif.className} mt-1 block text-[1.1rem] leading-snug`}>{r.title}</span>
-                  <span className="mt-2 block text-sm leading-relaxed text-[#5e5d59]">{r.why}</span>
-                  <span className="mt-3 block text-sm font-medium text-[#c96442]">Open →</span>
-                </a>
-              ))}
+              {active.pieces.map((piece, i) => {
+                const links = piece.links.filter(l => l.url);
+                // A card with a single link ([Read], [Explore], [Listen]) shows it top right,
+                // beside the title; cards with several links list them along the bottom.
+                const corner = links.length === 1 ? links[0] : null;
+                const linkClass = 'text-[#c96442] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c96442]';
+                return (
+                  // Cards that land first sit lower in the pile and in front, so the overlap hides
+                  // the bottom of the card above rather than this card's title.
+                  <div key={piece.title} data-card style={{ '--z': active.pieces.length - i } as React.CSSProperties}
+                    className={`${staticLayout ? '' : 'absolute left-0 top-0 -translate-y-[999px] z-[var(--z)] hover:z-50 focus-within:z-50'} w-[708px] max-w-[calc(100%-24px)] rounded-2xl border border-[#e8e6dc] bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]`}>
+                    <div className="flex items-baseline justify-between gap-4">
+                      <h2 className="text-[1.1rem] font-extrabold leading-snug">{piece.title}</h2>
+                      {corner && (
+                        <a href={corner.url} target="_blank" rel="noopener noreferrer" className={`shrink-0 text-base leading-snug ${linkClass}`}>
+                          [{corner.label}]
+                        </a>
+                      )}
+                    </div>
+                    <p className="mt-2 text-base leading-relaxed text-[#5e5d59]">{piece.blurb}</p>
+                    {piece.impact && <p className="mt-2 text-base leading-relaxed text-[#1f1e1d]"><span className="text-[#8f8d86]">Impact: </span>{piece.impact}</p>}
+                    {links.length > 1 && (
+                      <p className="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-base leading-snug">
+                        {links.map(l => (
+                          <a key={l.label} href={l.url} target="_blank" rel="noopener noreferrer"
+                            className={linkClass}>
+                            [{l.label}]
+                          </a>
+                        ))}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </section>
         )}

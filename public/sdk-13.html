@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Interfere's SDK 13 explained by a 6-71 Detroit Diesel</title>
 <meta name="description" content="Nine changes in Interfere's SDK 13.0, each explained by the part of a GM 6-71 marine diesel that does the same job. Quoted from the 13.0.0 changelog and the Series 71 service manual.">
-<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <style>
   /* Same desk as the 6-71 Parts Desk (onlychr.is/raglib/parts) and the Content Engine page. */
   :root {
@@ -24,7 +23,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Courier Prime', ui-monospace, monospace;
+    font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace;
     background: var(--paper);
     color: var(--text);
     min-height: 100vh;
@@ -32,21 +31,20 @@
 
   /* Desktop: headline and comparisons in a left gutter, the detail in the middle,
      and the figure on a portrait manual page pinned in a right gutter. */
-  :root { --gutter: max(25vw, 330px); --plate: 33.333vw; }
+  :root { --gutter: max(30vw, 460px); --plate: 33.333vw; --manual: Futura, "Futura PT", "Century Gothic", "Avenir Next", "Trebuchet MS", sans-serif; }
   body { display: grid; grid-template-columns: var(--gutter) minmax(0, 1fr) var(--plate); align-items: start; }
   header {
     position: sticky;
     top: 0;
-    height: 100vh;
+    height: auto;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 12px;
     padding: 28px 24px 64px 32px;
     background: var(--paper);
-    border-right: 1px solid var(--border);
   }
-  header h1 { max-width: 12em; font-weight: 600; font-size: 2rem; line-height: 1.2; }
+  header h1 { max-width: 21rem; font-weight: 600; font-size: 1.5rem; line-height: 1.2; }
   main { padding: 28px 40px 64px; min-width: 0; }
   main > * { min-width: 0; }
   .plate-col { position: sticky; top: 0; padding: 28px 32px 56px 0; min-width: 0; }
@@ -55,8 +53,11 @@
     body.engine { grid-template-columns: var(--gutter) minmax(0, 1fr); }
     body.engine header { grid-row: 1 / span 2; }
     body.engine .plate-col { grid-column: 2; grid-row: 1; position: static; padding: 28px 40px 0; }
-    body.engine .plate-col .sheet { max-width: 66.667vw; }
+    body.engine .plate-col .sheet { max-width: 53.333vw; margin-left: auto; }
     body.engine main { grid-column: 2; grid-row: 2; }
+    /* A part's cutaway moves into the left gutter, under the comparisons; the notes take the rest. */
+    body.part-view { grid-template-columns: var(--gutter) minmax(0, 1fr); }
+    header .plate-col { position: static; padding: 0 0 8px; }
   }
 
   @media (max-width: 960px) {
@@ -87,7 +88,7 @@
     justify-content: space-between;
     align-items: baseline;
     gap: 12px;
-    font-family: 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+    font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace;
     font-weight: 900;
     font-size: 0.95rem;
     letter-spacing: 0.08em;
@@ -112,7 +113,7 @@
   }
   .frame .overlay { position: absolute; inset: 0; width: 100%; height: 100%; }
   .figure.is-part .overlay { display: none; }
-  .back { margin-left: auto; font-family: 'Courier Prime', ui-monospace, monospace; font-weight: 700; font-size: 0.68rem; letter-spacing: 0.08em; color: var(--ink); background: transparent; border: 1px solid var(--ink); padding: 3px 9px; cursor: pointer; }
+  .back { margin-left: auto; font-family: var(--manual); font-weight: 700; font-size: 0.68rem; letter-spacing: 0.08em; color: var(--ink); background: transparent; border: 1px solid var(--ink); padding: 3px 9px; cursor: pointer; }
   .back:hover { color: var(--hover); border-color: var(--hover); }
   .back:focus-visible { outline: 2px solid var(--hover); outline-offset: 2px; }
   .figure svg * { vector-effect: non-scaling-stroke; }
@@ -132,7 +133,7 @@
   @media (min-width: 961px) {
     .parts-list { flex-direction: column; align-items: stretch; row-gap: 14px; }
     .parts-list li::after { content: none !important; }
-    .parts-list button { white-space: normal !important; }
+    .parts-list button { white-space: nowrap; }
   }
   .parts-list { list-style: none; display: flex; flex-wrap: wrap; align-items: baseline; row-gap: 4px; }
   .parts-list li { display: flex; align-items: baseline; }
@@ -151,13 +152,14 @@
     border: 0;
     padding: 2px 0;
     font: inherit;
-    font-size: 0.9rem;
+    font-family: var(--manual);
+    font-size: 0.85rem;
     line-height: 1.2;
     color: var(--muted);
     text-align: left;
     cursor: pointer;
   }
-  .parts-list .ch { color: var(--text); font-weight: 700; font-size: calc(1em + 4px); }
+  .parts-list .ch { color: var(--text); font-weight: 700; font-size: calc(1em + 2px); }
   .parts-list button:hover .ch, .parts-list button.hover .ch,
   .parts-list button:hover .pt, .parts-list button.hover .pt { color: var(--hover); text-decoration: underline; text-underline-offset: 3px; }
   .parts-list button.active .ch { color: var(--hover); font-weight: 700; }
@@ -191,7 +193,7 @@
   .quote .x { font-size: 0.84rem; line-height: 1.5; overflow-wrap: anywhere; }
   .quote .t { font-size: 0.7rem; color: var(--muted); margin-top: 6px; }
   .quote .t a { color: var(--accent); }
-  .detail code, .intro-note code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.92em; color: var(--accent); }
+  .detail code, .intro-note code { font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace; font-size: 0.92em; color: var(--accent); }
 
   .code { display: grid; gap: 6px; }
   .code pre {
@@ -199,7 +201,7 @@
     padding: 8px 10px;
     background: var(--code-bg);
     border: 1px solid var(--border);
-    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace;
     font-size: 0.74rem;
     line-height: 1.45;
     white-space: pre-wrap;
@@ -261,8 +263,8 @@
     { id: 'retry', short: 'no CORS retries', change: 'no CORS retries', part: 'Starting motor',
       spots: { side: { hot: '505,374 620,374 620,481 505,481', badge: [588, 431] }, xsec: { hot: '799,266 885,266 885,647 799,647', badge: [842, 285], label: 'Flywheel, which the starter turns' } },
       maps: [
-        "A starter motor provides a short burst that rotates the engine’s flywheel until its attached pistons can consistently combust fuel. It’s why repeatedly cranking a starter motor won’t tell you why the engine won’t fire; what it will do is fry the starter and drain your battery so that now you have three problems instead of one.",
-        "The same is true for failed cross-origin requests which, like a held ignition on a thunking starter motor, are sent a second time and whose retry not only doubled the request but hid the real fault (such as a CORS policy) and add unintended load to your observability stack.  SDK 13 was built for you to turn the observability key once so that if a request fails, that failure’s logged and stamped  only once. One call, one request."],
+        "A starter motor provides a short burst which rotates the engine’s flywheel until its attached pistons can consistently combust fuel on their own. It’s why repeatedly cranking a starter motor not only won’t give you visibility into why the engine won’t fire, but will fry the starter motor and drain your battery so that now you have three problems instead of one.",
+        "The same is true for failed cross-origin requests which, like a held ignition on a thunking starter motor, create more problems than they solve, not only doubling the request but also hiding the real fault (such as a CORS policy). In SDK 12, if a cross-origin request failed, the observability key stayed held down no matter what; SDK 13 turns the key once so that suspected failures are logged once — and only once — per origin. And if a header-bearing request to an origin fails before that origin has ever answered one, Interfere doesn’t send it trace headers for the rest of the browser session, while still recording its requests. One call, one request."],
       sdk: { text: 'Removed. One application call produces one request. A suspected CORS failure logs once per origin and stamps `interfere.propagation.suspect_cors` on the request observation; no header is stripped and nothing is retried.', src: NEXT_CL },
       also: { text: 'The SDK never resends an application request: a failed call stays failed for your code to handle.', src: REACT_RM },
       cut: { src: CUT('starter'), alt: 'Cutaway of an inertia-type starter motor: field coil and armature on the left, Bendix drive and pinion in the drive housing on the right', cap: 'Fig. 4-3, inertia-type starter motor (courtesy Detroit Diesel Corp.) · Boat-maintenance manual, “Failure to Start”, p.43' },
@@ -270,7 +272,9 @@
 
     { id: 'capture', short: 'captureRenderErrors', change: 'captureRenderErrors', part: 'Fuel filter',
       spots: { side: { hot: '272,197 320,197 320,283 272,283', badge: [294, 241] }, xsec: { hot: '266,57 761,57 761,181 266,181', badge: [495, 95], label: 'Injectors, where the filtered fuel ends up' } },
-      maps: ["Before fuel is injected into a piston’s combustion chamber, it must pass through a filter that catches debris that could clog narrow fuel injector lines. SDK 13’s CaptureBoundary works with your browser’s React components in the same way, catching every error that passes through then rethrow it to your host error boundary so your reset logic stays in place."],
+      maps: [
+        "Before fuel is injected into a cylinder, it passes through a filter which catches debris that could clog narrow fuel injector lines. SDK 13’s InterfereProvider works with your React components in a similar way, catching render errors as they pass through then rethrowing them to your host error boundary, all so your reset logic stays in place.",
+        "While this filter isn’t new to Interfere’s platform what is is the name of its shutoff valve, as the errorBoundary prop becomes captureRenderErrors, so turning capture off now reads captureRenderErrors={false}."],
       sdk: { text: '`InterfereProvider` captures render errors by default and rethrows them so your host error boundary keeps control of the fallback. Set `captureRenderErrors={false}` to disable this capture.', src: REACT_RM },
       code: [['12.x', '<InterfereProvider errorBoundary={false}>'], ['13.x', '<InterfereProvider captureRenderErrors={false}>']],
       cut: { src: CUT('fuel_filter'), alt: 'Cutaway of a primary fuel filter: fuel enters at the side, drops water into a clear bowl, rises through the replaceable element and leaves at the outlet', cap: 'Fig. 9-8A, a primary fuel filter with a replaceable element · Boat-maintenance manual, “Diesel Engines”, p.370' },
@@ -278,7 +282,9 @@
 
     { id: 'auto', short: 'tracing: "auto"', change: 'tracing: "auto"', part: 'Governor',
       spots: { side: { hot: '300,327 358,327 358,415 300,415', badge: [331, 375] } },
-      maps: ["An engine’s governor dictates how much fuel flows through its injectors. Which is why having two governors on one engine is more than redundant — it’s dangerous. SDK 13 automatically checks if you’ve already registered a trace propagator so that if you already have an observability layer in place, Interfere’s application mode runs atop it to organize mission critical-context — errors, replay, navigation, vitals and requests —  without touching your trace headers or OpenTelemetry globals. And if you don’t have an observability layer, Interfere’s Managed mode owns your trace headers and becomes your single source of observability."],
+      maps: [
+        "An engine’s governor dictates how much fuel flows through the injectors and into the combustion chamber. Which means having two governors on one engine is more than redundant — it’s dangerous.",
+        "That same logic is why SDK 13 defaults tracing to \"auto\" so that it can look for an existing governor (aka trace propagator) before installing one. So if you’ve already registered an OpenTelemetry provider, Interfere adopts that provider’s active spans. If you haven’t, Interfere becomes the governor itself, registering its own tracer provider to runs managed tracing and propagation as a way to to organize mission-critical DevOps context — errors, replay, navigation, vitals and requests."],
       sdk: { text: 'With no surface owner configured, the default is `tracing: "auto"`: register your application’s provider first and Interfere adopts its active spans without a warning; with no registered provider, Interfere uses managed tracing.', src: NEXT_RM },
       also: { text: '`register({ tracing: "application" })` writes no OpenTelemetry global and installs no instrumentation. Every server error reaches Interfere through Interfere’s own exporter …', src: NEXT_RM },
       code: [['Interfere owns tracing', 'register()'], ['Your provider owns it', 'register({ tracing: "application" })']],
@@ -287,7 +293,7 @@
 
     { id: 'mixed', short: '12.x + 13.x deployments', change: 'Mixed 12.x and 13.x deployments', part: 'Cylinder liners',
       spots: { side: { hot: '352,197 539,197 539,309 352,309', badge: [523, 281] }, xsec: { hot: '152,181 761,181 761,376 152,376', badge: [252, 285], label: 'Cylinder liners, with pistons' } },
-      maps: ["Pistons fit in replaceable liners that themselves fit into an irreplaceable engine block. Think of the SDK 13.0 SDK as the replaceable liner inside Interfere’s larger observability engine so that things likelike storage keys, device identities and ingest protocols remain unchanged whether you’re running the 13 SDK on a server beside browsers running SDK 12 — and vice versa."],
+      maps: ["Pistons fit in replaceable liners that themselves fit into an irreplaceable engine block. Think of SDK 13.0 as the replaceable liner inside Interfere’s larger observability engine so that things like storage keys, session/device identities and ingest protocols remain unchanged whether you’re running the 13 SDK on a server beside browsers running SDK 12 — and vice versa."],
       sdk: { text: 'Mixed deployments of 12.x browsers with 13.x servers, or the reverse, keep working: storage keys, session and device identity and the ingest protocol are unchanged, and the 12.x line receives compatibility and security fixes for twelve months after 13.0 is published.', src: NEXT_CL },
       cut: { src: CUT('liner'), alt: 'Exploded parts drawing of a cylinder kit: piston rings, piston, piston pin and retaining ring, the cylinder liner, and the liner seal rings', cap: 'Cylinder kit, exploded · parts catalog drawing supplied by the author (source to be cited)' },
       manual: { text: 'When a cylinder liner change is necessary, due to either wear or scoring, the old liner may be removed from the cylinder block and a new liner installed, or the old liner may be honed oversize and reinstalled.', src: SM, page: 17, href: SMP(17) } },
@@ -295,8 +301,8 @@
     { id: 'separate', short: 'correlationSpanProcessor', change: 'correlationSpanProcessor', part: 'Heat exchanger',
       spots: { side: { hot: '352,67 641,67 641,195 352,195', badge: [566, 146] } },
       maps: [
-        "Marine engines are designed to pump seawater through its block to keep from overheating; problem is, salty seawater can corrode as much as it cools.  Enter the heat exchanger, which splits cooling into two circuits: a freshwater loop running through engine and a saltwater loop that touches the heat exchanger but never enters the block. Because fresh and saltwater flows never mix,  each can be checked independently.",
-        "While Interfere’s SDK 12 was  raw-water cooled so that ID generators and propagators ran through the same OpenTelemetry pipe, SDK 13 has a built-in heat exchanger that not only separates always-running recorders  ( such as errors, replay, and vitals) from raw trace data but then can correlate across these flows so you can join a browser record and a server span while still keeping their pipes separate."],
+        "Marine engines are designed to pump seawater through its block to keep from overheating; problem is, the salt in that seawater can corrode as much as it cools. Enter the heat exchanger, which splits cooling functionality into two circuits: a freshwater loop that runs through engine and a saltwater loop that touches the heat exchanger but never enters the block. And because fresh and saltwater flows never mix, each can be checked independently.",
+        "While Interfere’s SDK 12 was raw-water cooled, as ID generators and propagators ran through the same OpenTelemetry pipe, SDK 13 now has a eat exchanger that not only separates recorder data  (errors, replay, and vitals) from raw trace data but then can also correlate both data flows so you can join a browser record and a server span even while still keeping each pipe separate."],
       sdk: { text: 'SDK 13.0 separates browser recording, request correlation and OpenTelemetry tracing, and retires the public server OTel kit in favour of two supported setups: Interfere-managed tracing (`register()` / `init()` with no options) and application-owned tracing (`register({ tracing: "application" })` / `init({ tracing: "application" })`, with your provider exporting to Interfere over standard OTLP).', src: NEXT_CL },
       also: { text: '`correlationSpanProcessor()` returns a fresh standard OpenTelemetry span processor for your provider. Install it when constructing the provider to copy Interfere session and device baggage onto request and child spans; unrelated vendor baggage stays unchanged.', src: NEXT_RM },
       code: [['Your provider, with Interfere’s correlation', 'registerOTel({\n  serviceName: "my-app",\n  spanProcessors: [correlationSpanProcessor(), "auto"],\n});\nawait registerInterfere({ tracing: "application" });']],
@@ -305,7 +311,7 @@
 
     { id: 'fresh', short: 'stamped SSR trace meta', change: 'Stamped SSR trace meta', part: 'Thermostat housing',
       spots: { side: { hot: '245,85 297,85 297,143 245,143', badge: [264, 106] } },
-      maps: ["A thermostat is designed to open the coolant tank once it reaches a certain temperature; it then shuts once the temperatures falls back to normal. SDK 13 does likewise with the browser reading  tracestate stamps like a thermostat reads temperature so that recent stamps “opens the valve” and links to its server trace; a stamp older than that, or missing, stays shut. And since closed is the tracestate stamp’s default state, cached HTML is unable to link visitors together."],
+      maps: ["A thermostat is designed to access coolant once the engine has reaches a certain temperature; it then removes access once the engine falls back within normal operating temps. SDK 13 does likewise in how the browser reads tracestate stamps; like a thermostat, recent stamps “opens the valve” and link to its server trace whereas older or missing stamps keeps it shut stays shut. And since the tracestate stamp’s default state is “closed”, a cached HTML won’t be able to link visitors together."],
       sdk: { text: 'it rejects SSR trace meta whose `interfere` tracestate stamp is missing or older than two minutes, so cached HTML cannot link visitors together.', src: NEXT_CL },
       also: { text: '`withInterfere()` injects stamped trace meta through Next’s `clientTraceMetadata`; an unstamped `traceparent` meta tag no longer links.', src: NEXT_RM },
       code: [['12.x', '<TraceMeta />  // from @interfere/next/server'], ['13.x', 'Remove it. withInterfere(config) injects the stamped meta.']],
@@ -326,7 +332,9 @@
   // Two views of the engine. Hotspot coordinates are in each view's viewBox (both 910 wide).
   // Fig. 2 is the Series 71 Service Manual, Fig. 3, p.75 (PDF index 79), turned upright.
   const VIEWS = {
-    side: { w: 910, h: 535,
+    // The side view is cropped from the original 1488x874 scan (158px off the left, 4px off the top);
+    // x/y/w/h is that crop in the original 910x535 coordinates, so the hotspots below stay put.
+    side: { x: 96.6, y: 2.4, w: 701.5, h: 525,
       img: '/sdk-13/dd671_fig.png',
       alt: 'Line illustration of an in-line marine diesel with the thermostat housing, fuel filter, governor, heat exchanger, pistons and starter motor labeled and numbered' },
     xsec: { w: 910, h: 664,
@@ -342,6 +350,17 @@
   const overlay = document.getElementById('overlay');
   let view = 'side';
 
+  // On desktop a part's cutaway sits in the left gutter under the menu; the engine and
+  // every phone layout keep the sheet in its own column.
+  const plate = document.querySelector('.plate-col');
+  const wide = matchMedia('(min-width: 961px)');
+  function placePlate() {
+    const inGutter = wide.matches && document.body.classList.contains('part-view');
+    if (inGutter && plate.parentElement.tagName !== 'HEADER') document.querySelector('header').appendChild(plate);
+    else if (!inGutter && plate.parentElement.tagName === 'HEADER') document.querySelector('main').after(plate);
+  }
+  wide.addEventListener('change', placePlate);
+
   function showView(v) {
     view = v;
     const V = VIEWS[v];
@@ -349,8 +368,10 @@
     img.src = V.img; img.alt = V.alt;
     img.closest('.figure').classList.remove('is-part');
     document.body.classList.add('engine');
+    document.body.classList.remove('part-view');
+    placePlate();
     document.getElementById('backBtn').hidden = true;
-    overlay.setAttribute('viewBox', `0 0 ${V.w} ${V.h}`);
+    overlay.setAttribute('viewBox', `${V.x || 0} ${V.y || 0} ${V.w} ${V.h}`);
     overlay.innerHTML = PARTS.filter(p => ROT(p, v)).map(p => {
       const s = ROT(p, v);
       const label = s.label || p.part;
@@ -375,6 +396,8 @@
     img.src = p.cut.src; img.alt = p.cut.alt;
     img.closest('.figure').classList.add('is-part');
     document.body.classList.remove('engine');
+    document.body.classList.add('part-view');
+    placePlate();
     document.getElementById('backBtn').hidden = false;
   }
   // Back to the complete engine; the chosen part stays selected and highlighted on it.

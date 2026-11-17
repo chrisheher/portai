@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dead Authors Write the Front Page</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=UnifrakturMaguntia&family=Oswald:wght@600;700&family=Source+Serif+4:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<style>
+  /* Same palette and layout as the texting demo (/dead-authors.html); the phone is now a newspaper. */
+  :root {
+    --n-page: #29221f; --n-panel: #1e1917; --n-line: #4a3f3a;
+    --n-ink: #f4eee9; --n-muted: #b9ada6; --n-focus: #e8b43f; --n-bubble: #3a302b;
+    --n-sans: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif;
+    --n-mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --p-paper: #f2ecdf; --p-ink: #1b1714; --p-grey: rgba(27,23,20,0.16);
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--n-page); }
+  body { margin: 0; background: var(--n-page); color: var(--n-ink); font-family: var(--n-sans); -webkit-font-smoothing: antialiased; }
+  a { color: var(--n-ink); }
+  a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--n-focus); outline-offset: 3px; }
+
+  .g { max-width: 1040px; margin: 0 auto; padding: 56px 24px 72px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 28px 56px; align-items: start;
+       grid-template-areas: "head head" "menu menu" "askcap presscap" "ask press" "process process" "steps steps" "foot foot"; }
+  .g-head { grid-area: head; } .g-menu { grid-area: menu; } .g-ask { grid-area: ask; } .g-press { grid-area: press; }
+  .g-askcap { grid-area: askcap; } .g-presscap { grid-area: presscap; }
+  .g-askcap, .g-presscap { align-self: end; margin-bottom: -18px; }
+  .g-process { grid-area: process; margin: 28px 0 -8px; } .g-steps { grid-area: steps; } .g-foot { grid-area: foot; }
+  .g-caps { font: 500 14px/1.2 var(--n-mono); color: var(--n-muted); margin: 0; text-transform: uppercase; }
+
+  /* Author menu */
+  .g-menu { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .g-menu .g-caps { margin-right: 6px; }
+  .g-menu button { font: 500 0.95rem/1 var(--n-sans); color: var(--n-muted); background: transparent; border: 1px solid var(--n-line); border-radius: 999px; padding: 10px 16px; cursor: pointer; }
+  .g-menu button:hover { color: var(--n-ink); border-color: var(--n-muted); }
+  .g-menu button[aria-pressed="true"] { background: var(--n-ink); color: var(--n-page); border-color: var(--n-ink); }
+  .g-wiki { font: 500 14px/1.2 var(--n-mono); color: var(--n-muted); margin-left: 6px; text-underline-offset: 3px; }
+  .g-wiki:hover { color: var(--n-ink); }
+
+  .g-h1 { font: 900 4rem/0.86 var(--n-sans); text-transform: uppercase; margin: 0; }
+  .g-h2 { font: 900 clamp(1.6rem, 3.6vw, 2.6rem)/0.95 var(--n-sans); text-transform: uppercase; margin: 0; }
+  .g-lede { font-size: clamp(1.05rem, 1.8vw, 1.35rem); line-height: 1.35; max-width: 62ch; margin: 18px 0 0; color: var(--n-muted); }
+
+  /* Falling story cards */
+  .g-ask { display: grid; gap: 10px; }
+  .g-stage { position: relative; border: 1px solid var(--n-line); border-radius: 14px; overflow: hidden; height: 460px;
+             background: repeating-linear-gradient(to bottom, transparent 0 63px, rgba(255,255,255,0.05) 63px 64px); }
+  .g-card { position: absolute; left: 0; top: 0; width: max-content; max-width: min(220px, calc(50% - 10px)); padding: 9px 12px; border-radius: 9px;
+            color: #1e1917; cursor: pointer; transform: translate(0, -999px); font: 500 13px/1.25 var(--n-sans); box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
+  .g-card:hover { filter: brightness(1.07); }
+  .g-card.busy { opacity: 0.55; cursor: progress; }
+  .g-card-open { display: block; font: 500 0.66rem/1.2 var(--n-mono); text-transform: uppercase; color: rgba(30,25,23,0.68); background: none; border: 0; padding: 0 0 4px; cursor: pointer; }
+  .g-card-src { font: 500 0.68rem var(--n-mono); color: rgba(30,25,23,0.7); text-decoration: none; margin-left: 4px; white-space: nowrap; }
+  .g-card-src:hover { color: #1e1917; text-decoration: underline; text-underline-offset: 2px; }
+  .g-stage.is-static { height: auto; display: flex; flex-wrap: wrap; gap: 10px; padding: 12px; }
+  .g-stage.is-static .g-card { position: static; transform: none; }
+
+  /* Own story */
+  .g-own { display: flex; gap: 8px; }
+  .g-own input { flex: 1; min-width: 0; font: 400 0.95rem var(--n-sans); color: var(--n-ink); background: var(--n-bubble); border: 1px solid var(--n-line); border-radius: 999px; padding: 10px 14px; }
+  .g-own button { font: 500 0.9rem var(--n-sans); background: var(--n-ink); color: var(--n-panel); border: 0; border-radius: 999px; padding: 10px 16px; cursor: pointer; }
+  .g-own button:disabled { opacity: 0.5; cursor: progress; }
+
+  /* The press: a dark panel the paper spins into */
+  .g-press { position: sticky; top: 24px; background: var(--n-panel); border: 1px solid var(--n-line); border-radius: 14px; padding: 22px 18px 16px;
+             display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 12px; min-height: 460px; overflow: hidden; }
+  .g-press-stage { display: grid; place-items: center; perspective: 1200px; min-height: 0; }
+  .g-note { font-size: 0.75rem; color: var(--n-muted); line-height: 1.4; margin: 0; text-align: center; min-height: 1.05em; }
+  .g-note a { color: var(--n-ink); text-underline-offset: 3px; }
+
+  /* The newspaper */
+  .paper { width: min(100%, 360px); background: var(--p-paper); color: var(--p-ink); padding: 16px 18px 18px; border-radius: 2px;
+           box-shadow: 0 18px 40px rgba(0,0,0,0.45), 0 2px 0 rgba(0,0,0,0.2); transform-origin: 50% 50%;
+           background-image: radial-gradient(rgba(27,23,20,0.035) 1px, transparent 1px); background-size: 3px 3px; }
+  .paper-mast { font: 400 clamp(1.9rem, 6vw, 2.5rem)/1 'UnifrakturMaguntia', serif; text-align: center; margin: 0; letter-spacing: 0.01em; }
+  .paper-rule { display: flex; justify-content: space-between; gap: 8px; border-top: 3px double var(--p-ink); border-bottom: 1px solid var(--p-ink);
+                margin: 8px 0 12px; padding: 3px 0; font: 500 0.58rem/1.2 var(--n-mono); text-transform: uppercase; letter-spacing: 0.04em; }
+  .paper-head { font: 700 2.4rem/0.98 'Oswald', 'Inter Tight', sans-serif; text-transform: uppercase; margin: 0; text-align: center; letter-spacing: -0.005em; overflow-wrap: anywhere; }
+  .paper-head.m { font-size: 2rem; } .paper-head.l { font-size: 1.65rem; }
+  .paper-slug { font: italic 400 1.02rem/1.3 'Source Serif 4', Georgia, serif; text-align: center; margin: 10px 4px 12px; padding-bottom: 12px; border-bottom: 1px solid var(--p-ink); }
+  .paper-body { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 10px; height: 92px; }
+  .paper-photo { background: radial-gradient(rgba(27,23,20,0.55) 1.1px, transparent 1.3px) 0 0 / 4px 4px, rgba(27,23,20,0.12); border: 1px solid var(--p-ink); }
+  .paper-col { background: repeating-linear-gradient(to bottom, var(--p-grey) 0 3px, transparent 3px 7px); }
+
+  /* Spinning in, like the Simpsons' newspaper: whirl far away while the editor writes, then land. */
+  .paper.whirl { animation: whirl 0.45s linear infinite; }
+  .paper.land { animation: land 1.25s cubic-bezier(0.16, 0.74, 0.25, 1) both; }
+  @keyframes whirl { from { transform: scale(0.12) rotate(0deg); } to { transform: scale(0.12) rotate(360deg); } }
+  @keyframes land { from { transform: scale(0.12) rotate(-1440deg); } 82% { transform: scale(1.04) rotate(-2deg); } to { transform: scale(1) rotate(-2deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .paper.whirl { animation: none; opacity: 0.4; }
+    .paper.land { animation: fade 0.3s ease both; transform: rotate(-2deg); }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  }
+
+  /* Steps */
+  .g-steps { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+  .g-steps li { border: 1px solid var(--n-line); border-radius: 10px; padding: 14px 16px; color: var(--n-muted); font-size: 0.92rem; line-height: 1.45; transition: background .3s, border-color .3s; }
+  .g-steps b { display: block; color: var(--n-ink); margin-top: 6px; }
+  .g-steps a { color: var(--n-ink); text-underline-offset: 3px; }
+  .g-steps li.lit { background: var(--n-ink); color: var(--n-panel); border-color: var(--n-ink); }
+  .g-steps li.lit b, .g-steps li.lit .g-caps, .g-steps li.lit a { color: var(--n-panel); }
+  .g-foot { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 8px 24px; }
+
+  @media (max-width: 800px) {
+    .g { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 36px 16px 56px; grid-template-areas: "head" "menu" "presscap" "press" "askcap" "ask" "process" "steps" "foot"; }
+    .g-h1 { font-size: 2.9rem; }
+    .g-press { position: static; min-height: 0; height: auto !important; }
+  }
+</style>
+</head>
+<body>
+<main class="g">
+  <header class="g-head">
+    <h1 class="g-h1">Dead authors write the front page</h1>
+    <p class="g-lede">Wisdom from authors fortunate not to have lived through today’s current events, set in 72-point type.</p>
+  </header>
+
+  <nav class="g-menu" aria-label="Choose an editor" id="menu"><span class="g-caps">Choose an editor</span></nav>
+
+  <div class="g-askcap"><p class="g-caps" id="askTitle">News of the day</p></div>
+  <section class="g-ask" aria-labelledby="askTitle">
+    <div class="g-stage" id="stage"></div>
+    <form class="g-own" id="own">
+      <input id="ownText" autocomplete="off" maxlength="200" aria-label="Your own story" placeholder="Or hand Goethe any story…">
+      <button type="submit" id="ownGo">Print</button>
+    </form>
+  </section>
+
+  <div class="g-presscap"><p class="g-caps">Today’s front page</p></div>
+  <section class="g-press" aria-label="Front page">
+    <div class="g-press-stage">
+      <article class="paper" id="paper" aria-live="polite" aria-busy="false">
+        <h3 class="paper-mast" id="mast">The Daily Goethe</h3>
+        <div class="paper-rule"><span id="est">Est. 1749</span><span id="date"></span><span>Five cents</span></div>
+        <h2 class="paper-head" id="head">Extra! Extra!</h2>
+        <p class="paper-slug" id="slug">Tap a story and the editor writes the front page.</p>
+        <div class="paper-body" aria-hidden="true"><div class="paper-photo"></div><div class="paper-col"></div><div class="paper-col"></div></div>
+      </article>
+    </div>
+    <p class="g-note" id="note"></p>
+  </section>
+
+  <h2 class="g-h2 g-process" id="processTitle">How It Works</h2>
+  <ol class="g-steps" aria-labelledby="processTitle">
+    <li data-step="1"><span class="g-caps">01 · Read</span><b>Cloud browsers read the week’s news</b>A crawl of news sites, filtered so nobody’s tragedy becomes a punchline.</li>
+    <li data-step="2"><span class="g-caps">02 · My library</span><b>The voices come from books I’ve actually read</b>Five authors from my GraphRAG library of ~230 works, each with a brief for how they think and sound. <a href="https://onlychr.is/raglib" target="_blank" rel="noopener">Explore the library</a></li>
+    <li data-step="3"><span class="g-caps">03 · Write</span><b>Claude, as the editor, writes the headline and slug</b>Nine words that read from across the room, one sentence of take underneath.</li>
+    <li data-step="4"><span class="g-caps">04 · Print</span><b>Stop the presses</b>The front page spins in. Same story, different editor: try all five.</li>
+  </ol>
+
+  <footer class="g-foot g-caps">
+    <a href="/dead-authors.html">Text the authors instead</a>
+    <a href="https://onlychr.is/raglib" target="_blank" rel="noopener">The library</a>
+  </footer>
+</main>
+<script>
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  const $ = id => document.getElementById(id);
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const AUTHORS = {
+    goethe: { key: 'Goethe', name: 'Johann Wolfgang von Goethe', wiki: 'Johann_Wolfgang_von_Goethe', born: 1749, tint: '#d9c9a3' },
+    exley: { key: 'Exley', name: 'Frederick Exley', wiki: 'Frederick_Exley', born: 1929, tint: '#e3cfc4' },
+    barzun: { key: 'Barzun', name: 'Jacques Barzun', wiki: 'Jacques_Barzun', born: 1907, tint: '#d9d3c7' },
+    koestler: { key: 'Koestler', name: 'Arthur Koestler', wiki: 'Arthur_Koestler', born: 1905, tint: '#cdd5cb' },
+    emerson: { key: 'Emerson', name: 'Ralph Waldo Emerson', wiki: 'Ralph_Waldo_Emerson', born: 1803, tint: '#d6dcc4' },
+  };
+  let current = 'goethe', printing = false;
+  const pages = {};   // author -> last front page, so switching editors shows their latest
+
+  $('date').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+
+  function lightStep(n) {
+    document.querySelectorAll('.g-steps li').forEach(li => li.classList.toggle('lit', li.dataset.step === String(n)));
+  }
+
+  // ── The paper ───────────────────────────────────────────────────────
+  function setPage({ headline, slug }) {
+    const a = AUTHORS[current];
+    $('mast').textContent = `The Daily ${a.key}`;
+    $('est').textContent = `Est. ${a.born}`;
+    $('head').textContent = headline;
+    $('head').className = 'paper-head' + (headline.length > 42 ? ' l' : headline.length > 24 ? ' m' : '');
+    $('slug').textContent = slug;
+  }
+  function land() {
+    const p = $('paper');
+    p.classList.remove('whirl', 'land');
+    void p.offsetWidth;   // restart the animation
+    p.classList.add('land');
+  }
+  const blank = () => ({ headline: 'Extra! Extra!', slug: `Tap a story and ${AUTHORS[current].key} writes the front page.` });
+
+  // ── Author ──────────────────────────────────────────────────────────
+  function setAuthor(slug) {
+    current = slug;
+    const a = AUTHORS[slug];
+    document.querySelectorAll('#menu button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.slug === slug)));
+    const wiki = $('wiki');
+    wiki.href = `https://en.wikipedia.org/wiki/${a.wiki}`; wiki.textContent = `What’s this guy ${a.key}’s deal? ↗`;
+    wiki.setAttribute('aria-label', `${a.name} on Wikipedia (opens in a new tab)`);
+    $('ownText').placeholder = `Or hand ${a.key} any story…`;
+    document.querySelectorAll('.g-card').forEach(c => { c.style.background = a.tint; c.querySelector('.g-card-open').textContent = `${a.key} on:`; });
+    history.replaceState(null, '', `${location.pathname}#${slug}`);
+    if (!printing) { setPage(pages[slug]?.page || blank()); $('note').innerHTML = pages[slug]?.note || ''; land(); }
+  }
+
+  // ── Printing: Claude writes the headline and slug ────────────────────
+  async function print(story, url, site) {
+    if (printing) return;
+    printing = true;
+    const slug = current, a = AUTHORS[slug];
+    $('paper').setAttribute('aria-busy', 'true');
+    $('paper').classList.remove('land');
+    $('paper').classList.add('whirl');
+    $('note').textContent = `${a.key} is writing the front page…`;
+    $('ownGo').disabled = true;
+    lightStep(3);
+    // On phones the paper sits above the cards: bring it into view to watch it spin.
+    const box = $('paper').getBoundingClientRect();
+    if (box.bottom < 0 || box.top > innerHeight) $('paper').scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+    try {
+      const r = await fetch('/api/front-page', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ author: a.key, story }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || 'The presses jammed. Try again.');
+      const note = url ? `${esc(a.key)} on <a href="${esc(url)}" target="_blank" rel="noopener">${esc(site || 'the story')}</a> · written by Claude in his voice`
+        : `${esc(a.key)} on your story · written by Claude in his voice`;
+      pages[slug] = { page: d, note };
+      if (current === slug) { setPage(d); $('note').innerHTML = note; }
+      lightStep(4);
+    } catch (err) {
+      if (current === slug) { setPage(pages[slug]?.page || blank()); $('note').textContent = err.message; }
+      lightStep(0);
+    } finally {
+      printing = false;
+      $('ownGo').disabled = false;
+      $('paper').setAttribute('aria-busy', 'false');
+      if (current !== slug) setPage(pages[current]?.page || blank());
+      land();
+    }
+  }
+
+  $('own').addEventListener('submit', e => {
+    e.preventDefault();
+    const v = $('ownText').value.trim();
+    if (!v) return;
+    $('ownText').value = '';
+    print(v);
+  });
+
+  // ── Falling story cards (Matter.js), as in the texting demo ──────────
+  let stage = null;
+  function buildStage(cards) {
+    stage?.teardown();
+    const { Engine, Runner, Bodies, Composite, Events } = Matter;
+    const box = $('stage'), W = box.clientWidth;
+    const sizes = cards.map(el => ({ w: el.offsetWidth, h: el.offsetHeight }));
+    const cols = Math.max(1, Math.min(2, Math.floor(W / Math.max(...sizes.map(c => c.w)))));
+    const colH = Array(cols).fill(0);
+    sizes.forEach((c, i) => { c.col = i % cols; colH[c.col] += c.h + 4; });
+    const H = Math.max(240, Math.round(Math.max(...colH) * 1.08 + 30));
+    box.style.height = H + 'px';
+    const engine = Engine.create({ gravity: { x: 0, y: 0.35 }, enableSleeping: true });
+    Composite.add(engine.world, [
+      Bodies.rectangle(W / 2, H + 30, W + 200, 60, { isStatic: true }),
+      Bodies.rectangle(-30, H / 2, 60, H * 3, { isStatic: true }),
+      Bodies.rectangle(W + 30, H / 2, 60, H * 3, { isStatic: true }),
+    ]);
+    const bodies = sizes.map((c, i) => Bodies.rectangle(
+      (c.col + 0.5) * W / cols + (Math.random() - 0.5) * Math.max(0, W / cols - c.w - 12), -c.h - i * 70, c.w, c.h,
+      { restitution: 0.2, friction: 0.2, frictionAir: 0.02, chamfer: { radius: 10 }, inertia: Infinity, angle: (Math.random() - 0.5) * 0.06 }));
+    Composite.add(engine.world, bodies);
+    const sync = () => bodies.forEach((b, i) => {
+      const t = `translate(${Math.round(b.position.x - sizes[i].w / 2)}px, ${Math.round(b.position.y - sizes[i].h / 2)}px) rotate(${b.angle.toFixed(3)}rad)`;
+      if (cards[i].style.transform !== t) cards[i].style.transform = t;
+    });
+    Events.on(engine, 'afterUpdate', sync);
+    sync();
+    const runner = Runner.create();
+    Runner.run(runner, engine);
+    stage = { width: W, teardown() { Runner.stop(runner); Events.off(engine, 'afterUpdate', sync); Composite.clear(engine.world, false); Engine.clear(engine); } };
+  }
+
+  async function init() {
+    const menu = $('menu');
+    Object.entries(AUTHORS).forEach(([slug, a]) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.dataset.slug = slug; b.textContent = a.name;
+      b.addEventListener('click', () => setAuthor(slug));
+      menu.appendChild(b);
+    });
+    menu.insertAdjacentHTML('beforeend', '<a class="g-wiki" id="wiki" target="_blank" rel="noopener"></a>');
+
+    const box = $('stage');
+    const data = await fetch('/api/front-page').then(r => r.json());
+    const stories = data.stories || [];
+    box.innerHTML = stories.map((s, i) => `<div class="g-card" data-i="${i}">
+        <button type="button" class="g-card-open" aria-label="Print the front page about: ${esc(s.title)}">on:</button>
+        <span class="g-card-title">${esc(s.title)}</span>
+        <a class="g-card-src" href="${/^https?:\/\//.test(s.url) ? esc(s.url) : '#'}" target="_blank" rel="noopener" aria-label="Source: ${esc(s.site)} (opens in a new tab)">[source]</a>
+      </div>`).join('');
+    box.addEventListener('click', async e => {
+      const card = e.target.closest('.g-card');
+      if (!card || e.target.closest('a') || printing) return;
+      const s = stories[+card.dataset.i];
+      card.classList.add('busy');
+      try { await print(s.title, s.url, s.site); } finally { card.classList.remove('busy'); }
+    });
+
+    const start = location.hash.slice(1);
+    setAuthor(AUTHORS[start] ? start : 'goethe');
+
+    const cards = [...box.querySelectorAll('.g-card')];
+    if (!cards.length) { $('note').textContent = data.error || 'No news today. Hand an author your own story.'; return; }
+    if (reduceMotion || typeof Matter === 'undefined') { box.classList.add('is-static'); return; }
+    await document.fonts.ready;
+    buildStage(cards);
+    let t;
+    addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => { if (box.clientWidth !== stage.width) buildStage(cards); }, 200); });
+  }
+  init().catch(err => { console.error(err); $('note').textContent = 'The news is late today. Hand an author your own story.'; });
+</script>
+</body>
+</html>
